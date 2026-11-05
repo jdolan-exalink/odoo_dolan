@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [main, recovery/rea-audit]
+  pull_request:
+
+jobs:
+  static-qa:
+    name: Validación estática de addons
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validador QA de la suite DOLAN
+        run: python scripts/validate_addons.py
+
+      - name: Compilar todo el código Python (sintaxis)
+        run: python -m compileall -q addons scripts
+
+  odoo-tests:
+    name: Tests en Odoo CE 20 (Docker)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U odoo -d postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Construir imagen Odoo CE 20 + dependencias DOLAN
+        run: docker build -t dolan/odoo20-ci:20.0 .
+
+      - name: Instalar la suite y ejecutar los tests
+        run: |
+          docker run --rm --network host \
+            -v "${{ github.workspace }}/addons:/opt/odoo/dolan-addons" \
+            dolan/odoo20-ci:20.0 bash -c '
+              set -euo pipefail
+              export PGPASSWORD=odoo
+              until pg_isready -h 127.0.0.1 -p 5432 -U odoo >/dev/null 2>&1; do sleep 1; done
+
+              ADDONS_PATH="/opt/odoo/odoo-server/odoo/addons,/opt/odoo/odoo-server/addons,/opt/odoo/dolan-addons"
+              for dir in /opt/odoo/ingadhoc/*; do
+                [ -d "${dir}" ] && ADDONS_PATH="${ADDONS_PATH},${dir}"
+              done
+
+              cat > /tmp/odoo.conf <<EOF
+              [options]
+              admin_passwd = ci
+              db_host = 127.0.0.1
+              db_port = 5432
+              db_user = odoo
+              db_password = odoo
+              addons_path = ${ADDONS_PATH}
+              data_dir = /var/lib/odoo
+              workers = 0
+              max_cron_threads = 0
+              without_demo = True
+              log_level = warn
+              log_handler = odoo.addons:INFO
+              EOF
+
+              MODULES="base,web,l10n_ar,l10n_ar_withholding,l10n_ar_pos,l10n_ar_stock,project,project_todo,purchase,purchase_stock,fleet,DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_views,DOLAN_pos,DOLAN_stock_mrp,DOLAN_subscription,DOLAN_renting,DOLAN_knowledge_bi,DOLAN_exchange"
+
+              # Instalación + tests en una sola pasada; odoo-bin sale con
+              # código != 0 si algún test falla.
+              python3 /opt/odoo/odoo-server/odoo-bin -c /tmp/odoo.conf \
+                -d ci_test \
+                --without-demo=True \
+                -i "${MODULES}" \
+                --test-enable \
+                --stop-after-init
+            '

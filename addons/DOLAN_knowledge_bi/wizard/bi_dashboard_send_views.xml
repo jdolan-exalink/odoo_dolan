@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_bi_dashboard_send_wizard_form" model="ir.ui.view">
+        <field name="name">dolan.bi.dashboard.send.wizard.form</field>
+        <field name="model">dolan.bi.dashboard.send.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Enviar informe BI">
+                <group>
+                    <field name="dashboard_id"/>
+                    <field name="partner_id" options="{'no_create': True}"/>
+                    <field name="subject"/>
+                    <field name="message"/>
+                </group>
+                <group string="Destino">
+                    <field name="email_available" invisible="1"/>
+                    <field name="whatsapp_available" invisible="1"/>
+                    <field name="email_to" invisible="not email_available"/>
+                    <field name="phone" invisible="not whatsapp_available"/>
+                    <div class="alert alert-info" role="status" invisible="email_available or whatsapp_available">
+                        Configurá un servidor de correo saliente o una conexión WAHA activa para enviar informes.
+                    </div>
+                    <div class="text-muted" invisible="email_available or not whatsapp_available">
+                        No hay correo saliente activo; podés enviar el PDF por WhatsApp.
+                    </div>
+                    <div class="text-muted" invisible="not email_available or whatsapp_available">
+                        No hay una sesión WAHA activa; podés enviar el PDF por correo.
+                    </div>
+                </group>
+                <footer>
+                    <button name="action_send_email" string="Enviar por correo" type="object"
+                            class="btn-primary" invisible="not email_available"/>
+                    <button name="action_send_whatsapp" string="Enviar por WhatsApp" type="object"
+                            class="btn-success" invisible="not whatsapp_available"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

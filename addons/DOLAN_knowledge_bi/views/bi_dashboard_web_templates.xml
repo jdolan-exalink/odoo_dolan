@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="bi_dashboard_web_page" name="DOLAN BI Dashboard">
+        <html lang="es">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title t-out="dashboard.name"/>
+                <style>
+                    :root { color-scheme: light dark; font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+                    * { box-sizing: border-box; }
+                    body { margin: 0; background: #f4f6fa; color: #182230; }
+                    .topbar { padding: 18px clamp(18px, 5vw, 64px); background: #20242c; color: #f5f7fa; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+                    .topbar a, .actions a { color: inherit; text-decoration: none; }
+                    .topbar a:hover, .actions a:hover { text-decoration: underline; }
+                    .brand { font-weight: 750; letter-spacing: .02em; }
+                    main { max-width: 1240px; margin: 0 auto; padding: 34px 22px 56px; }
+                    .heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; }
+                    h1 { margin: 0 0 10px; font-size: clamp(26px, 4vw, 38px); line-height: 1.15; }
+                    .subtitle { color: #657184; line-height: 1.6; }
+                    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+                    .button { display: inline-flex; align-items: center; padding: 10px 14px; border: 1px solid #cbd3df; border-radius: 10px; background: #fff; color: #253349 !important; font-weight: 650; }
+                    .button.primary { background: #76506f; border-color: #76506f; color: #fff !important; }
+                    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(205px, 1fr)); gap: 16px; }
+                    .metric { min-height: 125px; padding: 20px; border: 1px solid #e1e6ee; border-radius: 15px; background: #fff; box-shadow: 0 5px 20px #1926390a; }
+                    .metric.highlight { border-top: 4px solid #76506f; }
+                    .label { color: #687487; font-size: 14px; margin-bottom: 14px; }
+                    .value { font-size: clamp(21px, 3vw, 28px); font-weight: 750; overflow-wrap: anywhere; }
+                    .section { margin-top: 34px; }
+                    .section h2 { margin: 0 0 14px; font-size: 20px; }
+                    .info, .table-wrap { padding: 20px; border: 1px solid #e1e6ee; border-radius: 15px; background: #fff; }
+                    .info pre { margin: 0; white-space: pre-wrap; font: inherit; line-height: 1.7; }
+                    table { width: 100%; border-collapse: collapse; }
+                    th, td { padding: 12px 10px; border-bottom: 1px solid #e8ecf2; text-align: left; }
+                    th:last-child, td:not(:first-child) { text-align: right; }
+                    tr:last-child td { border-bottom: 0; }
+                    .note { margin-top: 28px; color: #7a8595; font-size: 13px; }
+                    @media (prefers-color-scheme: dark) {
+                        body { background: #171a20; color: #edf1f7; }
+                        .subtitle, .label { color: #aab4c3; }
+                        .metric, .info, .table-wrap, .button { background: #222731; border-color: #384252; color: #edf1f7 !important; }
+                        th, td { border-color: #384252; }
+                        .note { color: #9aa5b5; }
+                    }
+                    @media (max-width: 600px) { main { padding: 25px 15px 40px; } .metric { min-height: 108px; } }
+                </style>
+            </head>
+            <body>
+                <header class="topbar">
+                    <a class="brand" href="/odoo/action-1266">DOLAN · Tableros Gerenciales BI</a>
+                    <a href="/odoo/action-1266">← Volver al listado</a>
+                </header>
+                <main>
+                    <section class="heading">
+                        <div>
+                            <h1 t-out="dashboard.name"/>
+                            <div class="subtitle">
+                                <span t-out="company_names"/><br/>
+                                Período: <span t-field="dashboard.date_from"/> al <span t-field="dashboard.date_to"/>
+                            </div>
+                        </div>
+                        <nav class="actions" aria-label="Exportar tablero">
+                            <a class="button primary" t-att-href="'/dolan/bi/dashboard/%s/send' % dashboard.id">Enviar PDF</a>
+                            <a class="button" t-att-href="'/dolan/bi/export/%s?format=csv' % dashboard.id">Descargar CSV</a>
+                            <a class="button" t-att-href="'/dolan/bi/export/%s?format=xlsx' % dashboard.id">Descargar Excel</a>
+                            <a class="button primary" t-att-href="'/report/pdf/DOLAN_knowledge_bi.report_bi_dashboard_document/%s' % dashboard.id">Descargar PDF</a>
+                        </nav>
+                    </section>
+
+                    <section class="grid" aria-label="Indicadores del período">
+                        <article t-foreach="metrics" t-as="metric"
+                                 t-attf-class="metric {{ 'highlight' if metric['highlight'] else '' }}">
+                            <div class="label" t-out="metric.get('label')"/>
+                            <div class="value" t-out="metric.get('value')"/>
+                        </article>
+                    </section>
+
+                    <section t-if="cards" class="section">
+                        <h2>Indicadores seleccionados</h2>
+                        <div class="table-wrap">
+                            <table>
+                                <thead><tr><th>Indicador</th><th>Actual</th><th>Meta</th><th>Cumplimiento</th></tr></thead>
+                                <tbody>
+                                    <tr t-foreach="cards" t-as="card">
+                                        <td t-out="card.get('name')"/><td t-out="card.get('current')"/>
+                                        <td t-out="card.get('target')"/><td t-out="card.get('achievement')"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="section">
+                        <h2>Principales clientes</h2>
+                        <div class="info"><pre t-out="dashboard.top_customers_summary or 'Sin operaciones registradas en el período.'"/></div>
+                    </section>
+                    <section class="section">
+                        <h2>Principales productos</h2>
+                        <div class="info"><pre t-out="dashboard.top_products_summary or 'Sin líneas de producto vendidas en el período.'"/></div>
+                    </section>
+                    <p class="note">Datos de solo lectura de Odoo. Los importes corresponden al período indicado.</p>
+                </main>
+            </body>
+        </html>
+    </template>
+</odoo>

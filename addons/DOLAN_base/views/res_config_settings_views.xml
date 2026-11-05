@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_dolan_ce" model="ir.ui.view">
+        <field name="name">res.config.settings.form.dolan.ce</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mail.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='email_servers_setting']" position="attributes">
+                <attribute name="title">Configure un servidor de correo propio para enviar y recibir correos electrónicos.</attribute>
+            </xpath>
+            <xpath expr="//setting[@id='email_servers_setting']" position="inside">
+                <div class="content-group mt16">
+                    <button type="action"
+                            name="%(base.action_ir_mail_server_list)d"
+                            string="Configurar correo saliente (SMTP)"
+                            icon="fa-envelope"
+                            class="btn-link"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

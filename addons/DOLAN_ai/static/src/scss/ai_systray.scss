@@ -1,0 +1,1233 @@
+// Part of DOLAN Suite for Odoo 20 CE. See LICENSE file for full copyright and licensing details.
+// License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0).
+
+.o_dolan_ai_drawer {
+    position: fixed;
+    top: 46px;
+    right: 0;
+    bottom: 0;
+    width: 440px;
+    max-width: 100vw;
+    display: flex;
+    min-height: 0;
+    color: #202123;
+    background: #ffffff;
+    border-left: 1px solid #e0e0e0;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    z-index: 1040;
+    font-family: var(--body-font-family, inherit);
+    transition: width 0.2s ease, top 0.2s ease;
+
+    &.is-maximized {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        z-index: 1055;
+        box-shadow: none;
+        border-left: none;
+    }
+}
+
+.o_dolan_ai_sidebar {
+    position: relative;
+    display: flex;
+    flex: 0 0 238px;
+    min-width: 0;
+    flex-direction: column;
+    gap: 16px;
+    padding: 18px 12px 12px;
+    background: #f9f9f9;
+    border-right: 1px solid #ececec;
+}
+
+.o_dolan_ai_drawer.is-floating .o_dolan_ai_sidebar {
+    display: none;
+
+    &.is-visible {
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 250px;
+        z-index: 20;
+        box-shadow: 2px 0 16px rgba(0, 0, 0, 0.15);
+    }
+}
+
+.o_dolan_ai_sidebar_backdrop {
+    display: none;
+}
+
+.o_dolan_ai_drawer.is-floating .o_dolan_ai_sidebar_backdrop {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: rgba(13, 16, 22, 0.36);
+    cursor: pointer;
+    z-index: 19;
+}
+
+.o_dolan_ai_drawer.is-maximized .o_dolan_ai_sidebar {
+    display: none;
+    flex: 0 0 270px;
+
+    &.is-visible { display: flex; }
+}
+
+.o_dolan_ai_drawer.is-floating {
+    .o_dolan_ai_body {
+        padding: 14px 16px;
+    }
+
+    .o_dolan_ai_footer {
+        padding: 0 14px 10px;
+        max-width: 100%;
+    }
+
+    .o_dolan_ai_conversation {
+        max-width: 100%;
+    }
+
+    .o_dolan_ai_header {
+        padding: 6px 14px;
+        flex: 0 0 64px;
+        min-height: 64px;
+    }
+}
+
+.o_dolan_ai_systray_icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    vertical-align: middle;
+}
+
+.o_dolan_ai_systray_mark {
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    color: #fff;
+    background: #714b67;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.o_dolan_ai_brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0 8px 2px;
+    color: #202123;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.o_dolan_ai_brand_mark,
+.o_dolan_ai_assistant_mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: #fdfafd;
+    border: 1px solid rgba(113, 75, 103, 0.2);
+    overflow: hidden;
+
+    img {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+    }
+}
+
+.o_dolan_ai_account_avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #f4eef3;
+    overflow: hidden;
+
+    img {
+        width: 16px;
+        height: 16px;
+        object-fit: contain;
+    }
+}
+
+.o_dolan_ai_plus {
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #cfcfcf;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.o_dolan_ai_new_chat,
+.o_dolan_ai_history_item,
+.o_dolan_ai_account {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    border: 0;
+    border-radius: 9px;
+    color: #303134;
+    text-align: left;
+    background: transparent;
+}
+
+.o_dolan_ai_new_chat {
+    min-height: 40px;
+    padding: 0 11px;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    font-size: 0.86rem;
+    font-weight: 600;
+
+    &:hover { background: #f2f2f2; }
+}
+
+.o_dolan_ai_history_label {
+    padding: 2px 9px 0;
+    color: #737373;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.o_dolan_ai_history_item {
+    position: relative;
+    overflow: hidden;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+
+    > span:not(.o_dolan_ai_current_badge) {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    &:hover { background: #eeeeee; }
+    &.is-active {
+        background: #eee8ef;
+        box-shadow: inset 3px 0 0 #76516f;
+        font-weight: 600;
+    }
+}
+
+.o_dolan_ai_current_badge {
+    flex: 0 0 auto;
+    margin-left: auto;
+    padding: 2px 6px;
+    border-radius: 999px;
+    color: #fff;
+    background: #76516f;
+    font-size: 0.62rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.o_dolan_ai_history_row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    min-width: 0;
+
+    .o_dolan_ai_history_item { flex: 1 1 auto; min-width: 0; }
+}
+
+.o_dolan_ai_delete_chat {
+    display: inline-flex;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 7px;
+    color: #4b5563;
+    background: #eef0f3;
+    border: 1px solid #d5d9df;
+    opacity: 1;
+    cursor: pointer;
+
+    &:hover { color: #b42318; background: #fce8e6; border-color: #efb5af; }
+    &:disabled { opacity: 0.35; cursor: not-allowed; }
+}
+
+.o_dolan_ai_history_row .o_dolan_ai_delete_chat { visibility: visible; opacity: 1; }
+
+.o_dolan_ai_history {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    gap: 2px;
+    overflow: auto;
+}
+
+.o_dolan_ai_history_empty {
+    padding: 4px 9px;
+    color: #858585;
+    font-size: 0.74rem;
+    line-height: 1.45;
+}
+
+.o_dolan_ai_sidebar_bottom {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #e9e9e9;
+}
+
+.o_dolan_ai_account {
+    padding: 7px;
+    font-size: 0.78rem;
+    cursor: pointer;
+
+    &:hover { background: #eeeeee; }
+}
+
+.o_dolan_ai_account_avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 27px;
+    height: 27px;
+    border-radius: 50%;
+    color: white;
+    background: #714b67;
+    font-weight: 700;
+}
+
+.o_dolan_ai_account_label { flex: 1; }
+
+.o_dolan_ai_main {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    background: #fff;
+}
+
+.o_dolan_ai_header {
+    display: flex;
+    flex: 0 0 66px;
+    min-height: 66px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 18px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #ffffff;
+}
+
+.o_dolan_ai_header_left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.o_dolan_ai_header_logo {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.o_dolan_ai_title_col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.15;
+}
+
+.o_dolan_ai_title_main {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #202123;
+    letter-spacing: -0.01em;
+}
+
+.o_dolan_ai_title_sub {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #767676;
+}
+
+.o_dolan_ai_header_right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.o_dolan_ai_ctrl_row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.o_dolan_ai_model_row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.o_dolan_ai_led {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #28a745;
+    box-shadow: 0 0 6px rgba(40, 167, 69, 0.7);
+    animation: dolan_led_pulse 2s infinite;
+
+    &.is-disconnected {
+        background: #ffc107;
+        box-shadow: 0 0 6px rgba(255, 193, 7, 0.6);
+        animation: none;
+    }
+}
+
+.o_dolan_ai_model_select {
+    height: 22px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #495057;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 1px 6px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+
+    &:hover {
+        border-color: #714b67;
+        background-color: #ffffff;
+    }
+
+    &:focus {
+        border-color: #714b67;
+        box-shadow: 0 0 0 2px rgba(113, 75, 103, 0.2);
+    }
+}
+
+.o_dolan_ai_status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 9px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #626262;
+    font-size: 0.72rem;
+    cursor: pointer;
+
+    &:hover { background: #f5f5f5; }
+    &.is-connected { color: #21834a; }
+    &.is-disconnected { color: #a46a13; }
+    &.is-expired { color: #b54708; }
+    &.is-checking,
+    &.is-unknown { color: #777; }
+}
+
+.o_dolan_ai_status_dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.o_dolan_ai_icon_button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 0;
+    border-radius: 6px;
+    color: #676767;
+    background: transparent;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+
+    svg {
+        display: block;
+    }
+
+    &:hover {
+        color: #202123;
+        background: #f1f1f1;
+    }
+
+    &.o_dolan_ai_close_button:hover {
+        color: #dc3545;
+        background: rgba(220, 53, 69, 0.08);
+    }
+}
+
+.o_dolan_ai_close_button { font-size: 1.45rem; }
+
+.o_dolan_ai_body {
+    min-height: 0;
+    flex: 1;
+    overflow: auto;
+    padding: 24px 28px;
+    scrollbar-color: #c7c7c7 transparent;
+}
+
+.o_dolan_ai_conversation {
+    width: 100%;
+    max-width: 760px;
+    min-height: 100%;
+    margin: 0 auto;
+}
+
+.o_dolan_ai_welcome {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5vh 0 8vh;
+
+    h1 {
+        margin: 0 0 10px;
+        color: #202123;
+        font-size: clamp(1.65rem, 3vw, 2.1rem);
+        font-weight: 600;
+        letter-spacing: -0.035em;
+        text-align: center;
+    }
+
+    p {
+        margin: 0 auto 26px;
+        max-width: 540px;
+        color: #777;
+        font-size: 0.88rem;
+        text-align: center;
+    }
+}
+
+.o_dolan_ai_prompt_grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.o_dolan_ai_prompt_card {
+    display: flex;
+    min-height: 60px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid #e8e8e8;
+    border-radius: 13px;
+    color: #383838;
+    background: white;
+    font-size: 0.78rem;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover { border-color: #bcbcbc; background: #fafafa; }
+}
+
+.o_dolan_ai_message {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0 0 24px;
+    color: #242424;
+    font-size: 0.91rem;
+    line-height: 1.65;
+
+    &.is-user { justify-content: flex-end; }
+    &.is-user .o_dolan_ai_message_content {
+        max-width: 82%;
+        padding: 10px 15px;
+        border-radius: 18px;
+        background: #f4f4f4;
+    }
+    &.is-assistant .o_dolan_ai_assistant_mark { margin-top: 2px; }
+}
+
+.o_dolan_ai_message_content { min-width: 0; max-width: 88%; }
+
+.o_dolan_ai_msg_text {
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.o_dolan_ai_text_block { margin: 0; }
+.o_dolan_ai_text_heading { margin: 0 0 8px; font-size: 1rem; font-weight: 650; }
+.o_dolan_ai_text_list { margin: 0; padding-left: 1.2rem; }
+.o_dolan_ai_text_list li { margin: 3px 0; }
+
+.o_dolan_ai_msg_text code,
+.o_dolan_ai_code_block {
+    border-radius: 8px;
+    color: #242424;
+    background: #f4f4f4;
+    font-family: var(--font-monospace, monospace);
+    font-size: 0.84em;
+}
+
+.o_dolan_ai_msg_text code { padding: 2px 5px; }
+
+.o_dolan_ai_code_block {
+    margin: 12px 0 0;
+    padding: 13px 15px;
+    overflow: auto;
+    white-space: pre;
+
+    code { padding: 0; background: transparent; }
+}
+
+.o_dolan_ai_fallback_notice {
+    margin-top: 9px;
+    color: #99671e;
+    font-size: 0.72rem;
+}
+
+.o_dolan_ai_thinking {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0 20px;
+    color: #777;
+    font-size: 0.82rem;
+}
+
+.o_dolan_ai_footer {
+    width: 100%;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 25px 12px;
+}
+
+.o_dolan_ai_smart_actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 9px;
+}
+
+.o_dolan_ai_smart_action {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 32px;
+    padding: 6px 11px;
+    border: 1px solid #dedede;
+    border-radius: 999px;
+    color: #38343a;
+    background: #fff;
+    font-size: 0.74rem;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        border-color: #b8a5b3;
+        background: #f8f5f7;
+    }
+
+    &:disabled {
+        opacity: 0.55;
+        cursor: default;
+    }
+}
+
+.o_dolan_ai_composer {
+    padding: 12px 13px 9px 16px;
+    border: 1px solid #dedede;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
+    transition: border-color 0.15s, box-shadow 0.15s;
+
+    &:focus-within {
+        border-color: #bcbcbc;
+        box-shadow: 0 4px 17px rgba(0, 0, 0, 0.08);
+    }
+
+    textarea {
+        display: block;
+        width: 100%;
+        min-height: 30px;
+        max-height: 140px;
+        resize: vertical;
+        border: 0;
+        outline: 0;
+        color: #202123;
+        background: transparent;
+        font-size: 0.88rem;
+        box-shadow: none;
+
+        &::placeholder { color: #898989; }
+    }
+}
+
+.o_dolan_ai_composer_actions {
+    display: flex;
+    min-height: 34px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.o_dolan_ai_composer_buttons {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.o_dolan_ai_context_hint {
+    color: #777;
+    font-size: 0.69rem;
+}
+
+.o_dolan_ai_send {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 12px;
+    color: #fff;
+    background: linear-gradient(135deg, #714b67 0%, #087f83 100%);
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 3px 9px rgba(65, 47, 68, 0.22);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+
+    &:disabled { color: #a7a7a7; background: #e5e5e5; box-shadow: none; cursor: default; }
+    &:not(:disabled):hover { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 5px 12px rgba(65, 47, 68, 0.28); }
+    &:not(:disabled):active { transform: translateY(0); }
+}
+
+.o_dolan_ai_voice {
+    display: inline-flex;
+    width: 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d8d9df;
+    border-radius: 12px;
+    color: #675263;
+    background: #f7f5f7;
+    cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+
+    &:hover:not(:disabled) { color: #087f83; border-color: #84b8b8; background: #eef7f7; }
+    &:disabled { opacity: 0.5; cursor: default; }
+    &.is-recording { color: #fff; border-color: #c43d55; background: #c43d55; animation: dolan_recording_pulse 1.2s ease-in-out infinite; }
+}
+
+@keyframes dolan_recording_pulse {
+    50% { box-shadow: 0 0 0 5px rgba(196, 61, 85, 0.18); }
+}
+
+.o_dolan_ai_disclaimer {
+    padding-top: 7px;
+    color: #8a8a8a;
+    font-size: 0.64rem;
+    text-align: center;
+}
+
+// -----------------------------------------------------------------------------
+// Floating Minimized Pill Widget (Circular Orb)
+// -----------------------------------------------------------------------------
+.o_dolan_ai_floating_pill {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 1045;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid rgba(113, 75, 103, 0.25);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(113, 75, 103, 0.12);
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+    animation: dolan_pill_appear 0.25s ease-out;
+
+    &:hover {
+        transform: translateY(-2px) scale(1.05);
+        border-color: #714b67;
+        box-shadow: 0 10px 32px rgba(113, 75, 103, 0.24);
+
+        .o_dolan_ai_pill_close {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    }
+
+    &:active {
+        transform: translateY(0) scale(1);
+    }
+
+    .o_dolan_ai_pill_icon {
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+    }
+
+    .o_dolan_ai_status_dot {
+        position: absolute;
+        bottom: 3px;
+        right: 3px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #28a745;
+        border: 2px solid #ffffff;
+        flex-shrink: 0;
+
+        &.is-disconnected {
+            background: #ffc107;
+        }
+    }
+
+    .o_dolan_ai_pill_close {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        padding: 0;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        background: #ffffff;
+        color: #666;
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+
+        &:hover {
+            background: #f1f1f1;
+            color: #202123;
+        }
+    }
+}
+
+@keyframes dolan_led_pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 5px rgba(40, 167, 69, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+    }
+}
+
+.o_dolan_ai_spin {
+    animation: dolan_spin 1s linear infinite;
+}
+
+@keyframes dolan_spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes dolan_pill_appear {
+    from {
+        opacity: 0;
+        transform: scale(0.85) translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@media (max-width: 760px) {
+    .o_dolan_ai_drawer {
+        top: 0;
+        right: 0;
+        bottom: calc(58px + env(safe-area-inset-bottom, 0px));
+        left: 0;
+        width: 100vw;
+        height: calc(100dvh - 58px - env(safe-area-inset-bottom, 0px));
+        min-height: 0;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .o_dolan_ai_sidebar { display: none; }
+    .o_dolan_ai_header { padding: 0 12px; }
+    .o_dolan_ai_status { max-width: 130px; overflow: hidden; white-space: nowrap; }
+    .o_dolan_ai_body { padding: 18px 14px; }
+    .o_dolan_ai_footer { padding: 0 12px 10px; }
+    .o_dolan_ai_prompt_grid { grid-template-columns: 1fr; }
+}
+
+/* Match the floating Copilot window to DOLAN's persisted dark-mode setting. */
+body.o_dolan_dark_mode .o_dolan_ai_drawer {
+    color-scheme: dark;
+    color: #e4e6eb;
+    background: #171a20;
+    border-color: #3a404c;
+    --ai-surface: #20232b;
+    --ai-surface-raised: #292e37;
+    --ai-border: #3a404c;
+    --ai-text: #e4e6eb;
+    --ai-muted: #aeb6c2;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_sidebar {
+    color: #e4e6eb;
+    background: #1b1e25;
+    border-color: #343945;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_main,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_header,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_body,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_footer {
+    color: #e4e6eb;
+    background: #171a20;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_header {
+    border-color: #343945;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_brand,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_title_main,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_welcome h1,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_message,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_message_content,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_text_heading,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_text_block,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_text_list,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_msg_text,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_code_block,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_code_block code {
+    color: #e4e6eb;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_title_sub,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_history_label,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_history_empty,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_welcome p,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_thinking,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_context_hint,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_disclaimer {
+    color: #aeb6c2;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_new_chat,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_prompt_card,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_smart_action,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_model_select,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_model_select option,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_composer,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_msg_text code,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_code_block {
+    color: #e4e6eb;
+    background: #20232b;
+    border-color: #454c59;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_new_chat:hover,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_prompt_card:hover,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_smart_action:hover:not(:disabled),
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_history_item:hover,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_account:hover,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_icon_button:hover {
+    color: #fff;
+    background: #343946;
+    border-color: #5b6371;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_history_item,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_new_chat,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_account,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_icon_button {
+    color: #d8dce3;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_history_item.is-active,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_history_item:focus-visible {
+    color: #fff;
+    background: #51404f;
+    box-shadow: inset 3px 0 0 #d6a6ce;
+    font-weight: 600;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_current_badge {
+    color: #1b1e25;
+    background: #d6a6ce;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_model_select {
+    color-scheme: dark;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_model_select:focus,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_composer:focus-within {
+    border-color: #b790aa;
+    box-shadow: 0 0 0 2px rgba(183, 144, 170, 0.24);
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_message.is-user .o_dolan_ai_message_content {
+    color: #f1f3f5;
+    background: #303640;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_message.is-assistant .o_dolan_ai_message_content {
+    color: #e4e6eb;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_assistant_mark,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_brand_mark {
+    background: #29242d;
+    border-color: #51404f;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_account_avatar {
+    background: #51404f;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_sidebar_bottom {
+    border-color: #343945;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_status {
+    color: #c2c8d0;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_status:hover {
+    background: #343946;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_status.is-connected { color: #72d29a; }
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_status.is-disconnected { color: #f2c66d; }
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_status.is-expired { color: #ffab83; }
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_icon_button:hover {
+    color: #fff;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_composer textarea {
+    color: #e4e6eb;
+    caret-color: #f1f3f5;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_composer textarea::placeholder {
+    color: #9aa3af;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_send {
+    color: #fff;
+    background: linear-gradient(135deg, #825a79 0%, #078c90 100%);
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_voice {
+    color: #d9cbd6;
+    border-color: #4b4653;
+    background: #292e37;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_voice:hover:not(:disabled) {
+    color: #9be2e2;
+    border-color: #3c8588;
+    background: #213439;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_voice.is-recording {
+    color: #fff;
+    border-color: #c43d55;
+    background: #c43d55;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_send:not(:disabled):hover {
+    filter: brightness(1.12);
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_send:disabled {
+    color: #8f96a1;
+    background: #343946;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_floating_pill {
+    background: #20232b;
+    border-color: #51404f;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_floating_pill .o_dolan_ai_pill_close {
+    color: #e4e6eb;
+    background: #343946;
+    border-color: #555d6b;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_floating_pill .o_dolan_ai_pill_close:hover {
+    color: #fff;
+    background: #51404f;
+}
+
+/* Apply the dark palette to every surface in both floating and maximized chat.
+   The explicit important overrides also beat light component styles loaded by
+   Bootstrap/Odoo after this asset. */
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_sidebar,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_main,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_header,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_body,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_footer,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_conversation,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_welcome {
+    color: #e4e6eb !important;
+    background-color: #171a20 !important;
+    border-color: #3a404c !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_sidebar {
+    background-color: #1b1e25 !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_brand,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_title_main,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_welcome h1,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_message,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_message_content,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_msg_text,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_text_heading,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_text_block,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_text_list,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_disclaimer {
+    color: #e4e6eb !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_title_sub,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_history_label,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_history_empty,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_welcome p,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_thinking,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_context_hint {
+    color: #aeb6c2 !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_header,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_sidebar_bottom {
+    border-color: #343945 !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_new_chat,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_prompt_card,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_smart_action,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_model_select,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_composer,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_msg_text code,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_code_block,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_message.is-user .o_dolan_ai_message_content {
+    color: #e4e6eb !important;
+    background-color: #20232b !important;
+    border-color: #454c59 !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_history_item,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_delete_chat,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_account,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_icon_button {
+    color: #d8dce3 !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_history_item:hover,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_delete_chat:hover,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_account:hover,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_new_chat:hover,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_prompt_card:hover,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_smart_action:hover:not(:disabled),
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_icon_button:hover {
+    color: #ffffff !important;
+    background-color: #343946 !important;
+    border-color: #5b6371 !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_history_item.is-active,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_history_item:focus-visible {
+    color: #ffffff !important;
+    background-color: #51404f !important;
+    box-shadow: inset 3px 0 0 #d6a6ce !important;
+    font-weight: 600 !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_history_row .o_dolan_ai_delete_chat {
+    color: #e4e6eb !important;
+    background-color: #343946 !important;
+    border-color: #535b69 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_history_row .o_dolan_ai_delete_chat:hover {
+    color: #fff !important;
+    background-color: #762f38 !important;
+    border-color: #b85b65 !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_composer textarea,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_model_select,
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_model_select option {
+    color: #e4e6eb !important;
+    background-color: #20232b !important;
+    color-scheme: dark;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_composer textarea::placeholder {
+    color: #9aa3af !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .o_dolan_ai_send {
+    color: #ffffff !important;
+    background-color: #714b67 !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .alert-warning {
+    color: #f2d9a6 !important;
+    background-color: #3a3022 !important;
+    border-color: #6a5638 !important;
+}

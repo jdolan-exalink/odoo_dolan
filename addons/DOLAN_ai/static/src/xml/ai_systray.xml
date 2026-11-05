@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="DOLAN_ai.DolanAiSystray">
+        <div class="o_dolan_ai_systray d-flex align-items-center">
+            <button type="button"
+                    class="btn btn-sm o_nav_entry d-flex align-items-center gap-1 px-2 py-1"
+                    title="Abrir ChatGPT / Copilot de DOLAN"
+                    t-on-click="() => this.toggleDrawer()">
+                <img src="/DOLAN_ai/static/description/icon.svg" class="o_dolan_ai_systray_icon" alt="IA" width="20" height="20"/>
+                <span class="d-none d-md-inline fw-semibold">ChatGPT</span>
+            </button>
+
+            <!-- Floating Minimized Pill Widget (Clean circle without text) -->
+            <t t-if="this.state.isMinimized and !this.state.isOpen">
+                <div class="o_dolan_ai_floating_pill"
+                     role="button"
+                     tabindex="0"
+                     title="Abrir DOLAN ChatGPT"
+                     t-on-click="() => this.restoreFromMinimized()">
+                    <img src="/DOLAN_ai/static/description/icon.svg" class="o_dolan_ai_pill_icon" alt="ChatGPT" width="28" height="28"/>
+                    <span class="o_dolan_ai_status_dot" t-att-class="this.state.provider.oauth_status === 'connected' ? 'is-connected' : 'is-disconnected'"/>
+                    <button type="button" class="o_dolan_ai_pill_close" title="Cerrar" t-on-click.stop="() => this.closeMinimized()">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+            </t>
+
+            <t t-if="this.state.isOpen">
+                <section class="o_dolan_ai_drawer" t-att-class="{'is-maximized': this.state.isMaximized, 'is-floating': !this.state.isMaximized}" role="dialog" aria-label="ChatGPT de DOLAN">
+                    <aside class="o_dolan_ai_sidebar" t-att-class="{'is-visible': this.state.showSidebar}">
+                        <div class="o_dolan_ai_brand">
+                            <span class="o_dolan_ai_brand_mark" aria-hidden="true">
+                                <img src="/DOLAN_ai/static/description/icon.svg" alt="DOLAN AI" width="20" height="20"/>
+                            </span>
+                            <span>DOLAN AI</span>
+                        </div>
+                        <button type="button" class="o_dolan_ai_new_chat"
+                                t-on-click="() => this.startNewConversation()">
+                            <span class="o_dolan_ai_plus" aria-hidden="true">+</span><span>Nuevo chat</span>
+                        </button>
+                        <div class="o_dolan_ai_history_label">Recientes</div>
+                        <nav class="o_dolan_ai_history" aria-label="Conversaciones recientes">
+                            <t t-foreach="this.state.sessions" t-as="session" t-key="session.id">
+                                <div class="o_dolan_ai_history_row">
+                                    <button type="button" class="o_dolan_ai_history_item"
+                                            t-att-class="session.id === this.state.sessionId ? 'is-active' : ''"
+                                            t-att-aria-current="session.id === this.state.sessionId ? 'page' : false"
+                                            t-att-title="session.id === this.state.sessionId ? 'Conversación actual: ' + session.name : session.name"
+                                            t-on-click="() => this.openConversation(session)">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                        </svg>
+                                        <span t-out="session.name"/>
+                                        <span t-if="session.id === this.state.sessionId"
+                                              class="o_dolan_ai_current_badge"
+                                              aria-label="Conversación actual">Actual</span>
+                                    </button>
+                                    <button type="button" class="o_dolan_ai_delete_chat"
+                                            t-att-title="'Borrar conversación: ' + session.name"
+                                            aria-label="Borrar conversación"
+                                            t-att-disabled="this.state.isLoading"
+                                            t-on-click="(ev) => this.deleteConversation(session, ev)">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                             stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                             stroke-linejoin="round" aria-hidden="true">
+                                            <polyline points="3 6 5 6 21 6"/>
+                                            <path d="m19 6-1 14H6L5 6"/>
+                                            <path d="M10 11v6M14 11v6"/>
+                                            <path d="M9 6V4h6v2"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </t>
+                            <div t-if="!this.state.sessions.length" class="o_dolan_ai_history_empty">
+                                Tus conversaciones aparecerán aquí.
+                            </div>
+                        </nav>
+                        <div class="o_dolan_ai_sidebar_bottom">
+                            <button type="button" class="o_dolan_ai_account" t-on-click="() => this.openOAuthConfig()">
+                                <span class="o_dolan_ai_account_avatar">
+                                    <img src="/DOLAN_ai/static/description/icon.svg" alt="IA" width="16" height="16"/>
+                                </span>
+                                <span class="o_dolan_ai_account_label">Configuración IA</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="5" cy="12" r="2"/>
+                                    <circle cx="12" cy="12" r="2"/>
+                                    <circle cx="19" cy="12" r="2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </aside>
+
+                    <button t-if="this.state.showSidebar and !this.state.isMaximized"
+                            type="button"
+                            class="o_dolan_ai_sidebar_backdrop"
+                            aria-label="Cerrar historial de conversaciones"
+                            t-on-click="() => this.closeSidebar()"/>
+
+                    <main class="o_dolan_ai_main">
+                        <header class="o_dolan_ai_header">
+                            <!-- Left: Hamburger + Logo + Title (ChatGPT) + Small Model Subtitle -->
+                            <div class="o_dolan_ai_header_left">
+                                <button type="button" class="o_dolan_ai_icon_button"
+                                        title="Historial de chats" aria-label="Historial de chats"
+                                        t-on-click="() => this.toggleSidebar()">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                                    </svg>
+                                </button>
+                                <img src="/DOLAN_ai/static/description/icon.svg" alt="ChatGPT" width="28" height="28" class="o_dolan_ai_header_logo"/>
+                                <div class="o_dolan_ai_title_col">
+                                    <span class="o_dolan_ai_title_main">ChatGPT</span>
+                                    <span class="o_dolan_ai_title_sub" t-out="this.state.provider.model || 'gpt-4o'"/>
+                                </div>
+                            </div>
+
+                            <!-- Right: Window Controls Row (Top) + Green LED & Model Selector (Bottom) -->
+                            <div class="o_dolan_ai_header_right">
+                                <div class="o_dolan_ai_ctrl_row">
+                                    <button type="button" class="o_dolan_ai_icon_button"
+                                            title="Minimizar (seguir navegando)" aria-label="Minimizar chat"
+                                            t-on-click="() => this.minimizeDrawer()">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                            <line x1="5" y1="12" x2="19" y2="12"/>
+                                        </svg>
+                                    </button>
+                                    <button type="button" class="o_dolan_ai_icon_button"
+                                            t-att-title="this.state.isMaximized ? 'Restaurar flotante' : 'Maximizar'"
+                                            t-on-click="() => this.toggleMaximize()">
+                                        <t t-if="this.state.isMaximized">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="4" y="8" width="12" height="12" rx="2"/>
+                                                <path d="M8 4h10a2 2 0 0 1 2 2v10"/>
+                                            </svg>
+                                        </t>
+                                        <t t-else="">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                            </svg>
+                                        </t>
+                                    </button>
+                                    <button type="button" class="o_dolan_ai_icon_button" title="Configuración IA" aria-label="Configuración IA"
+                                            t-on-click="() => this.openOAuthConfig()">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="3"/>
+                                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                                        </svg>
+                                    </button>
+                                    <button type="button" class="o_dolan_ai_icon_button o_dolan_ai_close_button" title="Cerrar chat" aria-label="Cerrar chat"
+                                            t-on-click="() => this.closeDrawer()">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18"/>
+                                            <line x1="6" y1="6" x2="18" y2="18"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="o_dolan_ai_model_row">
+                                    <span class="o_dolan_ai_led" t-att-class="this.state.provider.oauth_status === 'connected' ? 'is-connected' : 'is-disconnected'" title="Modelo conectado activo"/>
+                                    <select class="o_dolan_ai_model_select" t-on-change="(ev) => this.onModelSelect(ev)" title="Seleccionar modelo de ChatGPT">
+                                        <t t-foreach="this.state.availableModels || []" t-as="m" t-key="m.id">
+                                            <option t-att-value="m.id" t-att-selected="this.state.provider.model === m.id">
+                                                <t t-out="m.name || m.id"/>
+                                            </option>
+                                        </t>
+                                        <t t-if="!this.state.availableModels or !this.state.availableModels.length">
+                                            <option t-att-value="this.state.provider.model" selected="selected"><t t-out="this.state.provider.model"/></option>
+                                        </t>
+                                    </select>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div t-if="this.state.uiError" class="alert alert-warning mx-3 mt-2 mb-0" role="alert">
+                            <t t-out="this.state.uiError"/>
+                        </div>
+                        <div class="o_dolan_ai_body" t-ref="this.chatBody">
+                            <div class="o_dolan_ai_conversation">
+                                <t t-if="!this.state.messages.length">
+                                    <div class="o_dolan_ai_welcome">
+                                        <h1>¿En qué puedo ayudarte?</h1>
+                                        <p>Pedí resúmenes de facturación, ventas, clientes o tu operación en Odoo.</p>
+                                        <t t-if="this.state.promptButtons.length">
+                                            <div class="o_dolan_ai_prompt_grid">
+                                                <t t-foreach="this.state.promptButtons.slice(0, 6)" t-as="btn" t-key="btn.id">
+                                                    <button type="button" class="o_dolan_ai_prompt_card"
+                                                            t-on-click="() => this.sendPromptButton(btn)">
+                                                        <span t-out="btn.name"/>
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                            <line x1="12" y1="19" x2="12" y2="5"/>
+                                                            <polyline points="5 12 12 5 19 12"/>
+                                                        </svg>
+                                                    </button>
+                                                </t>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </t>
+
+                                <t t-foreach="this.state.messages" t-as="msg" t-key="msg.id">
+                                    <article t-attf-class="o_dolan_ai_message {{ msg.role === 'user' ? 'is-user' : 'is-assistant' }}">
+                                        <div t-if="msg.role !== 'user'" class="o_dolan_ai_assistant_mark">
+                                            <img src="/DOLAN_ai/static/description/icon.svg" alt="AI" width="20" height="20"/>
+                                        </div>
+                                        <div class="o_dolan_ai_message_content">
+                                            <div class="o_dolan_ai_msg_text">
+                                                <t t-foreach="this.messageBlocks(msg.content)" t-as="block" t-key="block_index">
+                                                    <pre t-if="block.type === 'code'" class="o_dolan_ai_code_block"><code t-out="block.content"/></pre>
+                                                    <h4 t-elif="block.type === 'heading'" class="o_dolan_ai_text_heading">
+                                                        <t t-foreach="this.inlineMessageParts(block.content)" t-as="part" t-key="part_index">
+                                                            <strong t-if="part.type === 'bold'" t-out="part.content"/>
+                                                            <code t-elif="part.type === 'inline_code'" t-out="part.content"/>
+                                                            <a t-elif="part.type === 'link'" t-att-href="part.href" target="_blank" rel="noopener noreferrer" t-out="part.content"/>
+                                                            <t t-else="" t-out="part.content"/>
+                                                        </t>
+                                                    </h4>
+                                                    <ul t-elif="block.type === 'list'" class="o_dolan_ai_text_list">
+                                                        <li t-foreach="block.items" t-as="item" t-key="item_index">
+                                                            <t t-foreach="this.inlineMessageParts(item)" t-as="part" t-key="part_index">
+                                                                <strong t-if="part.type === 'bold'" t-out="part.content"/>
+                                                                <code t-elif="part.type === 'inline_code'" t-out="part.content"/>
+                                                                <a t-elif="part.type === 'link'" t-att-href="part.href" target="_blank" rel="noopener noreferrer" t-out="part.content"/>
+                                                                <t t-else="" t-out="part.content"/>
+                                                            </t>
+                                                        </li>
+                                                    </ul>
+                                                    <p t-else="" class="o_dolan_ai_text_block">
+                                                        <t t-foreach="this.inlineMessageParts(block.content)" t-as="part" t-key="part_index">
+                                                            <strong t-if="part.type === 'bold'" t-out="part.content"/>
+                                                            <code t-elif="part.type === 'inline_code'" t-out="part.content"/>
+                                                            <a t-elif="part.type === 'link'" t-att-href="part.href" target="_blank" rel="noopener noreferrer" t-out="part.content"/>
+                                                            <t t-else="" t-out="part.content"/>
+                                                        </t>
+                                                    </p>
+                                                </t>
+                                            </div>
+                                            <div t-if="msg.usedFallback" class="o_dolan_ai_fallback_notice">
+                                                Respuesta de respaldo. <t t-if="msg.fallbackReason"><span t-out="msg.fallbackReason"/></t>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </t>
+
+                                <div t-if="this.state.isLoading" class="o_dolan_ai_thinking">
+                                    <span class="o_dolan_ai_assistant_mark" aria-hidden="true">
+                                        <img src="/DOLAN_ai/static/description/icon.svg" alt="AI" width="20" height="20"/>
+                                    </span>
+                                    <span>
+                                        <svg class="o_dolan_ai_spin me-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                            <line x1="12" y1="2" x2="12" y2="6"/>
+                                            <line x1="12" y1="18" x2="12" y2="22"/>
+                                            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/>
+                                            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
+                                            <line x1="2" y1="12" x2="6" y2="12"/>
+                                            <line x1="18" y1="12" x2="22" y2="12"/>
+                                            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/>
+                                            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
+                                        </svg>
+                                        <t t-if="this.state.isBootstrapping">Cargando conversación...</t><t t-else="">Pensando...</t>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <footer class="o_dolan_ai_footer">
+                            <div t-if="this.state.smartActions.length" class="o_dolan_ai_smart_actions" aria-label="Acciones asistidas">
+                                <button t-foreach="this.state.smartActions" t-as="action" t-key="action.code"
+                                        type="button" class="o_dolan_ai_smart_action"
+                                        t-att-title="'Envía el contexto necesario del registro abierto al proveedor de IA configurado. ' + action.label"
+                                        t-on-click="() => this.sendSmartAction(action)"
+                                        t-att-disabled="this.state.isLoading">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                                        <line x1="8" y1="6" x2="21" y2="6"/>
+                                        <line x1="8" y1="12" x2="21" y2="12"/>
+                                        <line x1="8" y1="18" x2="21" y2="18"/>
+                                        <line x1="3" y1="6" x2="3.01" y2="6"/>
+                                        <line x1="3" y1="12" x2="3.01" y2="12"/>
+                                        <line x1="3" y1="18" x2="3.01" y2="18"/>
+                                    </svg>
+                                    <span t-out="action.label"/>
+                                </button>
+                            </div>
+                            <div class="o_dolan_ai_composer">
+                                <textarea t-ref="this.composerInput" rows="1"
+                                          placeholder="Preguntá lo que quieras"
+                                          t-att-value="this.state.inputText"
+                                          t-on-input="(ev) => this.onInputText(ev)"
+                                          t-on-keydown="(ev) => this.onInputKeydown(ev)"/>
+                                <div class="o_dolan_ai_composer_actions">
+                                    <span class="o_dolan_ai_context_hint">Solo lectura · datos de Odoo</span>
+                                    <div class="o_dolan_ai_composer_buttons">
+                                        <button type="button" class="o_dolan_ai_voice"
+                                                t-att-class="{'is-recording': this.state.isRecording}"
+                                                t-att-title="this.state.isTranscribing ? 'Transcribiendo con Whisper…' : (this.state.isRecording ? 'Detener dictado' : 'Dictar con Whisper')"
+                                                t-att-aria-label="this.state.isRecording ? 'Detener dictado' : 'Dictar con Whisper'"
+                                                t-att-disabled="this.state.isTranscribing || this.state.isLoading"
+                                                t-on-click="() => this.toggleVoiceInput()">
+                                            <svg t-if="!this.state.isRecording" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="9" y="2" width="6" height="12" rx="3"/>
+                                                <path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/>
+                                            </svg>
+                                            <svg t-else="" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                                                <rect x="6" y="6" width="12" height="12" rx="2"/>
+                                            </svg>
+                                        </button>
+                                    <button type="button" class="o_dolan_ai_send"
+                                            t-att-disabled="this.state.isLoading || !this.state.inputText.trim()"
+                                            title="Enviar mensaje" t-on-click="() => this.sendMessage()">
+                                        <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21.5 2.5 14 21l-3.5-7.5L3 10l18.5-7.5Z"/>
+                                            <path d="M21.5 2.5 10.5 13.5"/>
+                                        </svg>
+                                    </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_dolan_ai_disclaimer">La IA puede cometer errores. Verificá los datos importantes.</div>
+                        </footer>
+                    </main>
+                </section>
+            </t>
+        </div>
+    </t>
+</templates>

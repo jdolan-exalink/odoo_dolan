@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ePOS_print.EposPrintTest">
+        <main class="o_epos_print_test p-3 p-md-5">
+            <section class="o_epos_print_card">
+                <header class="o_epos_print_header">
+                    <div class="o_epos_print_icon"><i class="fa fa-print" aria-hidden="true"/></div>
+                    <div>
+                        <span class="o_epos_print_eyebrow">ePOS Print · Prueba de equipo</span>
+                        <h1 t-esc="this.params.name"/>
+                        <div class="o_epos_print_subtitle"><t t-esc="this.params.print_protocol === 'escpos_bridge' ? 'ESC/POS por puente' : 'Epson ePOS'"/> · <t t-esc="this.params.printer_ip"/></div>
+                        <div t-if="this.params.device_host" class="o_epos_print_subtitle">Destino: <t t-esc="this.params.device_host"/> · <t t-esc="this.params.use_type === 'preparation' ? 'Cocina / comandas' : 'Recibos'"/></div>
+                    </div>
+                </header>
+                <div class="o_epos_print_state" role="status" aria-live="polite">
+                    <span t-att-class="'o_epos_led o_epos_led_' + this.state.result" aria-hidden="true"/>
+                    <strong t-esc="this.state.status"/>
+                </div>
+                <p class="o_epos_print_detail" t-esc="this.state.detail"/>
+                <div class="o_epos_print_actions">
+                    <button class="btn btn-primary" t-att-disabled="this.state.busy || !this.params.printer_id" t-on-click="() => this.printTest()">
+                        <i class="fa fa-print me-2" aria-hidden="true"/>
+                        <t t-esc="this.state.busy ? 'Imprimiendo…' : 'Imprimir ticket de prueba'"/>
+                    </button>
+                </div>
+                <p class="o_epos_print_note">El botón imprime una muestra física. No genera ventas, pagos ni comandas.</p>
+            </section>
+        </main>
+    </t>
+</templates>

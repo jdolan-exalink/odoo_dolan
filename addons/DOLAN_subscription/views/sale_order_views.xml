@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extensión de vista Formulario de Pedido de Venta con Smart Button de Suscripción -->
+    <record id="view_order_form_inherit_dolan_subscription" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.dolan.subscription</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Smart Button en el header del formulario -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_subscription"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-refresh"
+                        invisible="not dolan_subscription_id">
+                    <field name="subscription_count" widget="statinfo" string="Suscripción"/>
+                </button>
+            </xpath>
+
+            <!-- Campos de suscripción en pestaña de Información u Otra Info -->
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="is_subscription"/>
+                <field name="subscription_plan_id" invisible="not is_subscription"/>
+                <field name="dolan_subscription_id" readonly="1" invisible="not dolan_subscription_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

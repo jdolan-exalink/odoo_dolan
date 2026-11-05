@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_account_loan_list" model="ir.ui.view">
+        <field name="name">dolan.account.loan.list</field>
+        <field name="model">dolan.account.loan</field>
+        <field name="arch" type="xml">
+            <list string="Préstamos Financieros y Bancarios">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="start_date"/>
+                <field name="amortization_system"/>
+                <field name="principal_amount"/>
+                <field name="total_interest_amount"/>
+                <field name="outstanding_principal"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'running'"
+                       decoration-muted="state == 'paid'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_account_loan_line_list" model="ir.ui.view">
+        <field name="name">dolan.account.loan.line.report.list</field>
+        <field name="model">dolan.account.loan.line</field>
+        <field name="arch" type="xml">
+            <list string="Análisis de Préstamos" create="false" edit="false" delete="false">
+                <field name="loan_id"/>
+                <field name="sequence"/>
+                <field name="date"/>
+                <field name="principal_amount" sum="Total capital"/>
+                <field name="interest_amount" sum="Total interés"/>
+                <field name="total_amount" sum="Total cuotas"/>
+                <field name="remaining_principal"/>
+                <field name="move_id"/>
+                <field name="currency_id" column_invisible="True"/>
+                <button name="action_post_installment_move" type="object" string="Contabilizar pago" icon="fa-check" invisible="bool(move_id)"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_account_loan_form" model="ir.ui.view">
+        <field name="name">dolan.account.loan.form</field>
+        <field name="model">dolan.account.loan</field>
+        <field name="arch" type="xml">
+            <form string="Préstamo Financiero / Bancario">
+                <header>
+                    <button name="action_compute_schedule"
+                            type="object"
+                            string="Calcular Cuadro de Cuotas"
+                            class="btn-secondary"
+                            invisible="state == 'paid'"/>
+                    <button name="action_confirm"
+                            type="object"
+                            string="Confirmar Préstamo"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_disburse"
+                            type="object"
+                            string="Registrar Desembolso"
+                            class="btn-primary"
+                            invisible="state != 'running' or bool(disbursement_move_id)"/>
+                    <button name="action_close"
+                            type="object"
+                            string="Marcar como Cancelado"
+                            class="btn-secondary"
+                            invisible="state != 'running'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,running,paid"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Ej. Préstamo PyME Banco Nación #001..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Condiciones Financieras">
+                            <field name="partner_id"/>
+                            <field name="company_id"/>
+                            <field name="currency_id"/>
+                            <field name="start_date"/>
+                            <field name="amortization_system"/>
+                            <field name="principal_amount"/>
+                            <field name="annual_interest_rate"/>
+                            <field name="installment_count"/>
+                        </group>
+                        <group string="Contabilización y Totales">
+                            <field name="journal_id"/>
+                            <field name="liability_account_id"/>
+                            <field name="interest_account_id"/>
+                            <field name="liquidity_account_id"/>
+                            <field name="total_interest_amount"/>
+                            <field name="total_payable_amount"/>
+                            <field name="outstanding_principal"/>
+                            <field name="disbursement_move_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Cuadro de Marcha (Capital + Interés)" name="schedule">
+                            <field name="line_ids">
+                                <list string="Cuotas del Préstamo" editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="date"/>
+                                    <field name="principal_amount" sum="Total Capital"/>
+                                    <field name="interest_amount" sum="Total Interés"/>
+                                    <field name="total_amount" sum="Total Cuotas"/>
+                                    <field name="remaining_principal"/>
+                                    <field name="move_id"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <button name="action_post_installment_move"
+                                            type="object"
+                                            string="Contabilizar Pago"
+                                            icon="fa-check"
+                                            invisible="bool(move_id)"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_account_loan" model="ir.actions.act_window">
+        <field name="name">Préstamos Financieros</field>
+        <field name="res_model">dolan.account.loan</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_dolan_loan_analysis" model="ir.actions.act_window">
+        <field name="name">Análisis de Préstamos</field>
+        <field name="res_model">dolan.account.loan.line</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

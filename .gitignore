@@ -1,0 +1,36 @@
+backups/*.dump
+backups/*.zip
+backups/*.tar.gz
+backups/_restore_work/
+__pycache__/
+*.pyc
+/TEST/
+/certs/
+/BACKs/
+/tmp/
+.env
+.env.*
+!.env.example
+/deployments/
+*.crt
+*.key
+*.pem
+*.dump
+backups/*.sql
+
+# Local/customer-specific operational artifacts (never publish credentials, DB snapshots, or live audit evidence).
+/Ficha de personajes GymBro coloridos.png
+/clover-latam-root.der
+/scripts/setup_admin_and_audit.py
+/scripts/enable_all_accounting_and_groups.py
+/scripts/install_all_exalink_ce.py
+/scripts/compare_exalink_vs_dolan.py
+/scripts/compare_menus_1to1.py
+/scripts/compare_menus_en_and_es.py
+/scripts/parse_exalink_rea.py
+/scripts/recover_local_arca_caes.py
+/scripts/upgrade_dolan_and_verify.py
+/scripts/exalink_*.json
+/docs/inventario_exalink_rea.json
+/docs/implementation/
+/docs/rea-audit/

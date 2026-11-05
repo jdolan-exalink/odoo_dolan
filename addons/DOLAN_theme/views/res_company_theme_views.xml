@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_dolan_theme" model="ir.ui.view">
+        <field name="name">res.company.form.dolan.theme</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Estética DOLAN (Odoo 20)" name="dolan_theme_page">
+                    <group>
+                        <group string="Colores y Diseño">
+                            <field name="dolan_primary_color" widget="color"/>
+                            <field name="dolan_secondary_color" widget="color"/>
+                            <field name="dolan_home_bg_style"/>
+                            <field name="dolan_full_width_sheets"/>
+                        </group>
+                        <group string="Orden de Aplicaciones">
+                            <button name="action_dolan_sync_menu_order"
+                                    string="Restaurar Orden de Menús Web Odoo 20"
+                                    type="object"
+                                    class="btn-primary"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,48 @@
+.o_epos_print_test {
+    min-height: 100%;
+    background: var(--o-view-background-color, #f6f7f9);
+    color: var(--o-main-text-color, #212529);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.o_epos_print_card {
+    width: 100%;
+    max-width: 760px;
+    padding: clamp(20px, 4vw, 40px);
+    border: 1px solid var(--border-color, #dee2e6);
+    border-radius: 20px;
+    background: var(--o-view-background-color, #fff);
+    box-shadow: 0 12px 40px rgba(23, 28, 40, .09);
+}
+
+.o_epos_print_header { display: flex; align-items: center; gap: 18px; }
+.o_epos_print_icon {
+    display: grid; place-items: center; flex: 0 0 58px; height: 58px;
+    border-radius: 16px; color: #fff; background: linear-gradient(135deg, #714b67, #00a09d); font-size: 24px;
+}
+.o_epos_print_eyebrow { color: #00a09d; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.o_epos_print_header h1 { margin: 2px 0; font-size: clamp(1.3rem, 3vw, 1.8rem); }
+.o_epos_print_subtitle, .o_epos_print_detail, .o_epos_print_note { color: var(--o-main-text-color, #5c636a); }
+.o_epos_print_state { display: flex; align-items: center; gap: 10px; margin-top: 30px; padding: 14px 16px; border-radius: 12px; background: var(--o-control-panel-background-color, #f5f6f8); }
+.o_epos_led { width: 12px; height: 12px; border-radius: 50%; background: #9aa0a6; box-shadow: 0 0 0 4px rgba(154, 160, 166, .15); }
+.o_epos_led_ok { background: #28a745; box-shadow: 0 0 0 4px rgba(40, 167, 69, .16); }
+.o_epos_led_error { background: #dc3545; box-shadow: 0 0 0 4px rgba(220, 53, 69, .15); }
+.o_epos_led_connecting { background: #e6a700; box-shadow: 0 0 0 4px rgba(230, 167, 0, .16); animation: epos-pulse 1s infinite; }
+.o_epos_print_detail { min-height: 48px; margin: 16px 0 24px; }
+.o_epos_print_note { margin: 20px 0 0; font-size: .85rem; }
+@keyframes epos-pulse { 50% { opacity: .45; } }
+
+body.o_dolan_dark_mode .o_epos_print_test { background: #17191f; color: #e5e7eb; }
+body.o_dolan_dark_mode .o_epos_print_card { background: #20232b; border-color: #3a3e48; }
+body.o_dolan_dark_mode .o_epos_print_header h1 { color: #f1f5f9; }
+body.o_dolan_dark_mode .o_epos_print_state { background: #292d36; }
+body.o_dolan_dark_mode .o_epos_print_subtitle,
+body.o_dolan_dark_mode .o_epos_print_detail,
+body.o_dolan_dark_mode .o_epos_print_note { color: #c2c7d0; }
+
+@media (max-width: 576px) {
+    .o_epos_print_card { border-radius: 14px; }
+    .o_epos_print_actions .btn { width: 100%; }
+}

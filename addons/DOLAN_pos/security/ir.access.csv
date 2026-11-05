@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_pos_kitchen_ticket_user,dolan.pos.kitchen.ticket.user,dolan.pos.kitchen.ticket,base.group_user,crud,
+access_dolan_pos_kitchen_ticket_line_user,dolan.pos.kitchen.ticket.line.user,dolan.pos.kitchen.ticket.line,base.group_user,crud,
+access_dolan_pos_settle_due_wizard_user,dolan.pos.settle.due.wizard.user,dolan.pos.settle.due.wizard,base.group_user,crud,

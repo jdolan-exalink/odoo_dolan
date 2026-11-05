@@ -1,0 +1,45 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_account_asset_user,dolan.account.asset.user,dolan.account.asset,account.group_account_user,cru,
+access_dolan_account_asset_user_readonly,dolan.account.asset.user.readonly,dolan.account.asset,account.group_account_readonly,r,
+access_dolan_account_asset_manager,dolan.account.asset.manager,dolan.account.asset,account.group_account_manager,crud,
+access_dolan_account_asset_line_user,dolan.account.asset.line.user,dolan.account.asset.line,account.group_account_user,crud,
+access_dolan_account_asset_line_user_readonly,dolan.account.asset.line.user.readonly,dolan.account.asset.line,account.group_account_readonly,r,
+access_dolan_account_asset_line_user_manager,dolan.account.asset.line.user.manager,dolan.account.asset.line,account.group_account_manager,crud,
+access_dolan_account_loan_user,dolan.account.loan.user,dolan.account.loan,account.group_account_user,cru,
+access_dolan_account_loan_user_readonly,dolan.account.loan.user.readonly,dolan.account.loan,account.group_account_readonly,r,
+access_dolan_account_loan_manager,dolan.account.loan.manager,dolan.account.loan,account.group_account_manager,crud,
+access_dolan_account_loan_line_user,dolan.account.loan.line.user,dolan.account.loan.line,account.group_account_user,crud,
+access_dolan_account_loan_line_user_readonly,dolan.account.loan.line.user.readonly,dolan.account.loan.line,account.group_account_readonly,r,
+access_dolan_account_loan_line_user_manager,dolan.account.loan.line.user.manager,dolan.account.loan.line,account.group_account_manager,crud,
+access_dolan_followup_level_user,dolan.followup.level.user,dolan.followup.level,account.group_account_user,crud,
+access_dolan_followup_level_user_readonly,dolan.followup.level.user.readonly,dolan.followup.level,account.group_account_readonly,r,
+access_dolan_followup_level_user_manager,dolan.followup.level.user.manager,dolan.followup.level,account.group_account_manager,crud,
+access_dolan_bank_statement_import_wizard_user,dolan.bank.statement.import.wizard.user,dolan.bank.statement.import.wizard,account.group_account_user,crud,
+access_dolan_bank_statement_import_wizard_user_manager,dolan.bank.statement.import.wizard.user.manager,dolan.bank.statement.import.wizard,account.group_account_manager,crud,
+access_dolan_bank_reconciliation_wizard_user,dolan.bank.reconciliation.wizard.user,dolan.bank.reconciliation.wizard,account.group_account_user,crud,
+access_dolan_bank_reconciliation_wizard_user_manager,dolan.bank.reconciliation.wizard.user.manager,dolan.bank.reconciliation.wizard,account.group_account_manager,crud,
+access_dolan_bank_reconciliation_line_user,dolan.bank.reconciliation.line.user,dolan.bank.reconciliation.line,account.group_account_user,crud,
+access_dolan_bank_reconciliation_line_user_manager,dolan.bank.reconciliation.line.user.manager,dolan.bank.reconciliation.line,account.group_account_manager,crud,
+access_dolan_financial_report_wizard_user,dolan.financial.report.wizard.user,dolan.financial.report.wizard,account.group_account_user,crud,
+access_dolan_financial_report_wizard_user_manager,dolan.financial.report.wizard.user.manager,dolan.financial.report.wizard,account.group_account_manager,crud,
+access_dolan_financial_report_wizard_user_readonly,dolan.financial.report.wizard.user.readonly,dolan.financial.report.wizard,account.group_account_readonly,crud,
+access_dolan_financial_report_line_user,dolan.financial.report.line.user,dolan.financial.report.line,account.group_account_user,crud,
+access_dolan_financial_report_line_user_manager,dolan.financial.report.line.user.manager,dolan.financial.report.line,account.group_account_manager,crud,
+access_dolan_financial_report_line_user_readonly,dolan.financial.report.line.user.readonly,dolan.financial.report.line,account.group_account_readonly,crud,
+access_dolan_bank_payment_export_wizard_user,dolan.bank.payment.export.wizard.user,dolan.bank.payment.export.wizard,account.group_account_user,crud,
+access_dolan_bank_payment_export_wizard_manager,dolan.bank.payment.export.wizard.manager,dolan.bank.payment.export.wizard,account.group_account_manager,crud,
+access_dolan_mercadopago_settlement_wizard_user,dolan.mercadopago.settlement.wizard.user,dolan.mercadopago.settlement.wizard,account.group_account_user,crud,
+access_dolan_mercadopago_settlement_wizard_manager,dolan.mercadopago.settlement.wizard.manager,dolan.mercadopago.settlement.wizard,account.group_account_manager,crud,
+access_dolan_fiscal_year_close_wizard_user,dolan.account.fiscal.year.close.wizard.user,dolan.account.fiscal.year.close.wizard,account.group_account_user,crud,
+access_dolan_fiscal_year_close_wizard_manager,dolan.account.fiscal.year.close.wizard.manager,dolan.account.fiscal.year.close.wizard,account.group_account_manager,crud,
+access_dolan_followup_level_invoice_read,dolan.followup.level.invoice.read,dolan.followup.level,account.group_account_invoice,r,
+dolan_dolan_account_asset_company_rule,dolan.account.asset.company.rule,dolan.account.asset,,crud,"[('company_id', 'in', company_ids)]"
+dolan_dolan_account_asset_line_company_rule,dolan.account.asset.line.company.rule,dolan.account.asset.line,,crud,"[('asset_id.company_id', 'in', company_ids)]"
+dolan_dolan_account_loan_company_rule,dolan.account.loan.company.rule,dolan.account.loan,,crud,"[('company_id', 'in', company_ids)]"
+dolan_dolan_account_loan_line_company_rule,dolan.account.loan.line.company.rule,dolan.account.loan.line,,crud,"[('loan_id.company_id', 'in', company_ids)]"
+dolan_dolan_followup_level_company_rule,dolan.followup.level.company.rule,dolan.followup.level,,crud,"[('company_id', 'in', company_ids)]"
+dolan_dolan_bank_statement_import_wizard_company_rule,dolan.bank.statement.import.wizard.company.rule,dolan.bank.statement.import.wizard,,crud,"[('journal_id.company_id', 'in', company_ids)]"
+dolan_dolan_bank_reconciliation_wizard_company_rule,dolan.bank.reconciliation.wizard.company.rule,dolan.bank.reconciliation.wizard,,crud,"[('journal_id.company_id', 'in', company_ids)]"
+dolan_dolan_bank_reconciliation_line_company_rule,dolan.bank.reconciliation.line.company.rule,dolan.bank.reconciliation.line,,crud,"[('wizard_id.journal_id.company_id', 'in', company_ids)]"
+dolan_dolan_financial_report_wizard_company_rule,dolan.financial.report.wizard.company.rule,dolan.financial.report.wizard,,crud,"[('company_id', 'in', company_ids)]"
+dolan_dolan_financial_report_line_company_rule,dolan.financial.report.line.company.rule,dolan.financial.report.line,,crud,"[('wizard_id.company_id', 'in', company_ids)]"

@@ -1,0 +1,12 @@
+id,name,model_id,group_id/id,operation,domain
+access_l10n_ar_afipws_connection_user,l10n_ar.afipws.connection.user,l10n_ar.afipws.connection,account.group_account_invoice,cru,
+access_l10n_ar_afipws_connection_manager,l10n_ar.afipws.connection.manager,l10n_ar.afipws.connection,account.group_account_manager,crud,
+access_l10n_ar_afip_ws_consult_user,l10n_ar_afip.ws.consult.user,l10n_ar_afip.ws.consult,account.group_account_invoice,crud,
+access_l10n_ar_libro_iva_digital_wizard_user,l10n_ar.libro.iva.digital.wizard.user,l10n_ar.libro.iva.digital.wizard,account.group_account_invoice,crud,
+access_l10n_ar_fiscal_report_wizard_user,l10n_ar.fiscal.report.wizard.user,l10n_ar.fiscal.report.wizard,account.group_account_invoice,crud,
+access_l10n_ar_fiscal_report_line_user,l10n_ar.fiscal.report.line.user,l10n_ar.fiscal.report.line,account.group_account_invoice,cru,
+access_dolan_iibb_padron_user,dolan.iibb.padron.user,dolan.iibb.padron,account.group_account_invoice,cru,
+access_dolan_iibb_padron_manager,dolan.iibb.padron.manager,dolan.iibb.padron,account.group_account_manager,crud,
+access_dolan_iibb_padron_import_wizard_user,dolan.iibb.padron.import.wizard.user,dolan.iibb.padron.import.wizard,account.group_account_invoice,crud,
+access_dolan_retention_certificate_user,dolan.retention.certificate.user,dolan.retention.certificate,account.group_account_invoice,cru,
+access_dolan_retention_certificate_manager,dolan.retention.certificate.manager,dolan.retention.certificate,account.group_account_manager,crud,

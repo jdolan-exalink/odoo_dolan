@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="DOLAN_payment_terminal.TerminalProbe">
+        <div class="o_action o_dolan_terminal_probe p-3 p-md-5 overflow-auto">
+            <section class="o_dolan_terminal_probe_card">
+                <header class="o_dolan_terminal_probe_header">
+                    <img src="/DOLAN_payment_terminal/static/description/clover.svg" alt="Clover"/>
+                    <div><span class="o_dolan_terminal_eyebrow">Terminal de cobro</span><h2 t-esc="this.props.action.params.name"/></div>
+                </header>
+                <div class="o_dolan_terminal_probe_status" role="status" aria-live="polite">
+                    <span t-att-class="'dolan_terminal_led dolan_terminal_led_' + this.state.connection" aria-hidden="true"/>
+                    <strong t-esc="this.state.status"/>
+                </div>
+                <p class="o_dolan_terminal_probe_detail" t-esc="this.state.detail"/>
+                <p t-if="this.state.pairingCode" class="o_dolan_terminal_pair_code">Código de emparejamiento <strong t-esc="this.state.pairingCode"/></p>
+                <div class="o_dolan_terminal_probe_actions">
+                    <button class="btn btn-outline-secondary" t-on-click="() => this.test()">Reconectar</button>
+                    <button class="btn btn-secondary" t-if="this.state.connection === 'connected'" t-att-disabled="this.state.pairing === 'pending' || this.state.pairing === 'paired'" t-on-click="() => this.pair()">Emparejar Clover</button>
+                    <button class="btn btn-primary" t-if="this.state.pairing === 'paired'" t-att-disabled="this.state.paymentBusy" t-on-click="() => this.testPayment()">Enviar prueba real de $10 ARS</button>
+                </div>
+                <p class="o_dolan_terminal_probe_note">Conectar y emparejar no cobran. La prueba de $10 sí inicia un cobro real en la terminal.</p>
+            </section>
+        </div>
+    </t>
+    <t t-name="DOLAN_payment_terminal.CloverPairStatus">
+        <span class="o_dolan_pair_status" role="status" t-att-title="this.state.connectionLabel">
+            <span t-att-class="'o_dolan_pair_pill ' + (this.state.linked ? 'is-linked' : '')">
+                <span class="o_dolan_pair_icon" aria-hidden="true"><t t-if="this.state.linked">✓</t><t t-else="">•</t></span>
+                <span class="o_dolan_pair_status_label" t-esc="this.state.status"/>
+            </span>
+            <small t-if="this.props.record.data.provider === 'clover'" class="o_dolan_pair_status_detail" t-esc="this.state.connectionLabel"/>
+        </span>
+    </t>
+    <t t-name="DOLAN_payment_terminal.TerminalProviderBadge">
+        <span class="o_dolan_terminal_brand" t-if="this.props.record.data.provider === 'clover'">
+            <img src="/DOLAN_payment_terminal/static/description/clover.svg" alt="Clover"/>
+            <span>Clover</span>
+        </span>
+        <span class="o_dolan_terminal_brand" t-elif="this.props.record.data.provider in ['mp_point', 'mp_qr']">
+            <img src="/DOLAN_payment_terminal/static/description/mercado_pago.svg" alt="Mercado Pago"/>
+            <span>Mercado Pago</span>
+            <small t-if="this.props.record.data.provider === 'mp_point'">Point</small>
+            <small t-else="">QR</small>
+        </span>
+        <span t-else="" class="text-muted">Sin proveedor</span>
+    </t>
+</templates>

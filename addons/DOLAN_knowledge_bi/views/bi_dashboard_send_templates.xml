@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="bi_dashboard_send_web_page" name="DOLAN BI Send PDF">
+        <html lang="es">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>Enviar informe BI</title>
+                <style>
+                    :root { color-scheme: light dark; font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+                    * { box-sizing: border-box; }
+                    body { margin: 0; background: #f4f6fa; color: #182230; }
+                    header { padding: 18px clamp(18px, 5vw, 64px); background: #20242c; color: #f5f7fa; }
+                    header a { color: inherit; text-decoration: none; }
+                    main { max-width: 760px; margin: 0 auto; padding: 36px 22px 56px; }
+                    h1 { margin: 0 0 8px; font-size: 30px; }
+                    .muted { color: #657184; line-height: 1.6; }
+                    .card { margin-top: 24px; padding: 24px; border: 1px solid #e1e6ee; border-radius: 15px; background: #fff; }
+                    label { display: block; margin: 16px 0 6px; font-weight: 650; }
+                    input, textarea { width: 100%; padding: 11px 12px; border: 1px solid #bdc7d5; border-radius: 8px; background: #fff; color: #182230; font: inherit; }
+                    textarea { min-height: 110px; resize: vertical; }
+                    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+                    button, .button { display: inline-flex; align-items: center; padding: 11px 16px; border: 1px solid #76506f; border-radius: 9px; background: #76506f; color: #fff; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
+                    button.whatsapp { border-color: #16865c; background: #16865c; }
+                    .notice { margin-top: 18px; padding: 12px 14px; border-radius: 8px; background: #eaf5ee; color: #185c32; }
+                    .error { background: #fff0ed; color: #9d2e1f; }
+                    .empty { padding: 14px; border-radius: 8px; background: #eef1f5; }
+                    @media (prefers-color-scheme: dark) {
+                        body { background: #171a20; color: #edf1f7; }
+                        .muted { color: #aab4c3; }
+                        .card { background: #222731; border-color: #384252; }
+                        input, textarea { background: #171a20; color: #edf1f7; border-color: #485568; }
+                        .empty { background: #2b313c; }
+                    }
+                </style>
+            </head>
+            <body>
+                <header><a t-att-href="'/dolan/bi/dashboard/%s' % dashboard.id">← Volver al tablero</a></header>
+                <main>
+                    <h1>Enviar tablero en PDF</h1>
+                    <div class="muted">
+                        <strong t-out="dashboard.name"/><br/>
+                        <span t-out="dashboard.company_ids.mapped('display_name') and ', '.join(dashboard.company_ids.mapped('display_name')) or dashboard.company_id.display_name"/><br/>
+                        Período: <span t-field="dashboard.date_from"/> al <span t-field="dashboard.date_to"/>
+                    </div>
+                    <div t-if="sent" class="notice">El PDF se envió correctamente.</div>
+                    <div t-if="error" class="notice error" t-out="error"/>
+                    <section class="card">
+                        <form method="post" t-att-action="'/dolan/bi/dashboard/%s/send' % dashboard.id">
+                            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+                            <label for="subject">Asunto</label>
+                            <input id="subject" name="subject" type="text" required="required" t-att-value="wizard.subject"/>
+                            <label for="message">Mensaje</label>
+                            <textarea id="message" name="message" t-out="wizard.message"/>
+
+                            <div t-if="wizard.email_available">
+                                <label for="email_to">Correo de destino</label>
+                                <input id="email_to" name="email_to" type="email" placeholder="nombre@empresa.com" t-att-value="wizard.email_to"/>
+                            </div>
+                            <div t-if="wizard.whatsapp_available">
+                                <label for="phone">WhatsApp de destino, con código de país</label>
+                                <input id="phone" name="phone" type="tel" placeholder="5493411234567" t-att-value="wizard.phone"/>
+                            </div>
+                            <div t-if="not wizard.email_available and not wizard.whatsapp_available" class="empty">
+                                No hay un servidor de correo saliente ni una sesión WAHA activa para enviar el informe.
+                            </div>
+                            <div t-if="wizard.email_available and not wizard.whatsapp_available" class="muted">Correo disponible. No se detectó una sesión WAHA activa para este tablero.</div>
+                            <div t-if="wizard.whatsapp_available and not wizard.email_available" class="muted">WhatsApp disponible. No se detectó un servidor de correo saliente.</div>
+                            <div class="actions">
+                                <button t-if="wizard.email_available" type="submit" name="channel" value="email">Enviar PDF por correo</button>
+                                <button t-if="wizard.whatsapp_available" type="submit" name="channel" value="whatsapp" class="whatsapp">Enviar PDF por WhatsApp</button>
+                                <a class="button" t-att-href="'/dolan/bi/dashboard/%s' % dashboard.id">Cancelar</a>
+                            </div>
+                        </form>
+                    </section>
+                </main>
+            </body>
+        </html>
+    </template>
+</odoo>

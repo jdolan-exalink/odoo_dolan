@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_account_fiscal_year_close_wizard_form" model="ir.ui.view">
+        <field name="name">dolan.account.fiscal.year.close.wizard.form</field>
+        <field name="model">dolan.account.fiscal.year.close.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cierre de Ejercicio y Refundición de Cuentas">
+                <field name="currency_id" invisible="1"/>
+                <field name="state" invisible="1"/>
+
+                <div class="alert alert-info" role="alert" invisible="state != 'draft'">
+                    <strong>Asistente Oficial de Cierre Contable</strong>.
+                    Este proceso identifica todas las cuentas de pérdidas y ganancias (Ingresos, Gastos, Costos) acumuladas hasta la fecha seleccionada, genera el asiento balanceado de refundición dejándolas en saldo cero y transfiere el resultado neto (ganancia o pérdida) a la cuenta patrimonial de Resultados del Ejercicio / Acumulados.
+                </div>
+
+                <div class="alert alert-success" role="alert" invisible="state != 'done'">
+                    <strong>¡Ejercicio cerrado con éxito!</strong> Se ha generado el asiento de refundición de cuentas de resultados y el asiento de apertura para el nuevo ejercicio contable.
+                </div>
+
+                <group invisible="state != 'draft'">
+                    <group string="Período y Diario">
+                        <field name="company_id" invisible="1"/>
+                        <field name="closing_date"/>
+                        <field name="journal_id" options="{'no_create': True}"/>
+                    </group>
+                    <group string="Destino Patrimonial">
+                        <field name="retained_earnings_account_id" options="{'no_create': True}"/>
+                        <field name="create_opening_entry"/>
+                    </group>
+                </group>
+
+                <group string="Vista Previa de Resultados" invisible="account_count == 0">
+                    <group>
+                        <field name="account_count"/>
+                        <field name="total_income" widget="monetary" options="{'currency_field': 'currency_id'}" class="text-success"/>
+                        <field name="total_expense" widget="monetary" options="{'currency_field': 'currency_id'}" class="text-danger"/>
+                    </group>
+                    <group>
+                        <field name="net_result" widget="monetary" options="{'currency_field': 'currency_id'}" class="font-weight-bold"/>
+                    </group>
+                </group>
+
+                <group string="Asientos Generados" invisible="state != 'done'">
+                    <group>
+                        <field name="closing_move_id" readonly="1"/>
+                        <field name="opening_move_id" readonly="1" invisible="not opening_move_id"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button name="action_calculate_preview"
+                            string="Calcular Saldos a Refundir"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_execute_close"
+                            string="Generar Asiento de Cierre"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_account_fiscal_year_close_wizard" model="ir.actions.act_window">
+        <field name="name">Cierre de Ejercicio y Refundición</field>
+        <field name="res_model">dolan.account.fiscal.year.close.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_dolan_fiscal_year_close"
+              name="Cierre de Ejercicio (Refundición)"
+              parent="account.menu_finance_entries"
+              action="action_dolan_account_fiscal_year_close_wizard"
+              sequence="50"/>
+</odoo>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- =================================================================== -->
+    <!-- EXTENSIÓN DE VISTA: account.move (Facturas de Proveedor / Gastos)   -->
+    <!-- =================================================================== -->
+    <record id="view_move_form_dolan_ocr" model="ir.ui.view">
+        <field name="name">account.move.form.dolan.ocr</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_dolan_ocr_extract"
+                        string="Digitalizar con DOLAN IA (Sin IAP)"
+                        type="object"
+                        class="btn-secondary"
+                        icon="fa-magic"
+                        invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
+                <button name="action_dolan_ocr_apply_cae"
+                        string="Aplicar CAE revisado"
+                        type="object"
+                        class="btn-secondary"
+                        icon="fa-check"
+                        invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund', 'in_receipt') or not dolan_ocr_cae or l10n_ar_afip_auth_code == dolan_ocr_cae"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="OCR &amp; QR AFIP (DOLAN IA)"
+                      name="dolan_ocr_tab"
+                      invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt') and dolan_ocr_status == 'none'">
+                    <group>
+                        <group string="Resultado de Digitalización">
+                            <field name="dolan_ocr_status" widget="badge"
+                                   decoration-success="dolan_ocr_status in ('qr_extracted', 'ai_extracted')"
+                                   decoration-danger="dolan_ocr_status == 'error'"/>
+                            <field name="dolan_ocr_warnings" readonly="1" invisible="not dolan_ocr_warnings"/>
+                            <field name="dolan_ocr_cae" readonly="1"/>
+                            <field name="dolan_ocr_duplicate_id" readonly="1" invisible="not dolan_ocr_duplicate_id"/>
+                            <field name="dolan_ocr_duplicate_reason" readonly="1" invisible="not dolan_ocr_duplicate_id"/>
+                        </group>
+                    </group>
+                    <group string="Datos Decodificados (QR AFIP / JSON IA)" col="2">
+                        <field name="dolan_ocr_qr_payload" readonly="1"/>
+                        <field name="dolan_ocr_raw_json" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- OCR must be able to save a draft before it has extracted the vendor's
+         document type and number. Native fiscal validation still applies when
+         the bill is posted. -->
+    <record id="view_move_form_dolan_ocr_document_number" model="ir.ui.view">
+        <field name="name">account.move.form.dolan.ocr.document.number</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="l10n_latam_document_number" position="attributes">
+                <attribute name="required">False</attribute>
+            </field>
+            <field name="l10n_latam_document_type_id" position="attributes">
+                <attribute name="required">False</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!-- =================================================================== -->
+    <!-- EXTENSIÓN DE VISTA: hr.expense (Gastos y Tickets)                   -->
+    <!-- =================================================================== -->
+    <record id="view_hr_expense_form_dolan_ocr" model="ir.ui.view">
+        <field name="name">hr.expense.form.dolan.ocr</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_dolan_ocr_extract"
+                        string="Digitalizar con DOLAN IA (Sin IAP)"
+                        type="object"
+                        class="btn-secondary"
+                        icon="fa-magic"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Extracción OCR DOLAN IA" invisible="dolan_ocr_status == 'none'">
+                    <group>
+                        <field name="dolan_ocr_status" widget="badge"
+                               decoration-success="dolan_ocr_status in ('qr_extracted', 'ai_extracted')"/>
+                        <field name="dolan_ocr_warnings" readonly="1" invisible="not dolan_ocr_warnings"/>
+                        <field name="dolan_ocr_cae" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="dolan_ocr_raw_json" readonly="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

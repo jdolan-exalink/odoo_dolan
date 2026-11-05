@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Cron diario para contabilizar amortizaciones de activos fijos vencidas -->
+    <record id="ir_cron_dolan_post_due_asset_depreciations" model="ir.cron">
+        <field name="name">DOLAN Contabilidad: Contabilizar Amortizaciones de Activos Fijos</field>
+        <field name="model_id" ref="model_dolan_account_asset"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_post_due_depreciation_lines()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <!-- Niveles predeterminados de Seguimiento de Deudores -->
+    <record id="dolan_followup_level_15" model="dolan.followup.level">
+        <field name="name">1° Aviso Preventivo (15 días de mora)</field>
+        <field name="delay_days">15</field>
+        <field name="send_email" eval="True"/>
+        <field name="block_sales" eval="False"/>
+    </record>
+
+    <record id="dolan_followup_level_30" model="dolan.followup.level">
+        <field name="name">2° Reclamo Formal de Cobranza (30 días de mora)</field>
+        <field name="delay_days">30</field>
+        <field name="send_email" eval="True"/>
+        <field name="block_sales" eval="False"/>
+    </record>
+
+    <record id="dolan_followup_level_60" model="dolan.followup.level">
+        <field name="name">3° Intimación y Bloqueo Comercial (60 días de mora)</field>
+        <field name="delay_days">60</field>
+        <field name="send_email" eval="True"/>
+        <field name="block_sales" eval="True"/>
+    </record>
+</odoo>

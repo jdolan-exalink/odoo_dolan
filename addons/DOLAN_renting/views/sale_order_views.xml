@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extensión de vista Formulario de Pedido de Venta con Smart Button de Alquiler -->
+    <record id="view_order_form_inherit_dolan_renting" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.dolan.renting</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Smart Button en el header del formulario -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_rental_order"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-calendar"
+                        invisible="not dolan_rental_order_id">
+                    <field name="rental_order_count" widget="statinfo" string="Alquiler"/>
+                </button>
+            </xpath>
+
+            <!-- Fechas y switch de alquiler -->
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="is_rental_order"/>
+                <field name="rental_pickup_date" invisible="not is_rental_order"/>
+                <field name="rental_return_date" invisible="not is_rental_order"/>
+                <field name="dolan_rental_order_id" readonly="1" invisible="not dolan_rental_order_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

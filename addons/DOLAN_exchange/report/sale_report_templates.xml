@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document_dolan_bna_exchange" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@id='total']" position="after">
+            <div t-if="doc.dolan_exchange_rate" class="mt-2 small text-muted">
+                <strong>Conversión de referencia:</strong>
+                BNA Cotización Billetes, Venta ·
+                1 USD = <span t-esc="'%.4f' % doc.dolan_exchange_rate"/> ARS ·
+                fecha <span t-field="doc.dolan_exchange_rate_date"/>.
+                Cotización USD de origen: <span t-field="doc.dolan_converted_from_id"/>.
+                El tipo aplicado es informativo para esta oferta; la cotización en ARS debe revisarse antes de confirmarla.
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- In Community Edition the manager group otherwise implies only Invoicing,
+         which leaves the manager unable to open the accounting dashboard and
+         basic accounting features despite having the highest accounting role. -->
+    <record id="account.group_account_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('account.group_account_basic'))]"/>
+    </record>
+</odoo>

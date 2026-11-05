@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========================================================= -->
+    <!-- VISTAS DE TABLEROS BI (dolan.bi.dashboard & kpi.card)     -->
+    <!-- ========================================================= -->
+
+    <!-- Kanban Ejecutivo Interactivo de Tableros BI -->
+    <record id="view_dolan_bi_dashboard_kanban" model="ir.ui.view">
+        <field name="name">dolan.bi.dashboard.kanban</field>
+        <field name="model">dolan.bi.dashboard</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard" create="1" sample="1">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="dashboard_type"/>
+                <field name="company_ids"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="currency_id"/>
+                <field name="sales_month"/>
+                <field name="sales_order_count"/>
+                <field name="invoiced_month"/>
+                <field name="vat_sales"/>
+                <field name="vat_purchases"/>
+                <field name="vat_balance"/>
+                <field name="receivables_due"/>
+                <field name="payables_due"/>
+                <field name="net_cash_position"/>
+                <field name="crm_pipeline"/>
+                <field name="stock_valuation"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
+                            <div>
+                                <strong class="fs-5"><field name="name"/></strong>
+                                <div class="text-muted small"><field name="company_ids" widget="many2many_tags"/></div>
+                                <div class="text-muted small">
+                                    Período: <field name="date_from"/> al <field name="date_to"/>
+                                </div>
+                            </div>
+                            <field name="dashboard_type" widget="badge"
+                                   decoration-primary="dashboard_type == 'executive'"
+                                   decoration-success="dashboard_type == 'sales_crm'"
+                                   decoration-info="dashboard_type == 'finance'"
+                                   decoration-warning="dashboard_type == 'operations'"/>
+                        </div>
+
+                        <div t-if="dashboard_type.raw_value === 'finance'" class="row g-2 mb-2">
+                            <div class="col-4">
+                                <div class="p-2 border rounded bg-light h-100">
+                                    <div class="text-muted small">IVA Ventas</div>
+                                    <strong class="text-success"><field name="vat_sales" widget="monetary"/></strong>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 border rounded bg-light h-100">
+                                    <div class="text-muted small">IVA Compras</div>
+                                    <strong class="text-info"><field name="vat_purchases" widget="monetary"/></strong>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 border rounded bg-light h-100">
+                                    <div class="text-muted small">Saldo</div>
+                                    <strong><field name="vat_balance" widget="monetary"/></strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 my-1">
+                            <div class="col-6">
+                                <div class="p-2 border rounded bg-light">
+                                    <div class="text-muted small">Ventas del Mes</div>
+                                    <strong class="text-primary">
+                                        <field name="sales_month" widget="monetary"/>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-2 border rounded bg-light">
+                                    <div class="text-muted small">Facturación Emitida</div>
+                                    <strong class="text-success">
+                                        <field name="invoiced_month" widget="monetary"/>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-2 border rounded bg-light">
+                                    <div class="text-muted small">Ctas. por Cobrar</div>
+                                    <strong class="text-info">
+                                        <field name="receivables_due" widget="monetary"/>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-2 border rounded bg-light">
+                                    <div class="text-muted small">Ctas. por Pagar</div>
+                                    <strong class="text-danger">
+                                        <field name="payables_due" widget="monetary"/>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-2 border rounded bg-light">
+                                    <div class="text-muted small">Pipeline CRM</div>
+                                    <strong>
+                                        <field name="crm_pipeline" widget="monetary"/>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-2 border rounded bg-light">
+                                    <div class="text-muted small">Valoración Stock</div>
+                                    <strong>
+                                        <field name="stock_valuation" widget="monetary"/>
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
+                            <button name="action_refresh_kpis"
+                                    type="object"
+                                    class="btn btn-sm btn-secondary">
+                                <i class="fa fa-refresh me-1"/> Actualizar
+                            </button>
+                            <div>
+                                <button name="action_print_pdf" type="object" class="btn btn-sm btn-outline-danger me-1">
+                                    <i class="fa fa-file-pdf-o me-1"/> PDF
+                                </button>
+                                <button name="action_open_send_wizard" type="object" class="btn btn-sm btn-outline-success me-1">
+                                    <i class="fa fa-send me-1"/> Enviar
+                                </button>
+                                <button name="action_export_csv"
+                                        type="object"
+                                        class="btn btn-sm btn-outline-primary me-1">
+                                    <i class="fa fa-download me-1"/> CSV
+                                </button>
+                                <button name="action_export_xlsx"
+                                        type="object"
+                                        class="btn btn-sm btn-primary">
+                                    <i class="fa fa-file-excel-o me-1"/> XLSX
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- List View de Tableros BI -->
+    <record id="view_dolan_bi_dashboard_list" model="ir.ui.view">
+        <field name="name">dolan.bi.dashboard.list</field>
+        <field name="model">dolan.bi.dashboard</field>
+        <field name="arch" type="xml">
+            <list string="Tableros Ejecutivos BI">
+                <field name="sequence" widget="handle"/>
+                <field name="name" decoration-bf="1"/>
+                <field name="dashboard_type" widget="badge"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="sales_month" widget="monetary"/>
+                <field name="invoiced_month" widget="monetary"/>
+                <field name="receivables_due" widget="monetary"/>
+                <field name="payables_due" widget="monetary"/>
+                <field name="crm_pipeline" widget="monetary"/>
+                <field name="stock_valuation" widget="monetary"/>
+                <button name="action_open_dashboard" type="object" string="Abrir tablero" class="btn-link"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View de Tableros BI -->
+    <record id="view_dolan_bi_dashboard_form" model="ir.ui.view">
+        <field name="name">dolan.bi.dashboard.form</field>
+        <field name="model">dolan.bi.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Tablero Gerencial BI">
+                <header>
+                    <button name="action_refresh_kpis"
+                            string="Recalcular Métricas en Tiempo Real"
+                            type="object"
+                            class="btn-primary"/>
+                    <button name="action_export_csv"
+                            string="Exportar CSV"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button name="action_export_xlsx"
+                            string="Exportar Excel (XLSX)"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button name="action_print_pdf"
+                            string="Descargar PDF"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button name="action_open_send_wizard"
+                            string="Enviar informe"
+                            type="object"
+                            class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Parámetros del Tablero">
+                            <field name="code"/>
+                            <field name="dashboard_type"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_ids" groups="base.group_multi_company" widget="many2many_tags"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                        </group>
+                        <group string="Rango de Fechas Analizado">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+
+                    <separator string="Indicadores Ejecutivos en Tiempo Real"/>
+                    <group col="3">
+                        <group string="Comercial y CRM">
+                            <field name="sales_month" widget="monetary" decoration-bf="1"/>
+                            <field name="sales_order_count"/>
+                            <field name="crm_pipeline" widget="monetary"/>
+                            <field name="crm_lead_count"/>
+                        </group>
+                        <group string="Facturación y Tesorería">
+                            <field name="invoiced_month" widget="monetary" decoration-bf="1"/>
+                            <field name="vat_sales" widget="monetary"/>
+                            <field name="vat_purchases" widget="monetary"/>
+                            <field name="vat_balance" widget="monetary" decoration-bf="1"/>
+                            <field name="receivables_due" widget="monetary"/>
+                            <field name="payables_due" widget="monetary"/>
+                            <field name="net_cash_position" widget="monetary" decoration-bf="1"/>
+                        </group>
+                        <group string="Operaciones y Stock">
+                            <field name="stock_valuation" widget="monetary" decoration-bf="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Tarjetas KPI y Metas" name="kpi_cards">
+                            <field name="kpi_card_ids">
+                                <list string="Tarjetas KPI" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" decoration-bf="1"/>
+                                    <field name="metric_type"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="current_value" widget="monetary"/>
+                                    <field name="target_value" widget="monetary"/>
+                                    <field name="achievement_rate" widget="progressbar"/>
+                                    <field name="badge_color"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Rankings: Top Clientes y Top Productos" name="rankings">
+                            <group>
+                                <group string="Top 5 Clientes del Período">
+                                    <field name="top_customers_summary" nolabel="1" colspan="2" readonly="1"/>
+                                </group>
+                                <group string="Top 5 Productos Vendidos">
+                                    <field name="top_products_summary" nolabel="1" colspan="2" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista Kanban de Tarjetas KPI Individuales -->
+    <record id="view_dolan_bi_kpi_card_kanban" model="ir.ui.view">
+        <field name="name">dolan.bi.kpi.card.kanban</field>
+        <field name="model">dolan.bi.kpi.card</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="dashboard_id" class="o_kanban_small_column" sample="1">
+                <field name="dashboard_id"/>
+                <field name="name"/>
+                <field name="metric_type"/>
+                <field name="current_value"/>
+                <field name="target_value"/>
+                <field name="achievement_rate"/>
+                <field name="currency_id"/>
+                <field name="badge_color"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <strong class="o_kanban_record_title"><field name="name"/></strong>
+                            <span class="badge text-bg-primary"><field name="achievement_rate"/>%</span>
+                        </div>
+                        <div class="fs-5 fw-bold text-primary my-1">
+                            <field name="current_value" widget="monetary"/>
+                        </div>
+                        <div class="text-muted small">
+                            Meta: <field name="target_value" widget="monetary"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ========================================================= -->
+    <!-- ACCIONES Y MENÚ RAÍZ TABLEROS (sequence="37")             -->
+    <!-- ========================================================= -->
+
+    <record id="action_dolan_bi_dashboard" model="ir.actions.act_window">
+        <field name="name">Tableros Ejecutivos BI</field>
+        <field name="res_model">dolan.bi.dashboard</field>
+        <!-- Keep the BI menu usable while the web client field-metadata issue
+             in its kanban/form views is isolated. -->
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Monitoreá tus indicadores clave de negocio en tiempo real
+            </p>
+            <p>
+                Consultá Ventas del mes, Facturación emitida, Cobranzas pendientes, Cuentas por Pagar,
+                Pipeline CRM, Valoración de Stock y Top Clientes/Productos con exportación a CSV y Excel.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_dolan_bi_kpi_cards" model="ir.actions.act_window">
+        <field name="name">Tarjetas KPI</field>
+        <field name="res_model">dolan.bi.kpi.card</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <!-- Integración directa en el menú raíz Tableros (spreadsheet_dashboard) sin duplicar ícono en Home Menu -->
+    <menuitem id="menu_dolan_bi_dashboards"
+              name="Tableros Gerenciales BI"
+              parent="spreadsheet_dashboard.spreadsheet_dashboard_menu_root"
+              action="action_dolan_bi_dashboard"
+              sequence="5"/>
+
+    <menuitem id="menu_dolan_bi_kpi_cards"
+              name="Indicadores KPI en Vivo"
+              parent="spreadsheet_dashboard.spreadsheet_dashboard_menu_root"
+              action="action_dolan_bi_kpi_cards"
+              sequence="6"/>
+</odoo>

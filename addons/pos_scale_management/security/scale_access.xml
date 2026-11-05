@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Odoo 20 uses ir.access records instead of the legacy ir.model.access CSV format. -->
+    <record id="access_scale_device_admin" model="ir.access">
+        <field name="name">scale.device admin</field><field name="model_id" ref="model_scale_device"/>
+        <field name="group_id" ref="group_scale_admin"/><field name="operation">cru</field>
+        <field name="domain">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="access_scale_device_manager" model="ir.access">
+        <field name="name">scale.device manager</field><field name="model_id" ref="model_scale_device"/>
+        <field name="group_id" ref="group_scale_branch_manager"/><field name="operation">cru</field>
+        <field name="domain">[('company_id', 'in', company_ids), ('warehouse_id', 'in', user.scale_allowed_warehouse_ids.ids)]</field>
+    </record>
+    <record id="access_scale_device_operator" model="ir.access">
+        <field name="name">scale.device operator</field><field name="model_id" ref="model_scale_device"/>
+        <field name="group_id" ref="group_scale_operator"/><field name="operation">r</field>
+        <field name="domain">[('company_id', 'in', company_ids), ('warehouse_id', 'in', user.scale_allowed_warehouse_ids.ids)]</field>
+    </record>
+    <record id="access_scale_device_auditor" model="ir.access">
+        <field name="name">scale.device auditor</field><field name="model_id" ref="model_scale_device"/>
+        <field name="group_id" ref="group_scale_auditor"/><field name="operation">r</field>
+        <field name="domain">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="access_scale_assignment_admin" model="ir.access">
+        <field name="name">scale.product.assignment admin</field><field name="model_id" ref="model_scale_product_assignment"/>
+        <field name="group_id" ref="group_scale_admin"/><field name="operation">cru</field>
+        <field name="domain">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="access_scale_assignment_manager" model="ir.access">
+        <field name="name">scale.product.assignment manager</field><field name="model_id" ref="model_scale_product_assignment"/>
+        <field name="group_id" ref="group_scale_branch_manager"/><field name="operation">cru</field>
+        <field name="domain">[('company_id', 'in', company_ids), ('device_id.warehouse_id', 'in', user.scale_allowed_warehouse_ids.ids)]</field>
+    </record>
+    <record id="access_scale_assignment_operator" model="ir.access">
+        <field name="name">scale.product.assignment operator</field><field name="model_id" ref="model_scale_product_assignment"/>
+        <field name="group_id" ref="group_scale_operator"/><field name="operation">r</field>
+        <field name="domain">[('company_id', 'in', company_ids), ('device_id.warehouse_id', 'in', user.scale_allowed_warehouse_ids.ids)]</field>
+    </record>
+    <record id="access_scale_assignment_auditor" model="ir.access">
+        <field name="name">scale.product.assignment auditor</field><field name="model_id" ref="model_scale_product_assignment"/>
+        <field name="group_id" ref="group_scale_auditor"/><field name="operation">r</field>
+        <field name="domain">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="access_scale_price_admin" model="ir.access">
+        <field name="name">scale.price.override admin</field><field name="model_id" ref="model_scale_price_override"/>
+        <field name="group_id" ref="group_scale_admin"/><field name="operation">cru</field>
+        <field name="domain">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="access_scale_price_manager" model="ir.access">
+        <field name="name">scale.price.override manager</field><field name="model_id" ref="model_scale_price_override"/>
+        <field name="group_id" ref="group_scale_branch_manager"/><field name="operation">cru</field>
+        <field name="domain">[('company_id', 'in', company_ids), ('device_id.warehouse_id', 'in', user.scale_allowed_warehouse_ids.ids)]</field>
+    </record>
+    <record id="access_scale_price_operator" model="ir.access">
+        <field name="name">scale.price.override operator</field><field name="model_id" ref="model_scale_price_override"/>
+        <field name="group_id" ref="group_scale_operator"/><field name="operation">r</field>
+        <field name="domain">[('company_id', 'in', company_ids), ('device_id.warehouse_id', 'in', user.scale_allowed_warehouse_ids.ids)]</field>
+    </record>
+    <record id="access_scale_price_auditor" model="ir.access">
+        <field name="name">scale.price.override auditor</field><field name="model_id" ref="model_scale_price_override"/>
+        <field name="group_id" ref="group_scale_auditor"/><field name="operation">r</field>
+        <field name="domain">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="access_scale_profile_admin" model="ir.access">
+        <field name="name">scale.export.profile admin</field><field name="model_id" ref="model_scale_export_profile"/>
+        <field name="group_id" ref="group_scale_admin"/><field name="operation">cru</field>
+    </record>
+    <record id="access_scale_profile_manager" model="ir.access">
+        <field name="name">scale.export.profile manager</field><field name="model_id" ref="model_scale_export_profile"/>
+        <field name="group_id" ref="group_scale_branch_manager"/><field name="operation">r</field>
+    </record>
+    <record id="access_scale_profile_operator" model="ir.access">
+        <field name="name">scale.export.profile operator</field><field name="model_id" ref="model_scale_export_profile"/>
+        <field name="group_id" ref="group_scale_operator"/><field name="operation">r</field>
+    </record>
+    <record id="access_scale_profile_auditor" model="ir.access">
+        <field name="name">scale.export.profile auditor</field><field name="model_id" ref="model_scale_export_profile"/>
+        <field name="group_id" ref="group_scale_auditor"/><field name="operation">r</field>
+    </record>
+
+    <record id="access_scale_barcode_admin" model="ir.access">
+        <field name="name">scale.barcode.profile admin</field><field name="model_id" ref="model_scale_barcode_profile"/>
+        <field name="group_id" ref="group_scale_admin"/><field name="operation">cru</field>
+    </record>
+    <record id="access_scale_barcode_manager" model="ir.access">
+        <field name="name">scale.barcode.profile manager</field><field name="model_id" ref="model_scale_barcode_profile"/>
+        <field name="group_id" ref="group_scale_branch_manager"/><field name="operation">r</field>
+    </record>
+    <record id="access_scale_barcode_operator" model="ir.access">
+        <field name="name">scale.barcode.profile operator</field><field name="model_id" ref="model_scale_barcode_profile"/>
+        <field name="group_id" ref="group_scale_operator"/><field name="operation">r</field>
+    </record>
+    <record id="access_scale_barcode_auditor" model="ir.access">
+        <field name="name">scale.barcode.profile auditor</field><field name="model_id" ref="model_scale_barcode_profile"/>
+        <field name="group_id" ref="group_scale_auditor"/><field name="operation">r</field>
+    </record>
+
+    <record id="access_scale_export_admin" model="ir.access">
+        <field name="name">scale.export.job admin</field><field name="model_id" ref="model_scale_export_job"/>
+        <field name="group_id" ref="group_scale_admin"/><field name="operation">ru</field>
+        <field name="domain">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="access_scale_export_manager" model="ir.access">
+        <field name="name">scale.export.job manager</field><field name="model_id" ref="model_scale_export_job"/>
+        <field name="group_id" ref="group_scale_branch_manager"/><field name="operation">ru</field>
+        <field name="domain">[('company_id', 'in', company_ids), ('warehouse_id', 'in', user.scale_allowed_warehouse_ids.ids)]</field>
+    </record>
+    <record id="access_scale_export_operator" model="ir.access">
+        <field name="name">scale.export.job operator</field><field name="model_id" ref="model_scale_export_job"/>
+        <field name="group_id" ref="group_scale_operator"/><field name="operation">r</field>
+        <field name="domain">[('company_id', 'in', company_ids), ('warehouse_id', 'in', user.scale_allowed_warehouse_ids.ids)]</field>
+    </record>
+    <record id="access_scale_export_auditor" model="ir.access">
+        <field name="name">scale.export.job auditor</field><field name="model_id" ref="model_scale_export_job"/>
+        <field name="group_id" ref="group_scale_auditor"/><field name="operation">r</field>
+        <field name="domain">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

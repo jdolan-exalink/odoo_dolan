@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Heredar de la plantilla primaria argentina: l10n_ar reemplaza el span
+         de th_subtotal después de account.report_invoice_document. Si heredamos
+         de account, ese replace pisa nuestro encabezado condicional. -->
+    <template id="report_invoice_document_inherit_dolan_l10n_ar_afip" inherit_id="l10n_ar.report_invoice_document">
+        <!-- Columna "Monto IVA" por línea, solo comprobantes letra A (FA/NC/ND),
+             donde el IVA se discrimina. El importe es price_total - price_subtotal
+             de la línea (sus impuestos; en las líneas A típicas = IVA). -->
+        <xpath expr="//th[@name='th_taxes']" position="after">
+            <th name="th_iva_amount"
+                t-if="display_taxes and o.l10n_latam_document_type_id.l10n_ar_letter == 'A'"
+                class="text-end text-nowrap">
+                <span>Monto IVA</span>
+            </th>
+        </xpath>
+        <xpath expr="//td[@name='td_taxes']" position="after">
+            <td name="td_iva_amount"
+                t-if="display_taxes and o.l10n_latam_document_type_id.l10n_ar_letter == 'A'"
+                class="text-end text-nowrap">
+                <span t-if="not hide_prices"
+                      t-out="line.price_total - line.price_subtotal"
+                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+            </td>
+        </xpath>
+        <!-- En letra A la última columna es TOTAL de la línea (neto + IVA =
+             price_total) en lugar del neto (price_subtotal), y el precio se
+             rotula explícitamente "s/IVA". Letras B/C conservan el core. -->
+        <xpath expr="//th[@name='th_priceunit']" position="replace">
+            <th name="th_priceunit" class="text-end text-nowrap">
+                <span t-if="o.l10n_latam_document_type_id.l10n_ar_letter == 'A'">Precio s/IVA</span>
+                <span t-elif="o.l10n_latam_document_type_id.l10n_ar_letter == 'B'">Precio Unitario c/IVA</span>
+                <span t-else="">Precio Unitario</span>
+            </th>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']" position="replace">
+            <th name="th_subtotal" class="text-end">
+                <span t-if="o.l10n_latam_document_type_id.l10n_ar_letter == 'B'">Total c/IVA</span>
+                <span t-else="">Total</span>
+            </th>
+        </xpath>
+        <xpath expr="//td[@name='td_subtotal']" position="replace">
+            <td name="td_subtotal" class="text-end o_price_total">
+                <span t-if="not hide_prices and (o.document_tax_mode == 'tax_included' or o.l10n_latam_document_type_id.l10n_ar_letter == 'A' or (o.l10n_latam_document_type_id.l10n_ar_letter == 'B' and o._l10n_ar_include_vat()))"
+                      class="text-nowrap" t-field="line.price_total">31.05</span>
+                <span t-if="not hide_prices and o.document_tax_mode == 'tax_excluded' and o.l10n_latam_document_type_id.l10n_ar_letter != 'A' and not (o.l10n_latam_document_type_id.l10n_ar_letter == 'B' and o._l10n_ar_include_vat())"
+                      class="text-nowrap" t-field="line.price_subtotal">27.00</span>
+            </td>
+        </xpath>
+
+        <!-- Las filas de sección/subsección necesitan +1 de colspan para que
+             su subtotal siga alineado con la última columna. -->
+        <xpath expr="//td[@name='line_name_td']" position="attributes">
+            <attribute name="t-att-colspan">((1 if is_product else line_colspan) + (1 if display_taxes and o.l10n_latam_document_type_id.l10n_ar_letter == 'A' else 0))</attribute>
+        </xpath>
+
+        <!-- El div original de la narración queda como ancla vacía (invisible):
+             otros xpath propios y ajenos siguen encontrando name='comment'. -->
+        <xpath expr="//div[@name='comment']" position="replace">
+            <div name="comment"/>
+        </xpath>
+
+        <!-- Cuadro NOTA flotando a la IZQUIERDA del cuadro de totales para
+             aprovechar el espacio vacío y compactar el pie (pedido de juan).
+             Float + width: técnica segura en wkhtmltopdf (nada de flex/grid).
+             Orden resultante: líneas → [NOTA | totales] → Ley 27.743 → ARCA/CAE. -->
+        <xpath expr="//div[@id='right-elements']" position="before">
+            <div t-if="not is_html_empty(o.narration) and 'localhost:8069/terms' not in (o.narration or '').lower()"
+                 class="mb-3 p-2 border rounded"
+                 style="font-size: 12px; float: left; width: 56%;">
+                <strong>NOTA: </strong>
+                <span t-field="o.narration"/>
+            </div>
+        </xpath>
+
+        <!-- l10n_ar ya inserta el resumen de transparencia junto al QR. En DOLAN
+             se muestra una sola vez en el pie, debajo del total. -->
+        <xpath expr="//div[@t-if='l10n_ar_custom_tax_summary']" position="replace"/>
+
+        <!-- Pie fiscal: Ley 27.743 + bloque ARCA/CAE. El wrapper .dolan_ar_footer
+             se fija al fondo de la hoja (junto con #right-elements) vía CSS en
+             static/src/css/report_dolan_ar.css. -->
+        <xpath expr="//div[@name='comment']" position="after">
+            <div class="dolan_ar_footer">
+                <!-- Ley 27.743: Régimen de Transparencia Fiscal al Consumidor -->
+                <div t-if="o.country_code == 'AR' and o.move_type in ('out_invoice', 'out_refund')"
+                     class="mt-3 p-2 border rounded bg-light"
+                     style="font-size: 11px; clear: both;">
+                    <strong>Régimen de Transparencia Fiscal al Consumidor (Ley 27.743)</strong>
+                    <span> — IVA Contenido </span>
+                    <span t-field="o.l10n_ar_transparent_vat_amount"
+                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </div>
+
+                <!-- Bloque Reglamentario ARCA/AFIP: QR RG 4892 + leyenda + CAE.
+                     Layout con <table>: wkhtmltopdf usa un WebKit antiguo y el grid
+                     flex de Bootstrap (.row/.col-*) superpone las columnas. -->
+                <div t-if="o.l10n_ar_afip_auth_code" class="mt-3 pt-2 border-top"
+                     style="clear: both;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td t-if="o.l10n_ar_afip_qr_code"
+                                style="width: 34mm; vertical-align: top; text-align: center; padding-top: 2mm;">
+                                <a t-att-href="o.l10n_ar_afip_qr_code" target="_blank">
+                                    <img t-att-src="o._get_dolan_afip_qr_image()"
+                                         alt="Código QR ARCA (RG 4892)"
+                                         style="width: 30mm; height: 30mm;"/>
+                                </a>
+                                <div style="font-size: 8px;" class="text-muted mt-1">
+                                    Escaneá para verificar en ARCA
+                                </div>
+                            </td>
+                            <td style="vertical-align: top; padding: 2mm 4mm 0 4mm;">
+                                <div class="fw-bold" style="font-size: 12px;">
+                                    Comprobante Autorizado por ARCA / AFIP
+                                </div>
+                                <div style="font-size: 10px;" class="text-muted">
+                                    Esta Administración Federal no se responsabiliza por los datos ingresados en el detalle de la operación.
+                                </div>
+                            </td>
+                            <td style="width: 62mm; vertical-align: top; text-align: right; font-size: 12px; padding-top: 2mm;">
+                                <div>
+                                    <strong><t t-out="o.l10n_ar_afip_auth_mode or 'CAE'"/> N°: </strong>
+                                    <span t-field="o.l10n_ar_afip_auth_code"/>
+                                </div>
+                                <div>
+                                    <strong>Fecha de Vto. de CAE: </strong>
+                                    <span t-field="o.l10n_ar_afip_auth_code_due"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- La factura B mantiene el total final y el IVA Contenido del pie, pero
+         no repite el IVA como una línea impositiva en el cuadro de totales. -->
+    <template id="document_tax_totals_hide_vat_for_b" inherit_id="l10n_ar.document_tax_totals">
+        <xpath expr="//tr[hasclass('o_taxes')]" position="attributes">
+            <attribute name="t-if">o.l10n_latam_document_type_id.l10n_ar_letter != 'B'</attribute>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,120 @@
+services:
+  escpos_bridge:
+    build:
+      context: ./services/escpos-bridge
+      dockerfile: Dockerfile
+    image: dolan/escpos-bridge:1.0
+    container_name: dolan_escpos_bridge
+    restart: unless-stopped
+    environment:
+      PRINTER_HOST: ${EPOS_BRIDGE_PRINTER_HOST:-192.168.1.50}
+      PRINTER_PORT: ${EPOS_BRIDGE_PRINTER_PORT:-9100}
+      RASTER_WIDTH_DOTS: ${EPOS_BRIDGE_RASTER_WIDTH_DOTS:-384}
+      ALLOWED_ORIGINS: ${EPOS_BRIDGE_ALLOWED_ORIGINS:-http://127.0.0.1:8069,http://localhost:8069}
+    ports:
+      - "${EPOS_BRIDGE_PORT:-8765}:8765"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/api/health', timeout=2)"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+
+  db:
+    image: postgres:17-alpine
+    container_name: dolan_odoo20_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?Definir POSTGRES_USER en .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Definir POSTGRES_PASSWORD en .env}
+      POSTGRES_DB: postgres
+    volumes:
+      - dolan_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  waha:
+    image: devlikeapro/waha:latest
+    container_name: dolan_waha
+    restart: unless-stopped
+    environment:
+      WHATSAPP_HOOK_URL: http://odoo:8069/dolan_whatsapp/webhook
+      WHATSAPP_HOOK_EVENTS: message,session.status
+      WAHA_ZIP_LOGS: "false"
+      WAHA_DASHBOARD_ENABLED: "true"
+      WAHA_DASHBOARD_USERNAME: ${WAHA_DASHBOARD_USERNAME:?Definir en .env}
+      WAHA_DASHBOARD_PASSWORD: ${WAHA_DASHBOARD_PASSWORD:?Definir en .env}
+      WHATSAPP_SWAGGER_USERNAME: ${WAHA_DASHBOARD_USERNAME}
+      WHATSAPP_SWAGGER_PASSWORD: ${WAHA_DASHBOARD_PASSWORD}
+      WAHA_API_KEY: ${WAHA_API_KEY:?Definir WAHA_API_KEY en .env}
+    ports:
+      - "${WAHA_PORT:-3000}:3000"
+    volumes:
+      - dolan_waha_data:/app/.sessions
+
+  whisper:
+    build:
+      context: ./services/local-whisper
+      dockerfile: Dockerfile
+    image: dolan/local-whisper:1.0
+    container_name: dolan_local_whisper
+    restart: unless-stopped
+    environment:
+      WHISPER_MODEL: ${WHISPER_MODEL:-small}
+      WHISPER_DEVICE: ${WHISPER_DEVICE:-cpu}
+      WHISPER_COMPUTE_TYPE: ${WHISPER_COMPUTE_TYPE:-int8}
+      WHISPER_CPU_THREADS: ${WHISPER_CPU_THREADS:-4}
+      WHISPER_MODEL_CACHE: /models
+      HF_HOME: /models/huggingface
+    expose:
+      - "8000"
+    volumes:
+      - dolan_whisper_models:/models
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import json,urllib.request; r=json.load(urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3)); assert r['status']=='ready'"
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 180s
+
+  odoo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dolan/odoo20-ce-rea:20.0
+    container_name: dolan_odoo20_web
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${DB_NAME:?Definir DB_NAME en .env}
+      ADMIN_PASSWD: ${ADMIN_PASSWD:?Definir ADMIN_PASSWD en .env}
+      ODOO_AUTO_UPDATE: ${ODOO_AUTO_UPDATE:-0}
+      DOLAN_ADDONS: ${DOLAN_ADDONS:-}
+      DOLAN_MODULES: ${DOLAN_MODULES:-}
+    ports:
+      - "${ODOO_PORT:-8069}:8069"
+      - "8072:8072"
+      # SIWC browser callback is served by Odoo on the exact loopback URI
+      # http://127.0.0.1:1455/auth/callback.
+      - "127.0.0.1:1455:8069"
+    volumes:
+      - ./addons:/opt/odoo/dolan-addons
+      - dolan_filestore:/var/lib/odoo
+
+volumes:
+  dolan_pgdata:
+  dolan_filestore:
+  dolan_waha_data:
+  dolan_whisper_models:

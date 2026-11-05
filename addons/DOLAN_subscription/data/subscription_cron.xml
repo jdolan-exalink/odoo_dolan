@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Secuencia para Contratos de Suscripción -->
+        <record id="seq_dolan_subscription" model="ir.sequence">
+            <field name="name">Suscripción DOLAN</field>
+            <field name="code">dolan.subscription</field>
+            <field name="prefix">SUB/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Planes de Suscripción Preconfigurados -->
+        <record id="subscription_plan_monthly" model="dolan.subscription.plan">
+            <field name="name">Plan Mensual</field>
+            <field name="code">PLAN-MENSUAL</field>
+            <field name="sequence">10</field>
+            <field name="billing_period">monthly</field>
+            <field name="auto_renew" eval="True"/>
+            <field name="auto_send_email" eval="True"/>
+            <field name="description">Facturación recurrente cada mes calendario con renovación automática.</field>
+        </record>
+
+        <record id="subscription_plan_bimonthly" model="dolan.subscription.plan">
+            <field name="name">Plan Bimestral</field>
+            <field name="code">PLAN-BIMESTRAL</field>
+            <field name="sequence">20</field>
+            <field name="billing_period">bimonthly</field>
+            <field name="auto_renew" eval="True"/>
+            <field name="auto_send_email" eval="True"/>
+            <field name="description">Facturación recurrente cada 2 meses con renovación automática.</field>
+        </record>
+
+        <record id="subscription_plan_quarterly" model="dolan.subscription.plan">
+            <field name="name">Plan Trimestral</field>
+            <field name="code">PLAN-TRIMESTRAL</field>
+            <field name="sequence">30</field>
+            <field name="billing_period">quarterly</field>
+            <field name="auto_renew" eval="True"/>
+            <field name="auto_send_email" eval="True"/>
+            <field name="description">Facturación recurrente cada 3 meses con renovación automática.</field>
+        </record>
+
+        <record id="subscription_plan_semiannual" model="dolan.subscription.plan">
+            <field name="name">Plan Semestral</field>
+            <field name="code">PLAN-SEMESTRAL</field>
+            <field name="sequence">40</field>
+            <field name="billing_period">semiannual</field>
+            <field name="auto_renew" eval="True"/>
+            <field name="auto_send_email" eval="True"/>
+            <field name="description">Facturación recurrente cada 6 meses con renovación automática.</field>
+        </record>
+
+        <record id="subscription_plan_annual" model="dolan.subscription.plan">
+            <field name="name">Plan Anual</field>
+            <field name="code">PLAN-ANUAL</field>
+            <field name="sequence">50</field>
+            <field name="billing_period">annual</field>
+            <field name="auto_renew" eval="True"/>
+            <field name="auto_send_email" eval="True"/>
+            <field name="description">Facturación recurrente cada 12 meses con renovación automática.</field>
+        </record>
+
+        <!-- Motivos de Baja (Churn) Preconfigurados -->
+        <record id="close_reason_price" model="dolan.subscription.close.reason">
+            <field name="name">Precio elevado / Ajuste presupuestario</field>
+            <field name="sequence">10</field>
+            <field name="is_churn" eval="True"/>
+            <field name="retention_message">Ofrecer plan semestral/anual bonificado o revisar alcance del abono.</field>
+        </record>
+
+        <record id="close_reason_competitor" model="dolan.subscription.close.reason">
+            <field name="name">Cambio de proveedor / Competencia</field>
+            <field name="sequence">20</field>
+            <field name="is_churn" eval="True"/>
+            <field name="retention_message">Relevar funcionalidades faltantes y agendar llamada con cuenta clave.</field>
+        </record>
+
+        <record id="close_reason_project_ended" model="dolan.subscription.close.reason">
+            <field name="name">Finalización normal del contrato o proyecto</field>
+            <field name="sequence">30</field>
+            <field name="is_churn" eval="False"/>
+            <field name="retention_message">Mantener contacto comercial para futuros proyectos.</field>
+        </record>
+
+        <record id="close_reason_non_payment" model="dolan.subscription.close.reason">
+            <field name="name">Baja por falta de pago / Mora</field>
+            <field name="sequence">40</field>
+            <field name="is_churn" eval="True"/>
+            <field name="retention_message">Derivar a seguimiento de cobranzas antes de reactivar.</field>
+        </record>
+
+        <!-- Tarea Programada (ir.cron) de Facturación Recurrente -->
+        <record id="ir_cron_dolan_subscription_recurring_invoices" model="ir.cron">
+            <field name="name">DOLAN Suscripciones: Generar Facturas Recurrentes Vencidas</field>
+            <field name="model_id" ref="model_dolan_subscription"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_recurring_create_invoice()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

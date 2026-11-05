@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_dolan_l10n_ar_afip" model="ir.ui.view">
+        <field name="name">res.config.settings.form.dolan.l10n_ar.afip</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="inside">
+                <block title="ARCA / AFIP Facturación Electrónica Argentina (DOLAN)" name="dolan_l10n_ar_afip_setting_container">
+                    <setting string="Ambiente y Certificados X.509 ARCA/AFIP"
+                             help="Configure el ambiente Homologación/Producción y el certificado digital para WSAA.">
+                        <div class="content-group mt16">
+                            <div class="row mt8">
+                                <label for="l10n_ar_afip_ws_environment" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_ar_afip_ws_environment"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="l10n_ar_afip_ws_crt_id" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_ar_afip_ws_crt_id"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="l10n_ar_afip_ws_key_id" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_ar_afip_ws_key_id"/>
+                            </div>
+                            <div class="mt16">
+                                <button name="action_l10n_ar_test_afip_connection"
+                                        type="object"
+                                        string="Probar Conexión ARCA/AFIP"
+                                        icon="fa-plug"
+                                        class="btn-primary me-2"/>
+                                <button name="action_l10n_ar_generate_csr"
+                                        type="object"
+                                        string="Generar Solicitud CSR (X.509)"
+                                        icon="fa-key"
+                                        class="btn-secondary"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="Certificado compartido para consultas de Padrón ARCA"
+                             help="Configure una sola identidad de firma para consultar CUIT desde todas las compañías. Esto solo aplica a consultas de lectura del Padrón; la emisión WSFE conserva los certificados propios de cada compañía.">
+                        <div class="content-group mt16">
+                            <div class="row mt8">
+                                <label for="l10n_ar_padron_representative_company_id" class="col-lg-5 o_light_label"/>
+                                <field name="l10n_ar_padron_representative_company_id" options="{'no_create': True}"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="l10n_ar_padron_certificate_id" class="col-lg-5 o_light_label"/>
+                                <field name="l10n_ar_padron_certificate_id" options="{'no_create': True}"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="l10n_ar_padron_key_id" class="col-lg-5 o_light_label"/>
+                                <field name="l10n_ar_padron_key_id" options="{'no_create': True}"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="Envío real de comprobantes WSFE"
+                             help="El envío permanece bloqueado por defecto. Habilítelo solo después de aprobar homologación ARCA y revisar certificados, CUIT, punto de venta y reglas fiscales.">
+                        <field name="l10n_ar_afip_wsfe_submission_enabled"/>
+                    </setting>
+                    <setting string="Opciones Fiscales ARCA, FCE MiPyME y Libro IVA Digital"
+                             help="Parámetros de transmisión de Factura de Crédito Electrónica y prorrateo de crédito fiscal.">
+                        <div class="content-group mt16">
+                            <div class="row mt8">
+                                <label for="l10n_ar_afip_verification_type" class="col-lg-5 o_light_label"/>
+                                <field name="l10n_ar_afip_verification_type"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="l10n_ar_fce_transmission_type" class="col-lg-5 o_light_label"/>
+                                <field name="l10n_ar_fce_transmission_type"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="l10n_ar_computable_tax_credit" class="col-lg-5 o_light_label"/>
+                                <field name="l10n_ar_computable_tax_credit"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="l10n_ar_daily_book_start_entry_number" class="col-lg-5 o_light_label"/>
+                                <field name="l10n_ar_daily_book_start_entry_number"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_whatsapp_account_user,dolan.whatsapp.account.user,dolan.whatsapp.account,base.group_user,r,"[('company_id', 'in', company_ids)]"
+access_dolan_whatsapp_account_admin,dolan.whatsapp.account.admin,dolan.whatsapp.account,base.group_system,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_whatsapp_message_user,dolan.whatsapp.message.user,dolan.whatsapp.message,base.group_user,r,"[('company_id', 'in', company_ids)]"
+access_dolan_whatsapp_compose_user,dolan.whatsapp.compose.user,dolan.whatsapp.compose,base.group_user,crud,

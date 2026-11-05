@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========================================================= -->
+    <!-- VISTAS DE CONOCIMIENTO (dolan.knowledge.article)          -->
+    <!-- ========================================================= -->
+
+    <!-- Search View -->
+    <record id="view_dolan_knowledge_article_search" model="ir.ui.view">
+        <field name="name">dolan.knowledge.article.search</field>
+        <field name="model">dolan.knowledge.article</field>
+        <field name="arch" type="xml">
+            <search string="Buscar en Base de Conocimiento">
+                <field name="name" string="Título o Contenido"
+                       filter_domain="['|', '|', ('name', 'ilike', self), ('body', 'ilike', self), ('ai_summary', 'ilike', self)]"/>
+                <field name="parent_id"/>
+                <field name="author_id"/>
+                <filter string="Favoritos" name="filter_favorites" domain="[('is_favorite', '=', True)]"/>
+                <filter string="Espacio de Trabajo (Workspace)" name="filter_workspace" domain="[('category', '=', 'workspace')]"/>
+                <filter string="Compartidos" name="filter_shared" domain="[('category', '=', 'shared')]"/>
+                <filter string="Privados" name="filter_private" domain="[('category', '=', 'private')]"/>
+                <separator/>
+                <filter string="Indexados para IA (RAG)" name="filter_rag" domain="[('is_rag_indexed', '=', True)]"/>
+                <filter string="Artículos Raíz" name="filter_root" domain="[('parent_id', '=', False)]"/>
+                <group>
+                    <filter string="Categoría" name="group_by_category" context="{'group_by': 'category'}"/>
+                    <filter string="Artículo Padre" name="group_by_parent" context="{'group_by': 'parent_id'}"/>
+                    <filter string="Autor" name="group_by_author" context="{'group_by': 'author_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- List View (Odoo 20 <list>) -->
+    <record id="view_dolan_knowledge_article_list" model="ir.ui.view">
+        <field name="name">dolan.knowledge.article.list</field>
+        <field name="model">dolan.knowledge.article</field>
+        <field name="arch" type="xml">
+            <list string="Artículos de Conocimiento" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+                <field name="icon" string=""/>
+                <field name="full_path" decoration-bf="1"/>
+                <field name="category" widget="badge"
+                       decoration-primary="category == 'workspace'"
+                       decoration-info="category == 'shared'"
+                       decoration-warning="category == 'private'"/>
+                <field name="author_id" widget="many2one_avatar_user"/>
+                <field name="child_count" string="Sub-artículos"/>
+                <field name="is_rag_indexed" widget="boolean_toggle"/>
+                <field name="last_edition_date" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kanban View (Odoo 20 <t t-name="card">) -->
+    <record id="view_dolan_knowledge_article_kanban" model="ir.ui.view">
+        <field name="name">dolan.knowledge.article.kanban</field>
+        <field name="model">dolan.knowledge.article</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="category" class="o_kanban_small_column" sample="1">
+                <field name="name"/>
+                <field name="icon"/>
+                <field name="full_path"/>
+                <field name="category"/>
+                <field name="is_favorite"/>
+                <field name="is_rag_indexed"/>
+                <field name="ai_summary"/>
+                <field name="author_id"/>
+                <field name="child_count"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <strong class="o_kanban_record_title">
+                                <span class="me-1"><field name="icon"/></span>
+                                <field name="name"/>
+                            </strong>
+                            <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+                        </div>
+                        <div class="text-muted small mb-2">
+                            <field name="full_path"/>
+                        </div>
+                        <div t-if="record.ai_summary.raw_value" class="small text-secondary mb-2">
+                            <field name="ai_summary"/>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-auto">
+                            <div>
+                                <span t-if="record.is_rag_indexed.raw_value" class="badge text-bg-info me-1">
+                                    RAG IA
+                                </span>
+                                <span t-if="record.child_count.raw_value &gt; 0" class="badge text-bg-secondary">
+                                    <field name="child_count"/> hijos
+                                </span>
+                            </div>
+                            <field name="author_id" widget="many2one_avatar_user"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_dolan_knowledge_article_form" model="ir.ui.view">
+        <field name="name">dolan.knowledge.article.form</field>
+        <field name="model">dolan.knowledge.article</field>
+        <field name="arch" type="xml">
+            <form string="Artículo de Conocimiento">
+                <header>
+                    <button name="action_create_child_article"
+                            string="Crear Sub-Artículo"
+                            type="object"
+                            class="btn-primary"/>
+                    <button name="action_generate_ai_summary"
+                            string="Actualizar Resumen RAG (IA)"
+                            type="object"
+                            class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <div class="text-muted small mb-1">
+                            <field name="full_path" readonly="1"/>
+                        </div>
+                        <h1>
+                            <field name="icon" class="oe_inline me-2" style="width: 3rem;"/>
+                            <field name="name" class="oe_inline" placeholder="Título del artículo..."/>
+                            <field name="is_favorite" widget="boolean_favorite" class="ms-2"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Estructura y Clasificación">
+                            <field name="parent_id"/>
+                            <field name="category" widget="radio" options="{'horizontal': true}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Permisos e Indexación RAG">
+                            <field name="author_id" widget="many2one_avatar_user"/>
+                            <field name="is_rag_indexed" widget="boolean_toggle"/>
+                            <field name="is_locked" widget="boolean_toggle"/>
+                            <field name="last_edition_uid" readonly="1"/>
+                            <field name="last_edition_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Contenido Wiki" name="content">
+                            <field name="body" readonly="is_locked" placeholder="Escriba aquí la documentación, procedimientos operativos o guías internas..."/>
+                        </page>
+                        <page string="Sub-Artículos (Jerarquía)" name="children">
+                            <field name="child_ids">
+                                <list string="Sub-Artículos">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="icon" string=""/>
+                                    <field name="name" decoration-bf="1"/>
+                                    <field name="category" widget="badge"/>
+                                    <field name="is_rag_indexed"/>
+                                    <field name="author_id" widget="many2one_avatar_user"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Contexto RAG (IA) y Permisos" name="rag_and_members">
+                            <group string="Resumen Semántico para DOLAN IA (RAG)">
+                                <field name="ai_summary" nolabel="1" colspan="2"
+                                       placeholder="Resumen compacto utilizado por los agentes de IA para responder consultas sobre este artículo..."/>
+                            </group>
+                            <group string="Miembros con Acceso">
+                                <field name="member_ids" widget="many2many_tags" nolabel="1" colspan="2"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ========================================================= -->
+    <!-- ACCIONES Y MENÚ RAÍZ CONOCIMIENTO (sequence="17")         -->
+    <!-- ========================================================= -->
+
+    <record id="action_dolan_knowledge_article" model="ir.actions.act_window">
+        <field name="name">Base de Conocimiento</field>
+        <field name="res_model">dolan.knowledge.article</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_dolan_knowledge_article_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Creá el primer artículo de tu Base de Conocimiento (Wiki RAG)
+            </p>
+            <p>
+                Organizá manuales, instructivos ARCA/AFIP y políticas internas en un árbol jerárquico
+                conectado como fuente de conocimiento para DOLAN IA.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_dolan_knowledge_favorites" model="ir.actions.act_window">
+        <field name="name">Artículos Favoritos</field>
+        <field name="res_model">dolan.knowledge.article</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_favorite', '=', True)]</field>
+    </record>
+
+    <!-- Menú Raíz: Artículos / Conocimiento (sequence="17", idéntico a Odoo 20) -->
+    <menuitem id="menu_dolan_knowledge_root"
+              name="Artículos"
+              sequence="17"
+              web_icon="DOLAN_knowledge_bi,static/description/icon_knowledge.svg"
+              groups="base.group_user"/>
+
+    <menuitem id="menu_dolan_knowledge_home"
+              name="Inicio"
+              parent="menu_dolan_knowledge_root"
+              action="action_dolan_knowledge_article"
+              sequence="5"/>
+
+    <menuitem id="menu_dolan_knowledge_all"
+              name="Artículos"
+              parent="menu_dolan_knowledge_root"
+              action="action_dolan_knowledge_article"
+              sequence="10"/>
+
+    <menuitem id="menu_dolan_knowledge_config"
+              name="Configuración"
+              parent="menu_dolan_knowledge_root"
+              sequence="90"/>
+
+    <menuitem id="menu_dolan_knowledge_favorites"
+              name="Favoritos"
+              parent="menu_dolan_knowledge_config"
+              action="action_dolan_knowledge_favorites"
+              sequence="10"/>
+</odoo>

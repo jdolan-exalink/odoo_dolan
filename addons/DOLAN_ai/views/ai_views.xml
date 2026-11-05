@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- =================================================================== -->
+    <!-- VISTAS: dolan.ai.provider (Conector ChatGPT OAuth 2.0 PKCE / API)   -->
+    <!-- =================================================================== -->
+    <record id="view_dolan_ai_provider_list" model="ir.ui.view">
+        <field name="name">dolan.ai.provider.list</field>
+        <field name="model">dolan.ai.provider</field>
+        <field name="arch" type="xml">
+            <list string="Proveedores de IA">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="provider_mode"/>
+                <field name="default_model"/>
+                <field name="company_id"/>
+                <field name="oauth_status" widget="badge"
+                       decoration-success="oauth_status == 'connected'"
+                       decoration-warning="oauth_status == 'pending'"
+                       decoration-danger="oauth_status == 'expired'"
+                       decoration-muted="oauth_status == 'disconnected'"/>
+                <field name="chatgpt_user_email"/>
+                <field name="token_expires_at"/>
+                <field name="is_default"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_ai_provider_form" model="ir.ui.view">
+        <field name="name">dolan.ai.provider.form</field>
+        <field name="model">dolan.ai.provider</field>
+        <field name="arch" type="xml">
+            <form string="Proveedor de IA DOLAN">
+                <header>
+                    <button name="action_start_chatgpt_oauth"
+                            string="1. Vincular Cuenta ChatGPT"
+                            type="object"
+                            class="btn-primary"
+                            groups="base.group_system"
+                            invisible="provider_mode != 'chatgpt_oauth'"/>
+                    <button name="action_exchange_manual_callback"
+                            string="2. Canjear URL de retorno"
+                            type="object"
+                            class="btn-secondary"
+                            groups="base.group_system"
+                            invisible="provider_mode != 'chatgpt_oauth'"/>
+                    <button name="action_test_connection"
+                            string="Probar conexión con ChatGPT"
+                            type="object"
+                            class="btn-secondary"
+                            groups="base.group_system"
+                            invisible="provider_mode != 'chatgpt_oauth' or oauth_status != 'connected'"/>
+                    <button name="refresh_access_token"
+                            string="Renovar Token (Refresh)"
+                            type="object"
+                            class="btn-secondary"
+                            groups="base.group_system"
+                            invisible="provider_mode != 'chatgpt_oauth' or not refresh_token"/>
+                    <button name="action_disconnect_oauth"
+                            string="Desvincular OAuth"
+                            type="object"
+                            class="btn-link"
+                            groups="base.group_system"
+                            invisible="provider_mode != 'chatgpt_oauth' or oauth_status == 'disconnected'"/>
+                    <field name="oauth_status" widget="statusbar" statusbar_visible="disconnected,pending,connected"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="ChatGPT plan (Sign in with ChatGPT)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Configuración General">
+                            <field name="provider_mode"/>
+                            <field name="default_model"/>
+                            <field name="company_id"/>
+                            <field name="is_default"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Estado de Cuenta ChatGPT OAuth" invisible="provider_mode != 'chatgpt_oauth'">
+                            <field name="chatgpt_user_email"/>
+                            <field name="chatgpt_account_id"/>
+                            <field name="token_expires_at"/>
+                            <field name="redirect_mode"/>
+                            <field name="redirect_uri"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Sign in with ChatGPT" invisible="provider_mode != 'chatgpt_oauth'">
+                            <div class="alert alert-info mb-3" role="status">
+                                <strong>Sign in with ChatGPT para uso del plan desde una instalación local de DOLAN AI:</strong>
+                                <ol class="mb-0 mt-1">
+                                    <li>Hacé clic en <strong>"1. Vincular Cuenta ChatGPT"</strong> e iniciá sesión. En el primer uso, autorizá a <strong>DOLAN AI</strong> y el permiso para usar tu plan.</li>
+                                    <li>El callback vuelve a <code>http://127.0.0.1:1455/auth/callback</code>. Docker debe publicar <code>127.0.0.1:1455</code> hacia el puerto HTTP <code>8069</code> del contenedor. Los proyectos nuevos generados por el instalador DOLAN incluyen ese mapeo; si el contenedor ya existía, actualizá su publicación de puertos y recrealo antes de autorizar.</li>
+                                    <li>DOLAN valida el estado, la identidad y los permisos antes de guardar los tokens. Si el código venció o el intento falló, iniciá una autorización nueva.</li>
+                                    <li>Usá <strong>"Probar conexión con ChatGPT"</strong> para consultar los modelos de esa cuenta y realizar una respuesta real.</li>
+                                </ol>
+                                <p class="mb-0 mt-2"><strong>Instancias alojadas o SaaS:</strong> el uso del plan ChatGPT requiere un entorno local/autohospedado bajo control del usuario. Para un Odoo administrado remotamente, configurá el endpoint OpenAI compatible con su API key; ese consumo se factura por separado.</p>
+                            </div>
+                            <group>
+                                <field name="manual_callback_input"
+                                       placeholder="http://127.0.0.1:1455/auth/callback?code=...&amp;state=...&amp;client_id=oaiapp_..."/>
+                                <field name="authorization_url_preview" widget="url"/>
+                            </group>
+                            <group string="Parámetros de OAuth" groups="base.group_system">
+                                <group>
+                                    <field name="oauth_authorize_url" readonly="1"/>
+                                    <field name="oauth_token_url" readonly="1"/>
+                                    <field name="oauth_client_id"/>
+                                    <field name="oauth_scopes" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="pkce_code_challenge" readonly="1"/>
+                                    <field name="oauth_state" readonly="1"/>
+                                    <field name="request_timeout"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Endpoint API / Ollama" invisible="provider_mode == 'chatgpt_oauth' and not api_base_url">
+                            <group>
+                                <field name="api_base_url"/>
+                                <field name="api_key" password="True" invisible="provider_mode != 'openai_api'"/>
+                                <field name="request_timeout"/>
+                            </group>
+                        </page>
+                        <page string="Dictado Whisper">
+                            <group>
+                                <field name="whisper_backend"/>
+                                <field name="whisper_local_url" invisible="whisper_backend != 'local'"/>
+                                <field name="whisper_api_key" password="True" invisible="whisper_backend != 'openai_api'"/>
+                                <div class="text-muted" colspan="2">
+                                    El botón de micrófono graba solo cuando lo pulsás. Al detener la grabación,
+                                    el motor local mantiene el audio en este servidor. La descarga inicial del
+                                    modelo requiere Internet; luego el audio no sale de la red local. OpenAI API
+                                    queda como alternativa y requiere una clave propia.
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_ai_provider" model="ir.actions.act_window">
+        <field name="name">Proveedores de IA (ChatGPT OAuth / API / Ollama)</field>
+        <field name="res_model">dolan.ai.provider</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- =================================================================== -->
+    <!-- VISTAS: ai.agent y ai.agent.source                                  -->
+    <!-- =================================================================== -->
+    <record id="view_ai_agent_kanban" model="ir.ui.view">
+        <field name="name">ai.agent.kanban</field>
+        <field name="model">ai.agent</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="subtitle"/>
+                <field name="is_system_agent"/>
+                <field name="avatar_role"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex flex-column justify-content-between h-100 p-2">
+                            <div>
+                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                    <strong class="fs-5"><field name="name"/></strong>
+                                    <span t-if="record.is_system_agent.raw_value" class="badge text-bg-primary">Sistema</span>
+                                </div>
+                                <div class="text-muted small mb-2">
+                                    <field name="subtitle"/>
+                                </div>
+                            </div>
+                            <div class="mt-2 pt-2 border-top d-flex justify-content-between align-items-center">
+                                <field name="skill_ids" widget="many2many_tags"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_ai_agent_list" model="ir.ui.view">
+        <field name="name">ai.agent.list</field>
+        <field name="model">ai.agent</field>
+        <field name="arch" type="xml">
+            <list string="Agentes de IA">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="subtitle"/>
+                <field name="is_system_agent"/>
+                <field name="embedding_model"/>
+                <field name="skill_ids" widget="many2many_tags"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ai_agent_form" model="ir.ui.view">
+        <field name="name">ai.agent.form</field>
+        <field name="model">ai.agent</field>
+        <field name="arch" type="xml">
+            <form string="Agente de IA">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                        <field name="subtitle" placeholder="Subtítulo o descripción breve del rol del agente..."/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="avatar_role"/>
+                            <field name="is_system_agent"/>
+                            <field name="restrict_to_sources"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="embedding_model"/>
+                            <field name="partner_id"/>
+                            <field name="allowed_agent_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="System Prompt">
+                            <field name="system_prompt" placeholder="Instrucciones de sistema del agente..."/>
+                        </page>
+                        <page string="Habilidades (Skills)">
+                            <group>
+                                <field name="skill_ids" widget="many2many_tags"/>
+                                <field name="custom_skill_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                        <page string="Fuentes de Conocimiento (RAG)">
+                            <field name="sources_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="type"/>
+                                    <field name="url"/>
+                                    <field name="attachment_id"/>
+                                    <field name="content_text"/>
+                                    <field name="status"/>
+                                    <field name="is_active"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Prompt Renderizado">
+                            <field name="system_prompt_rendered" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_agent" model="ir.actions.act_window">
+        <field name="name">Agentes de IA</field>
+        <field name="res_model">ai.agent</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <!-- =================================================================== -->
+    <!-- VISTAS: ai.skill                                                    -->
+    <!-- =================================================================== -->
+    <record id="view_ai_skill_list" model="ir.ui.view">
+        <field name="name">ai.skill.list</field>
+        <field name="model">ai.skill</field>
+        <field name="arch" type="xml">
+            <list string="Habilidades (Skills)">
+                <field name="name"/>
+                <field name="type"/>
+                <field name="is_native_skill"/>
+                <field name="description"/>
+                <field name="agent_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ai_skill_form" model="ir.ui.view">
+        <field name="name">ai.skill.form</field>
+        <field name="model">ai.skill</field>
+        <field name="arch" type="xml">
+            <form string="Habilidad de IA (Skill)">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="type"/>
+                            <field name="is_native_skill"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="agent_ids" widget="many2many_tags"/>
+                            <field name="tool_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group string="Descripción">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Instrucciones Detalladas">
+                            <field name="instructions"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_skill" model="ir.actions.act_window">
+        <field name="name">Habilidades (Skills)</field>
+        <field name="res_model">ai.skill</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- =================================================================== -->
+    <!-- VISTAS: ai.composer y ai.prompt.button                              -->
+    <!-- =================================================================== -->
+    <record id="view_ai_composer_list" model="ir.ui.view">
+        <field name="name">ai.composer.list</field>
+        <field name="model">ai.composer</field>
+        <field name="arch" type="xml">
+            <list string="Composers de Interfaz">
+                <field name="name"/>
+                <field name="interface_key"/>
+                <field name="ai_agent_id"/>
+                <field name="focused_model_id"/>
+                <field name="is_system_default"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ai_composer_form" model="ir.ui.view">
+        <field name="name">ai.composer.form</field>
+        <field name="model">ai.composer</field>
+        <field name="arch" type="xml">
+            <form string="AI Composer">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="interface_key"/>
+                            <field name="ai_agent_id"/>
+                        </group>
+                        <group>
+                            <field name="focused_model_id"/>
+                            <field name="is_system_default"/>
+                            <field name="hide_model_selection"/>
+                            <field name="hide_prompt_button_page"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Prompt por Defecto">
+                            <field name="default_prompt"/>
+                        </page>
+                        <page string="Botones de Prompt Rápidos">
+                            <field name="available_prompt_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="render_model"/>
+                                    <field name="lang"/>
+                                    <field name="prompt"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_composer" model="ir.actions.act_window">
+        <field name="name">Composers y Botones Rápidos</field>
+        <field name="res_model">ai.composer</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- =================================================================== -->
+    <!-- VISTAS: ai.session y ai.session.event                               -->
+    <!-- =================================================================== -->
+    <record id="view_ai_session_list" model="ir.ui.view">
+        <field name="name">ai.session.list</field>
+        <field name="model">ai.session</field>
+        <field name="arch" type="xml">
+            <list string="Sesiones de IA">
+                <field name="name"/>
+                <field name="agent_id"/>
+                <field name="request_user_id"/>
+                <field name="res_model"/>
+                <field name="res_id"/>
+                <field name="loop_state" widget="badge"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ai_session_form" model="ir.ui.view">
+        <field name="name">ai.session.form</field>
+        <field name="model">ai.session</field>
+        <field name="arch" type="xml">
+            <form string="Sesión Agéntica de IA">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="agent_id"/>
+                            <field name="ai_composer_id"/>
+                            <field name="request_user_id"/>
+                        </group>
+                        <group>
+                            <field name="res_model"/>
+                            <field name="res_id"/>
+                            <field name="loop_state"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Historial de Eventos y Herramientas">
+                            <field name="event_ids">
+                                <list>
+                                    <field name="create_date"/>
+                                    <field name="role" widget="badge"/>
+                                    <field name="tool_name"/>
+                                    <field name="content"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_session" model="ir.actions.act_window">
+        <field name="name">Sesiones de Conversación IA</field>
+        <field name="res_model">ai.session</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- =================================================================== -->
+    <!-- MENÚ RAÍZ: IA (sequence="50", idéntico a Odoo 20)          -->
+    <!-- =================================================================== -->
+    <menuitem id="menu_dolan_ai_root"
+              name="IA"
+              sequence="52"
+              web_icon="DOLAN_ai,static/description/icon.svg"/>
+
+    <menuitem id="menu_dolan_ai_agents"
+              name="Agentes"
+              parent="menu_dolan_ai_root"
+              action="action_ai_agent"
+              sequence="10"/>
+
+    <menuitem id="menu_dolan_ai_sessions"
+              name="Sesiones"
+              parent="menu_dolan_ai_root"
+              action="action_ai_session"
+              sequence="20"/>
+
+    <menuitem id="menu_dolan_ai_skills"
+              name="Skills (Habilidades)"
+              parent="menu_dolan_ai_root"
+              action="action_ai_skill"
+              sequence="30"/>
+
+    <menuitem id="menu_dolan_ai_config"
+              name="Configuración"
+              parent="menu_dolan_ai_root"
+              sequence="90"/>
+
+    <menuitem id="menu_dolan_ai_composers"
+              name="Prompts predeterminados"
+              parent="menu_dolan_ai_config"
+              action="action_ai_composer"
+              sequence="10"/>
+
+    <menuitem id="menu_dolan_ai_cfg_skills"
+              name="Habilidades (Skills)"
+              parent="menu_dolan_ai_config"
+              action="action_ai_skill"
+              sequence="20"/>
+
+    <menuitem id="menu_dolan_ai_providers"
+              name="Proveedores OAuth (ChatGPT / Ollama)"
+              parent="menu_dolan_ai_config"
+              action="action_dolan_ai_provider"
+              sequence="30"/>
+</odoo>

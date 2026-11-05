@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_dolan_bna_exchange" model="ir.ui.view">
+        <field name="name">sale.order.form.dolan.bna.exchange</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_dolan_fetch_bna_rate"
+                        type="object"
+                        string="Consultar BNA Venta"
+                        class="btn-secondary"
+                        groups="sales_team.group_sale_salesman"/>
+                <button name="action_dolan_convert_to_ars_bna"
+                        type="object"
+                        string="Convertir a ARS · BNA Venta"
+                        class="btn-secondary"
+                        groups="sales_team.group_sale_salesman"
+                        invisible="not dolan_can_convert_to_ars"
+                        confirm="Se consultará el BNA y se creará otra cotización en ARS en borrador. La cotización USD original no se modifica. ¿Continuar?"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_dolan_view_converted_quotes"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-exchange"
+                        invisible="dolan_converted_order_count == 0">
+                    <field name="dolan_converted_order_count" widget="statinfo" string="Convertidas"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='pricelist_id']" position="after">
+                <field name="dolan_converted_from_id" invisible="not dolan_converted_from_id" readonly="1"/>
+                <field name="dolan_exchange_rate" invisible="not dolan_exchange_rate" readonly="1"/>
+                <field name="dolan_exchange_rate_date" invisible="not dolan_exchange_rate_date" readonly="1"/>
+                <field name="dolan_exchange_rate_source" invisible="not dolan_exchange_rate_source" readonly="1"/>
+                <field name="dolan_exchange_rate_id" invisible="not dolan_exchange_rate_id" readonly="1"/>
+                <field name="dolan_can_convert_to_ars" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_epos_print_printer_list" model="ir.ui.view">
+        <field name="name">epos.print.printer.list</field>
+        <field name="model">pos.printer</field>
+        <field name="arch" type="xml">
+            <list string="Impresoras POS">
+                <field name="name" string="Impresora"/>
+                <field name="use_type" string="Uso"/>
+                <field name="epos_print_protocol" string="Protocolo"/>
+                <field name="printer_ip" string="Endpoint ePOS / puente"/>
+                <field name="epos_print_device_host" string="Destino ESC/POS" optional="hide"/>
+                <field name="paper_size" string="Papel"/>
+                <field name="epos_print_last_test_state" string="Estado" widget="badge"
+                       decoration-success="epos_print_last_test_state == 'ok'"
+                       decoration-danger="epos_print_last_test_state == 'error'"/>
+                <field name="epos_print_last_test_at" string="Última prueba" optional="hide"/>
+                <field name="use_cashdrawer" string="Cajón" optional="hide"/>
+                <field name="is_split_per_product" string="Separar por producto" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_epos_print_printer_form_inherit" model="ir.ui.view">
+        <field name="name">epos.print.printer.form.inherit</field>
+        <field name="model">pos.printer</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_printer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Impresora POS</attribute>
+            </xpath>
+            <xpath expr="//widget[@name='point_of_sale_test_epos']" position="before">
+                <button name="action_epos_print_test" type="object" string="Imprimir ticket de prueba"
+                        icon="fa-print" class="btn-primary" groups="point_of_sale.group_pos_manager"/>
+            </xpath>
+            <xpath expr="//widget[@name='point_of_sale_test_epos']" position="attributes">
+                <attribute name="invisible">epos_print_protocol == 'escpos_bridge'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='use_type']" position="attributes">
+                <attribute name="string">Destino</attribute>
+            </xpath>
+            <xpath expr="//field[@name='printer_ip']" position="attributes">
+                <attribute name="string">IP / puerto del ePOS o puente</attribute>
+                <attribute name="placeholder">192.168.1.20:8765</attribute>
+            </xpath>
+            <xpath expr="//field[@name='printer_ip']" position="before">
+                <field name="epos_print_protocol" string="Protocolo"/>
+            </xpath>
+            <xpath expr="//field[@name='printer_ip']" position="after">
+                <field name="epos_print_device_host" string="Impresora ESC/POS de destino"
+                       placeholder="192.168.1.50:9100" invisible="epos_print_protocol != 'escpos_bridge'"/>
+            </xpath>
+            <xpath expr="//field[@name='use_lna']" position="attributes">
+                <attribute name="string">Acceso a red local (LNA)</attribute>
+            </xpath>
+            <xpath expr="//field[@name='product_categories_ids']" position="attributes">
+                <attribute name="string">Categorías que imprime</attribute>
+            </xpath>
+            <xpath expr="//field[@name='use_cashdrawer']" position="attributes">
+                <attribute name="string">Abrir cajón de dinero</attribute>
+            </xpath>
+            <xpath expr="//sheet/group" position="before">
+                <div class="alert alert-info d-flex align-items-start gap-2" role="status">
+                    <i class="fa fa-print mt-1" aria-hidden="true"/>
+                    <div>
+                        <strong>Conexión desde el navegador del POS</strong>
+                        <div>Para Epson ePOS, ingresá la IP de la impresora. Para ESC/POS, ingresá el endpoint del puente y el destino de red permitido. La prueba imprime un ticket físico.</div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='use_type']" position="after">
+                <field name="epos_print_last_test_state" string="Estado de la última prueba" widget="badge"
+                       decoration-success="epos_print_last_test_state == 'ok'"
+                       decoration-danger="epos_print_last_test_state == 'error'" readonly="1"/>
+                <field name="epos_print_last_test_at" string="Fecha de última prueba" readonly="1"/>
+                <field name="epos_print_last_test_message" string="Detalle de última prueba" readonly="1"
+                       invisible="not epos_print_last_test_message"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_epos_print_pos_config_form_inherit" model="ir.ui.view">
+        <field name="name">epos.print.pos.config.form.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='other_devices']" position="attributes">
+                <attribute name="string">Impresoras de recibos</attribute>
+                <attribute name="help">Imprimí recibos y tickets desde el navegador de este POS.</attribute>
+            </xpath>
+            <xpath expr="//setting[@id='preparation_devices']" position="attributes">
+                <attribute name="string">Impresoras de cocina y comandas</attribute>
+                <attribute name="help">Enviá los productos a cocina, barra u otras estaciones según sus categorías.</attribute>
+            </xpath>
+            <xpath expr="//field[@name='receipt_printer_ids']" position="attributes">
+                <attribute name="string">Impresoras de recibos</attribute>
+            </xpath>
+            <xpath expr="//field[@name='preparation_printer_ids']" position="attributes">
+                <attribute name="string">Impresoras de preparación</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_epos_print_pos_configs" model="ir.actions.act_window">
+        <field name="name">Configurar por Punto de Venta</field>
+        <field name="res_model">pos.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+
+    <record id="action_epos_print_printers" model="ir.actions.act_window">
+        <field name="name">Impresoras</field>
+        <field name="res_model">pos.printer</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_epos_print_printer_list"/>
+    </record>
+
+    <menuitem id="menu_epos_print_root"
+              name="ePOS Print"
+              sequence="58"
+              web_icon="ePOS_print,static/description/icon.svg"
+              action="action_epos_print_pos_configs"
+              groups="point_of_sale.group_pos_manager"/>
+
+    <menuitem id="menu_epos_print_pos_configs"
+              name="Configurar por Punto de Venta"
+              parent="menu_epos_print_root"
+              action="action_epos_print_pos_configs"
+              sequence="10"
+              groups="point_of_sale.group_pos_manager"/>
+
+    <menuitem id="menu_epos_print_printers"
+              name="Impresoras"
+              parent="menu_epos_print_root"
+              action="action_epos_print_printers"
+              sequence="20"
+              groups="point_of_sale.group_pos_manager"/>
+</odoo>

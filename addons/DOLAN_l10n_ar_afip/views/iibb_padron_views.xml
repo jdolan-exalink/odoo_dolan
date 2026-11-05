@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vistas de Padrón IIBB -->
+    <record id="view_dolan_iibb_padron_tree" model="ir.ui.view">
+        <field name="name">dolan.iibb.padron.list</field>
+        <field name="model">dolan.iibb.padron</field>
+        <field name="arch" type="xml">
+            <list string="Padrón Alícuotas IIBB">
+                <field name="vat"/>
+                <field name="partner_id"/>
+                <field name="jurisdiction"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+                <field name="perception_aliquot"/>
+                <field name="withholding_aliquot"/>
+                <field name="regime_code"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_iibb_padron_form" model="ir.ui.view">
+        <field name="name">dolan.iibb.padron.form</field>
+        <field name="model">dolan.iibb.padron</field>
+        <field name="arch" type="xml">
+            <form string="Registro de Padrón IIBB">
+                <sheet>
+                    <group>
+                        <group string="Identificación">
+                            <field name="vat"/>
+                            <field name="partner_id"/>
+                            <field name="jurisdiction"/>
+                        </group>
+                        <group string="Vigencia y Alícuotas">
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                            <field name="perception_aliquot"/>
+                            <field name="withholding_aliquot"/>
+                            <field name="regime_code"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_iibb_padron_search" model="ir.ui.view">
+        <field name="name">dolan.iibb.padron.search</field>
+        <field name="model">dolan.iibb.padron</field>
+        <field name="arch" type="xml">
+            <search string="Buscar en Padrón">
+                <field name="vat"/>
+                <field name="partner_id"/>
+                <field name="jurisdiction"/>
+                <filter string="ARBA (Bs As)" name="arba" domain="[('jurisdiction', '=', 'arba')]"/>
+                <filter string="AGIP (CABA)" name="agip" domain="[('jurisdiction', '=', 'agip')]"/>
+                <filter string="Jurisdicción" name="grp_jurisdiction" context="{'group_by': 'jurisdiction'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_iibb_padron" model="ir.actions.act_window">
+        <field name="name">Padrones IIBB (ARBA / AGIP)</field>
+        <field name="res_model">dolan.iibb.padron</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_dolan_iibb_padron_search"/>
+    </record>
+
+    <!-- Wizard de Importación de Padrón -->
+    <record id="view_dolan_iibb_padron_import_wizard_form" model="ir.ui.view">
+        <field name="name">dolan.iibb.padron.import.wizard.form</field>
+        <field name="model">dolan.iibb.padron.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Importar Padrón de Alícuotas IIBB">
+                <field name="state" invisible="1"/>
+                <div class="alert alert-info" role="alert" invisible="state != 'draft'">
+                    <strong>Suba el archivo oficial del padrón</strong> (ARBA mensual o AGIP). El asistente actualizará masivamente las alícuotas de percepción y retención aplicables para cada CUIT en la jurisdicción seleccionada.
+                </div>
+                <div class="alert alert-success" role="alert" invisible="state != 'done'">
+                    <strong>¡Importación finalizada con éxito!</strong> Se importaron <field name="records_processed" readonly="1" class="font-weight-bold"/> registros de alícuotas.
+                </div>
+                <group invisible="state != 'draft'">
+                    <group>
+                        <field name="jurisdiction"/>
+                        <field name="attachment_filename" invisible="1"/>
+                        <field name="attachment_file" filename="attachment_filename"/>
+                    </group>
+                    <group>
+                        <field name="from_date"/>
+                        <field name="to_date"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_import_padron"
+                            string="Procesar e Importar Padrón"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_iibb_padron_import_wizard" model="ir.actions.act_window">
+        <field name="name">Importador Padrón IIBB</field>
+        <field name="res_model">dolan.iibb.padron.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Certificados de Retención -->
+    <record id="view_dolan_retention_certificate_tree" model="ir.ui.view">
+        <field name="name">dolan.retention.certificate.list</field>
+        <field name="model">dolan.retention.certificate</field>
+        <field name="arch" type="xml">
+            <list string="Certificados de Retención">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="partner_vat"/>
+                <field name="tax_type"/>
+                <field name="base_amount"/>
+                <field name="aliquot"/>
+                <field name="amount"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_retention_certificate_form" model="ir.ui.view">
+        <field name="name">dolan.retention.certificate.form</field>
+        <field name="model">dolan.retention.certificate</field>
+        <field name="arch" type="xml">
+            <form string="Certificado de Retención Impositiva">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Datos del Sujeto Retenido">
+                            <field name="partner_id"/>
+                            <field name="partner_vat"/>
+                            <field name="date"/>
+                            <field name="payment_id"/>
+                        </group>
+                        <group string="Cálculo Impositivo">
+                            <field name="company_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="tax_type"/>
+                            <field name="base_amount"/>
+                            <field name="aliquot"/>
+                            <field name="amount" class="text-primary font-weight-bold"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_retention_certificate" model="ir.actions.act_window">
+        <field name="name">Certificados de Retención (SICORE / SIRE)</field>
+        <field name="res_model">dolan.retention.certificate</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menús en Contabilidad / Fiscal -->
+    <menuitem id="menu_dolan_iibb_padron_root"
+              name="Padrones y Retenciones"
+              parent="account.menu_finance_entries"
+              sequence="40"/>
+
+    <menuitem id="menu_dolan_iibb_padron"
+              name="Alícuotas IIBB (ARBA / AGIP)"
+              parent="menu_dolan_iibb_padron_root"
+              action="action_dolan_iibb_padron"
+              sequence="10"/>
+
+    <menuitem id="menu_dolan_iibb_padron_import"
+              name="Importar Padrón ARBA / AGIP"
+              parent="menu_dolan_iibb_padron_root"
+              action="action_dolan_iibb_padron_import_wizard"
+              sequence="20"/>
+
+    <menuitem id="menu_dolan_retention_certificate"
+              name="Certificados de Retención"
+              parent="menu_dolan_iibb_padron_root"
+              action="action_dolan_retention_certificate"
+              sequence="30"/>
+</odoo>

@@ -1,0 +1,3 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_ocr_extractor_user,dolan.ocr.extractor.user,dolan.ocr.extractor,base.group_user,r,
+access_dolan_ocr_extractor_system,dolan.ocr.extractor.system,dolan.ocr.extractor,base.group_system,crud,

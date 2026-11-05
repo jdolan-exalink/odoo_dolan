@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_account_asset_list" model="ir.ui.view">
+        <field name="name">dolan.account.asset.list</field>
+        <field name="model">dolan.account.asset</field>
+        <field name="arch" type="xml">
+            <list string="Activos Fijos y Bienes de Uso">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="acquisition_date"/>
+                <field name="original_value"/>
+                <field name="depreciated_value"/>
+                <field name="book_value"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'open'"
+                       decoration-muted="state == 'close'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_account_asset_line_list" model="ir.ui.view">
+        <field name="name">dolan.account.asset.line.report.list</field>
+        <field name="model">dolan.account.asset.line</field>
+        <field name="arch" type="xml">
+            <list string="Tabla de Amortización" create="false" edit="false" delete="false">
+                <field name="asset_id"/>
+                <field name="sequence"/>
+                <field name="depreciation_date"/>
+                <field name="name"/>
+                <field name="amount" sum="Total amortización"/>
+                <field name="depreciated_value"/>
+                <field name="remaining_value"/>
+                <field name="move_id"/>
+                <field name="move_posted"/>
+                <field name="currency_id" column_invisible="True"/>
+                <button name="action_create_move" type="object" string="Contabilizar cuota" icon="fa-check" invisible="move_posted"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_account_asset_form" model="ir.ui.view">
+        <field name="name">dolan.account.asset.form</field>
+        <field name="model">dolan.account.asset</field>
+        <field name="arch" type="xml">
+            <form string="Activo Fijo / Bien de Uso">
+                <header>
+                    <button name="action_compute_depreciation_board"
+                            type="object"
+                            string="Calcular Cuadro de Amortización"
+                            class="btn-secondary"
+                            invisible="state == 'close'"/>
+                    <button name="action_validate"
+                            type="object"
+                            string="Confirmar y Poner en Curso"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_close"
+                            type="object"
+                            string="Dar de Baja / Cerrar"
+                            class="btn-secondary"
+                            invisible="state != 'open'"/>
+                    <button name="action_set_to_draft"
+                            type="object"
+                            string="Pasar a Borrador"
+                            class="btn-secondary"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Ej. Rodado Utilitario / Servidor Rack..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Valores del Bien de Uso">
+                            <field name="code"/>
+                            <field name="company_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="acquisition_date"/>
+                            <field name="original_value"/>
+                            <field name="salvage_value"/>
+                            <field name="depreciable_value"/>
+                            <field name="depreciated_value"/>
+                            <field name="book_value"/>
+                        </group>
+                        <group string="Parámetros Contables y Amortización">
+                            <field name="method"/>
+                            <field name="method_period"/>
+                            <field name="method_number"/>
+                            <field name="journal_id"/>
+                            <field name="asset_account_id"/>
+                            <field name="depreciation_account_id"/>
+                            <field name="expense_account_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Cuadro de Amortización" name="depreciation_board">
+                            <field name="depreciation_line_ids">
+                                <list string="Cuotas de Amortización" editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                    <field name="depreciation_date"/>
+                                    <field name="amount"/>
+                                    <field name="depreciated_value"/>
+                                    <field name="remaining_value"/>
+                                    <field name="move_id"/>
+                                    <field name="move_posted"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <button name="action_create_move"
+                                            type="object"
+                                            string="Contabilizar Cuota"
+                                            icon="fa-check"
+                                            invisible="move_posted"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_account_asset" model="ir.actions.act_window">
+        <field name="name">Activos Fijos (Bienes de Uso)</field>
+        <field name="res_model">dolan.account.asset</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_dolan_asset_depreciation_schedule" model="ir.actions.act_window">
+        <field name="name">Tabla de Amortización</field>
+        <field name="res_model">dolan.account.asset.line</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

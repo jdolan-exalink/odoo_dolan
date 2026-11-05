@@ -1,0 +1,56 @@
+/*
+ * Fix wkhtmltopdf: los bordes definidos a nivel <tr> se pintan desplazados
+ * ~media fila hacia abajo, lo que tachaba visualmente las filas de pago
+ * ("Pagado el ...") que siguen a la fila de Total en el cuadro de totales
+ * (regla original: .o_total_table .o_total { border-top } en report_tables.scss
+ * del módulo web). Se anula el borde a nivel fila y se repone a nivel celda,
+ * donde wkhtmltopdf lo renderiza en la posición correcta.
+ */
+#total .o_total_table tr {
+    border-top: none !important;
+}
+
+#total .o_total_table tr.o_total td {
+    border-top: 1px solid #dee2e6 !important;
+}
+
+/*
+ * Totales y pie fiscal (Ley 27.743 + ARCA/CAE) al fondo de la hoja.
+ * Solo reportes de factura: data-report-id lleva el XML ID de la ACCIÓN de
+ * reporte (account.account_invoices = "con pagos", account.account_invoices_
+ * without_payment = "sin pagos"), así el resto de los reportes no se afecta.
+ *
+ * Técnica: .page pasa a display:table con altura fija y cada hijo directo a
+ * display:table-row; la fila de líneas (height:100%) absorbe el espacio
+ * sobrante y empuja el bloque final (NOTA + totales + Ley 27.743 + ARCA/CAE)
+ * contra el fondo. Es la única vía confiable en wkhtmltopdf: position:absolute
+ * funciona pero .page no se estira con min-height menor a una hoja (bug del
+ * WebKit antiguo), y window.innerHeight llega en 0 por el html{height:0} del
+ * minimal_layout, así que tampoco sirve medir con JS.
+ *
+ * La altura (240mm) está calibrada contra el pipeline real: Odoo invoca
+ * wkhtmltopdf con --zoom 96/90 (dpi 90 del paperformat), así que el alto
+ * efectivo es ~1.07x. Con el A4 estándar (margen inf. 32mm) el pie queda a
+ * ~10mm del margen inferior. Si el contenido supera una hoja, la tabla crece
+ * y el pie queda al final sin páginas en blanco extra. Si se cambia el
+ * paperformat o el dpi, recalibrar esta medida.
+ */
+body[data-report-id="account.account_invoices"] .page,
+body[data-report-id="account.account_invoices_without_payment"] .page {
+    display: table;
+    width: 100%;
+    height: 240mm;
+}
+
+body[data-report-id="account.account_invoices"] .page > .oe_structure,
+body[data-report-id="account.account_invoices"] .page > .overflow-hidden,
+body[data-report-id="account.account_invoices_without_payment"] .page > .oe_structure,
+body[data-report-id="account.account_invoices_without_payment"] .page > .overflow-hidden {
+    display: table-row;
+}
+
+body[data-report-id="account.account_invoices"] .page > .table-responsive-sm,
+body[data-report-id="account.account_invoices_without_payment"] .page > .table-responsive-sm {
+    display: table-row;
+    height: 100%;
+}

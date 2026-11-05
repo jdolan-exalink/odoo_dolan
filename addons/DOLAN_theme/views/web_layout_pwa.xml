@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="web_layout_pwa" inherit_id="web.layout">
+        <xpath expr="//head" position="inside">
+            <!-- DOLAN PWA Support -->
+            <link rel="manifest" href="/dolan_theme/manifest.json"/>
+            <meta name="theme-color" content="#714B67"/>
+            <meta name="apple-mobile-web-app-capable" content="yes"/>
+            <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+            <meta name="apple-mobile-web-app-title" content="DOLAN ERP"/>
+            <link rel="apple-touch-icon" href="/DOLAN_theme/static/description/icon.png"/>
+            <meta name="mobile-web-app-capable" content="yes"/>
+            <meta name="application-name" content="DOLAN"/>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="profile_kretz_itegra_draft" model="scale.export.profile">
+        <field name="name">Kretz / iTegra (pendiente de validación)</field>
+        <field name="code">KRETZ_ITEGRA_DRAFT</field>
+        <field name="brand">kretz</field>
+        <field name="adapter_code">kretz_itegra</field>
+        <field name="validation_state">draft</field>
+        <field name="requires_plu">1</field>
+        <field name="notes">Bloqueado hasta recibir un archivo aceptado por iTegra y probar la importación real. No se asume extensión ni estructura.</field>
+    </record>
+</odoo>

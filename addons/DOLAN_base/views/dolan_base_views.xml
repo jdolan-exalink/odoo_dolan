@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista Lista de Perfiles de Cliente DOLAN -->
+    <record id="view_dolan_client_profile_list" model="ir.ui.view">
+        <field name="name">dolan.client.profile.list</field>
+        <field name="model">dolan.client.profile</field>
+        <field name="arch" type="xml">
+            <list string="Perfiles de Cliente DOLAN">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="module_names"/>
+                <field name="is_applied" widget="boolean_toggle" readonly="1"/>
+                <button name="action_apply_profile" string="Instalar Perfil" type="object" class="btn-primary"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista Formulario de Perfiles de Cliente DOLAN -->
+    <record id="view_dolan_client_profile_form" model="ir.ui.view">
+        <field name="name">dolan.client.profile.form</field>
+        <field name="model">dolan.client.profile</field>
+        <field name="arch" type="xml">
+            <form string="Perfil de Cliente DOLAN">
+                <header>
+                    <button name="action_apply_profile" string="Aplicar e Instalar Módulos del Perfil" type="object" class="oe_highlight"/>
+                    <button name="action_hide_enterprise_tiles" string="Ocultar aplicaciones no disponibles en CE" type="object" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="sequence"/>
+                            <field name="is_applied"/>
+                        </group>
+                        <group>
+                            <field name="module_names"/>
+                        </group>
+                    </group>
+                    <group string="Descripción del Perfil">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción de Perfiles de Cliente -->
+    <record id="action_dolan_client_profile" model="ir.actions.act_window">
+        <field name="name">Perfiles de Cliente DOLAN</field>
+        <field name="res_model">dolan.client.profile</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Asistente de Alta Rápida Multi-Empresa Argentina -->
+    <record id="view_dolan_company_onboarding_wizard_form" model="ir.ui.view">
+        <field name="name">dolan.company.onboarding.wizard.form</field>
+        <field name="model">dolan.company.onboarding.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Alta Rápida de Nueva Empresa Argentina (Multi-CUIT)">
+                <group>
+                    <group string="Datos Fiscales ARCA / AFIP">
+                        <field name="name" placeholder="Ej.: Empresa Ejemplo S.R.L."/>
+                        <field name="cuit" placeholder="30-71234567-9"/>
+                        <field name="afip_responsibility_type_id"/>
+                        <field name="pos_number"/>
+                        <field name="env_type"/>
+                    </group>
+                    <group string="Ubicación y Contacto">
+                        <field name="street"/>
+                        <field name="city"/>
+                        <field name="zip_code"/>
+                        <field name="state_id"/>
+                        <field name="email"/>
+                        <field name="phone"/>
+                        <field name="grant_current_user"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_create_argentine_company" string="Crear Empresa Argentina" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_company_onboarding_wizard" model="ir.actions.act_window">
+        <field name="name">Nueva Empresa Argentina (Multi-CUIT)</field>
+        <field name="res_model">dolan.company.onboarding.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menús bajo Ajustes -->
+    <menuitem id="menu_dolan_root_config"
+              name="Suite DOLAN Argentina"
+              parent="base.menu_administration"
+              sequence="1"/>
+
+    <menuitem id="menu_dolan_client_profiles"
+              name="Perfiles de Módulos DOLAN"
+              parent="menu_dolan_root_config"
+              action="action_dolan_client_profile"
+              sequence="10"/>
+
+    <menuitem id="menu_dolan_company_onboarding"
+              name="Alta Rápida Multi-Empresa (CUIT)"
+              parent="menu_dolan_root_config"
+              action="action_dolan_company_onboarding_wizard"
+              sequence="20"/>
+</odoo>

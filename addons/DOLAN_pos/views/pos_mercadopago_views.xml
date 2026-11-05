@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_mercadopago" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.mercadopago</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Mercado Pago Argentina (QR / Point)">
+                    <field name="mp_integration_mode"/>
+                    <field name="mp_bearer_token" password="True" invisible="mp_integration_mode == 'none'"/>
+                    <field name="mp_user_id" invisible="mp_integration_mode != 'qr_dynamic'"/>
+                    <field name="mp_external_pos_id" invisible="mp_integration_mode != 'qr_dynamic'"/>
+                    <field name="mp_point_device_id" invisible="mp_integration_mode != 'point'"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

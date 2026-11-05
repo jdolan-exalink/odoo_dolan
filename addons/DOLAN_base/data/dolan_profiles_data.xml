@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="profile_core" model="dolan.client.profile">
+            <field name="name">Core Argentina (Facturación ARCA + Contabilidad + IA + Estética)</field>
+            <field name="code">core</field>
+            <field name="sequence">10</field>
+            <field name="module_names">DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp</field>
+            <field name="description">Paquete esencial para cualquier empresa en Argentina: estética responsive OWL 3, Facturación Electrónica ARCA/AFIP, Contabilidad completa, IA con OAuth de ChatGPT, lector OCR de comprobantes y WhatsApp con WAHA.</field>
+        </record>
+
+        <record id="profile_comercio" model="dolan.client.profile">
+            <field name="name">Comercio, Retail &amp; Gastronomía</field>
+            <field name="code">comercio</field>
+            <field name="sequence">20</field>
+            <field name="module_names">DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_pos,DOLAN_stock_mrp</field>
+            <field name="description">Incluye todo el paquete Core Argentina más Punto de Venta con Pantalla de Cocina (Kitchen Display), cobro de cuenta corriente en caja y lector de Código de Barras.</field>
+        </record>
+
+        <record id="profile_industria" model="dolan.client.profile">
+            <field name="name">Industria, Planta &amp; Manufactura</field>
+            <field name="code">industria</field>
+            <field name="sequence">30</field>
+            <field name="module_names">DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_stock_mrp,DOLAN_views</field>
+            <field name="description">Incluye todo el paquete Core Argentina más Taller MRP II (Shop Floor), Control de Calidad, Código de Barras y Vistas Gantt/Grid/Map.</field>
+        </record>
+
+        <record id="profile_servicios" model="dolan.client.profile">
+            <field name="name">Servicios, Suscripciones &amp; Alquileres</field>
+            <field name="code">servicios</field>
+            <field name="sequence">40</field>
+            <field name="module_names">DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_subscription,DOLAN_renting,DOLAN_views,DOLAN_knowledge_bi</field>
+            <field name="description">Incluye todo el paquete Core Argentina más Abonos Recurrentes, Alquiler de equipos, Base de Conocimiento Wiki (RAG) y Tableros BI.</field>
+        </record>
+
+        <record id="profile_full" model="dolan.client.profile">
+            <field name="name">Suite Completa DOLAN (Paridad 100% Web Demo)</field>
+            <field name="code">full</field>
+            <field name="sequence">50</field>
+            <field name="module_names">DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_views,DOLAN_pos,DOLAN_stock_mrp,DOLAN_subscription,DOLAN_renting,DOLAN_knowledge_bi</field>
+            <field name="description">Activa los 13 módulos de la suite DOLAN_* sobre Odoo CE 20.</field>
+        </record>
+    </data>
+</odoo>

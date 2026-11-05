@@ -1,0 +1,2 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_screen_preference_user,dolan.screen.preference user,dolan.screen.preference,base.group_user,cru,"[('user_id', '=', user.id)]"

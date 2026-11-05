@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_ar_fiscal_report_line_list" model="ir.ui.view">
+        <field name="name">l10n_ar.fiscal.report.line.list</field>
+        <field name="model">l10n_ar.fiscal.report.line</field>
+        <field name="arch" type="xml">
+            <list string="Resumen Fiscal Argentino" create="false" edit="false" delete="false">
+                <field name="name"/>
+                <field name="tax_group_id" optional="show"/>
+                <field name="tax_group_ids" optional="hide" widget="many2many_tags"/>
+                <field name="document_count" sum="Comprobantes"/>
+                <field name="tax_base_amount" sum="Base imponible"/>
+                <field name="tax_amount" sum="Importe del impuesto"/>
+                <button name="action_open_entries" type="object" string="Apuntes" icon="fa-list"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_ar_fiscal_report_line_search" model="ir.ui.view">
+        <field name="name">l10n_ar.fiscal.report.line.search</field>
+        <field name="model">l10n_ar.fiscal.report.line</field>
+        <field name="arch" type="xml">
+            <search string="Buscar en el informe fiscal">
+                <field name="name"/>
+                <field name="jurisdiction_id"/>
+                <field name="tax_group_ids"/>
+                <field name="tax_ids"/>
+                <filter name="group_by_jurisdiction" string="Jurisdicción" domain="[]" context="{'group_by': 'jurisdiction_id'}"/>
+                <filter name="group_by_group" string="Grupo de impuesto" domain="[]" context="{'group_by': 'tax_group_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_l10n_ar_fiscal_report_line_pivot" model="ir.ui.view">
+        <field name="name">l10n_ar.fiscal.report.line.pivot</field>
+        <field name="model">l10n_ar.fiscal.report.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Resumen Fiscal Argentino">
+                <field name="jurisdiction_id" type="row"/>
+                <field name="tax_group_id" type="row"/>
+                <field name="document_count" type="measure"/>
+                <field name="tax_base_amount" type="measure"/>
+                <field name="tax_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_l10n_ar_fiscal_report_line_form" model="ir.ui.view">
+        <field name="name">l10n_ar.fiscal.report.line.form</field>
+        <field name="model">l10n_ar.fiscal.report.line</field>
+        <field name="arch" type="xml">
+            <form string="Resumen por Jurisdicción" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_open_entries" type="object" string="Ver apuntes fiscales" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="jurisdiction_id"/>
+                        <field name="tax_group_id"/>
+                        <field name="tax_group_ids" widget="many2many_tags"/>
+                        <field name="tax_ids" widget="many2many_tags"/>
+                    </group>
+                    <group>
+                        <field name="document_count"/>
+                        <field name="tax_base_amount"/>
+                        <field name="tax_amount"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_l10n_ar_fiscal_report_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_ar.fiscal.report.wizard.form</field>
+        <field name="model">l10n_ar.fiscal.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Informes Fiscales Argentinos">
+                <header>
+                    <button name="action_compute_report" type="object" string="Consultar" class="btn-primary"/>
+                    <button name="action_export_csv" type="object" string="Exportar CSV"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Filtros">
+                            <field name="company_id"/>
+                            <field name="report_type"/>
+                            <field name="jurisdiction_id" invisible="report_type not in ('iibb_sales', 'iibb_purchase')"/>
+                        </group>
+                        <group string="Período y moneda">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="scope_note" readonly="1"/>
+                        </group>
+                    </group>
+                    <field name="export_filename" invisible="1"/>
+                    <field name="export_file" filename="export_filename" invisible="not export_file"/>
+                    <div class="alert alert-info" role="alert">
+                        Las bases y los importes se expresan en la moneda de la compañía y provienen de impuestos de apuntes publicados.
+                        Los reportes son informativos; su cálculo no determina obligaciones provinciales ni reemplaza una presentación fiscal.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ar_vat_sales_report" model="ir.actions.act_window">
+        <field name="name">Libro IVA Ventas</field>
+        <field name="res_model">l10n_ar.fiscal.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'default_report_type': 'vat_sales'}</field>
+    </record>
+    <record id="action_l10n_ar_vat_purchase_report" model="ir.actions.act_window">
+        <field name="name">Libro IVA Compras</field>
+        <field name="res_model">l10n_ar.fiscal.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'default_report_type': 'vat_purchase'}</field>
+    </record>
+    <record id="action_l10n_ar_iibb_sales_report" model="ir.actions.act_window">
+        <field name="name">IIBB Ventas por jurisdicción</field>
+        <field name="res_model">l10n_ar.fiscal.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'default_report_type': 'iibb_sales'}</field>
+    </record>
+    <record id="action_l10n_ar_iibb_purchase_report" model="ir.actions.act_window">
+        <field name="name">IIBB Compras por jurisdicción</field>
+        <field name="res_model">l10n_ar.fiscal.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'default_report_type': 'iibb_purchase'}</field>
+    </record>
+
+    <menuitem id="menu_l10n_ar_fiscal_report_root" name="Informes interactivos" parent="l10n_ar.account_reports_ar_statements_menu" sequence="7"/>
+    <menuitem id="menu_l10n_ar_vat_sales_report" name="Libro IVA Ventas" parent="menu_l10n_ar_fiscal_report_root" action="action_l10n_ar_vat_sales_report" sequence="10"/>
+    <menuitem id="menu_l10n_ar_vat_purchase_report" name="Libro IVA Compras" parent="menu_l10n_ar_fiscal_report_root" action="action_l10n_ar_vat_purchase_report" sequence="20"/>
+    <menuitem id="menu_l10n_ar_iibb_sales_report" name="IIBB Ventas por jurisdicción" parent="menu_l10n_ar_fiscal_report_root" action="action_l10n_ar_iibb_sales_report" sequence="30"/>
+    <menuitem id="menu_l10n_ar_iibb_purchase_report" name="IIBB Compras por jurisdicción" parent="menu_l10n_ar_fiscal_report_root" action="action_l10n_ar_iibb_purchase_report" sequence="40"/>
+
+    <menuitem id="menu_l10n_ar_invoicing_reports" name="Informes argentinos interactivos" parent="DOLAN_accounting.menu_dolan_invoicing_reports" sequence="30"/>
+    <menuitem id="menu_l10n_ar_invoice_vat_sales_report" name="Libro IVA Ventas" parent="menu_l10n_ar_invoicing_reports" action="action_l10n_ar_vat_sales_report" sequence="10"/>
+    <menuitem id="menu_l10n_ar_invoice_vat_purchase_report" name="Libro IVA Compras" parent="menu_l10n_ar_invoicing_reports" action="action_l10n_ar_vat_purchase_report" sequence="20"/>
+    <menuitem id="menu_l10n_ar_invoice_iibb_sales_report" name="IIBB Ventas por jurisdicción" parent="menu_l10n_ar_invoicing_reports" action="action_l10n_ar_iibb_sales_report" sequence="30"/>
+    <menuitem id="menu_l10n_ar_invoice_iibb_purchase_report" name="IIBB Compras por jurisdicción" parent="menu_l10n_ar_invoicing_reports" action="action_l10n_ar_iibb_purchase_report" sequence="40"/>
+
+    <!-- Replace generic accounting wizard shortcuts with the real fiscal reports. -->
+    <record id="DOLAN_accounting.menu_finance_report_tax" model="ir.ui.menu">
+        <field name="name">IVA Ventas (consulta)</field>
+        <field name="action" ref="action_l10n_ar_vat_sales_report"/>
+    </record>
+    <record id="DOLAN_accounting.menu_finance_report_fiscal" model="ir.ui.menu">
+        <field name="name">IIBB Ventas por jurisdicción</field>
+        <field name="action" ref="action_l10n_ar_iibb_sales_report"/>
+    </record>
+    <record id="DOLAN_accounting.menu_finance_closing_tax_returns" model="ir.ui.menu">
+        <field name="name">Libro IVA Digital (exportación limitada)</field>
+        <field name="action" ref="action_l10n_ar_libro_iva_digital_wizard"/>
+    </record>
+</odoo>

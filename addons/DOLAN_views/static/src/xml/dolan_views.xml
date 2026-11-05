@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="DOLAN_views.MultiViewPlanner">
+        <div class="o_dolan_multiview_container p-3">
+            <!-- Top Toolbar -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                    <h3 class="m-0 fw-bold">Planificador Multi-Vista CE</h3>
+                    <select class="form-select form-select-sm w-auto ms-2" t-on-change="(ev) => this.onCategoryChange(ev)">
+                        <option value="all">Todos los ámbitos (Proyectos, MRP, Alquileres, RRHH, Contactos)</option>
+                        <option value="project">Proyectos y Tareas</option>
+                        <option value="mrp">Órdenes de Producción (MRP)</option>
+                        <option value="rental">Alquileres y Reservas</option>
+                        <option value="hr">Turnos y RRHH</option>
+                        <option value="contact">Contactos Geolocalizados</option>
+                    </select>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button"
+                            t-attf-class="btn btn-sm {{ this.state.activeMode === 'gantt' ? 'btn-primary' : 'btn-outline-primary' }}"
+                            t-on-click="() => this.setMode('gantt')">
+                        <i class="fa fa-tasks me-1"/>Gantt
+                    </button>
+                    <button type="button"
+                            t-attf-class="btn btn-sm {{ this.state.activeMode === 'cohort' ? 'btn-primary' : 'btn-outline-primary' }}"
+                            t-on-click="() => this.setMode('cohort')">
+                        <i class="fa fa-th me-1"/>Cohort
+                    </button>
+                    <button type="button"
+                            t-attf-class="btn btn-sm {{ this.state.activeMode === 'grid' ? 'btn-primary' : 'btn-outline-primary' }}"
+                            t-on-click="() => this.setMode('grid')">
+                        <i class="fa fa-table me-1"/>Grid Semanal
+                    </button>
+                    <button type="button"
+                            t-attf-class="btn btn-sm {{ this.state.activeMode === 'map' ? 'btn-primary' : 'btn-outline-primary' }}"
+                            t-on-click="() => this.setMode('map')">
+                        <i class="fa fa-map-marker me-1"/>Mapa OSM
+                    </button>
+                    <button type="button" class="btn btn-sm btn-secondary ms-2" t-on-click="() => this.openRecordsList()">
+                        <i class="fa fa-list me-1"/>Gestionar Registros
+                    </button>
+                </div>
+            </div>
+
+            <!-- GANTT VIEW -->
+            <t t-if="this.state.activeMode === 'gantt'">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <span class="fw-semibold">Diagrama de Gantt Interactivo con Barras de Progreso</span>
+                        <span class="badge bg-info text-dark"><t t-out="this.state.ganttRows.length"/> actividades</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 22%;">Actividad / Recurso</th>
+                                    <th style="width: 14%;">Responsable</th>
+                                    <th style="width: 44%;">Línea de Tiempo &amp; Progreso</th>
+                                    <th style="width: 20%;" class="text-end">Ajuste Rápido</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="this.state.ganttRows" t-as="row" t-key="row.id">
+                                    <tr>
+                                        <td>
+                                            <div class="fw-bold"><t t-out="row.name"/></div>
+                                            <small class="text-muted"><t t-out="row.date_start"/> → <t t-out="row.date_stop"/></small>
+                                        </td>
+                                        <td><span class="badge bg-secondary"><t t-out="row.responsible"/></span></td>
+                                        <td>
+                                            <div class="dolan-gantt-track">
+                                                <div class="dolan-gantt-bar"
+                                                     t-attf-style="left: {{ row.left_pct }}%; width: {{ row.width_pct }}%;">
+                                                    <div class="dolan-gantt-fill"
+                                                         t-attf-style="width: {{ row.progress }}%;"/>
+                                                    <span class="dolan-gantt-label"><t t-out="row.progress"/>%</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="btn-group btn-group-sm">
+                                                <button class="btn btn-outline-secondary" t-on-click="() => this.onProgressStep(row, -10)">-10%</button>
+                                                <button class="btn btn-outline-success" t-on-click="() => this.onProgressStep(row, 10)">+10%</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </t>
+
+            <!-- COHORT VIEW -->
+            <t t-if="this.state.activeMode === 'cohort'">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light fw-semibold">Matriz Cohort de Retención y Ciclo de Vida</div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Cohorte (Mes Inicio)</th>
+                                    <th>Total Inicial</th>
+                                    <th>M+0</th>
+                                    <th>M+1</th>
+                                    <th>M+2</th>
+                                    <th>M+3</th>
+                                    <th>M+4</th>
+                                    <th>M+5</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="this.state.cohortRows" t-as="crow" t-key="crow.cohort">
+                                    <tr>
+                                        <td class="fw-bold"><t t-out="crow.cohort"/></td>
+                                        <td><t t-out="crow.initial_count"/></td>
+                                        <t t-foreach="crow.periods" t-as="p" t-key="p.step">
+                                            <td t-attf-style="background-color: rgba(13, 110, 253, {{ (p.pct / 100.0) * 0.45 }});">
+                                                <div class="fw-bold"><t t-out="p.pct"/>%</div>
+                                                <small class="text-muted">(<t t-out="p.count"/>)</small>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </t>
+
+            <!-- WEEKLY GRID VIEW -->
+            <t t-if="this.state.activeMode === 'grid'">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light fw-semibold">Grilla Semanal Editable de Horas y Recursos</div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Recurso / Responsable</th>
+                                    <th>Ámbito</th>
+                                    <t t-foreach="this.state.gridDays" t-as="dayIso" t-key="dayIso">
+                                        <th class="text-center"><t t-out="dayIso"/></th>
+                                    </t>
+                                    <th class="text-end">Total Semana</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="this.state.gridRows" t-as="grow" t-key="grow.key">
+                                    <tr>
+                                        <td class="fw-bold"><t t-out="grow.responsible"/></td>
+                                        <td><span class="badge bg-info text-dark"><t t-out="grow.category_type"/></span></td>
+                                        <t t-foreach="this.state.gridDays" t-as="dayIso" t-key="dayIso">
+                                            <td class="text-center">
+                                                <input type="number"
+                                                       step="0.5"
+                                                       class="form-control form-control-sm text-center"
+                                                       t-att-value="grow.days[dayIso]"
+                                                       t-on-change="(ev) => this.onGridCellChange(grow, dayIso, ev)"/>
+                                            </td>
+                                        </t>
+                                        <td class="text-end fw-bold"><t t-out="grow.total"/> h</td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </t>
+
+            <!-- MAP VIEW (OpenStreetMap) -->
+            <t t-if="this.state.activeMode === 'map'">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-light fw-semibold">Ubicaciones Geolocalizadas (Nominatim / OSM)</div>
+                            <div class="list-group list-group-flush">
+                                <t t-foreach="this.state.mapMarkers" t-as="marker" t-key="marker.id">
+                                    <button type="button"
+                                            class="list-group-item list-group-item-action"
+                                            t-on-click="() => this.selectMarker(marker)">
+                                        <div class="fw-bold"><t t-out="marker.name"/></div>
+                                        <div class="small text-muted"><t t-out="marker.address"/></div>
+                                        <span class="badge bg-secondary"><t t-out="marker.lat"/>, <t t-out="marker.lon"/></span>
+                                    </button>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold">Mapa OpenStreetMap</span>
+                                <t t-if="this.state.selectedMarker">
+                                    <a t-att-href="this.state.selectedMarker.osm_url" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        Abrir en OpenStreetMap
+                                    </a>
+                                </t>
+                            </div>
+                            <div class="card-body p-0" style="min-height: 420px;">
+                                <t t-if="this.state.selectedMarker">
+                                    <iframe width="100%"
+                                            height="420"
+                                            style="border:0;"
+                                            loading="lazy"
+                                            t-attf-src="https://www.openstreetmap.org/export/embed.html?bbox={{ this.state.selectedMarker.lon - 0.02 }},{{ this.state.selectedMarker.lat - 0.02 }},{{ this.state.selectedMarker.lon + 0.02 }},{{ this.state.selectedMarker.lat + 0.02 }}&amp;layer=mapnik&amp;marker={{ this.state.selectedMarker.lat }},{{ this.state.selectedMarker.lon }}"/>
+                                </t>
+                                <t t-else="">
+                                    <div class="p-4 text-center text-muted">
+                                        Seleccione un registro geolocalizado para visualizar el mapa OpenStreetMap.
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

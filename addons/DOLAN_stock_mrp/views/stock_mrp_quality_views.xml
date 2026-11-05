@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========================================================== -->
+    <!-- 1. CÓDIGO DE BARRAS (STOCK BARCODE SESSION VIEWS)          -->
+    <!-- ========================================================== -->
+    <record id="view_dolan_stock_barcode_session_list" model="ir.ui.view">
+        <field name="name">dolan.stock.barcode.session.list</field>
+        <field name="model">dolan.stock.barcode.session</field>
+        <field name="arch" type="xml">
+            <list string="Sesiones de Escaneo de Código de Barras">
+                <field name="name"/>
+                <field name="operation_mode"/>
+                <field name="picking_id"/>
+                <field name="location_id"/>
+                <field name="user_id"/>
+                <field name="last_scan_message"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'in_progress'"
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_stock_barcode_session_form" model="ir.ui.view">
+        <field name="name">dolan.stock.barcode.session.form</field>
+        <field name="model">dolan.stock.barcode.session</field>
+        <field name="arch" type="xml">
+            <form string="Terminal de Código de Barras (Recepciones, Entregas e Inventario)">
+                <header>
+                    <button name="action_process_barcode"
+                            string="Procesar Código Escaneado"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state == 'done'"/>
+                    <button name="action_validate_picking_one_click"
+                            string="Validar Operación en 1 Clic"
+                            type="object"
+                            class="btn-success"
+                            invisible="state == 'done'"/>
+                    <button name="action_open_touch_barcode_terminal"
+                            string="Abrir Terminal Web Fullscreen"
+                            type="object"
+                            class="btn-outline-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="in_progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Configuración de Operación">
+                            <field name="operation_mode"/>
+                            <field name="picking_id" invisible="operation_mode != 'picking'"/>
+                            <field name="location_id"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group string="Escáner Lector USB / Bluetooth">
+                            <field name="barcode_input" placeholder="Escanee EAN13 / Code128 / Ubicación aquí..."/>
+                            <field name="last_scan_status" widget="badge"
+                                   decoration-success="last_scan_status == 'ok'"
+                                   decoration-warning="last_scan_status == 'warning'"
+                                   decoration-danger="last_scan_status == 'error'"/>
+                            <field name="last_scan_message"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Líneas Escaneadas en Tiempo Real" name="scanned_lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="barcode"/>
+                                    <field name="product_id"/>
+                                    <field name="location_id"/>
+                                    <field name="scanned_qty" sum="Total Escaneado"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_stock_barcode_sessions" model="ir.actions.act_window">
+        <field name="name">Código de Barras (Recepciones, Entregas e Inventario)</field>
+        <field name="res_model">dolan.stock.barcode.session</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========================================================== -->
+    <!-- 2. TALLER / SHOP FLOOR (MRP WORKORDER TERMINAL VIEWS)      -->
+    <!-- ========================================================== -->
+    <record id="view_dolan_mrp_workorder_shopfloor_kanban" model="ir.ui.view">
+        <field name="name">mrp.workorder.dolan.shopfloor.kanban</field>
+        <field name="model">mrp.workorder</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="workcenter_id" create="false">
+                <field name="name"/>
+                <field name="production_id"/>
+                <field name="product_id"/>
+                <field name="qty_remaining"/>
+                <field name="state"/>
+                <field name="shopfloor_employee_id"/>
+                <field name="total_labor_cost"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="p-2">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <strong class="fs-5"><field name="production_id"/> - <field name="name"/></strong>
+                                <span class="badge text-bg-info"><field name="state"/></span>
+                            </div>
+                            <div class="mb-1">
+                                Producto: <strong><field name="product_id"/></strong>
+                            </div>
+                            <div class="small text-muted mb-2">
+                                Operario: <field name="shopfloor_employee_id"/> ·
+                                Costo MO: $<field name="total_labor_cost"/>
+                            </div>
+                            <div class="d-flex flex-wrap gap-1 mt-2">
+                                <button name="action_shopfloor_start"
+                                        type="object"
+                                        string="▶ Iniciar"
+                                        class="btn btn-sm btn-primary"
+                                        invisible="state in ('progress', 'done', 'cancel')"/>
+                                <button name="action_shopfloor_pause"
+                                        type="object"
+                                        string="⏸ Pausar"
+                                        class="btn btn-sm btn-warning"
+                                        invisible="state != 'progress'"/>
+                                <button name="action_shopfloor_done"
+                                        type="object"
+                                        string="✔ Terminar"
+                                        class="btn btn-sm btn-success"
+                                        invisible="state in ('done', 'cancel')"/>
+                                <button name="action_shopfloor_register_scrap"
+                                        type="object"
+                                        string="Scrap"
+                                        class="btn btn-sm btn-outline-danger"
+                                        invisible="state in ('done', 'cancel')"/>
+                                <button name="action_shopfloor_maintenance_request"
+                                        type="object"
+                                        string="🔧 Mantenimiento"
+                                        class="btn btn-sm btn-outline-secondary"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_dolan_mrp_workorder_shopfloor_form_inherit" model="ir.ui.view">
+        <field name="name">mrp.workorder.dolan.shopfloor.form.inherit</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Terminal de Planta (Taller / RRHH / Mantenimiento)">
+                    <group>
+                        <field name="shopfloor_employee_id"/>
+                        <field name="equipment_id"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="total_labor_cost"/>
+                        <field name="scrap_qty_recorded"/>
+                    </group>
+                    <group>
+                        <button name="action_shopfloor_start"
+                                string="Iniciar Turno en Taller"
+                                type="object"
+                                class="btn-primary"/>
+                        <button name="action_shopfloor_pause"
+                                string="Pausar Turno"
+                                type="object"
+                                class="btn-warning"/>
+                        <button name="action_shopfloor_done"
+                                string="Terminar Orden de Trabajo"
+                                type="object"
+                                class="btn-success"/>
+                        <button name="action_shopfloor_maintenance_request"
+                                string="Solicitar Mantenimiento de Equipo"
+                                type="object"
+                                class="btn-secondary"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_dolan_mrp_shopfloor" model="ir.actions.act_window">
+        <field name="name">Terminal de Planta - Taller (Shop Floor)</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="view_dolan_mrp_workorder_shopfloor_kanban"/>
+    </record>
+
+    <!-- ========================================================== -->
+    <!-- 3. CONTROL DE CALIDAD (QUALITY POINTS, CHECKS & ALERTS)    -->
+    <!-- ========================================================== -->
+    <record id="view_dolan_quality_point_list" model="ir.ui.view">
+        <field name="name">dolan.quality.point.list</field>
+        <field name="model">dolan.quality.point</field>
+        <field name="arch" type="xml">
+            <list string="Puntos de Control de Calidad">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="title"/>
+                <field name="test_type"/>
+                <field name="picking_type_ids" widget="many2many_tags"/>
+                <field name="user_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_quality_point_form" model="ir.ui.view">
+        <field name="name">dolan.quality.point.form</field>
+        <field name="model">dolan.quality.point</field>
+        <field name="arch" type="xml">
+            <form string="Punto de Control de Calidad">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="title" placeholder="Ej. Control de Espesor en Recepción..."/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="product_ids" widget="many2many_tags"/>
+                            <field name="picking_type_ids" widget="many2many_tags"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="test_type"/>
+                            <field name="norm" invisible="test_type != 'measure'"/>
+                            <field name="tolerance_min" invisible="test_type != 'measure'"/>
+                            <field name="tolerance_max" invisible="test_type != 'measure'"/>
+                            <field name="norm_unit" invisible="test_type != 'measure'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Instrucciones de Inspección" name="instructions">
+                            <field name="instructions"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_quality_check_list" model="ir.ui.view">
+        <field name="name">dolan.quality.check.list</field>
+        <field name="model">dolan.quality.check</field>
+        <field name="arch" type="xml">
+            <list string="Controles de Calidad">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="product_id"/>
+                <field name="picking_id"/>
+                <field name="production_id"/>
+                <field name="test_type"/>
+                <field name="measure"/>
+                <field name="quality_state" widget="badge"
+                       decoration-info="quality_state == 'none'"
+                       decoration-success="quality_state == 'pass'"
+                       decoration-danger="quality_state == 'fail'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_quality_check_form" model="ir.ui.view">
+        <field name="name">dolan.quality.check.form</field>
+        <field name="model">dolan.quality.check</field>
+        <field name="arch" type="xml">
+            <form string="Control de Calidad">
+                <header>
+                    <button name="action_pass"
+                            string="Aprobar Control"
+                            type="object"
+                            class="btn-success"
+                            invisible="quality_state == 'pass'"/>
+                    <button name="action_fail"
+                            string="Rechazar Control"
+                            type="object"
+                            class="btn-danger"
+                            invisible="quality_state == 'fail'"/>
+                    <button name="action_evaluate_measure"
+                            string="Evaluar Medición vs Tolerancia"
+                            type="object"
+                            class="btn-primary"
+                            invisible="test_type != 'measure'"/>
+                    <button name="action_create_quality_alert"
+                            string="Crear Alerta de No Conformidad"
+                            type="object"
+                            class="btn-warning"/>
+                    <field name="quality_state" widget="statusbar" statusbar_visible="none,pass,fail"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/> - <field name="title"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="lot_id"/>
+                            <field name="picking_id"/>
+                            <field name="production_id"/>
+                            <field name="workorder_id"/>
+                        </group>
+                        <group>
+                            <field name="test_type"/>
+                            <field name="measure" invisible="test_type != 'measure'"/>
+                            <field name="tolerance_min" invisible="test_type != 'measure'"/>
+                            <field name="tolerance_max" invisible="test_type != 'measure'"/>
+                            <field name="norm_unit" invisible="test_type != 'measure'"/>
+                            <field name="user_id"/>
+                            <field name="checked_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Instrucciones y Observaciones" name="notes">
+                            <field name="instructions"/>
+                            <field name="notes" placeholder="Notas del inspector de calidad..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_quality_alert_list" model="ir.ui.view">
+        <field name="name">dolan.quality.alert.list</field>
+        <field name="model">dolan.quality.alert</field>
+        <field name="arch" type="xml">
+            <list string="Alertas de Calidad y No Conformidades (CAPA)">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="product_id"/>
+                <field name="priority" widget="priority"/>
+                <field name="user_id"/>
+                <field name="stage" widget="badge"
+                       decoration-danger="stage == 'new'"
+                       decoration-warning="stage in ('root_cause', 'action_plan')"
+                       decoration-success="stage == 'resolved'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_quality_alert_form" model="ir.ui.view">
+        <field name="name">dolan.quality.alert.form</field>
+        <field name="model">dolan.quality.alert</field>
+        <field name="arch" type="xml">
+            <form string="Alerta de Calidad / No Conformidad (CAPA)">
+                <header>
+                    <button name="action_start_root_cause"
+                            string="Analizar Causa Raíz"
+                            type="object"
+                            class="btn-primary"
+                            invisible="stage != 'new'"/>
+                    <button name="action_start_corrective_plan"
+                            string="Iniciar Plan Correctivo"
+                            type="object"
+                            class="btn-warning"
+                            invisible="stage != 'root_cause'"/>
+                    <button name="action_mark_resolved"
+                            string="Cerrar No Conformidad"
+                            type="object"
+                            class="btn-success"
+                            invisible="stage == 'resolved'"/>
+                    <field name="stage" widget="statusbar" statusbar_visible="new,root_cause,action_plan,resolved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/> - <field name="title"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="lot_id"/>
+                            <field name="partner_id"/>
+                            <field name="priority" widget="priority"/>
+                        </group>
+                        <group>
+                            <field name="check_id"/>
+                            <field name="picking_id"/>
+                            <field name="production_id"/>
+                            <field name="workcenter_id"/>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Causa Raíz y Acciones Correctivas (CAPA)" name="capa">
+                            <group>
+                                <field name="description"/>
+                                <field name="root_cause"/>
+                                <field name="corrective_action"/>
+                                <field name="preventive_action"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_quality_points" model="ir.actions.act_window">
+        <field name="name">Puntos de Control de Calidad</field>
+        <field name="res_model">dolan.quality.point</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_dolan_quality_checks" model="ir.actions.act_window">
+        <field name="name">Controles de Calidad</field>
+        <field name="res_model">dolan.quality.check</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_dolan_quality_alerts" model="ir.actions.act_window">
+        <field name="name">Alertas de No Conformidad (CAPA)</field>
+        <field name="res_model">dolan.quality.alert</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========================================================== -->
+    <!-- MENÚS RAÍZ Y SUBMENÚS (Secuencias 155 y 146)               -->
+    <!-- ========================================================== -->
+    <!-- Root Menu: Código de barras (sequence="155") -->
+    <menuitem id="menu_dolan_stock_barcode_root"
+              name="Código de barras"
+              sequence="155"
+              web_icon="DOLAN_stock_mrp,static/description/icon_barcode.svg"
+              action="action_dolan_stock_barcode_sessions"/>
+
+    <menuitem id="menu_dolan_stock_barcode_sessions"
+              name="Escaneo de Remitos e Inventario"
+              parent="menu_dolan_stock_barcode_root"
+              action="action_dolan_stock_barcode_sessions"
+              sequence="10"/>
+
+    <!-- Root Menu: Taller / Shop Floor (sequence="146") -->
+    <menuitem id="menu_dolan_mrp_shopfloor_root"
+              name="Taller"
+              sequence="146"
+              web_icon="DOLAN_stock_mrp,static/description/icon_shopfloor.svg"
+              action="action_dolan_mrp_shopfloor"/>
+
+    <menuitem id="menu_dolan_mrp_shopfloor_terminal"
+              name="Terminal de Planta (Shop Floor)"
+              parent="menu_dolan_mrp_shopfloor_root"
+              action="action_dolan_mrp_shopfloor"
+              sequence="10"/>
+
+    <menuitem id="menu_dolan_quality_checks"
+              name="Controles de Calidad"
+              parent="menu_dolan_mrp_shopfloor_root"
+              action="action_dolan_quality_checks"
+              sequence="20"/>
+
+    <menuitem id="menu_dolan_quality_alerts"
+              name="Alertas de Calidad (CAPA)"
+              parent="menu_dolan_mrp_shopfloor_root"
+              action="action_dolan_quality_alerts"
+              sequence="30"/>
+
+    <menuitem id="menu_dolan_quality_points"
+              name="Puntos de Control (QCP)"
+              parent="menu_dolan_mrp_shopfloor_root"
+              action="action_dolan_quality_points"
+              sequence="40"/>
+
+    <!-- Integración 1 a 1 dentro de Manufactura (mrp.menu_mrp_root) -->
+    <menuitem id="menu_mrp_overview_dolan"
+              name="Resumen"
+              parent="mrp.menu_mrp_root"
+              action="mrp.mrp_workcenter_kanban_action"
+              sequence="5"/>
+
+    <menuitem id="menu_mrp_planning_dolan"
+              name="Planificación"
+              parent="mrp.menu_mrp_root"
+              sequence="22"/>
+
+    <menuitem id="menu_mrp_planning_workorders"
+              name="Órdenes de trabajo (Kanban / Taller)"
+              parent="menu_mrp_planning_dolan"
+              action="action_dolan_mrp_shopfloor"
+              sequence="10"/>
+
+    <menuitem id="menu_mrp_quality_checks_in_mrp"
+              name="Controles de calidad"
+              parent="mrp.menu_mrp_manufacturing"
+              action="action_dolan_quality_checks"
+              sequence="50"/>
+</odoo>

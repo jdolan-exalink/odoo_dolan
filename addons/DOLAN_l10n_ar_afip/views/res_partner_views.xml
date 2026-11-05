@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_dolan_l10n_ar_padron" model="ir.ui.view">
+        <field name="name">res.partner.form.dolan.l10n_ar.padron</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <div class="d-inline-block ms-2" invisible="not vat">
+                    <button name="action_l10n_ar_update_from_padron"
+                            type="object"
+                            string="Buscar en padrón ARCA"
+                            icon="fa-search"
+                            invisible="not vat"
+                            help="Consulta ARCA solo cuando se pulsa este botón. Usa el certificado compartido configurado para Padrón, si existe; no consume créditos IAP."
+                            class="btn btn-sm btn-primary"/>
+                </div>
+                <field name="l10n_ar_padron_status" invisible="not l10n_ar_padron_status"/>
+                <field name="l10n_ar_padron_last_update" invisible="not l10n_ar_padron_last_update"/>
+                <field name="l10n_ar_padron_error" invisible="not l10n_ar_padron_error" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

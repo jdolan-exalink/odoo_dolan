@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_bank_payment_export_wizard_form" model="ir.ui.view">
+        <field name="name">dolan.bank.payment.export.wizard.form</field>
+        <field name="model">dolan.bank.payment.export.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Exportar Pagos a Bancos Argentinos">
+                <field name="state" invisible="1"/>
+                <div class="alert alert-info" role="alert" invisible="state != 'draft'">
+                    <i class="fa fa-info-circle me-1"/>
+                    Este asistente genera los archivos planos (TXT) normalizados según los estándares de 
+                    <strong>Interbanking (Datanet)</strong>, <strong>Banco Galicia</strong>, 
+                    <strong>Banco Santander</strong> y <strong>Banco BBVA</strong> para subir por Home Banking Empresas.
+                </div>
+
+                <group invisible="state != 'draft'">
+                    <group>
+                        <field name="company_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="journal_id" options="{'no_create': True}"/>
+                        <field name="export_format"/>
+                    </group>
+                    <group>
+                        <field name="payment_date"/>
+                        <field name="payment_count"/>
+                        <field name="total_amount" widget="monetary"/>
+                    </group>
+                </group>
+
+                <notebook invisible="state != 'draft'">
+                    <page string="Pagos Seleccionados" name="payments">
+                        <field name="payment_ids">
+                            <list decoration-muted="exported_to_bank">
+                                <field name="name"/>
+                                <field name="date"/>
+                                <field name="partner_id" string="Proveedor"/>
+                                <field name="amount" sum="Total"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="exported_to_bank" widget="boolean_toggle"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+
+                <div invisible="state != 'done'" class="text-center py-4">
+                    <h4 class="text-success mb-3">
+                        <i class="fa fa-check-circle me-1"/> Archivo bancario generado con éxito
+                    </h4>
+                    <p class="text-muted">
+                        Descargue el archivo y súbalo a la plataforma de su banco para ejecutar la transferencia masiva.
+                    </p>
+                    <group class="col-md-6 offset-md-3">
+                        <field name="file_name" invisible="1"/>
+                        <field name="file_data" filename="file_name" widget="binary" string="Descargar Archivo TXT"/>
+                    </group>
+                </div>
+
+                <footer>
+                    <button name="action_generate_export_file" string="Generar Archivo TXT" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_bank_payment_export_wizard" model="ir.actions.act_window">
+        <field name="name">Pago Masivo a Proveedores (Bancos Argentinos)</field>
+        <field name="res_model">dolan.bank.payment.export.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu entry under Accounting > Proveedores -->
+    <menuitem id="menu_dolan_bank_payment_export"
+              name="Pagos Masivos a Bancos (TXT)"
+              parent="account.menu_finance_payables"
+              action="action_dolan_bank_payment_export_wizard"
+              sequence="25"/>
+</odoo>

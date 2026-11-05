@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_ar_afipws_connection_list" model="ir.ui.view">
+        <field name="name">l10n_ar.afipws.connection.list</field>
+        <field name="model">l10n_ar.afipws.connection</field>
+        <field name="arch" type="xml">
+            <list string="Conexiones Webservices ARCA/AFIP">
+                <field name="company_id"/>
+                <field name="l10n_ar_afip_ws"/>
+                <field name="type" widget="badge" decoration-success="type == 'production'" decoration-info="type == 'testing'"/>
+                <field name="uniqueid"/>
+                <field name="generation_time"/>
+                <field name="expiration_time"/>
+                <field name="is_simulated"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_ar_afipws_connection_form" model="ir.ui.view">
+        <field name="name">l10n_ar.afipws.connection.form</field>
+        <field name="model">l10n_ar.afipws.connection</field>
+        <field name="arch" type="xml">
+            <form string="Conexión Webservice ARCA/AFIP">
+                <header>
+                    <button name="action_renew_token"
+                            type="object"
+                            string="Renovar Ticket de Acceso (WSAA)"
+                            class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Configuración del Servicio">
+                            <field name="company_id"/>
+                            <field name="l10n_ar_afip_ws"/>
+                            <field name="type"/>
+                            <field name="is_simulated"/>
+                        </group>
+                        <group string="Vigencia del Ticket de Acceso (TA)">
+                            <field name="uniqueid"/>
+                            <field name="generation_time"/>
+                            <field name="expiration_time"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Credenciales WSAA (Token &amp; Sign)" name="credentials">
+                            <group>
+                                <field name="token"/>
+                                <field name="sign"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ar_afipws_connection" model="ir.actions.act_window">
+        <field name="name">Conexiones ARCA/AFIP (WSAA)</field>
+        <field name="res_model">l10n_ar.afipws.connection</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_l10n_ar_afip_root"
+              name="ARCA / AFIP Argentina"
+              parent="account.menu_finance_configuration"
+              sequence="95"/>
+
+    <menuitem id="menu_l10n_ar_afipws_connection"
+              name="Tickets de Acceso (WSAA)"
+              parent="menu_l10n_ar_afip_root"
+              action="action_l10n_ar_afipws_connection"
+              sequence="10"/>
+</odoo>

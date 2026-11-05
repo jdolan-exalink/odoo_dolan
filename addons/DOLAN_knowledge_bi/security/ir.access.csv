@@ -1,0 +1,8 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_knowledge_article_user,dolan.knowledge.article.user,dolan.knowledge.article,base.group_user,cru,
+access_dolan_knowledge_article_system,dolan.knowledge.article.system,dolan.knowledge.article,base.group_system,crud,
+access_dolan_bi_dashboard_user,dolan.bi.dashboard.user,dolan.bi.dashboard,base.group_user,ru,
+access_dolan_bi_dashboard_manager,dolan.bi.dashboard.manager,dolan.bi.dashboard,sales_team.group_sale_manager,crud,
+access_dolan_bi_kpi_card_user,dolan.bi.kpi.card.user,dolan.bi.kpi.card,base.group_user,ru,
+access_dolan_bi_kpi_card_manager,dolan.bi.kpi.card.manager,dolan.bi.kpi.card,sales_team.group_sale_manager,crud,
+access_dolan_bi_dashboard_send_wizard_user,dolan.bi.dashboard.send.wizard.user,dolan.bi.dashboard.send.wizard,base.group_user,crud,

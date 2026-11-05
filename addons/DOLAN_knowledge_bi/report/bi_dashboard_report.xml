@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_bi_dashboard" model="ir.actions.report">
+        <field name="name">Informe de Tablero BI</field>
+        <field name="model">dolan.bi.dashboard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">DOLAN_knowledge_bi.report_bi_dashboard_document</field>
+        <field name="print_report_name">'DOLAN_BI_%s' % (object.code or object.id)</field>
+    </record>
+
+    <template id="report_bi_dashboard_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 t-field="o.name"/>
+                        <p>
+                            <strong>Compañías:</strong>
+                            <span t-esc="', '.join(o.company_ids.mapped('name')) or o.company_id.name"/><br/>
+                            <strong>Período:</strong>
+                            <span t-field="o.date_from"/> al <span t-field="o.date_to"/><br/>
+                            <strong>Moneda:</strong>
+                            <span t-esc="o.currency_id.name"/>
+                        </p>
+                        <h3>Indicadores</h3>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr><th>Indicador</th><th class="text-end">Importe</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Ventas confirmadas</td><td class="text-end"><span t-field="o.sales_month" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td></tr>
+                                <tr><td>Facturación emitida</td><td class="text-end"><span t-field="o.invoiced_month" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td></tr>
+                                <tr><td>IVA ventas</td><td class="text-end"><span t-field="o.vat_sales" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td></tr>
+                                <tr><td>IVA compras</td><td class="text-end"><span t-field="o.vat_purchases" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td></tr>
+                                <tr><td><strong>Saldo IVA ventas menos compras</strong></td><td class="text-end"><strong><span t-field="o.vat_balance" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></strong></td></tr>
+                                <tr><td>Cobranzas pendientes</td><td class="text-end"><span t-field="o.receivables_due" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td></tr>
+                                <tr><td>Cuentas por pagar</td><td class="text-end"><span t-field="o.payables_due" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td></tr>
+                                <tr><td>Posición neta</td><td class="text-end"><span t-field="o.net_cash_position" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td></tr>
+                                <tr><td>Pipeline CRM</td><td class="text-end"><span t-field="o.crm_pipeline" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td></tr>
+                                <tr><td>Valoración de stock</td><td class="text-end"><span t-field="o.stock_valuation" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td></tr>
+                            </tbody>
+                        </table>
+                        <t t-if="o.kpi_card_ids">
+                            <h3>Indicadores seleccionados</h3>
+                            <table class="table table-sm">
+                                <thead><tr><th>Indicador</th><th class="text-end">Valor actual</th><th class="text-end">Meta</th></tr></thead>
+                                <tbody>
+                                    <tr t-foreach="o.kpi_card_ids" t-as="card">
+                                        <td t-esc="card.name"/>
+                                        <td class="text-end"><span t-field="card.current_value" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                        <td class="text-end"><span t-field="card.target_value" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <h3>Principales clientes</h3>
+                                <pre t-esc="o.top_customers_summary or 'Sin operaciones registradas en el período.'"/>
+                            </div>
+                            <div class="col-6">
+                                <h3>Principales productos</h3>
+                                <pre t-esc="o.top_products_summary or 'Sin operaciones registradas en el período.'"/>
+                            </div>
+                        </div>
+                        <div class="text-muted mt-3">Informe generado desde datos de lectura de Odoo. Verificá los importes antes de tomar decisiones fiscales.</div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

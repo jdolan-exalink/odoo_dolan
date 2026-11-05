@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========================================================= -->
+    <!-- EXTENSIÓN DE PRODUCTO (product.template) PARA ALQUILER    -->
+    <!-- ========================================================= -->
+
+    <record id="view_product_template_form_dolan_rental" model="ir.ui.view">
+        <field name="name">product.template.form.dolan.rental</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <span class="d-inline-block">
+                    <field name="is_rental"/>
+                    <label for="is_rental"/>
+                </span>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Tarifas de Alquiler (Rental)" name="dolan_rental_pricing" invisible="not is_rental">
+                    <group>
+                        <group string="Cuadro Tarifario por Período">
+                            <field name="rental_price_hour" widget="monetary"/>
+                            <field name="rental_price_day" widget="monetary"/>
+                            <field name="rental_price_week" widget="monetary"/>
+                            <field name="rental_price_month" widget="monetary"/>
+                        </group>
+                        <group string="Mora y Garantía">
+                            <field name="extra_hour_penalty" widget="monetary"/>
+                            <field name="extra_day_penalty" widget="monetary"/>
+                            <field name="rental_security_deposit" widget="monetary"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ========================================================= -->
+    <!-- VISTAS DE ÓRDENES DE ALQUILER (dolan.rental.order)        -->
+    <!-- ========================================================= -->
+
+    <!-- Search View -->
+    <record id="view_dolan_rental_order_search" model="ir.ui.view">
+        <field name="name">dolan.rental.order.search</field>
+        <field name="model">dolan.rental.order</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Órdenes de Alquiler">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="warehouse_id"/>
+                <filter string="Reservados" name="filter_reserved" domain="[('state', '=', 'reserved')]"/>
+                <filter string="En poder del Cliente (Retirados)" name="filter_picked_up" domain="[('state', '=', 'picked_up')]"/>
+                <filter string="Devueltos" name="filter_returned" domain="[('state', '=', 'returned')]"/>
+                <filter string="Con Devolución Tardía (En Mora)" name="filter_late" domain="[('is_late', '=', True)]"/>
+                <separator/>
+                <filter string="Mis Alquileres" name="filter_my_rentals" domain="[('user_id', '=', uid)]"/>
+                <group>
+                    <filter string="Estado" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Cliente" name="group_by_partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Responsable" name="group_by_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Fecha de Retiro" name="group_by_pickup" context="{'group_by': 'pickup_date:day'}"/>
+                    <filter string="Fecha de Devolución" name="group_by_return" context="{'group_by': 'return_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Calendar View (Planificación de Retiros y Devoluciones) -->
+    <record id="view_dolan_rental_order_calendar" model="ir.ui.view">
+        <field name="name">dolan.rental.order.calendar</field>
+        <field name="model">dolan.rental.order</field>
+        <field name="arch" type="xml">
+            <calendar string="Calendario de Alquileres y Disponibilidad"
+                      date_start="pickup_date"
+                      date_stop="return_date"
+                      color="state"
+                      mode="month"
+                      quick_create="0">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="state" filters="1"/>
+                <field name="amount_total" widget="monetary"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Kanban View (Odoo 20 <t t-name="card">) -->
+    <record id="view_dolan_rental_order_kanban" model="ir.ui.view">
+        <field name="name">dolan.rental.order.kanban</field>
+        <field name="model">dolan.rental.order</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column" sample="1">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="pickup_date"/>
+                <field name="return_date"/>
+                <field name="duration_days"/>
+                <field name="is_late"/>
+                <field name="late_hours"/>
+                <field name="amount_total"/>
+                <field name="currency_id"/>
+                <field name="user_id"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <strong class="o_kanban_record_title">
+                                <field name="name"/> — <field name="partner_id"/>
+                            </strong>
+                            <field name="state" widget="label_selection"
+                                   options="{'classes': {'draft': 'secondary', 'reserved': 'info', 'picked_up': 'warning', 'returned': 'success', 'invoiced': 'primary', 'cancelled': 'danger'}}"/>
+                        </div>
+                        <div class="text-muted small mb-1">
+                            <div><i class="fa fa-sign-out me-1" title="Retiro"/> Retiro: <field name="pickup_date"/></div>
+                            <div><i class="fa fa-sign-in me-1" title="Devolución"/> Devolución: <field name="return_date"/></div>
+                        </div>
+                        <div t-if="record.is_late.raw_value" class="mb-1">
+                            <span class="badge text-bg-danger">
+                                En Mora (<field name="late_hours"/> hs extra)
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-auto">
+                            <strong class="text-primary">
+                                <field name="amount_total" widget="monetary"/>
+                            </strong>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- List View (Odoo 20 <list>) -->
+    <record id="view_dolan_rental_order_list" model="ir.ui.view">
+        <field name="name">dolan.rental.order.list</field>
+        <field name="model">dolan.rental.order</field>
+        <field name="arch" type="xml">
+            <list string="Órdenes de Alquiler" sample="1"
+                  decoration-danger="is_late and state == 'picked_up'"
+                  decoration-info="state == 'reserved'"
+                  decoration-warning="state == 'picked_up' and not is_late"
+                  decoration-success="state in ('returned', 'invoiced')"
+                  decoration-muted="state == 'cancelled'">
+                <field name="name" decoration-bf="1"/>
+                <field name="partner_id"/>
+                <field name="pickup_date"/>
+                <field name="return_date"/>
+                <field name="duration_days" string="Días"/>
+                <field name="late_hours" optional="show"/>
+                <field name="is_late" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="security_deposit" widget="monetary" optional="show"/>
+                <field name="late_fee_amount" widget="monetary" sum="Total Mora" optional="show"/>
+                <field name="amount_total" widget="monetary" sum="Total Alquiler" decoration-bf="1"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'reserved'"
+                       decoration-warning="state == 'picked_up'"
+                       decoration-success="state in ('returned', 'invoiced')"
+                       decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_dolan_rental_order_form" model="ir.ui.view">
+        <field name="name">dolan.rental.order.form</field>
+        <field name="model">dolan.rental.order</field>
+        <field name="arch" type="xml">
+            <form string="Orden de Alquiler">
+                <header>
+                    <button name="action_confirm_reservation"
+                            string="Confirmar Reserva"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_register_pickup"
+                            string="Registrar Retiro (Pickup)"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state not in ('draft', 'reserved')"/>
+                    <button name="action_register_return"
+                            string="Registrar Devolución (Return)"
+                            type="object"
+                            class="btn-success"
+                            invisible="state != 'picked_up'"/>
+                    <button name="action_create_invoice"
+                            string="Crear Factura"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state not in ('reserved', 'picked_up', 'returned')"/>
+                    <button name="action_cancel"
+                            string="Cancelar"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state not in ('draft', 'reserved')"/>
+                    <button name="action_reset_to_draft"
+                            string="Pasar a Borrador"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,reserved,picked_up,returned,invoiced"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoices"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o">
+                            <field name="invoice_count" widget="statinfo" string="Facturas"/>
+                        </button>
+                    </div>
+                    <div class="alert alert-danger mb-3" role="alert" invisible="not is_late">
+                        <strong>Atención:</strong> Se registran <field name="late_hours" class="fw-bold"/> horas de exceso respecto de la fecha de devolución pactada.
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Orden de Alquiler"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Cliente y Logística">
+                            <field name="partner_id"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="warehouse_id"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Período de Alquiler y Garantía">
+                            <field name="pickup_date"/>
+                            <field name="return_date"/>
+                            <field name="duration_hours"/>
+                            <field name="duration_days"/>
+                            <field name="actual_pickup_date" invisible="not actual_pickup_date"/>
+                            <field name="actual_return_date" invisible="not actual_return_date"/>
+                            <field name="security_deposit" widget="monetary"/>
+                            <field name="security_deposit_returned" invisible="not security_deposit"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Equipos y Series Alquilados" name="lines">
+                            <field name="line_ids">
+                                <list string="Líneas de Alquiler" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="pricing_unit"/>
+                                    <field name="lot_ids" widget="many2many_tags" options="{'no_create': False}"/>
+                                    <field name="quantity"/>
+                                    <field name="qty_delivered" optional="show"/>
+                                    <field name="qty_returned" optional="show"/>
+                                    <field name="price_unit"/>
+                                    <field name="tax_ids" widget="many2many_tags" optional="show"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="late_penalty_subtotal" widget="monetary" optional="show"/>
+                                    <field name="price_subtotal" widget="monetary"/>
+                                    <field name="price_total" widget="monetary" optional="hide"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="rental_totals">
+                                <field name="amount_untaxed" widget="monetary"/>
+                                <field name="late_fee_amount" widget="monetary" invisible="late_fee_amount == 0"/>
+                                <field name="amount_tax" widget="monetary"/>
+                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                    <label for="amount_total"/>
+                                </div>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+                            </group>
+                            <div class="clearfix"/>
+                        </page>
+                        <page string="Condiciones de Entrega y Notas" name="notes">
+                            <field name="notes" placeholder="Detalle el estado de los equipos entregados, accesorios incluidos y observaciones de devolución..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ========================================================= -->
+    <!-- ACCIONES Y MENÚ RAÍZ ALQUILER (sequence="45")             -->
+    <!-- ========================================================= -->
+
+    <record id="action_dolan_rental_order" model="ir.actions.act_window">
+        <field name="name">Órdenes de Alquiler</field>
+        <field name="res_model">dolan.rental.order</field>
+        <field name="view_mode">kanban,calendar,list,form</field>
+        <field name="search_view_id" ref="view_dolan_rental_order_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Creá tu primera orden de alquiler
+            </p>
+            <p>
+                Planificá reservas por hora, día, semana o mes, asigná números de serie,
+                registrá retiros (Pickup) y devoluciones (Return) y liquidá recargos por mora automáticamente.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_dolan_rental_calendar" model="ir.actions.act_window">
+        <field name="name">Calendario de Disponibilidad</field>
+        <field name="res_model">dolan.rental.order</field>
+        <field name="view_mode">calendar,kanban,list,form</field>
+        <field name="search_view_id" ref="view_dolan_rental_order_search"/>
+    </record>
+
+    <record id="action_dolan_rental_products" model="ir.actions.act_window">
+        <field name="name">Productos en Alquiler</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_rental', '=', True)]</field>
+        <field name="context">{'default_is_rental': True}</field>
+    </record>
+
+    <!-- Menú Raíz: Alquiler (sequence="45", espejo 1 a 1 de Odoo 20) -->
+    <menuitem id="menu_dolan_renting_root"
+              name="Alquiler"
+              sequence="45"
+              web_icon="DOLAN_renting,static/description/icon.svg"
+              groups="sales_team.group_sale_salesman"/>
+
+    <menuitem id="menu_dolan_renting_orders_parent"
+              name="Órdenes"
+              parent="menu_dolan_renting_root"
+              sequence="10"/>
+
+    <menuitem id="menu_dolan_renting_orders"
+              name="Órdenes"
+              parent="menu_dolan_renting_orders_parent"
+              action="action_dolan_rental_order"
+              sequence="10"/>
+
+    <menuitem id="menu_dolan_renting_customers"
+              name="Clientes"
+              parent="menu_dolan_renting_orders_parent"
+              action="account.res_partner_action_customer"
+              sequence="20"/>
+
+    <menuitem id="menu_dolan_renting_schedule"
+              name="Planificación"
+              parent="menu_dolan_renting_root"
+              action="action_dolan_rental_calendar"
+              sequence="20"/>
+
+    <menuitem id="menu_dolan_renting_products_parent"
+              name="Productos"
+              parent="menu_dolan_renting_root"
+              sequence="30"/>
+
+    <menuitem id="menu_dolan_renting_products"
+              name="Productos"
+              parent="menu_dolan_renting_products_parent"
+              action="action_dolan_rental_products"
+              sequence="10"/>
+
+    <menuitem id="menu_dolan_renting_reporting"
+              name="Informes"
+              parent="menu_dolan_renting_root"
+              action="action_dolan_rental_order"
+              sequence="40"/>
+</odoo>

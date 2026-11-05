@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_terminal_list" model="ir.ui.view">
+        <field name="name">dolan.payment.terminal.list</field><field name="model">dolan.payment.terminal</field>
+        <field name="arch" type="xml"><list><field name="name"/><field name="provider" column_invisible="True"/><field name="provider_brand" string="Equipo" widget="dolan_terminal_provider_badge"/><field name="clover_ip" column_invisible="True"/><field name="clover_status_prefix" column_invisible="True"/><field name="clover_paired" column_invisible="True"/><field name="clover_pair_status" string="Emparejamiento" widget="dolan_clover_pair_status"/><field name="company_id" groups="base.group_multi_company"/><field name="journal_id"/><field name="active"/></list></field>
+    </record>
+    <record id="view_terminal_form" model="ir.ui.view">
+        <field name="name">dolan.payment.terminal.form</field><field name="model">dolan.payment.terminal</field>
+        <field name="arch" type="xml">
+            <form string="Terminal de cobro">
+                <header>
+                    <button name="action_probe_clover" type="object" string="Integrar ahora" class="btn-primary" groups="base.group_system" invisible="provider != 'clover'"/>
+                    <button name="action_test_clover" type="object" string="Probar cobro de $10" class="btn-secondary" groups="base.group_system" invisible="provider != 'clover'"/>
+                </header>
+                <sheet>
+                    <div class="o_dolan_terminal_identity">
+                        <field name="provider_brand" widget="dolan_terminal_provider_badge" nolabel="1" readonly="1"/>
+                        <div class="oe_title"><h1><field name="name" placeholder="Ej. Caja principal"/></h1></div>
+                    </div>
+                    <group>
+                        <group string="Equipo">
+                            <field name="provider"/>
+                            <field name="company_id"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Diario de cobro">
+                            <field name="journal_id" string="Diario" domain="[('type', 'in', ['bank', 'cash']), ('company_id', '=', company_id)]" context="{'default_company_id': company_id, 'default_type': 'bank'}" options="{'no_quick_create': True, 'no_create_edit': False}" placeholder="Seleccioná un diario o creá uno nuevo"/>
+                        </group>
+                    </group>
+                    <div class="o_dolan_terminal_status_panel" invisible="provider != 'clover'">
+                        <h3>Estado de integración</h3>
+                        <field name="clover_pair_status" widget="dolan_clover_pair_status" nolabel="1"/>
+                    </div>
+                    <group string="Conexión Clover" invisible="provider != 'clover'">
+                        <group><field name="clover_ip"/><field name="clover_port"/><field name="clover_remote_app_id"/></group>
+                    </group>
+                    <group string="Conexión Mercado Pago" invisible="provider == 'clover'">
+                        <group><field name="mp_device_id" invisible="provider != 'mp_point'"/><field name="mp_external_pos_id" invisible="provider != 'mp_qr'"/></group>
+                    </group>
+                    <field name="clover_paired" invisible="True"/>
+                    <field name="clover_status_prefix" invisible="True"/>
+                    <div class="alert alert-info" role="alert" invisible="provider != 'clover'">El emparejamiento se guarda cifrado en Odoo. Cerrá esta ventana cuando termines: la conexión local se abrirá desde el navegador al integrarla. “Probar cobro de $10” inicia una transacción real en Clover.</div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_terminals" model="ir.actions.act_window"><field name="name">Terminales de cobro</field><field name="res_model">dolan.payment.terminal</field><field name="view_mode">list,form</field></record>
+    <record id="view_payment_operation_list" model="ir.ui.view">
+        <field name="name">dolan.payment.operation.list</field><field name="model">dolan.payment.operation</field>
+        <field name="arch" type="xml"><list create="false" delete="false"><field name="create_date"/><field name="reference"/><field name="operation_kind"/><field name="company_id" groups="base.group_multi_company"/><field name="terminal_id"/><field name="amount"/><field name="currency_id" column_invisible="True"/><field name="state"/><field name="provider_reference"/></list></field>
+    </record>
+    <record id="view_payment_operation_form" model="ir.ui.view">
+        <field name="name">dolan.payment.operation.form</field><field name="model">dolan.payment.operation</field>
+        <field name="arch" type="xml"><form create="false" edit="false" delete="false"><sheet><group><field name="reference"/><field name="company_id"/><field name="terminal_id"/><field name="state"/><field name="currency_id"/><field name="amount"/><field name="move_id"/><field name="payment_id"/><field name="provider_reference"/><field name="detail"/></group></sheet></form></field>
+    </record>
+    <record id="action_payment_operations" model="ir.actions.act_window"><field name="name">Operaciones</field><field name="res_model">dolan.payment.operation</field><field name="view_mode">list,form</field></record>
+    <menuitem id="menu_terminal_root" name="Terminales de cobro" action="action_terminals" web_icon="DOLAN_payment_terminal,static/description/icon.svg" sequence="65" groups="base.group_user"/>
+    <menuitem id="menu_terminal_config" name="Terminales" parent="menu_terminal_root" action="action_terminals" groups="base.group_user"/>
+    <menuitem id="menu_payment_operations" name="Operaciones" parent="menu_terminal_root" action="action_payment_operations" groups="base.group_user"/>
+</odoo>

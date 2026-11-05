@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_financial_report_line_list" model="ir.ui.view">
+        <field name="name">dolan.financial.report.line.list</field>
+        <field name="model">dolan.financial.report.line</field>
+        <field name="arch" type="xml">
+            <list string="Resultado del Reporte Contable" create="false" edit="false" delete="false">
+                <field name="date" optional="show"/>
+                <field name="move_id" optional="show"/>
+                <field name="account_id" optional="show"/>
+                <field name="partner_id" optional="show"/>
+                <field name="journal_id" optional="hide"/>
+                <field name="code" optional="show"/>
+                <field name="name"/>
+                <field name="opening_balance" optional="show" sum="Saldo inicial"/>
+                <field name="debit" sum="Total Debe"/>
+                <field name="credit" sum="Total Haber"/>
+                <field name="balance" sum="Saldo Neto"/>
+                <field name="note" optional="hide"/>
+                <button name="action_open_entries" type="object" string="Apuntes" icon="fa-list" invisible="not account_id and not partner_id and not move_id and not code"/>
+                <field name="comparison_debit" optional="hide" sum="Debe comparativo"/>
+                <field name="comparison_credit" optional="hide" sum="Haber comparativo"/>
+                <field name="comparison_balance" optional="show" sum="Saldo comparativo"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_financial_report_line_search" model="ir.ui.view">
+        <field name="name">dolan.financial.report.line.search</field>
+        <field name="model">dolan.financial.report.line</field>
+        <field name="arch" type="xml">
+            <search string="Buscar líneas del reporte">
+                <field name="date"/>
+                <field name="account_id"/>
+                <field name="partner_id"/>
+                <field name="move_id"/>
+                <field name="journal_id"/>
+                <filter name="group_by_account" string="Cuenta" domain="[]" context="{'group_by': 'account_id'}"/>
+                <filter name="group_by_partner" string="Contacto" domain="[]" context="{'group_by': 'partner_id'}"/>
+                <filter name="group_by_month" string="Mes" domain="[]" context="{'group_by': 'date:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dolan_financial_report_line_pivot" model="ir.ui.view">
+        <field name="name">dolan.financial.report.line.pivot</field>
+        <field name="model">dolan.financial.report.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Reporte Contable">
+                <field name="account_id" type="row"/>
+                <field name="partner_id" type="row"/>
+                <field name="opening_balance" type="measure"/>
+                <field name="debit" type="measure"/>
+                <field name="credit" type="measure"/>
+                <field name="balance" type="measure"/>
+                <field name="comparison_balance" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_dolan_financial_report_line_form" model="ir.ui.view">
+        <field name="name">dolan.financial.report.line.form</field>
+        <field name="model">dolan.financial.report.line</field>
+        <field name="arch" type="xml">
+            <form string="Línea del Reporte" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_open_entries" type="object" string="Ver apuntes contables" class="btn-primary" invisible="not account_id and not partner_id and not move_id and not code"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="date"/>
+                        <field name="move_id"/>
+                        <field name="account_id"/>
+                        <field name="partner_id"/>
+                        <field name="code"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="opening_balance"/>
+                        <field name="debit"/>
+                        <field name="credit"/>
+                        <field name="balance"/>
+                        <field name="note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_financial_report_wizard_form" model="ir.ui.view">
+        <field name="name">dolan.financial.report.wizard.form</field>
+        <field name="model">dolan.financial.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reportes Contables Dinámicos (Balance, P&amp;L, Mayor, Sumas y Saldos)">
+                <header>
+                    <button name="action_compute_report"
+                            type="object"
+                            string="Consultar en Pantalla"
+                            class="oe_highlight"/>
+                    <button name="action_export_xlsx"
+                            type="object"
+                            string="Exportar Excel (.xlsx)"/>
+                    <button name="action_export_csv"
+                            type="object"
+                            string="Exportar CSV"/>
+                </header>
+                <group>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="report_type"/>
+                        <field name="target_move"/>
+                    </group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="comparison" invisible="report_type in ('general_ledger', 'general_journal')"/>
+                        <field name="comparison_date_from" invisible="comparison == 'none' or report_type in ('general_ledger', 'general_journal')"/>
+                        <field name="comparison_date_to" invisible="comparison == 'none' or report_type in ('general_ledger', 'general_journal')"/>
+                        <field name="export_filename" invisible="1"/>
+                        <field name="export_file" filename="export_filename" invisible="not export_file"/>
+                    </group>
+                </group>
+                <field name="line_ids" invisible="not line_ids">
+                    <list string="Resultado del Reporte Contable" create="false" edit="false">
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="debit" sum="Total Debe"/>
+                        <field name="credit" sum="Total Haber"/>
+                        <field name="balance" sum="Saldo Neto"/>
+                        <field name="comparison_balance" sum="Saldo comparativo"/>
+                        <field name="note"/>
+                    </list>
+                </field>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_financial_report_wizard" model="ir.actions.act_window">
+        <field name="name">Estados Contables y Reportes Financieros</field>
+        <field name="res_model">dolan.financial.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

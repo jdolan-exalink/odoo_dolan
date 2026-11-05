@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="DOLAN_theme.Icon">
+        <svg class="o_dolan_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+             t-att-width="this.size" t-att-height="this.size"
+             t-att-fill="this.props.filled ? 'currentColor' : 'none'"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true" focusable="false">
+            <path t-foreach="this.paths" t-as="d" t-key="d_index" t-att-d="d"/>
+        </svg>
+    </t>
+</templates>

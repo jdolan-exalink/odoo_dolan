@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_client_profile_user,dolan.client.profile.user,dolan.client.profile,base.group_user,r,
+access_dolan_client_profile_system,dolan.client.profile.system,dolan.client.profile,base.group_system,crud,
+access_dolan_company_onboarding_wizard,dolan.company.onboarding.wizard.system,dolan.company.onboarding.wizard,base.group_system,crud,

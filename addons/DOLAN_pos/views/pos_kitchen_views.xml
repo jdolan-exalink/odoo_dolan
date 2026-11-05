@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sequence for Kitchen Tickets -->
+    <record id="seq_dolan_pos_kitchen_ticket" model="ir.sequence">
+        <field name="name">Secuencia de Comandas de Cocina DOLAN</field>
+        <field name="code">dolan.pos.kitchen.ticket</field>
+        <field name="prefix">CMD-</field>
+        <field name="padding">4</field>
+    </record>
+
+    <!-- Kitchen Ticket Kanban View -->
+    <record id="view_dolan_pos_kitchen_ticket_kanban" model="ir.ui.view">
+        <field name="name">dolan.pos.kitchen.ticket.kanban</field>
+        <field name="model">dolan.pos.kitchen.ticket</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column" create="true">
+                <field name="name"/>
+                <field name="station"/>
+                <field name="table_name"/>
+                <field name="elapsed_minutes"/>
+                <field name="is_delayed"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="p-2 {{ record.is_delayed.raw_value ? 'border border-danger' : '' }}">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <strong class="fs-5"><field name="name"/></strong>
+                                <span class="badge text-bg-secondary"><field name="station"/></span>
+                            </div>
+                            <div class="text-muted small mb-2">
+                                Mesa: <strong><field name="table_name"/></strong> ·
+                                ⏱ <field name="elapsed_minutes"/> min
+                            </div>
+                            <div class="d-flex gap-1 mt-2">
+                                <button name="action_start_preparing"
+                                        type="object"
+                                        string="Preparar"
+                                        class="btn btn-sm btn-primary"
+                                        invisible="state != 'pending'"/>
+                                <button name="action_mark_ready"
+                                        type="object"
+                                        string="¡Listo!"
+                                        class="btn btn-sm btn-success"
+                                        invisible="state not in ('pending', 'preparing')"/>
+                                <button name="action_mark_delivered"
+                                        type="object"
+                                        string="Entregar"
+                                        class="btn btn-sm btn-dark"
+                                        invisible="state != 'ready'"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Kitchen Ticket List View -->
+    <record id="view_dolan_pos_kitchen_ticket_list" model="ir.ui.view">
+        <field name="name">dolan.pos.kitchen.ticket.list</field>
+        <field name="model">dolan.pos.kitchen.ticket</field>
+        <field name="arch" type="xml">
+            <list string="Comandas de Cocina (KDS)"
+                  decoration-danger="is_delayed"
+                  decoration-success="state == 'ready'">
+                <field name="name"/>
+                <field name="pos_reference"/>
+                <field name="station"/>
+                <field name="table_name"/>
+                <field name="waiter_id"/>
+                <field name="elapsed_minutes"/>
+                <field name="is_delayed"/>
+                <field name="state" widget="badge"
+                       decoration-warning="state == 'pending'"
+                       decoration-info="state == 'preparing'"
+                       decoration-success="state == 'ready'"
+                       decoration-muted="state == 'delivered'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kitchen Ticket Form View -->
+    <record id="view_dolan_pos_kitchen_ticket_form" model="ir.ui.view">
+        <field name="name">dolan.pos.kitchen.ticket.form</field>
+        <field name="model">dolan.pos.kitchen.ticket</field>
+        <field name="arch" type="xml">
+            <form string="Comanda de Cocina (KDS)">
+                <header>
+                    <button name="action_start_preparing"
+                            string="Iniciar Preparación"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'pending'"/>
+                    <button name="action_mark_ready"
+                            string="Marcar Listo para Servir"
+                            type="object"
+                            class="btn-success"
+                            invisible="state not in ('pending', 'preparing')"/>
+                    <button name="action_mark_delivered"
+                            string="Marcar Entregado"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state != 'ready'"/>
+                    <button name="action_open_live_kds"
+                            string="Pantalla Táctil KDS en Vivo"
+                            type="object"
+                            class="btn-outline-primary"/>
+                    <button name="action_open_order_tracking"
+                            string="Pantalla Pública de Turnos"
+                            type="object"
+                            class="btn-outline-success"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,preparing,ready,delivered"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="station"/>
+                            <field name="table_name"/>
+                            <field name="waiter_id"/>
+                            <field name="partner_id"/>
+                            <field name="priority" widget="priority"/>
+                        </group>
+                        <group>
+                            <field name="pos_order_id"/>
+                            <field name="pos_reference"/>
+                            <field name="max_prep_minutes"/>
+                            <field name="elapsed_minutes"/>
+                            <field name="is_delayed"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Platos / Productos a Preparar" name="lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="qty"/>
+                                    <field name="note"/>
+                                    <field name="state" widget="badge"/>
+                                    <button name="action_toggle_line_ready"
+                                            type="object"
+                                            string="Listo / Alternar"
+                                            class="btn-sm btn-success"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Tiempos y Observaciones" name="timings">
+                            <group>
+                                <field name="started_at" readonly="1"/>
+                                <field name="ready_at" readonly="1"/>
+                                <field name="delivered_at" readonly="1"/>
+                                <field name="notes"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Settle Due & Stock Check Wizard Form -->
+    <record id="view_dolan_pos_settle_due_wizard_form" model="ir.ui.view">
+        <field name="name">dolan.pos.settle.due.wizard.form</field>
+        <field name="model">dolan.pos.settle.due.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Saldar Cuenta Corriente de Cliente y Consultar Stock PoS">
+                <group>
+                    <group string="Cobro de Cuenta Corriente (Settle Due)">
+                        <field name="partner_id"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="current_due_amount"/>
+                        <field name="amount_to_settle"/>
+                        <field name="journal_id"/>
+                        <field name="payment_ref"/>
+                    </group>
+                    <group string="Consulta de Stock Multialmacén en Vivo">
+                        <field name="product_id"/>
+                        <field name="stock_summary_html" nolabel="1" colspan="2"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_settle_partner_due"
+                            string="Registrar Cobro y Conciliar Deuda"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_dolan_pos_kitchen_tickets" model="ir.actions.act_window">
+        <field name="name">Kitchen Display (Comandas KDS)</field>
+        <field name="res_model">dolan.pos.kitchen.ticket</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <record id="action_dolan_pos_settle_due_wizard" model="ir.actions.act_window">
+        <field name="name">Saldar Cuenta Corriente &amp; Stock PoS</field>
+        <field name="res_model">dolan.pos.settle.due.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_dolan_pos_live_kds_url" model="ir.actions.act_url">
+        <field name="name">Pantalla Táctil Cocina (KDS en Vivo)</field>
+        <field name="url">/dolan_pos/kitchen_display</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_dolan_pos_order_tracking_url" model="ir.actions.act_url">
+        <field name="name">Pantalla Pública de Turnos (Order Tracking)</field>
+        <field name="url">/dolan_pos/order_tracking</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Root Menu: Pantalla para cocina (sequence 55, idéntico a Odoo 20) -->
+    <menuitem id="menu_dolan_pos_kitchen_root"
+              name="Pantalla para cocina"
+              sequence="55"
+              web_icon="DOLAN_pos,static/description/icon.svg"
+              action="action_dolan_pos_kitchen_tickets"/>
+
+    <menuitem id="menu_dolan_pos_kitchen_board"
+              name="Tablero de Comandas (Kanban)"
+              parent="menu_dolan_pos_kitchen_root"
+              action="action_dolan_pos_kitchen_tickets"
+              sequence="10"/>
+
+    <menuitem id="menu_dolan_pos_live_kds_screen"
+              name="Pantalla Táctil Cocina en Vivo"
+              parent="menu_dolan_pos_kitchen_root"
+              action="action_dolan_pos_live_kds_url"
+              sequence="20"/>
+
+    <menuitem id="menu_dolan_pos_customer_tracking_screen"
+              name="Pantalla Pública de Clientes"
+              parent="menu_dolan_pos_kitchen_root"
+              action="action_dolan_pos_order_tracking_url"
+              sequence="30"/>
+
+    <menuitem id="menu_dolan_pos_settle_due"
+              name="Saldar Cuenta Corriente y Stock PoS"
+              parent="menu_dolan_pos_kitchen_root"
+              action="action_dolan_pos_settle_due_wizard"
+              sequence="40"/>
+
+    <!-- Integración 1 a 1 dentro de Punto de venta (point_of_sale) -->
+    <menuitem id="menu_pos_orders_preparation_display"
+              name="Pantalla de preparación"
+              parent="point_of_sale.menu_point_of_sale"
+              action="action_dolan_pos_kitchen_tickets"
+              sequence="25"/>
+
+    <menuitem id="menu_pos_rep_preparation_time"
+              name="Tiempo de preparación"
+              parent="point_of_sale.menu_point_rep"
+              action="action_dolan_pos_kitchen_tickets"
+              sequence="25"/>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_dolan_kpi_expenses" model="ir.actions.server">
+        <field name="name">Gastos del ejercicio</field>
+        <field name="model_id" ref="account.model_account_journal"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_dolan_open_kpi('expenses')</field>
+    </record>
+    <record id="action_dolan_kpi_receivable" model="ir.actions.server">
+        <field name="name">Documentos por cobrar</field>
+        <field name="model_id" ref="account.model_account_journal"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_dolan_open_kpi('receivable')</field>
+    </record>
+    <record id="action_dolan_kpi_payable" model="ir.actions.server">
+        <field name="name">Documentos por pagar</field>
+        <field name="model_id" ref="account.model_account_journal"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_dolan_open_kpi('payable')</field>
+    </record>
+</odoo>

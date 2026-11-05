@@ -1,0 +1,37 @@
+.dolan_terminal_led { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; background: #7c8795; vertical-align: middle; }
+.dolan_terminal_led_connecting { background: #d99b24; }
+.dolan_terminal_led_connected { background: #22a559; box-shadow: 0 0 0 3px rgba(34, 165, 89, .18); }
+.dolan_terminal_led_disconnected { background: #d64a4a; }
+.o_dolan_terminal_identity { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.o_dolan_terminal_brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+.o_dolan_terminal_brand img { width: 28px; height: 28px; object-fit: contain; }
+.o_dolan_terminal_brand small { color: var(--o-muted-color, #6c757d); font-weight: 400; }
+.o_dolan_pair_status { display: inline-flex; align-items: center; gap: 7px; min-width: 130px; white-space: nowrap; }
+.o_dolan_pair_pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border: 1px solid var(--bs-border-color, #dee2e6); border-radius: 999px; }
+.o_dolan_pair_pill.is-linked { border-color: rgba(22, 163, 106, .25); background: rgba(22, 163, 106, .09); color: #13945f; }
+.o_dolan_pair_icon { color: var(--bs-secondary-color, #7a8189); font-weight: 800; line-height: 1; }
+.o_dolan_pair_pill.is-linked .o_dolan_pair_icon { color: #16a36a; font-size: 16px; }
+.o_dolan_pair_status_label { font-weight: 600; }
+.o_dolan_pair_status_detail { margin-left: 2px; color: var(--o-muted-color, #78808a); font-size: 11px; }
+.o_dolan_terminal_status_panel { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 8px 0; padding: 16px 18px; border: 1px solid var(--bs-border-color, #dee2e6); border-radius: 12px; background: var(--bs-secondary-bg, rgba(127, 127, 127, .04)); }
+.o_dolan_terminal_status_panel h3 { margin: 0; font-size: 1rem; }
+.o_dolan_terminal_probe { min-height: 100%; background: var(--bs-body-bg, #f6f7f9); color: var(--bs-body-color, #212529); }
+.o_dolan_terminal_probe_card { width: min(100%, 720px); margin: 0 auto; padding: clamp(20px, 4vw, 36px); border: 1px solid var(--bs-border-color, #dee2e6); border-radius: 16px; background: var(--bs-tertiary-bg, var(--bs-body-bg, #fff)); box-shadow: 0 12px 36px rgba(25, 35, 45, .08); }
+.o_dolan_terminal_probe_header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+.o_dolan_terminal_probe_header img { width: 52px; height: 52px; }
+.o_dolan_terminal_probe_header h2 { margin: 2px 0 0; font-size: 1.35rem; }
+.o_dolan_terminal_eyebrow { color: var(--bs-secondary-color, #6c757d); font-size: .8rem; text-transform: uppercase; letter-spacing: .07em; }
+.o_dolan_terminal_probe_status { display: flex; align-items: center; gap: 9px; padding: 12px 14px; border-radius: 10px; background: var(--bs-secondary-bg, #f1f3f5); }
+.o_dolan_terminal_probe_detail { min-height: 48px; margin: 16px 0 20px; color: var(--bs-secondary-color, #6c757d); line-height: 1.55; }
+.o_dolan_terminal_pair_code { padding: 13px 15px; border: 1px dashed var(--bs-border-color, #adb5bd); border-radius: 9px; font-size: 1rem; }
+.o_dolan_terminal_pair_code strong { margin-left: 8px; font-size: 1.4rem; letter-spacing: .12em; }
+.o_dolan_terminal_probe_actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.o_dolan_terminal_probe_actions .btn { min-height: 42px; border-radius: 9px; }
+.o_dolan_terminal_probe_note { margin: 18px 0 0; color: var(--bs-secondary-color, #6c757d); font-size: .82rem; }
+@media (max-width: 576px) {
+    .o_dolan_terminal_identity { gap: 6px; }
+    .o_dolan_pair_status { min-width: 0; flex-wrap: wrap; }
+    .o_dolan_pair_status_detail { flex-basis: 100%; margin-left: 23px; }
+    .o_dolan_terminal_probe_actions { align-items: stretch; flex-direction: column; }
+    .o_dolan_terminal_probe_actions .btn { width: 100%; }
+}

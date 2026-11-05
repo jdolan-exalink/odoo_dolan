@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_bna_exchange_rate_list" model="ir.ui.view">
+        <field name="name">dolan.bna.exchange.rate.list</field>
+        <field name="model">dolan.bna.exchange.rate</field>
+        <field name="arch" type="xml">
+            <list string="Cotizaciones BNA Venta" create="false" edit="false" delete="false">
+                <field name="rate_date"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="market"/>
+                <field name="operation"/>
+                <field name="rate"/>
+                <field name="fetched_at"/>
+                <field name="source_url" widget="url"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_bna_exchange_rate_form" model="ir.ui.view">
+        <field name="name">dolan.bna.exchange.rate.form</field>
+        <field name="model">dolan.bna.exchange.rate</field>
+        <field name="arch" type="xml">
+            <form string="Cotización BNA Venta" create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="rate_date"/>
+                            <field name="market"/>
+                            <field name="operation"/>
+                        </group>
+                        <group>
+                            <field name="rate"/>
+                            <field name="fetched_at"/>
+                            <field name="source_url" widget="url"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="status">
+                        Tipo informado por el Banco Nación para cotización de dólar billete, operación Venta.
+                        El valor se consulta al momento de solicitarlo y queda asociado a la empresa.
+                    </div>
+                </sheet>
+                <footer><button string="Cerrar" class="btn-primary" special="cancel"/></footer>
+            </form>
+        </field>
+    </record>
+</odoo>

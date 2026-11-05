@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_whatsapp_account_list" model="ir.ui.view">
+        <field name="name">dolan.whatsapp.account.list</field>
+        <field name="model">dolan.whatsapp.account</field>
+        <field name="arch" type="xml">
+            <list string="Conexiones WhatsApp">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="session_name"/>
+                <field name="session_status"/>
+                <field name="connected_phone"/>
+                <field name="last_checked"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_dolan_whatsapp_account_form" model="ir.ui.view">
+        <field name="name">dolan.whatsapp.account.form</field>
+        <field name="model">dolan.whatsapp.account</field>
+        <field name="arch" type="xml">
+            <form string="Conexión WhatsApp WAHA">
+                <header>
+                    <button name="action_test_connection" type="object" string="Probar conexión" class="btn-secondary" groups="base.group_system"/>
+                    <button name="action_create_session" type="object" string="Crear sesión WAHA" class="btn-primary" groups="base.group_system"/>
+                    <button name="action_start_session" type="object" string="Iniciar sesión" class="btn-secondary" groups="base.group_system"/>
+                    <button name="action_refresh_status" type="object" string="Actualizar estado / QR" class="btn-secondary" groups="base.group_system"/>
+                    <field name="session_status"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group string="Servidor WAHA">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="base_url" groups="base.group_system"/>
+                            <field name="api_key" password="True" groups="base.group_system"/>
+                            <field name="session_name" groups="base.group_system"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Webhook de mensajes">
+                            <field name="webhook_url" widget="url" groups="base.group_system"/>
+                            <field name="webhook_secret" password="True" groups="base.group_system"/>
+                            <field name="connected_phone" readonly="1"/>
+                            <field name="last_checked" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Vinculación del teléfono" groups="base.group_system">
+                        <field name="qr_image" widget="image" class="oe_avatar" options="{'size': [256, 256]}"/>
+                        <field name="last_error" readonly="1"/>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        WAHA debe ser accesible desde el servidor Odoo. Para recibir mensajes, configure la URL pública HTTPS de Odoo y permita el webhook de eventos message con HMAC SHA-512.
+                    </div>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="action_dolan_whatsapp_accounts" model="ir.actions.act_window">
+        <field name="name">Conexiones WAHA</field>
+        <field name="res_model">dolan.whatsapp.account</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

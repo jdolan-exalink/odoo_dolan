@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_dolan_whatsapp" model="ir.ui.view">
+        <field name="name">res.partner.form.dolan.whatsapp</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="before">
+                <group string="WhatsApp">
+                    <field name="dolan_whatsapp_number" placeholder="5491123456789"/>
+                    <button name="action_dolan_whatsapp_compose" type="object" string="Enviar WhatsApp" icon="fa-whatsapp" class="btn-primary" groups="base.group_user"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

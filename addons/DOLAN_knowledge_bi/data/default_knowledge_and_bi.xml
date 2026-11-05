@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ========================================================= -->
+        <!-- ARTÍCULOS INICIALES DE BASE DE CONOCIMIENTO (WIKI RAG)    -->
+        <!-- ========================================================= -->
+
+        <record id="knowledge_article_root_manual" model="dolan.knowledge.article">
+            <field name="name">Manual Operativo DOLAN ERP (Odoo 20 CE)</field>
+            <field name="icon">📘</field>
+            <field name="sequence">10</field>
+            <field name="category">workspace</field>
+            <field name="is_favorite" eval="True"/>
+            <field name="is_rag_indexed" eval="True"/>
+            <field name="ai_summary">Manual maestro de bienvenida y operación de la suite DOLAN ERP sobre Odoo 20 CE para empresas argentinas.</field>
+            <field name="body"><![CDATA[
+                <h2>Bienvenido a la Base de Conocimiento DOLAN</h2>
+                <p>Este espacio centraliza los procedimientos operativos, normativas fiscales ARCA/AFIP y guías internas de la organización.</p>
+                <ul>
+                    <li><strong>Facturación Electrónica ARCA/AFIP:</strong> Emisión de CAE, código QR reglamentario y Libro IVA Digital.</li>
+                    <li><strong>Suscripciones y Alquileres:</strong> Contratos recurrentes con cálculo de MRR/ARR y gestión de retiros/devoluciones.</li>
+                    <li><strong>IA Agéntica (RAG):</strong> Todos los artículos marcados con <em>Habilitado para RAG</em> alimentan el contexto de <strong>Odoo AI</strong>.</li>
+                </ul>
+            ]]></field>
+        </record>
+
+        <record id="knowledge_article_arca_guide" model="dolan.knowledge.article">
+            <field name="name">Guía Fiscal ARCA / AFIP y Facturación Electrónica</field>
+            <field name="icon">🇦🇷</field>
+            <field name="sequence">20</field>
+            <field name="parent_id" ref="knowledge_article_root_manual"/>
+            <field name="category">workspace</field>
+            <field name="is_rag_indexed" eval="True"/>
+            <field name="ai_summary">Procedimiento de homologación y producción de certificados X.509 WSAA, WSFEv1, Factura de Crédito MiPyME y Libro IVA Digital.</field>
+            <field name="body"><![CDATA[
+                <h3>Configuración de Webservices ARCA (WSAA y WSFEv1)</h3>
+                <ol>
+                    <li>Generar clave privada y solicitud CSR desde el módulo de Certificados.</li>
+                    <li>Asociar el computador fiscal en el portal de ARCA con el servicio <strong>wsfe</strong>.</li>
+                    <li>Verificar el estado del punto de venta electrónico y emitir comprobantes con QR oficial y leyenda Ley 27.743.</li>
+                </ol>
+            ]]></field>
+        </record>
+
+        <record id="knowledge_article_commercial_policy" model="dolan.knowledge.article">
+            <field name="name">Políticas Comerciales: Suscripciones y Alquileres</field>
+            <field name="icon">🚀</field>
+            <field name="sequence">30</field>
+            <field name="parent_id" ref="knowledge_article_root_manual"/>
+            <field name="category">shared</field>
+            <field name="is_rag_indexed" eval="True"/>
+            <field name="ai_summary">Reglas comerciales de abonos recurrentes (MRR/ARR), bonificaciones por pago anual y penalidades por devolución tardía de equipos en alquiler.</field>
+            <field name="body"><![CDATA[
+                <h3>Lineamientos de Suscripciones y Rental</h3>
+                <p>Las suscripciones activas se facturan automáticamente mediante cron diario según su fecha de próxima factura. Los alquileres registran fecha/hora exacta de retiro y devolución, calculando recargos automáticos en caso de mora.</p>
+            ]]></field>
+        </record>
+
+        <!-- ========================================================= -->
+        <!-- TABLEROS EJECUTIVOS BI Y TARJETAS KPI PRECONFIGURADOS     -->
+        <!-- ========================================================= -->
+
+        <record id="bi_dashboard_executive_360" model="dolan.bi.dashboard">
+            <field name="name">Tablero Ejecutivo 360° (Dirección)</field>
+            <field name="code">EXEC_360</field>
+            <field name="sequence">10</field>
+            <field name="dashboard_type">executive</field>
+        </record>
+
+        <record id="bi_dashboard_sales_crm" model="dolan.bi.dashboard">
+            <field name="name">Comercial, Ventas y Pipeline CRM</field>
+            <field name="code">SALES_CRM</field>
+            <field name="sequence">20</field>
+            <field name="dashboard_type">sales_crm</field>
+        </record>
+
+        <record id="bi_dashboard_finance_arca" model="dolan.bi.dashboard">
+            <field name="name">Finanzas, Facturación y Cobranzas</field>
+            <field name="code">FINANCE_AR</field>
+            <field name="sequence">30</field>
+            <field name="dashboard_type">finance</field>
+        </record>
+
+        <record id="bi_dashboard_stock_ops" model="dolan.bi.dashboard">
+            <field name="name">Inventario, Compras y Operaciones</field>
+            <field name="code">STOCK_OPS</field>
+            <field name="sequence">40</field>
+            <field name="dashboard_type">operations</field>
+        </record>
+
+        <!-- Tarjetas KPI del Tablero Ejecutivo 360° -->
+        <record id="bi_kpi_card_sales" model="dolan.bi.kpi.card">
+            <field name="name">Ventas Mensuales Confirmadas</field>
+            <field name="sequence">10</field>
+            <field name="dashboard_id" ref="bi_dashboard_executive_360"/>
+            <field name="metric_type">sales_month</field>
+            <field name="target_value">10000000.0</field>
+            <field name="badge_color">primary</field>
+        </record>
+
+        <record id="bi_kpi_card_invoiced" model="dolan.bi.kpi.card">
+            <field name="name">Facturación Emitida del Mes</field>
+            <field name="sequence">20</field>
+            <field name="dashboard_id" ref="bi_dashboard_executive_360"/>
+            <field name="metric_type">invoiced_month</field>
+            <field name="target_value">10000000.0</field>
+            <field name="badge_color">success</field>
+        </record>
+
+        <record id="bi_kpi_card_receivables" model="dolan.bi.kpi.card">
+            <field name="name">Cobranzas Pendientes en Calle</field>
+            <field name="sequence">30</field>
+            <field name="dashboard_id" ref="bi_dashboard_executive_360"/>
+            <field name="metric_type">receivables_due</field>
+            <field name="target_value">2500000.0</field>
+            <field name="badge_color">info</field>
+        </record>
+
+        <record id="bi_kpi_card_crm" model="dolan.bi.kpi.card">
+            <field name="name">Pipeline Ponderado CRM</field>
+            <field name="sequence">40</field>
+            <field name="dashboard_id" ref="bi_dashboard_sales_crm"/>
+            <field name="metric_type">crm_pipeline</field>
+            <field name="target_value">15000000.0</field>
+            <field name="badge_color">primary</field>
+        </record>
+
+        <record id="bi_kpi_card_stock" model="dolan.bi.kpi.card">
+            <field name="name">Valoración de Inventario Físico</field>
+            <field name="sequence">50</field>
+            <field name="dashboard_id" ref="bi_dashboard_stock_ops"/>
+            <field name="metric_type">stock_valuation</field>
+            <field name="target_value">20000000.0</field>
+            <field name="badge_color">warning</field>
+        </record>
+    </data>
+</odoo>

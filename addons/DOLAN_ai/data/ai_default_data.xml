@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- =============================================================== -->
+        <!-- 1. TAREA PROGRAMADA (CRON): Renovación Automática Token OAuth   -->
+        <!-- =============================================================== -->
+        <record id="ir_cron_dolan_ai_refresh_oauth" model="ir.cron">
+            <field name="name">DOLAN AI: Renovar tokens de Sign in with ChatGPT</field>
+            <field name="model_id" ref="model_dolan_ai_provider"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_refresh_oauth_tokens()</field>
+            <field name="interval_number">15</field>
+            <field name="interval_type">minutes</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- =============================================================== -->
+        <!-- 2. PROVEEDOR POR DEFECTO: Sign in with ChatGPT plan usage       -->
+        <!-- =============================================================== -->
+        <record id="default_dolan_ai_provider_chatgpt_oauth" model="dolan.ai.provider">
+            <field name="name">ChatGPT plan (Sign in with ChatGPT)</field>
+            <field name="provider_mode">chatgpt_oauth</field>
+            <field name="default_model">gpt-6.1-sol</field>
+            <field name="oauth_authorize_url">https://auth.openai.com/api/accounts/authorize</field>
+            <field name="oauth_token_url">https://auth.openai.com/api/accounts/oauth/token</field>
+            <field name="oauth_client_id">dynamic_agent_client</field>
+            <field name="redirect_mode">localhost_paste</field>
+            <field name="is_default" eval="True"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- =============================================================== -->
+        <!-- 3. LAS 12 SKILLS NATIVAS DE ODOO 20                             -->
+        <!-- =============================================================== -->
+        <record id="ai_skill_1_shape_view" model="ai.skill">
+            <field name="name">Shape View</field>
+            <field name="description">Interpreta la consulta del usuario para abrir la vista adecuada de Odoo con los filtros y agrupaciones correspondientes.</field>
+            <field name="type">executable</field>
+            <field name="is_native_skill" eval="False"/>
+        </record>
+
+        <record id="ai_skill_2_search_database" model="ai.skill">
+            <field name="name">Search Database</field>
+            <field name="description">Colección de herramientas ORM (search_read, read_group) para recuperar información de modelos y registros respetando permisos.</field>
+            <field name="type">executable</field>
+            <field name="is_native_skill" eval="False"/>
+        </record>
+
+        <record id="ai_skill_3_update_records" model="ai.skill">
+            <field name="name">Update Records</field>
+            <field name="description">Permite actualizar campos de registros existentes en Odoo mediante write().</field>
+            <field name="type">executable</field>
+            <field name="is_native_skill" eval="False"/>
+        </record>
+
+        <record id="ai_skill_4_create_records" model="ai.skill">
+            <field name="name">Create Records</field>
+            <field name="description">Permite crear nuevos registros en modelos de Odoo mediante create().</field>
+            <field name="type">executable</field>
+            <field name="is_native_skill" eval="False"/>
+        </record>
+
+        <record id="ai_skill_5_generate_image" model="ai.skill">
+            <field name="name">Generate Image</field>
+            <field name="description">Herramientas para generar o mejorar imágenes de productos y artículos.</field>
+            <field name="type">executable</field>
+            <field name="is_native_skill" eval="True"/>
+        </record>
+
+        <record id="ai_skill_6_web_search" model="ai.skill">
+            <field name="name">Web Search</field>
+            <field name="description">Permite al agente consultar información pública actualizada en tiempo real.</field>
+            <field name="type">executable</field>
+            <field name="is_native_skill" eval="True"/>
+        </record>
+
+        <record id="ai_skill_7_accounting_report_analysis" model="ai.skill">
+            <field name="name">Accounting Report Analysis</field>
+            <field name="description">Análisis de reportes contables de solo lectura para balances, resultados, flujo de caja, mayores, antigüedad de saldos e impuestos.</field>
+            <field name="type">executable</field>
+            <field name="is_native_skill" eval="False"/>
+        </record>
+
+        <record id="ai_skill_8_accounting" model="ai.skill">
+            <field name="name">Accounting</field>
+            <field name="description">Punto de entrada para consultas contables de usuario, reportes financieros y legajos de auditoría.</field>
+            <field name="type">executable</field>
+            <field name="is_native_skill" eval="False"/>
+        </record>
+
+        <record id="ai_skill_9_accounting_audit_evidence" model="ai.skill">
+            <field name="name">Accounting Audit Evidence</field>
+            <field name="description">Lee instrucciones de auditoría contable, selecciona el legajo de trabajo de la sesión e interpreta evidencia en apuntes contables.</field>
+            <field name="type">executable</field>
+            <field name="is_native_skill" eval="False"/>
+        </record>
+
+        <record id="ai_skill_10_self_update" model="ai.skill">
+            <field name="name">Self Update</field>
+            <field name="description">Permite al agente actualizar sus propias instrucciones, vincular skills y añadir fuentes de conocimiento.</field>
+            <field name="type">executable</field>
+            <field name="is_native_skill" eval="True"/>
+        </record>
+
+        <record id="ai_skill_11_build_automation" model="ai.skill">
+            <field name="name">Build Automation</field>
+            <field name="description">Crea y actualiza reglas de automatización persistentes (base.automation) para ejecutar acciones programadas o por eventos.</field>
+            <field name="type">executable</field>
+            <field name="is_native_skill" eval="False"/>
+        </record>
+
+        <record id="ai_skill_12_create_lead" model="ai.skill">
+            <field name="name">Create Lead (Livechat)</field>
+            <field name="description">Permite registrar una oportunidad/lead en CRM a partir de una conversación con un visitante.</field>
+            <field name="type">executable</field>
+            <field name="is_native_skill" eval="False"/>
+        </record>
+
+        <!-- =============================================================== -->
+        <!-- 4. LOS 3 AGENTES NATIVOS DE ODOO 20 (EXALINK REA)               -->
+        <!-- =============================================================== -->
+        <record id="ai_agent_1_odoo_ai" model="ai.agent">
+            <field name="name">Odoo AI</field>
+            <field name="subtitle">Soy tu copiloto de Odoo para las tareas empresariales del día a día.</field>
+            <field name="is_system_agent" eval="True"/>
+            <field name="restrict_to_sources" eval="False"/>
+            <field name="embedding_model">gemini-embedding-2</field>
+            <field name="avatar_role">assistant</field>
+            <field name="sequence">10</field>
+            <field name="system_prompt">You are the main Odoo AI Assistant. Help users complete business work inside Odoo accurately, efficiently, and with good judgment.
+
+## Working Style
+- Be practical, concise, and action-oriented. Prefer making progress when the user's intent is clear.
+- Ask a short clarifying question only when missing information would materially change the result, block the action, or create business risk.
+- Use a professional, supportive tone. Put the useful answer or outcome first, followed by important caveats or next steps.
+
+## Collaboration
+- Adapt to the user's intent.
+- For information requests, answer from the available evidence.
+- For action requests, proceed through the available tools or loaded workflows once the target, intended action, and required values are clear.
+- For drafting, rewriting, summarizing, or data-quality improvement, preserve the user's intent and factual basis while improving clarity, tone, structure, and usefulness.
+- If you cannot complete the request with the currently available tools or context, explain the limitation briefly and offer the closest useful next step.</field>
+            <field name="skill_ids" eval="[(6, 0, [
+                ref('ai_skill_1_shape_view'),
+                ref('ai_skill_2_search_database'),
+                ref('ai_skill_3_update_records'),
+                ref('ai_skill_4_create_records'),
+                ref('ai_skill_5_generate_image'),
+                ref('ai_skill_6_web_search'),
+                ref('ai_skill_7_accounting_report_analysis'),
+                ref('ai_skill_8_accounting'),
+                ref('ai_skill_11_build_automation')
+            ])]"/>
+            <field name="custom_skill_ids" eval="[(6, 0, [
+                ref('ai_skill_1_shape_view'),
+                ref('ai_skill_2_search_database'),
+                ref('ai_skill_3_update_records'),
+                ref('ai_skill_4_create_records'),
+                ref('ai_skill_7_accounting_report_analysis'),
+                ref('ai_skill_8_accounting'),
+                ref('ai_skill_11_build_automation')
+            ])]"/>
+        </record>
+
+        <record id="ai_agent_2_audit_reviewer" model="ai.agent">
+            <field name="name">Audit Reviewer</field>
+            <field name="subtitle">Revisa de forma independiente la evidencia y conclusión de un control de auditoría.</field>
+            <field name="is_system_agent" eval="False"/>
+            <field name="restrict_to_sources" eval="False"/>
+            <field name="embedding_model">gemini-embedding-2</field>
+            <field name="avatar_role">reviewer</field>
+            <field name="sequence">20</field>
+            <field name="system_prompt">You are the independent Audit Reviewer. Load your assigned skills together before reviewing the check.
+
+Review the assigned check's objective, evidence and proposed conclusion. Independently investigate the claims that determine the result. Check whether the population and time basis answer the actual question, follow relevant record links and look for evidence that could overturn the conclusion.
+
+Verify quoted period amounts against native period columns or an explicitly dated ai_tool_read_group aggregation with the same scope. Check debit and credit separately; a matching net movement does not validate both totals.
+
+Return audit_id, check_code and a verdict (confirmed, challenged or incomplete), evidence supporting it, concrete objections and what could resolve them.</field>
+            <field name="skill_ids" eval="[(6, 0, [
+                ref('ai_skill_2_search_database'),
+                ref('ai_skill_7_accounting_report_analysis'),
+                ref('ai_skill_9_accounting_audit_evidence')
+            ])]"/>
+            <field name="custom_skill_ids" eval="[(6, 0, [
+                ref('ai_skill_2_search_database'),
+                ref('ai_skill_7_accounting_report_analysis'),
+                ref('ai_skill_9_accounting_audit_evidence')
+            ])]"/>
+        </record>
+
+        <record id="ai_agent_3_auditor" model="ai.agent">
+            <field name="name">Auditor</field>
+            <field name="subtitle">Investiga un control de auditoría contable y devuelve hallazgos verificados.</field>
+            <field name="is_system_agent" eval="False"/>
+            <field name="restrict_to_sources" eval="False"/>
+            <field name="embedding_model">gemini-embedding-2</field>
+            <field name="avatar_role">auditor</field>
+            <field name="sequence">30</field>
+            <field name="system_prompt">You are the Auditor. Load your assigned skills together, then investigate your assigned check with curiosity and professional judgment.
+
+Concentrate on the assigned check. Read its native instructions and determine what must be established. Choose and adapt your procedures using the available records, reports and documents. Follow relevant leads, investigate contradictions and seek evidence that could disprove your initial explanation.
+
+Return audit_id, check_code, proposed result (reviewed, anomaly or todo), neutral draft notes, and the review verdict, objections and their resolution.</field>
+            <field name="skill_ids" eval="[(6, 0, [
+                ref('ai_skill_2_search_database'),
+                ref('ai_skill_7_accounting_report_analysis'),
+                ref('ai_skill_9_accounting_audit_evidence')
+            ])]"/>
+            <field name="custom_skill_ids" eval="[(6, 0, [
+                ref('ai_skill_2_search_database'),
+                ref('ai_skill_7_accounting_report_analysis'),
+                ref('ai_skill_9_accounting_audit_evidence')
+            ])]"/>
+        </record>
+
+        <!-- =============================================================== -->
+        <!-- 5. LOS 14 COMPOSERS DE INTERFAZ DE ODOO 20                      -->
+        <!-- =============================================================== -->
+        <record id="ai_composer_1_mail" model="ai.composer">
+            <field name="name">Mail/Note Composer</field>
+            <field name="interface_key">mail_composer</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+            <field name="default_prompt">Tu tarea es ayudar a redactar mensajes. Escribí únicamente el cuerpo del mensaje, sin asunto ni comentarios adicionales, siguiendo el tono de la conversación.</field>
+        </record>
+
+        <record id="ai_composer_2_html_field" model="ai.composer">
+            <field name="name">Record HTML Fields</field>
+            <field name="interface_key">html_field_record</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+            <field name="default_prompt">Tu tarea es redactar la descripción de un registro de Odoo. Devolvé únicamente el texto listo para insertar sin comentarios extra.</field>
+        </record>
+
+        <record id="ai_composer_3_text_selector" model="ai.composer">
+            <field name="name">Text Selector</field>
+            <field name="interface_key">html_field_text_select</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+            <field name="default_prompt">Sugerí alternativas o reescrituras para el texto seleccionado por el usuario. Tu respuesta reemplazará el texto original directamente.</field>
+        </record>
+
+        <record id="ai_composer_4_chatter_helper" model="ai.composer">
+            <field name="name">Chatter Helper</field>
+            <field name="interface_key">chatter_ai_button</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+            <field name="default_prompt">Ayudá al usuario con el registro actual y resumí o redactá respuestas para el hilo del Chatter.</field>
+        </record>
+
+        <record id="ai_composer_5_file_viewer" model="ai.composer">
+            <field name="name">File Viewer Helper</field>
+            <field name="interface_key">file_viewer_ai_button</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+            <field name="default_prompt">Ayudá al usuario a interpretar, resumir y extraer datos de documentos PDF e imágenes adjuntas.</field>
+        </record>
+
+        <record id="ai_composer_6_mail_template" model="ai.composer">
+            <field name="name">Mail Template Prompt Evaluator</field>
+            <field name="interface_key">html_prompt_shortcut</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+            <field name="default_prompt">Transformá la instrucción en un fragmento conciso y profesional para un correo electrónico.</field>
+        </record>
+
+        <record id="ai_composer_7_ask_ai" model="ai.composer">
+            <field name="name">Ask AI</field>
+            <field name="interface_key">systray_ai_button</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+        </record>
+
+        <record id="ai_composer_8_voice_transcription" model="ai.composer">
+            <field name="name">Summarize Voice Transcription</field>
+            <field name="interface_key">voice_transcription_component</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+            <field name="default_prompt">Resumí la transcripción de voz en puntos claros en formato Markdown.</field>
+        </record>
+
+        <record id="ai_composer_9_media_manager" model="ai.composer">
+            <field name="name">Media Manager</field>
+            <field name="interface_key">media_dialog</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+        </record>
+
+        <record id="ai_composer_10_product_media" model="ai.composer">
+            <field name="name">Product Media Manager</field>
+            <field name="interface_key">media_dialog</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+        </record>
+
+        <record id="ai_composer_11_product_chatter" model="ai.composer">
+            <field name="name">Product Chatter Helper</field>
+            <field name="interface_key">chatter_ai_button</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+        </record>
+
+        <record id="ai_composer_12_product_variant_media" model="ai.composer">
+            <field name="name">Product Variant Media Manager</field>
+            <field name="interface_key">media_dialog</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+        </record>
+
+        <record id="ai_composer_13_product_variant_chatter" model="ai.composer">
+            <field name="name">Product Variant Chatter Helper</field>
+            <field name="interface_key">chatter_ai_button</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+        </record>
+
+        <record id="ai_composer_14_knowledge_html" model="ai.composer">
+            <field name="name">Knowledge Article HTML</field>
+            <field name="interface_key">html_field_knowledge</field>
+            <field name="ai_agent_id" ref="ai_agent_1_odoo_ai"/>
+            <field name="is_system_default" eval="True"/>
+            <field name="default_prompt">Ayudá al usuario a redactar, estructurar, resumir o traducir artículos de la base de Conocimiento.</field>
+        </record>
+
+        <!-- =============================================================== -->
+        <!-- 6. BOTONES RÁPIDOS DE PROMPT EN ESPAÑOL (ai.prompt.button)      -->
+        <!-- =============================================================== -->
+        <record id="ai_prompt_btn_1" model="ai.prompt.button">
+            <field name="name">Resumir la conversación del Chatter</field>
+            <field name="composer_id" ref="ai_composer_4_chatter_helper"/>
+            <field name="sequence">10</field>
+            <field name="prompt">&lt;p&gt;Analizá los mensajes del Chatter ignorando notificaciones automáticas y generá un resumen ejecutivo en viñetas concisas.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_2" model="ai.prompt.button">
+            <field name="name">Redactar respuesta de seguimiento</field>
+            <field name="composer_id" ref="ai_composer_4_chatter_helper"/>
+            <field name="sequence">20</field>
+            <field name="prompt">&lt;p&gt;Redactá una respuesta cordial y profesional de seguimiento basada en el último mensaje del hilo.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_3" model="ai.prompt.button">
+            <field name="name">Redactar respuesta de seguimiento</field>
+            <field name="composer_id" ref="ai_composer_1_mail"/>
+            <field name="sequence">10</field>
+            <field name="prompt">&lt;p&gt;Redactá un correo electrónico de seguimiento claro y conciso.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_4" model="ai.prompt.button">
+            <field name="name">Reescribir texto seleccionado</field>
+            <field name="composer_id" ref="ai_composer_3_text_selector"/>
+            <field name="sequence">10</field>
+            <field name="prompt">&lt;p&gt;Mejorá la redacción, claridad y tono profesional del texto seleccionado.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_8" model="ai.prompt.button">
+            <field name="name">¿Qué clientes tengo registrados en Buenos Aires?</field>
+            <field name="composer_id" ref="ai_composer_7_ask_ai"/>
+            <field name="sequence">10</field>
+            <field name="prompt">&lt;p&gt;Buscá los contactos en res.partner (clientes) y listalos con su Nombre, CUIT (vat) y Correo electrónico (email).&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_9" model="ai.prompt.button">
+            <field name="name">Resumir este archivo</field>
+            <field name="composer_id" ref="ai_composer_5_file_viewer"/>
+            <field name="sequence">10</field>
+            <field name="prompt">&lt;p&gt;Resumí los datos principales y puntos clave del documento adjunto.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_10" model="ai.prompt.button">
+            <field name="name">Explicar este documento</field>
+            <field name="composer_id" ref="ai_composer_5_file_viewer"/>
+            <field name="sequence">20</field>
+            <field name="prompt">&lt;p&gt;Explicá de forma clara el contenido, importes y partes involucradas en este archivo.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_18" model="ai.prompt.button">
+            <field name="name">Redactar descripción comercial del producto</field>
+            <field name="composer_id" ref="ai_composer_11_product_chatter"/>
+            <field name="render_model">product.template</field>
+            <field name="sequence">20</field>
+            <field name="prompt">&lt;p&gt;Generá una descripción comercial atractiva de un párrafo para este producto destacando sus beneficios principales.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_24" model="ai.prompt.button">
+            <field name="name">Mostrar el estado actual de flujo de caja y saldos</field>
+            <field name="composer_id" ref="ai_composer_7_ask_ai"/>
+            <field name="sequence">20</field>
+            <field name="prompt">&lt;p&gt;Ejecutá el análisis contable (accounting_report_analysis) para mostrar el estado actual de liquidez, cuentas por cobrar y cuentas por pagar.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_26" model="ai.prompt.button">
+            <field name="name">Top 5 vendedores por facturación</field>
+            <field name="composer_id" ref="ai_composer_7_ask_ai"/>
+            <field name="sequence">30</field>
+            <field name="prompt">&lt;p&gt;Consultá los pedidos de venta (sale.order), agrupalos por vendedor (user_id), sumá el total (amount_total) y devolvé los 5 primeros.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_27" model="ai.prompt.button">
+            <field name="name">Ventas por categoría de producto este mes</field>
+            <field name="composer_id" ref="ai_composer_7_ask_ai"/>
+            <field name="sequence">40</field>
+            <field name="prompt">&lt;p&gt;Analizá las ventas agrupadas por categoría de producto y mostrame los totales.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_32" model="ai.prompt.button">
+            <field name="name">Productos con stock crítico</field>
+            <field name="composer_id" ref="ai_composer_7_ask_ai"/>
+            <field name="sequence">50</field>
+            <field name="prompt">&lt;p&gt;Buscá los productos almacenables y mostrame su disponibilidad actual en inventario.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_33" model="ai.prompt.button">
+            <field name="name">Últimas órdenes de compra a proveedores</field>
+            <field name="composer_id" ref="ai_composer_7_ask_ai"/>
+            <field name="sequence">60</field>
+            <field name="prompt">&lt;p&gt;Buscá las últimas órdenes de compra (purchase.order) indicando proveedor, fecha y monto total.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_35" model="ai.prompt.button">
+            <field name="name">¿Cuál es mi agenda para hoy?</field>
+            <field name="composer_id" ref="ai_composer_7_ask_ai"/>
+            <field name="sequence">70</field>
+            <field name="prompt">&lt;p&gt;Buscá mis eventos de calendario (calendar.event) con su nombre, hora de inicio y hora de fin.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_36" model="ai.prompt.button">
+            <field name="name">Resumen de facturación del mes</field>
+            <field name="composer_id" ref="ai_composer_7_ask_ai"/>
+            <field name="sequence">1</field>
+            <field name="prompt">&lt;p&gt;Resumí la facturación del mes actual por empresa, con cantidad de comprobantes, base, IVA, total y notas de crédito.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_37" model="ai.prompt.button">
+            <field name="name">Comparar IVA de compras y ventas</field>
+            <field name="composer_id" ref="ai_composer_7_ask_ai"/>
+            <field name="sequence">2</field>
+            <field name="prompt">&lt;p&gt;Compará el IVA de compras con el IVA de ventas del mes actual para las empresas seleccionadas.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_38" model="ai.prompt.button">
+            <field name="name">Crear tablero personalizado de IVA</field>
+            <field name="composer_id" ref="ai_composer_7_ask_ai"/>
+            <field name="sequence">3</field>
+            <field name="prompt">&lt;p&gt;Armame un tablero que compare IVA compras vs IVA ventas de este mes para las empresas seleccionadas.&lt;/p&gt;</field>
+        </record>
+
+        <record id="ai_prompt_btn_39" model="ai.prompt.button">
+            <field name="name">Clientes con cobranzas pendientes</field>
+            <field name="composer_id" ref="ai_composer_7_ask_ai"/>
+            <field name="sequence">4</field>
+            <field name="prompt">&lt;p&gt;Listá las facturas de clientes pendientes o parcialmente cobradas, agrupadas por empresa y cliente, con vencimiento y saldo.&lt;/p&gt;</field>
+        </record>
+    </data>
+</odoo>

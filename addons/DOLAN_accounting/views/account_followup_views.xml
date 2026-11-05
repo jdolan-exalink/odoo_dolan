@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_followup_level_list" model="ir.ui.view">
+        <field name="name">dolan.followup.level.list</field>
+        <field name="model">dolan.followup.level</field>
+        <field name="arch" type="xml">
+            <list string="Niveles de Seguimiento de Deudores" editable="bottom">
+                <field name="name"/>
+                <field name="delay_days"/>
+                <field name="send_email"/>
+                <field name="block_sales"/>
+                <field name="company_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_followup_level" model="ir.actions.act_window">
+        <field name="name">Niveles de Seguimiento de Mora</field>
+        <field name="res_model">dolan.followup.level</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_partner_form_inherit_dolan_followup" model="ir.ui.view">
+        <field name="name">res.partner.form.dolan.followup</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Seguimiento de Cobranzas y Mora" name="dolan_followup">
+                    <group>
+                        <group string="Estado de Mora Actual">
+                            <field name="dolan_overdue_amount"/>
+                            <field name="dolan_max_overdue_days"/>
+                            <field name="dolan_followup_level_id"/>
+                            <field name="dolan_last_followup_date"/>
+                            <field name="dolan_credit_blocked"/>
+                        </group>
+                        <group string="Acciones de Cuenta Corriente">
+                            <button name="action_dolan_send_followup_statement"
+                                    type="object"
+                                    string="Enviar Estado de Cuenta / Reclamo"
+                                    icon="fa-envelope"
+                                    class="btn-primary"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_dolan_partner_followup_list" model="ir.actions.act_window">
+        <field name="name">Seguimiento de Deudores Morosos</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('customer_rank', '&gt;', 0)]</field>
+    </record>
+</odoo>

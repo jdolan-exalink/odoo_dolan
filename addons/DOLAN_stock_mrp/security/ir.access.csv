@@ -1,0 +1,7 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_stock_barcode_session_user,dolan.stock.barcode.session.user,dolan.stock.barcode.session,base.group_user,crud,
+access_dolan_stock_barcode_session_line_user,dolan.stock.barcode.session.line.user,dolan.stock.barcode.session.line,base.group_user,crud,
+access_dolan_mrp_workorder_time_user,dolan.mrp.workorder.time.user,dolan.mrp.workorder.time,base.group_user,crud,
+access_dolan_quality_point_user,dolan.quality.point.user,dolan.quality.point,base.group_user,crud,
+access_dolan_quality_check_user,dolan.quality.check.user,dolan.quality.check,base.group_user,crud,
+access_dolan_quality_alert_user,dolan.quality.alert.user,dolan.quality.alert,base.group_user,crud,

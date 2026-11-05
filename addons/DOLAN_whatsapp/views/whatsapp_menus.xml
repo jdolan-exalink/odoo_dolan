@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dolan_whatsapp_root"
+              name="WhatsApp"
+              sequence="62"
+              action="action_dolan_whatsapp_messages"
+              web_icon="DOLAN_whatsapp,static/description/icon.svg"
+              groups="base.group_user"/>
+    <menuitem id="menu_dolan_whatsapp_messages"
+              name="Mensajes"
+              parent="menu_dolan_whatsapp_root"
+              action="action_dolan_whatsapp_messages"
+              sequence="10"
+              groups="base.group_user"/>
+    <menuitem id="menu_dolan_whatsapp_accounts"
+              name="Conexiones WAHA"
+              parent="menu_dolan_whatsapp_root"
+              action="action_dolan_whatsapp_accounts"
+              sequence="20"
+              groups="base.group_system"/>
+</odoo>

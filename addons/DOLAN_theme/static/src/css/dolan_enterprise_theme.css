@@ -1,0 +1,2164 @@
+/* ==========================================================================
+   DOLAN Enterprise Theme 20.0 (OWL 3)
+   Paridad visual 1:1 con Odoo 20 Enterprise (web_enterprise / Odoo 20)
+   Clean-room CSS bajo licencia LGPL-3
+   ========================================================================== */
+
+:root {
+    --dolan-primary: #714B67;
+    --dolan-primary-hover: #604058;
+    --dolan-secondary: #017e84;
+    --dolan-secondary-soft: #e6f2f3;
+    --NavBar-entry-color: #212529;
+    --NavBar-entry-backgroundColor--hover: #e7ebed;
+    --NavBar-entry-borderColor-active: #017e84;
+    --NavBar-entry-backgroundColor--active: #e6f2f3;
+}
+
+/* --------------------------------------------------------------------------
+   1. Home Menu Background (.o_home_menu_background)
+   Superficie clara #f8f9fa con grilla de micro-puntos radiales 12x12px
+   -------------------------------------------------------------------------- */
+.o_home_menu_background,
+.o_dolan_home_menu_wrapper {
+    background-color: #f8f9fa;
+    background-size: auto, auto, 100% 40%, auto, 12px 12px;
+    background-image:
+        linear-gradient(45deg, #f8f9fa 0%, transparent 50%),
+        linear-gradient(135deg, #f8f9fa 0%, transparent 30%, transparent 60%, #f8f9fa 95%),
+        linear-gradient(180deg, #f8f9fa 0%, transparent 100%),
+        radial-gradient(circle at 50% 50%, rgba(233, 236, 239, 0.95) 20%, transparent 400%),
+        radial-gradient(rgba(0, 0, 0, 0.12) 1px, #f8f9fa 1px);
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+}
+
+.o_home_menu_background_custom,
+.o_home_menu_background_custom .o_dolan_home_menu_wrapper {
+    background-size: cover;
+    background-attachment: fixed;
+    background-color: var(--homeMenu-bg-color, #dee2e6);
+    background-image: var(--homeMenu-bg-image);
+}
+
+.o_home_menu_background_custom .o_home_menu .o_caption {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75) !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. Top Navbar (.o_main_navbar) y Botón SVG 3x3 (.o_menu_toggle)
+   -------------------------------------------------------------------------- */
+.o_main_navbar {
+    --NavBar-bg: #ffffff;
+    --NavBar-entry-backgroundColor: transparent;
+    --NavBar-entry-backgroundColor--hover: #e7ebed;
+    --NavBar-entry-backgroundColor--active: #e6f2f3;
+    --NavBar-entry-backgroundColor--focus: #e7ebed;
+    --NavBar-entry-color: #212529;
+    --NavBar-entry-color--hover: #111827;
+    --NavBar-entry-color--active: #111827;
+    --NavBar-brand-color: #212529;
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #d8dadd;
+    color: #212529;
+    min-height: 46px;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+/* Navbar transparente cuando el Home Menu está abierto (igual que Odoo 20) */
+body.o_home_menu_background:not(.o_home_menu_background_custom) .o_main_navbar {
+    background: transparent !important;
+    border-bottom-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Ocultar el menú desplegable clásico de Odoo CE (el botón se transforma en .o_menu_toggle SVG 3x3) */
+.o_main_navbar .o_navbar_apps_menu .o-dropdown--menu,
+.o_main_navbar .o_navbar_apps_menu .dropdown-menu {
+    display: none !important;
+}
+
+body.o_home_menu_background .o_main_navbar .o_menu_brand,
+body.o_home_menu_background .o_main_navbar .o_menu_sections {
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Entradas de la barra superior */
+.o_main_navbar .o_menu_brand {
+    color: #212529 !important;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+}
+
+.o_main_navbar .o_nav_entry,
+.o_main_navbar .o_menu_sections .dropdown-toggle,
+.o_main_navbar .o_menu_sections .o-dropdown,
+.o_main_navbar .o_menu_systray .dropdown-toggle,
+.o_main_navbar .o_menu_systray button {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: var(--NavBar-entry-color, #212529) !important;
+    border-radius: 0.25rem;
+    transition: background-color 0.12s ease;
+}
+
+.o_main_navbar .o_nav_entry:hover,
+.o_main_navbar .o_menu_sections .dropdown-toggle:hover,
+.o_main_navbar .o_menu_systray .dropdown-toggle:hover,
+.o_main_navbar .o_menu_systray button:hover {
+    background-color: var(--NavBar-entry-backgroundColor--hover, #e7ebed) !important;
+}
+
+/* Botón .o_menu_toggle (Grilla SVG 3x3 con crossfade a flecha ← dentro de una app) */
+.o_main_navbar .o_menu_toggle {
+    color: #714B67 !important;
+    padding: 0 12px;
+    height: 46px;
+    min-width: 40px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none !important;
+    cursor: pointer;
+    border: none;
+    border-radius: 0.25rem;
+    background: transparent;
+}
+
+.o_main_navbar .o_menu_toggle:hover,
+.o_main_navbar .o_menu_toggle:focus {
+    color: #604058 !important;
+    background-color: var(--NavBar-entry-backgroundColor--hover, #e7ebed) !important;
+}
+
+.o_main_navbar .o_menu_toggle svg.o_menu_toggle_icon {
+    width: 16px;
+    height: 16px;
+    transition: opacity 0.15s ease;
+}
+
+/* Flecha ← real (SVG aparte, superpuesta): reemplaza la animación de skew que
+   colapsaba la fila central y se veía "rota". Solo aparece dentro de una app. */
+.o_main_navbar .o_menu_toggle .o_menu_toggle_arrow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+}
+
+body:not(.o_home_menu_background) .o_main_navbar .o_menu_toggle.hasImage:hover svg.o_menu_toggle_icon,
+body:not(.o_home_menu_background) .o_main_navbar .o_menu_toggle.hasImage:focus-visible svg.o_menu_toggle_icon {
+    opacity: 0;
+}
+
+body:not(.o_home_menu_background) .o_main_navbar .o_menu_toggle.hasImage:hover .o_menu_toggle_arrow,
+body:not(.o_home_menu_background) .o_main_navbar .o_menu_toggle.hasImage:focus-visible .o_menu_toggle_arrow {
+    opacity: 1;
+}
+
+/* Casita: volver a todas las apps, siempre visible en la navbar */
+.o_main_navbar .o_dolan_home_btn {
+    color: var(--NavBar-entry-color, #212529) !important;
+    height: 46px;
+    min-width: 40px;
+    padding: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 0.25rem;
+    background: transparent;
+    cursor: pointer;
+}
+
+.o_main_navbar .o_dolan_home_btn:hover,
+.o_main_navbar .o_dolan_home_btn:focus {
+    color: #714B67 !important;
+    background-color: var(--NavBar-entry-backgroundColor--hover, #e7ebed) !important;
+}
+
+/* Modo oscuro: el violeta #714B67 no se ve sobre la navbar oscura */
+body.o_dolan_dark_mode .o_main_navbar .o_menu_toggle,
+body.o_dolan_dark_mode .o_main_navbar .o_dolan_home_btn {
+    color: #e4e6eb !important;
+}
+
+body.o_dolan_dark_mode .o_main_navbar .o_menu_toggle:hover,
+body.o_dolan_dark_mode .o_main_navbar .o_menu_toggle:focus,
+body.o_dolan_dark_mode .o_main_navbar .o_dolan_home_btn:hover,
+body.o_dolan_dark_mode .o_main_navbar .o_dolan_home_btn:focus {
+    color: #ffffff !important;
+    background-color: var(--NavBar-entry-backgroundColor--hover, #303540) !important;
+}
+
+/* Mobile BurgerMenu trigger is a separate Odoo control from .o_menu_toggle.
+   Give the “Alternar menú” button its own dark surface and visible focus state. */
+@media (max-width: 767.98px) {
+    body.o_dolan_dark_mode .o_main_navbar .o_mobile_menu_toggle {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 36px !important;
+        min-width: 36px !important;
+        height: 36px !important;
+        padding: 0 !important;
+        margin-inline: 4px !important;
+        color: #f1f3f5 !important;
+        background-color: #292d36 !important;
+        border: 1px solid #454c59 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, .28) !important;
+        opacity: 1 !important;
+    }
+
+    body.o_dolan_dark_mode .o_main_navbar .o_mobile_menu_toggle :is(svg, i, .oi) {
+        color: #f1f3f5 !important;
+        fill: currentColor !important;
+        opacity: 1 !important;
+    }
+
+    body.o_dolan_dark_mode .o_main_navbar .o_mobile_menu_toggle:hover,
+    body.o_dolan_dark_mode .o_main_navbar .o_mobile_menu_toggle:active,
+    body.o_dolan_dark_mode .o_main_navbar .o_mobile_menu_toggle:focus-visible {
+        color: #ffffff !important;
+        background-color: #3a3040 !important;
+        border-color: #806b7c !important;
+        box-shadow: 0 0 0 2px rgba(195, 154, 181, .32) !important;
+    }
+
+    body.o_dolan_dark_mode .o_main_navbar .o_mobile_menu_toggle:focus:not(:focus-visible) {
+        box-shadow: none !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   3. Home Menu (.o_home_menu) - Estructura y Tarjetas de 70x70px
+   -------------------------------------------------------------------------- */
+.o_dolan_home_menu_wrapper {
+    position: fixed;
+    top: 46px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1035;
+    overflow: hidden;
+    animation: dolanHomeMenuFadeIn 0.12s ease-out;
+}
+
+@keyframes dolanHomeMenuFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.o_home_menu {
+    direction: ltr;
+}
+
+.o_home_menu .container,
+.o_home_menu .container-fluid,
+.o_home_menu .container-sm,
+.o_home_menu .container-md,
+.o_home_menu .container-lg,
+.o_home_menu .container-xl,
+.o_home_menu .container-xxl,
+.o_home_menu .o_home_menu_search_input {
+    max-width: 850px !important;
+    width: 100%;
+}
+
+/* Buscador minimalista que aparece al tipear */
+.o_home_menu .o_home_menu_search_bar {
+    max-width: 850px;
+    width: 100%;
+    margin: 0.75rem auto 0;
+    position: relative;
+}
+
+.o_home_menu .o_home_menu_search_input {
+    border: 1px solid #dee2e6;
+    background-color: #ffffff !important;
+    color: #212529;
+    padding: 0.6rem 1rem 0.6rem 2.4rem;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.o_home_menu .o_home_menu_search_input:focus {
+    border-color: #017e84;
+    box-shadow: 0 0 0 3px rgba(1, 126, 132, 0.15);
+}
+
+/* Tarjeta de aplicación (.o_app) e ícono squircle 70x70px (.o_app_icon) */
+.o_home_menu .o_app {
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: background-color 0.12s ease;
+}
+
+.o_home_menu .o_app .o_app_icon {
+    width: 70px;
+    height: 70px;
+    aspect-ratio: 1;
+    padding: 10px;
+    background-color: #ffffff;
+    object-fit: cover;
+    transform-origin: center bottom;
+    transition: box-shadow ease-in 0.1s, transform ease-in 0.1s;
+    box-shadow:
+        rgba(0, 0, 0, 0.075) 0px 0px 0px 1px,
+        rgba(42, 51, 70, 0.03) 0px 1px 1px -0.5px,
+        rgba(42, 51, 70, 0.04) 0px 2px 2px -1px,
+        rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px,
+        rgba(42, 51, 70, 0.03) 0px 5px 5px -2.5px,
+        rgba(42, 51, 70, 0.03) 0px 10px 10px -5px,
+        rgba(42, 51, 70, 0.03) 0px 24px 24px -8px;
+    border-radius: 0.5rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_home_menu .o_app:hover .o_app_icon,
+.o_home_menu .o_app:focus .o_app_icon {
+    box-shadow:
+        rgba(0, 0, 0, 0.15) 0px 0px 0px 1px,
+        rgba(9, 30, 66, 0.25) 0px 4px 8px -2px,
+        rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    transform: translateY(-2px);
+}
+
+.o_home_menu .o_app.o_focused {
+    background: rgba(230, 242, 243, 0.75);
+    outline: 1px solid #017e84;
+    border-radius: 0.375rem;
+}
+
+.o_home_menu .o_menuitem.o_focused {
+    background-color: rgba(1, 126, 132, 0.1);
+}
+
+.o_home_menu .o_caption {
+    color: #212529;
+    text-shadow: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25;
+}
+
+/* Fallback de iniciales cuando una app no tiene imagen PNG/SVG */
+.o_home_menu .o_app_icon_fallback {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.35rem;
+    background: linear-gradient(135deg, #714B67 0%, #017e84 100%);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   4. Componentes Backend Odoo 20 Enterprise
+   (.o_notebook, .badge.text-bg-*, .o_card_record, .o_list_renderer, .o_switcher)
+   -------------------------------------------------------------------------- */
+
+/* Formularios amplios y limpios */
+.o_form_view .o_form_sheet_bg > .o_form_sheet {
+    max-width: 1480px;
+    border-radius: 0.375rem;
+    border: 1px solid #d8dadd;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* Pestañas (.o_notebook) con borde superior de 3px en #714B67 */
+.o_notebook {
+    --Notebook-padding-x: 0;
+    --Notebook-link-border-color: #d8dadd;
+    --Notebook-link-border-color-active: #d8dadd;
+    --Notebook-link-border-color-active-accent: #714B67;
+    --Notebook-link-background-color: #f8f9fa;
+    --Notebook-link-background-color-hover: #e7ebed;
+    --Notebook-link-background-color-disabled: #f8f9fa;
+}
+
+.o_notebook .nav-link.active {
+    border-top: 3px solid #714B67 !important;
+    font-weight: 600;
+    color: #212529 !important;
+}
+
+/* Badges suaves con opacidad .15 y texto coloreado (Odoo 20 Enterprise) */
+.badge.text-bg-primary {
+    --bg-opacity: .15;
+    color: #714B67 !important;
+    background-color: rgba(113, 75, 103, 0.15) !important;
+}
+
+.badge.text-bg-secondary {
+    --bg-opacity: .15;
+    color: #495057 !important;
+    background-color: rgba(73, 80, 87, 0.15) !important;
+}
+
+.badge.text-bg-success {
+    --bg-opacity: .15;
+    color: #008818 !important;
+    background-color: rgba(0, 136, 24, 0.15) !important;
+}
+
+.badge.text-bg-info {
+    --bg-opacity: .15;
+    color: #0180a5 !important;
+    background-color: rgba(1, 128, 165, 0.15) !important;
+}
+
+.badge.text-bg-warning {
+    --bg-opacity: .15;
+    color: #9a6b01 !important;
+    background-color: rgba(154, 107, 1, 0.15) !important;
+}
+
+.badge.text-bg-danger {
+    --bg-opacity: .15;
+    color: #d23f3a !important;
+    background-color: rgba(210, 63, 58, 0.15) !important;
+}
+
+/* Tarjetas Kanban (.o_kanban_record / .o_card_record) */
+.o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban) {
+    border-radius: 0.375rem;
+    border: 1px solid #d8dadd;
+    background-color: #ffffff;
+}
+
+.o_kanban_renderer .o_kanban_group .o_kanban_header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    backdrop-filter: blur(8px);
+}
+
+/* List Renderer (.o_list_renderer) */
+.o_list_renderer {
+    --ListRenderer-thead-bg-color: #FFFFFF;
+}
+
+.o_list_renderer .o_list_table thead {
+    color: #495057;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.o_list_renderer .o_list_table thead th {
+    font-weight: 500;
+}
+
+/* View Switcher Pills (.o_cp_switch_buttons) */
+.o_control_panel .o_cp_switch_buttons {
+    border: 1px solid #dee2e6;
+    background-color: #ffffff;
+    border-radius: 0.375rem;
+    padding: 1px;
+    gap: 2px;
+}
+
+.o_control_panel .o_cp_switch_buttons .btn {
+    border: none !important;
+    border-radius: 0.25rem !important;
+    background: transparent;
+    color: #495057;
+}
+
+.o_control_panel .o_cp_switch_buttons .btn.active,
+.o_control_panel .o_cp_switch_buttons .btn:hover {
+    background-color: #e7ebed !important;
+    color: #212529 !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Modo Oscuro Enterprise (body.o_dolan_dark_mode)
+   -------------------------------------------------------------------------- */
+body.o_dolan_dark_mode,
+body.o_dolan_dark_mode .o_home_menu_background,
+body.o_dolan_dark_mode .o_dolan_home_menu_wrapper {
+    background-color: #16181d !important;
+    background-image:
+        radial-gradient(circle at 50% 50%, rgba(34, 38, 46, 0.9) 20%, transparent 400%),
+        radial-gradient(rgba(255, 255, 255, 0.08) 1px, #16181d 1px) !important;
+    background-size: auto, 12px 12px !important;
+    background-repeat: no-repeat, repeat !important;
+    color: #e4e6eb !important;
+}
+
+body.o_dolan_dark_mode .o_main_navbar {
+    background-color: #1e2128 !important;
+    border-bottom-color: #2d323e !important;
+    color: #e4e6eb !important;
+}
+
+body.o_dolan_dark_mode.o_home_menu_background .o_main_navbar {
+    background: transparent !important;
+    border-bottom-color: transparent !important;
+}
+
+body.o_dolan_dark_mode .o_main_navbar .o_menu_brand,
+body.o_dolan_dark_mode .o_main_navbar .o_nav_entry,
+body.o_dolan_dark_mode .o_main_navbar .o_menu_sections .dropdown-toggle,
+body.o_dolan_dark_mode .o_home_menu .o_caption {
+    color: #e4e6eb !important;
+}
+
+body.o_dolan_dark_mode .o_home_menu .o_app .o_app_icon {
+    background-color: #242832;
+    box-shadow:
+        rgba(255, 255, 255, 0.08) 0px 0px 0px 1px,
+        rgba(0, 0, 0, 0.45) 0px 8px 16px -4px;
+}
+
+body.o_dolan_dark_mode .o_action_manager,
+body.o_dolan_dark_mode .o_form_view .o_form_sheet_bg,
+body.o_dolan_dark_mode .o_kanban_view,
+body.o_dolan_dark_mode .o_list_view {
+    background-color: #16181d !important;
+    color: #e4e6eb !important;
+}
+
+body.o_dolan_dark_mode .o_form_view .o_form_sheet_bg > .o_form_sheet,
+body.o_dolan_dark_mode .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban),
+body.o_dolan_dark_mode .table {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #2f3441 !important;
+}
+
+/* --------------------------------------------------------------------------
+   6. Botón de acceso rápido a Apps en Systray y Header de Home Menu
+   -------------------------------------------------------------------------- */
+.o_dolan_systray_apps_btn {
+    color: #714B67 !important;
+    padding: 2px 7px !important;
+    border-radius: 6px !important;
+    transition: background-color 0.15s ease;
+}
+.o_dolan_systray_apps_btn:hover {
+    background-color: var(--NavBar-entry-backgroundColor--hover, #e7ebed) !important;
+}
+body.o_dolan_dark_mode .o_dolan_systray_apps_btn {
+    color: #e4e6eb !important;
+}
+
+.o_home_menu_top_bar {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+.o_home_menu_title {
+    color: #212529;
+}
+body.o_dolan_dark_mode .o_home_menu_title {
+    color: #f8f9fa !important;
+}
+body.o_dolan_dark_mode .o_home_menu_top_bar .btn {
+    background-color: #242832 !important;
+    border-color: #3b404d !important;
+    color: #e4e6eb !important;
+}
+body.o_dolan_dark_mode .o_home_menu_top_bar kbd {
+    background-color: #1e2128 !important;
+    color: #adb5bd !important;
+    border-color: #3b404d !important;
+}
+body.o_dolan_dark_mode .o_home_menu_search_input {
+    background-color: #242832 !important;
+    color: #f8f9fa !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+body.o_dolan_dark_mode .o_home_menu_search_input::placeholder {
+    color: #8c93a0 !important;
+}
+
+/* ==========================================================================
+   7. PRD 04 - Mobile Bottom Navigation Bar (.o_dolan_bottom_bar)
+   Navegación ergonómica para pulgar en móviles y tablets (< 768px)
+   ========================================================================== */
+.o_dolan_bottom_bar {
+    height: 58px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    z-index: 1040;
+    padding: 0 8px;
+}
+
+.o_dolan_bottom_item {
+    color: #64748b;
+    min-width: 56px;
+    height: 48px; /* Target táctil accesible mínimo 48px */
+    border-radius: 12px;
+    transition: all 0.15s ease-in-out;
+}
+
+.o_dolan_bottom_item:active,
+.o_dolan_bottom_item:focus {
+    color: #714B67;
+    background-color: rgba(113, 75, 103, 0.08);
+}
+
+.o_dolan_bottom_label {
+    font-size: 10px;
+    font-weight: 500;
+    margin-top: 2px;
+    line-height: 1;
+}
+
+.o_dolan_bottom_icon_ai {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, #714B67 0%, #017e84 100%);
+    border-radius: 50%;
+    margin-top: -12px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 4px 12px rgba(113, 75, 103, 0.35);
+}
+
+/* Espacio inferior de seguridad en móvil para no tapar contenido */
+@media (max-width: 767.98px) {
+    .o_content {
+        padding-bottom: 64px !important;
+    }
+    .o_form_statusbar {
+        bottom: 58px !important;
+    }
+}
+
+/* Modo oscuro para Bottom Bar */
+body.o_dolan_dark_mode .o_dolan_bottom_bar {
+    background: rgba(24, 27, 34, 0.94);
+    border-top-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.35);
+}
+
+body.o_dolan_dark_mode .o_dolan_bottom_item {
+    color: #94a3b8;
+}
+
+body.o_dolan_dark_mode .o_dolan_bottom_item:active,
+body.o_dolan_dark_mode .o_dolan_bottom_item:focus {
+    color: #e2e8f0;
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+body.o_dolan_dark_mode .o_dolan_bottom_icon_ai {
+    border-color: #181b22;
+}
+
+/* ==========================================================================
+   8. PRD 04 - Home Menu Workspace & Action Cards
+   ========================================================================== */
+.o_dolan_action_card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.o_dolan_action_card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+    border-color: rgba(113, 75, 103, 0.25) !important;
+}
+
+.o_dolan_card_icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.o_dolan_dark_mode .o_dolan_action_card {
+    background: #20232b !important;
+    border-color: #2f3441 !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_action_card h6 {
+    color: #f1f5f9 !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_action_card p {
+    color: #94a3b8 !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_drawer_tab_group {
+    background-color: #20232b !important;
+    border-color: #2f3441 !important;
+}
+
+/* ==========================================================================
+   9. PRD 04 - Tablas y Listas Pro (Sticky Headers & Densidad)
+   ========================================================================== */
+.o_list_table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.o_list_table thead th {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 5 !important;
+    background-color: #f8fafc !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    color: #475569 !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+    letter-spacing: 0.02em;
+}
+
+body.o_dolan_dark_mode .o_list_table thead th {
+    background-color: #1e2128 !important;
+    color: #cbd5e1 !important;
+    border-bottom-color: #334155 !important;
+}
+
+.o_list_table tbody tr {
+    transition: background-color 0.12s ease;
+}
+
+.o_list_table tbody tr:hover {
+    background-color: rgba(113, 75, 103, 0.04) !important;
+}
+
+body.o_dolan_dark_mode .o_list_table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* ==========================================================================
+   10. PRD 04 - Formularios, Focus Rings y Estados Visuales
+   ========================================================================== */
+.o_form_view .o_input:focus,
+.o_form_view select:focus,
+.o_form_view textarea:focus {
+    border-color: #714B67 !important;
+    box-shadow: 0 0 0 3px rgba(113, 75, 103, 0.16) !important;
+    outline: none !important;
+}
+
+/* Botones principales destacados */
+.btn-primary {
+    background-color: #714B67 !important;
+    border-color: #714B67 !important;
+    color: #ffffff !important;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: all 0.15s ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: #5e3d55 !important;
+    border-color: #5e3d55 !important;
+    box-shadow: 0 2px 6px rgba(113, 75, 103, 0.3) !important;
+}
+
+/* Statusbar pills */
+.o_statusbar_status .o_arrow_button {
+    font-weight: 500;
+    border-radius: 20px !important;
+    margin-right: 4px;
+    padding: 4px 12px !important;
+}
+
+/* ==========================================================================
+   11. Accesibilidad y Modo Standalone PWA
+   ========================================================================== */
+@media all and (display-mode: standalone) {
+    /* Pantalla completa en PWA instalada en móvil/desktop */
+    body {
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+
+
+/* ===== PRD 04: Mi Espacio (KPIs), skeletons y densidad ===== */
+.o_dolan_kpi_grid { max-width: 960px; }
+.o_dolan_kpi { min-height: 64px; background: var(--bs-body-bg, #fff); cursor: pointer; border-inline-start: 4px solid #6c757d !important; }
+.o_dolan_kpi:focus-visible { outline: 3px solid #714B67; outline-offset: 2px; }
+.o_dolan_kpi_critical { border-inline-start-color: #b02a37 !important; }
+.o_dolan_kpi_critical .o_dolan_kpi_badge { background: #b02a37; color: #fff; }
+.o_dolan_kpi_warning { border-inline-start-color: #b36b00 !important; }
+.o_dolan_kpi_warning .o_dolan_kpi_badge { background: #ffe8c2; color: #5c3600; }
+.o_dolan_kpi_action { border-inline-start-color: #714B67 !important; }
+.o_dolan_kpi_action .o_dolan_kpi_badge { background: #eadfe7; color: #4a2f43; }
+.o_dolan_kpi_info .o_dolan_kpi_badge { background: #e9ecef; color: #343a40; }
+.o_dolan_skeleton { height: 76px; background: linear-gradient(90deg, #e9ecef 25%, #f4f5f7 37%, #e9ecef 63%); background-size: 400% 100%; animation: o_dolan_shimmer 1.4s ease infinite; }
+@keyframes o_dolan_shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+@media (prefers-reduced-motion: reduce) { .o_dolan_skeleton { animation: none; } }
+@media (min-width: 768px) {
+  body.o_dolan_compact .o_list_table tbody td,
+  body.o_dolan_compact .o_list_table thead th { padding-top: 2px !important; padding-bottom: 2px !important; font-size: 0.85rem; }
+}
+body.o_dolan_dark_mode .o_dolan_kpi { background: #23262b; color: #e9ecef; }
+body.o_dolan_dark_mode .o_dolan_skeleton { background: linear-gradient(90deg, #2b2f35 25%, #353a41 37%, #2b2f35 63%); background-size: 400% 100%; }
+
+/* ===== PRD 04: favoritos / recientes / tarjetas de atencion ===== */
+.o_dolan_app_cell .o_dolan_fav_btn { top: 2px; right: 6px; z-index: 2; min-width: 28px; min-height: 28px; color: #6c757d; opacity: .55; }
+.o_dolan_app_cell:hover .o_dolan_fav_btn, .o_dolan_app_cell .o_dolan_fav_btn:focus-visible, .o_dolan_fav_btn.o_dolan_fav_on { opacity: 1; }
+.o_dolan_fav_btn.o_dolan_fav_on { color: #b36b00; }
+.o_dolan_fav_btn:focus-visible { outline: 3px solid #714B67; outline-offset: 1px; }
+@media (hover: none) { .o_dolan_app_cell .o_dolan_fav_btn { opacity: 1; min-width: 36px; min-height: 36px; } }
+.o_dolan_kpi_main:focus-visible { outline: 3px solid #714B67; outline-offset: 2px; }
+
+/* ===== Iconos SVG propios ===== */
+.o_dolan_icon { flex-shrink: 0; vertical-align: -0.2em; }
+.o_dolan_drawer_tab_group .o_dolan_icon, .o_dolan_kpi .btn .o_dolan_icon, .o_dolan_recents .o_dolan_icon { margin-inline-end: .35rem; }
+.o_dolan_card_icon { display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
+.o_dolan_kpi_icon, .o_dolan_kpi .o_dolan_icon { color: inherit; }
+
+/* Keep quick-action glyphs visible when Bootstrap's bg-opacity utility is unavailable. */
+.o_dolan_card_icon.bg-primary { background-color: rgba(113, 75, 103, .14) !important; color: #714B67 !important; }
+.o_dolan_card_icon.bg-success { background-color: rgba(25, 135, 84, .14) !important; color: #198754 !important; }
+.o_dolan_card_icon.bg-info { background-color: rgba(8, 121, 144, .14) !important; color: #087990 !important; }
+.o_dolan_card_icon.bg-warning { background-color: rgba(255, 193, 7, .22) !important; color: #805600 !important; }
+.o_dolan_card_icon.bg-secondary { background-color: rgba(108, 117, 125, .14) !important; color: #5c636a !important; }
+.o_dolan_card_icon.bg-dark { background-color: rgba(33, 37, 41, .10) !important; color: #212529 !important; }
+body.o_dolan_dark_mode .o_dolan_card_icon.bg-primary { background-color: rgba(190, 160, 181, .2) !important; color: #e3cddd !important; }
+body.o_dolan_dark_mode .o_dolan_card_icon.bg-secondary { background-color: rgba(173, 181, 189, .16) !important; color: #dee2e6 !important; }
+body.o_dolan_dark_mode .o_dolan_card_icon.bg-dark { background-color: rgba(222, 226, 230, .12) !important; color: #dee2e6 !important; }
+
+/* ===== Modo oscuro global: eliminar superficies claras heredadas de Bootstrap/Odoo ===== */
+body.o_dolan_dark_mode {
+    color-scheme: dark;
+    --bs-body-bg: #16181d;
+    --bs-body-color: #e4e6eb;
+    --bs-secondary-bg: #20232b;
+    --bs-tertiary-bg: #272b34;
+    --bs-border-color: #3a404c;
+    --bs-emphasis-color: #f8f9fa;
+    --bs-secondary-color: #adb5bd;
+    --bs-link-color: #cba6c0;
+    /* Odoo compiles Bootstrap with an EMPTY $prefix: utility classes consume
+       --dark-bg-subtle, NOT --bs-dark-bg-subtle. Both spellings are set so the
+       values apply no matter which one a given SCSS partial references. */
+    --body-bg: #16181d;
+    --body-color: #e4e6eb;
+    --secondary-bg: #20232b;
+    --tertiary-bg: #272b34;
+    --border-color: #3a404c;
+    --emphasis-color: #f8f9fa;
+    --secondary-color: #adb5bd;
+    --link-color: #cba6c0;
+    /* Bootstrap 5.3 subtle backgrounds stay light in dark mode (Purchase
+       dashboard cards use .bg-dark-subtle). Align them with the dark palette. */
+    --bs-primary-bg-subtle: #3a2f38;
+    --bs-secondary-bg-subtle: #272b34;
+    --bs-success-bg-subtle: #1e3226;
+    --bs-info-bg-subtle: #1c2e33;
+    --bs-warning-bg-subtle: #38301c;
+    --bs-danger-bg-subtle: #3a2426;
+    --bs-light-bg-subtle: #1e2128;
+    --bs-dark-bg-subtle: #272b34;
+    --bs-primary-text-emphasis: #d7bfce;
+    --bs-secondary-text-emphasis: #c2c8d0;
+    --bs-success-text-emphasis: #9ed8b2;
+    --bs-info-text-emphasis: #9fc9d1;
+    --bs-warning-text-emphasis: #e8c87a;
+    --bs-danger-text-emphasis: #eba9a5;
+    --bs-light-text-emphasis: #c9ced6;
+    --bs-dark-text-emphasis: #e4e6eb;
+    --bs-primary-border-subtle: #806b7c;
+    --bs-secondary-border-subtle: #4a5160;
+    --bs-success-border-subtle: #2f5c43;
+    --bs-info-border-subtle: #2f5a63;
+    --bs-warning-border-subtle: #6b5a2a;
+    --bs-danger-border-subtle: #6e3a3d;
+    --bs-light-border-subtle: #3a404c;
+    --bs-dark-border-subtle: #4a5160;
+    --primary-bg-subtle: #3a2f38;
+    --secondary-bg-subtle: #272b34;
+    --success-bg-subtle: #1e3226;
+    --info-bg-subtle: #1c2e33;
+    --warning-bg-subtle: #38301c;
+    --danger-bg-subtle: #3a2426;
+    --light-bg-subtle: #1e2128;
+    --dark-bg-subtle: #272b34;
+    --primary-text-emphasis: #d7bfce;
+    --secondary-text-emphasis: #c2c8d0;
+    --success-text-emphasis: #9ed8b2;
+    --info-text-emphasis: #9fc9d1;
+    --warning-text-emphasis: #e8c87a;
+    --danger-text-emphasis: #eba9a5;
+    --light-text-emphasis: #c9ced6;
+    --dark-text-emphasis: #e4e6eb;
+    --primary-border-subtle: #806b7c;
+    --secondary-border-subtle: #4a5160;
+    --success-border-subtle: #2f5c43;
+    --info-border-subtle: #2f5a63;
+    --warning-border-subtle: #6b5a2a;
+    --danger-border-subtle: #6e3a3d;
+    --light-border-subtle: #3a404c;
+    --dark-border-subtle: #4a5160;
+}
+
+body.o_dolan_dark_mode .o_control_panel,
+body.o_dolan_dark_mode .o_control_panel .o_cp_switch_buttons,
+body.o_dolan_dark_mode .o_control_panel .o_cp_switch_buttons .btn,
+body.o_dolan_dark_mode .o_form_view .o_form_statusbar,
+body.o_dolan_dark_mode .o_notebook .nav-tabs,
+body.o_dolan_dark_mode .o_notebook .nav-link,
+body.o_dolan_dark_mode .o_search_panel,
+body.o_dolan_dark_mode .o_search_panel .o_search_panel_section,
+body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+}
+
+body.o_dolan_dark_mode .bg-white,
+body.o_dolan_dark_mode .bg-light,
+body.o_dolan_dark_mode .o_dolan_action_card,
+body.o_dolan_dark_mode .card,
+body.o_dolan_dark_mode .list-group-item,
+body.o_dolan_dark_mode .dropdown-menu,
+body.o_dolan_dark_mode .o-dropdown--menu,
+body.o_dolan_dark_mode .modal-content,
+body.o_dolan_dark_mode .popover,
+body.o_dolan_dark_mode .o_notification,
+body.o_dolan_dark_mode .o_notification .o_notification_body,
+body.o_dolan_dark_mode .o-autocomplete--dropdown-menu,
+body.o_dolan_dark_mode .o_datetime_picker,
+body.o_dolan_dark_mode .o_datepicker {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+}
+
+/* Odoo's gray-scale utilities (.bg-100..400) stay light in dark mode: Purchase
+   dashboard cards, muted kanban placeholders in Shop Floor, misc panels. */
+body.o_dolan_dark_mode .bg-100 {
+    background-color: #1e2128 !important;
+}
+
+body.o_dolan_dark_mode .bg-200 {
+    background-color: #272b34 !important;
+}
+
+body.o_dolan_dark_mode .bg-300 {
+    background-color: #343a44 !important;
+}
+
+body.o_dolan_dark_mode .bg-400 {
+    background-color: #454c59 !important;
+}
+
+/* Empty states ("No hay registros...", Shop Floor, Purchase) keep Bootstrap's
+   dark body color on inner elements and become unreadable on the dark shell. */
+body.o_dolan_dark_mode .o_view_nocontent,
+body.o_dolan_dark_mode .o_view_nocontent .o_nocontent_help,
+body.o_dolan_dark_mode .o_view_nocontent p,
+body.o_dolan_dark_mode .o_view_nocontent div,
+body.o_dolan_dark_mode .o_view_nocontent span,
+body.o_dolan_dark_mode .o_view_nocontent a {
+    color: #c9ced6 !important;
+}
+
+body.o_dolan_dark_mode .btn-light,
+body.o_dolan_dark_mode .btn-secondary,
+body.o_dolan_dark_mode .btn-outline-secondary,
+body.o_dolan_dark_mode .btn-outline-primary,
+body.o_dolan_dark_mode .o_control_panel .o_cp_switch_buttons .btn:hover,
+body.o_dolan_dark_mode .o_notebook .nav-link:hover {
+    background-color: #2b3039 !important;
+    color: #f1f3f5 !important;
+    border-color: #4a5160 !important;
+}
+
+body.o_dolan_dark_mode .btn-outline-primary {
+    color: #d7bfce !important;
+    border-color: #987d91 !important;
+}
+
+body.o_dolan_dark_mode .btn-outline-primary:hover,
+body.o_dolan_dark_mode .btn-outline-primary:focus {
+    background-color: #51404f !important;
+    color: #fff !important;
+}
+
+body.o_dolan_dark_mode .o_form_view .o_form_sheet_bg > .o_form_sheet,
+body.o_dolan_dark_mode .o_list_renderer .o_list_table,
+body.o_dolan_dark_mode .o_list_renderer .o_list_table thead,
+body.o_dolan_dark_mode .o_list_renderer .o_list_table tbody,
+body.o_dolan_dark_mode .table,
+body.o_dolan_dark_mode .table > :not(caption) > * > * {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+    --bs-table-bg: #20232b;
+    --bs-table-color: #e4e6eb;
+    --bs-table-border-color: #3a404c;
+}
+
+body.o_dolan_dark_mode input:not([type="checkbox"]):not([type="radio"]),
+body.o_dolan_dark_mode textarea,
+body.o_dolan_dark_mode select,
+body.o_dolan_dark_mode .o_input,
+body.o_dolan_dark_mode .o_searchview_input {
+    background-color: #181b21 !important;
+    color: #e4e6eb !important;
+    border-color: #454c59 !important;
+}
+
+body.o_dolan_dark_mode input::placeholder,
+body.o_dolan_dark_mode textarea::placeholder,
+body.o_dolan_dark_mode .text-muted,
+body.o_dolan_dark_mode .o_form_view .o_form_label {
+    color: #aeb6c2 !important;
+}
+
+body.o_dolan_dark_mode .o_control_panel .o_cp_switch_buttons .btn.active,
+body.o_dolan_dark_mode .o_notebook .nav-link.active {
+    background-color: #303540 !important;
+    color: #f8f9fa !important;
+    border-color: #4a5160 !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .btn-light,
+body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .bg-white,
+body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+}
+
+body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_action_card h6,
+body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_action_card p,
+body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_kpi,
+body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_kpi_main {
+    color: #e4e6eb !important;
+}
+
+/* Accounting dashboards use their own card classes instead of Bootstrap's generic .card. */
+body.o_dolan_dark_mode .o_account_dashboard_kpi_card,
+body.o_dolan_dark_mode .o_account_dashboard_kpi_invoice_layout_card,
+body.o_dolan_dark_mode .o_account_dashboard .o_card,
+body.o_dolan_dark_mode .o_card_record,
+body.o_dolan_dark_mode .o_kanban_renderer .o_kanban_record,
+body.o_dolan_dark_mode .o_kanban_renderer,
+body.o_dolan_dark_mode .o_searchview,
+body.o_dolan_dark_mode .o_searchview.bg-view,
+body.o_dolan_dark_mode .o_searchview_facet {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+    --o-view-background-color: #20232b;
+}
+
+body.o_dolan_dark_mode .o_account_dashboard_kpi_header,
+body.o_dolan_dark_mode .o_account_dashboard_kpi_name {
+    color: #aeb6c2 !important;
+}
+
+body.o_dolan_dark_mode .o_account_dashboard_kpi_value,
+body.o_dolan_dark_mode .o_account_dashboard_kpi_invoice_layout_card,
+body.o_dolan_dark_mode .o_account_dashboard_kpi_invoice_layout_card * {
+    color: #f1f3f5 !important;
+}
+
+body.o_dolan_dark_mode .o_card_record .o_kanban_record_title,
+body.o_dolan_dark_mode .o_card_record .o_kanban_record_subtitle,
+body.o_dolan_dark_mode .o_card_record .text-muted {
+    color: #c2c8d0 !important;
+}
+
+body.o_dolan_dark_mode .o_card_record a.oe_kanban_action:not(.btn) {
+    color: #d7bfce !important;
+}
+
+body.o_dolan_dark_mode .o_account_dashboard .o_kanban_record_title,
+body.o_dolan_dark_mode .o_account_dashboard .o_kanban_record_subtitle,
+body.o_dolan_dark_mode .o_account_dashboard .o_account_dashboard_kpi_header,
+body.o_dolan_dark_mode .o_account_dashboard .o_account_dashboard_kpi_name {
+    color: #c7cdd5 !important;
+}
+
+body.o_dolan_dark_mode .o_main_navbar,
+body.o_dolan_dark_mode .o_main_navbar .o_menu_sections .dropdown-menu,
+body.o_dolan_dark_mode .o_menu_systray .dropdown-menu {
+    --NavBar-bg: #1e2128;
+    --NavBar-entry-color: #e4e6eb;
+    --NavBar-entry-backgroundColor--hover: #303540;
+    --NavBar-entry-backgroundColor--active: #303540;
+}
+
+body.o_dolan_dark_mode .modal-header,
+body.o_dolan_dark_mode .modal-footer,
+body.o_dolan_dark_mode .dropdown-item,
+body.o_dolan_dark_mode .list-group-item-action {
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+}
+
+body.o_dolan_dark_mode .dropdown-item:hover,
+body.o_dolan_dark_mode .list-group-item-action:hover {
+    background-color: #2b3039 !important;
+}
+
+/* Odoo Settings renders a separate settings shell with hard-coded light panels. */
+body.o_dolan_dark_mode .o_base_settings_view,
+body.o_dolan_dark_mode .o_base_settings_view .o_form_renderer,
+body.o_dolan_dark_mode .o_base_settings_view .o_setting_container,
+body.o_dolan_dark_mode .o_base_settings_view .settings,
+body.o_dolan_dark_mode .o_base_settings_view .settings_tab,
+body.o_dolan_dark_mode .o_base_settings_view .o_setting_box,
+body.o_dolan_dark_mode .o_base_settings_view .o_setting_right_pane,
+body.o_dolan_dark_mode .o_base_settings_view .o_setting_left_pane {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+    --settings__tab-color: #c2c8d0;
+}
+
+body.o_dolan_dark_mode .o_base_settings_view .settings h2,
+body.o_dolan_dark_mode .o_base_settings_view .settings h3,
+body.o_dolan_dark_mode .o_base_settings_view .settings .o_horizontal_separator,
+body.o_dolan_dark_mode .o_base_settings_view .settings .o_setting_header {
+    background-color: #2b3039 !important;
+    color: #f1f3f5 !important;
+    border-color: #3a404c !important;
+}
+
+body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab,
+body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab:hover,
+body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab.selected,
+body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab:focus {
+    color: #d7dce3 !important;
+}
+
+body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab {
+    background-color: #20232b !important;
+    color: #d7dce3 !important;
+    border: 1px solid transparent !important;
+}
+
+body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab:hover,
+body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab:focus-visible {
+    background-color: #303540 !important;
+    color: #ffffff !important;
+    border-color: #4a5160 !important;
+}
+
+body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab.selected,
+body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab[aria-current="page"] {
+    background-color: #493b47 !important;
+    color: #ffffff !important;
+    border-color: #806b7c !important;
+    box-shadow: inset 3px 0 0 #c39ab5 !important;
+}
+
+body.o_dolan_dark_mode .o_base_settings_view .o_setting_box .text-muted,
+body.o_dolan_dark_mode .o_base_settings_view .o_setting_box .o_form_label,
+body.o_dolan_dark_mode .o_base_settings_view .o_setting_box label,
+body.o_dolan_dark_mode .o_base_settings_view .o_setting_box .o_form_uri {
+    color: #b9c1cc !important;
+}
+
+body.o_dolan_dark_mode .o_base_settings_view .o_field_boolean,
+body.o_dolan_dark_mode .o_base_settings_view .o_external_button,
+body.o_dolan_dark_mode .o_base_settings_view .btn-light {
+    background-color: #2b3039 !important;
+    color: #e4e6eb !important;
+    border-color: #4a5160 !important;
+}
+
+body.o_dolan_dark_mode .o_base_settings_view .o_setting_box input:not([type="checkbox"]),
+body.o_dolan_dark_mode .o_base_settings_view .o_setting_box select,
+body.o_dolan_dark_mode .o_base_settings_view .o_setting_box .o_input,
+body.o_dolan_dark_mode .o_base_settings_view .o_setting_box .o-autocomplete--input {
+    background-color: #181b21 !important;
+    color: #e4e6eb !important;
+    border-color: #454c59 !important;
+}
+
+/* Shared calendar and kanban surfaces used by Events, Fleet, Attendance and Time Off. */
+body.o_dolan_dark_mode .bg-view,
+body.o_dolan_dark_mode .o_kanban_group,
+body.o_dolan_dark_mode .o_kanban_header,
+body.o_dolan_dark_mode .o_calendar_container,
+body.o_dolan_dark_mode .o_calendar_renderer,
+body.o_dolan_dark_mode .o_calendar_sidepanel_container,
+body.o_dolan_dark_mode .o_calendar_sidebar_container,
+body.o_dolan_dark_mode .o_calendar_sidebar,
+body.o_dolan_dark_mode .o_attendance_calendar,
+body.o_dolan_dark_mode .o_day_of_week_cell,
+body.o_dolan_dark_mode .fc,
+body.o_dolan_dark_mode .fc-view-harness,
+body.o_dolan_dark_mode .fc-scroller-harness,
+body.o_dolan_dark_mode .fc-scroller-harness-liquid,
+body.o_dolan_dark_mode .fc-scroller,
+body.o_dolan_dark_mode .fc-daygrid-body,
+body.o_dolan_dark_mode .fc-scrollgrid-section > *,
+body.o_dolan_dark_mode .fc-theme-standard .fc-scrollgrid,
+body.o_dolan_dark_mode .fc-theme-standard td,
+body.o_dolan_dark_mode .fc-theme-standard th,
+body.o_dolan_dark_mode .fc .fc-daygrid-day,
+body.o_dolan_dark_mode .fc .fc-timegrid-slot,
+body.o_dolan_dark_mode .fc .fc-col-header-cell {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+    --o-view-background-color: #20232b;
+}
+
+body.o_dolan_dark_mode .o_kanban_header,
+body.o_dolan_dark_mode .o_kanban_group .o_kanban_header {
+    color: #e4e6eb !important;
+}
+
+/* Kanban column titles use Bootstrap's text-900 utility, which stays dark in dark mode. */
+body.o_dolan_dark_mode .o_kanban_renderer .o_kanban_header .o_column_title,
+body.o_dolan_dark_mode .o_kanban_renderer .o_kanban_header .o_column_title *,
+body.o_dolan_dark_mode .o_kanban_renderer .o_kanban_header .o_kanban_counter {
+    color: #e4e6eb !important;
+}
+
+/* Make activity pipeline progress visible, including the neutral "has records" segment. */
+body.o_dolan_dark_mode .o_kanban_renderer .o_kanban_header .o_column_progress {
+    background-color: #343946 !important;
+    border: 1px solid #555d6b;
+}
+
+body.o_dolan_dark_mode .o_kanban_renderer .o_kanban_header .o_column_progress .o_bar_has_records,
+body.o_dolan_dark_mode .o_kanban_renderer .o_kanban_header .o_column_progress .bg-300 {
+    background-color: #9a7d96 !important;
+}
+
+/* The first invoice print opens Odoo's account.document.layout wizard. Its
+   form renderer hard-codes a white surface and text-900 labels, overriding the
+   generic dark modal styles above. Keep the editor dark while leaving its
+   embedded paper preview white so the preview still matches the printed PDF. */
+body.o_dolan_dark_mode .o_document_layout,
+body.o_dolan_dark_mode .o_document_layout .o_form_renderer,
+body.o_dolan_dark_mode .o_document_layout .o_form_nosheet,
+body.o_dolan_dark_mode .o_document_layout .o_inner_group,
+body.o_dolan_dark_mode .o_document_layout .o_group {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+}
+
+body.o_dolan_dark_mode .o_document_layout .o_cell.o_wrap_label,
+body.o_dolan_dark_mode .o_document_layout .o_form_label,
+body.o_dolan_dark_mode .o_document_layout .text-900,
+body.o_dolan_dark_mode .o_document_layout label,
+body.o_dolan_dark_mode .o_document_layout .o_field_widget,
+body.o_dolan_dark_mode .o_document_layout .o_field_widget * {
+    color: #c9ced6 !important;
+}
+
+/* Spreadsheet dashboards: the DOLAN dark toggle syncs the native
+   `color_scheme=dark` cookie, so o-spreadsheet adds the `.dark` class and
+   applies its own `--os-dark-mode-filter` (invert + hue-rotate) to every
+   `.os-theme-dependant` element (sheet background, figure wrappers, grid
+   canvas). Those elements MUST keep their light default colors here:
+   overriding them with dark values would get inverted back to near-white
+   by the native filter. Only surfaces WITHOUT `.os-theme-dependant` are
+   themed below. */
+body.o_dolan_dark_mode .o-dashboard-background {
+    background-color: #16181d !important;
+}
+
+/* Sale list dashboard cards (.o_dashboard_card_*) paint pastel Bootstrap-100
+   backgrounds via --btn-* with dark *-700 numbers: unreadable in dark mode.
+   Odoo ships a dark variant (dashboard.dark.scss) only in web.assets_web_dark,
+   which community never serves (ir_http.color_scheme() is hard-coded "light"),
+   so the dark palette is themed here. */
+body.o_dolan_dark_mode .o_dashboard_card_purple {
+    --btn-bg: #453252;
+    --btn-hover-bg: #554064;
+    --btn-active-bg: #554064;
+}
+body.o_dolan_dark_mode .o_dashboard_card_purple .o_dashboard_card_data {
+    color: #d7bfce !important;
+}
+body.o_dolan_dark_mode .o_dashboard_card_cyan {
+    --btn-bg: #1f3a42;
+    --btn-hover-bg: #28494f;
+    --btn-active-bg: #28494f;
+}
+body.o_dolan_dark_mode .o_dashboard_card_cyan .o_dashboard_card_data {
+    color: #9fc9d1 !important;
+}
+body.o_dolan_dark_mode .o_dashboard_card_orange {
+    --btn-bg: #453522;
+    --btn-hover-bg: #54432c;
+    --btn-active-bg: #54432c;
+}
+body.o_dolan_dark_mode .o_dashboard_card_orange .o_dashboard_card_data {
+    color: #e8c87a !important;
+}
+body.o_dolan_dark_mode .o_dashboard_card_red {
+    --btn-bg: #47292b;
+    --btn-hover-bg: #563336;
+    --btn-active-bg: #563336;
+}
+body.o_dolan_dark_mode .o_dashboard_card_red .o_dashboard_card_data {
+    color: #eba9a5 !important;
+}
+
+/* Image figures (charts embedded as <img>) are the ONLY figures without
+   `.os-theme-dependant`, so o-spreadsheet's native dark filter skips them
+   and they stay blinding white over the dark dashboard. Invert them with
+   the same native filter. Scoped to `.dark` so it only applies when the
+   color_scheme=dark cookie is active. */
+body.o_dolan_dark_mode .o-spreadsheet.dark .o-figure-wrapper:not(.os-theme-dependant) {
+    filter: var(--os-dark-mode-filter, invert(.88) hue-rotate(180deg));
+}
+
+/* Discuss uses the mail component's own surface classes. */
+body.o_dolan_dark_mode .o-mail-Discuss,
+body.o_dolan_dark_mode .o-mail-MessagingMenu-navbar,
+body.o_dolan_dark_mode .o-mail-MessagingMenu,
+body.o_dolan_dark_mode .o-mail-DiscussContent,
+body.o_dolan_dark_mode .o-mail-ChatterContainer,
+body.o_dolan_dark_mode .o-mail-Chatter,
+body.o_dolan_dark_mode .o-mail-Chatter-top,
+body.o_dolan_dark_mode .o-mail-Chatter-content,
+body.o_dolan_dark_mode .o-mail-Thread,
+body.o_dolan_dark_mode .o-mail-Thread-content,
+body.o_dolan_dark_mode .o-mail-DiscussContent-headerBox,
+body.o_dolan_dark_mode .o-mail-DiscussContent-threadAvatar,
+body.o_dolan_dark_mode .o-mail-Composer,
+body.o_dolan_dark_mode .o-mail-Composer-bg,
+body.o_dolan_dark_mode .o-mail-Composer-inputContainer,
+body.o_dolan_dark_mode .o-mail-Composer-quickActions {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+}
+
+body.o_dolan_dark_mode .o-mail-Discuss button,
+body.o_dolan_dark_mode .o-mail-MessagingMenu button,
+body.o_dolan_dark_mode .o-mail-Composer button,
+body.o_dolan_dark_mode .o-mail-DiscussContent .text-muted {
+    color: #c2c8d0 !important;
+}
+
+body.o_dolan_dark_mode .o-mail-Message-bubble,
+body.o_dolan_dark_mode .o-mail-Message-body,
+body.o_dolan_dark_mode .o-mail-Message-bubbleTailBg {
+    background-color: #2b3039 !important;
+    color: #e4e6eb !important;
+    border-color: #454c59 !important;
+}
+
+body.o_dolan_dark_mode .o-mail-Message-date {
+    color: #aeb6c2 !important;
+}
+
+/* A few apps have their own landing panels instead of standard Odoo cards. */
+body.o_dolan_dark_mode .o_view_nocontent_expense_receipt,
+body.o_dolan_dark_mode .o_lunch_banner,
+body.o_dolan_dark_mode .o_lunch_banner .bg-100,
+body.o_dolan_dark_mode .o_lunch_banner .bg-light {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+}
+
+body.o_dolan_dark_mode .o_lunch_banner .bg-100,
+body.o_dolan_dark_mode .o_lunch_banner .text-muted {
+    color: #c2c8d0 !important;
+}
+
+/* Make selected values and dropdown focus states unambiguous in every form. */
+body.o_dolan_dark_mode .o_form_view .o_statusbar_status,
+body.o_dolan_dark_mode .o_form_view .o_form_statusbar .o_statusbar_status {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+}
+
+body.o_dolan_dark_mode .o_form_view .o_statusbar_status .o_arrow_button_current {
+    background-color: #574453 !important;
+    color: #fff !important;
+    border-color: #987d91 !important;
+}
+
+body.o_dolan_dark_mode .o_select_menu_menu,
+body.o_dolan_dark_mode .o-autocomplete--dropdown-menu,
+body.o_dolan_dark_mode .o-autocomplete--dropdown-menu .dropdown-menu,
+body.o_dolan_dark_mode .o_field_many2many_tags .dropdown-menu {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #454c59 !important;
+    --bs-dropdown-bg: #20232b;
+    --bs-dropdown-color: #e4e6eb;
+    --bs-dropdown-link-color: #e4e6eb;
+    --bs-dropdown-link-hover-bg: #343946;
+    --bs-dropdown-link-hover-color: #fff;
+}
+
+body.o_dolan_dark_mode .o_select_menu_item,
+body.o_dolan_dark_mode .o-autocomplete--dropdown-menu .dropdown-item,
+body.o_dolan_dark_mode .o_field_many2many_tags .dropdown-item {
+    background-color: transparent !important;
+    color: #e4e6eb !important;
+}
+
+body.o_dolan_dark_mode .o_select_menu_item.selected,
+body.o_dolan_dark_mode .o_select_menu_item.focus,
+body.o_dolan_dark_mode .o_select_menu_item:focus,
+body.o_dolan_dark_mode .o_select_menu_item:hover,
+body.o_dolan_dark_mode .o-autocomplete--dropdown-menu .dropdown-item.active,
+body.o_dolan_dark_mode .o-autocomplete--dropdown-menu .dropdown-item:focus,
+body.o_dolan_dark_mode .o-autocomplete--dropdown-menu .dropdown-item:hover,
+body.o_dolan_dark_mode .o_field_many2many_tags .dropdown-item.active,
+body.o_dolan_dark_mode .o_field_many2many_tags .dropdown-item:focus,
+body.o_dolan_dark_mode .o_field_many2many_tags .dropdown-item:hover,
+body.o_dolan_dark_mode .o-autocomplete--dropdown-menu .ui-state-active,
+body.o_dolan_dark_mode .o-autocomplete--dropdown-menu .ui-state-active:hover,
+body.o_dolan_dark_mode .o-autocomplete--dropdown-menu .dropdown-item.ui-state-active {
+    background-color: #51404f !important;
+    color: #fff !important;
+}
+
+body.o_dolan_dark_mode .o_form_view select,
+body.o_dolan_dark_mode .o_form_view select option,
+body.o_dolan_dark_mode .o_form_view .o_select_menu_input,
+body.o_dolan_dark_mode .o_form_view .o_autocomplete input,
+body.o_dolan_dark_mode .o_form_view .o-autocomplete--input {
+    color-scheme: dark;
+}
+
+body.o_dolan_dark_mode .o_form_view select option,
+body.o_dolan_dark_mode .o_form_view select option:checked {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+}
+
+body.o_dolan_dark_mode .o_form_view input:focus,
+body.o_dolan_dark_mode .o_form_view textarea:focus,
+body.o_dolan_dark_mode .o_form_view select:focus,
+body.o_dolan_dark_mode .o_form_view .o_input:focus,
+body.o_dolan_dark_mode .o_form_view .o_select_menu_input:focus,
+body.o_dolan_dark_mode .o_form_view .o-autocomplete--input:focus {
+    border-color: #b790aa !important;
+    box-shadow: 0 0 0 0.15rem rgba(183, 144, 170, 0.28) !important;
+    outline: none;
+}
+
+body.o_dolan_dark_mode .o_form_view input[type="checkbox"],
+body.o_dolan_dark_mode .o_form_view input[type="radio"],
+body.o_dolan_dark_mode .o_form_view .form-check-input {
+    accent-color: #b790aa;
+}
+
+body.o_dolan_dark_mode .o_form_view .o_tag,
+body.o_dolan_dark_mode .o_form_view .badge.bg-light {
+    background-color: #343946 !important;
+    color: #e4e6eb !important;
+    border-color: #555d6b !important;
+}
+
+body.o_dolan_dark_mode .o_control_panel .breadcrumb,
+body.o_dolan_dark_mode .o_control_panel .breadcrumb-item,
+body.o_dolan_dark_mode .o_control_panel .breadcrumb-item a,
+body.o_dolan_dark_mode .o_control_panel .breadcrumb-item.active {
+    background-color: #20232b !important;
+    color: #c9ced6 !important;
+    border-color: #3a404c !important;
+    --bs-breadcrumb-bg: #20232b;
+    --bs-breadcrumb-divider-color: #8b95a2;
+    --bs-breadcrumb-item-active-color: #e4e6eb;
+}
+
+/* Give the action menu trigger a clear visual edge across every Odoo app.
+   .o_btn_circle resets the button's own background and paints it on a ::before
+   pseudo-element driven by --btn-* variables, so the variables must be
+   overridden; painting the button itself leaves a white pseudo-element on top
+   and the white glyph becomes invisible. */
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .btn,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .dropdown-toggle,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus button,
+body.o_dolan_dark_mode .o_btn_circle.btn-light {
+    --btn-bg: #493b47;
+    --btn-border-color: #806b7c;
+    --btn-hover-bg: #624e60;
+    --btn-hover-border-color: #c39ab5;
+    --btn-active-bg: #574453;
+    --btn-active-border-color: #c39ab5;
+    --btn-disabled-bg: #2b3039;
+    --btn-disabled-border-color: #4a5160;
+    background-color: #493b47;
+    color: #ffffff !important;
+    border-color: #806b7c !important;
+}
+
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .btn .oi,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .btn .fa,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus button .oi,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus button .fa,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus button svg {
+    color: #ffffff !important;
+    fill: currentColor !important;
+}
+
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .btn:hover,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .dropdown-toggle:hover,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus button:hover,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .btn:focus-visible,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus button:focus-visible {
+    background-color: #624e60 !important;
+    color: #ffffff !important;
+    border-color: #c39ab5 !important;
+    box-shadow: 0 0 0 2px rgba(195, 154, 181, .35) !important;
+}
+
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .dropdown-menu,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .o-dropdown--menu {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border: 1px solid #4a5160 !important;
+    --bs-dropdown-bg: #20232b;
+    --bs-dropdown-color: #e4e6eb;
+}
+
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .dropdown-item,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .o-dropdown--menu .o-dropdown--item {
+    color: #e4e6eb !important;
+}
+
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .dropdown-item:hover,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .dropdown-item:focus,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .dropdown-item.active,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .o-dropdown--menu .o-dropdown--item:hover,
+body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .o-dropdown--menu .o-dropdown--item:focus {
+    background-color: #343946 !important;
+    color: #ffffff !important;
+}
+
+/* Odoo's company switcher uses light utility classes inside its own dropdown. */
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_items,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .form-control,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_input {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #454c59 !important;
+    --bs-dropdown-bg: #20232b;
+    --bs-dropdown-color: #e4e6eb;
+}
+
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .company_label,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item .btn,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item .btn-link,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .form-check-label,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .oi {
+    color: #e4e6eb !important;
+}
+
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item.alert-light,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item.bg-primary-subtle {
+    background-color: #3a3040 !important;
+    color: #ffffff !important;
+}
+
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item:hover,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item.focus,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item:focus-within {
+    background-color: #343946 !important;
+    color: #ffffff !important;
+}
+
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_buttons .btn-secondary {
+    background-color: #343946 !important;
+    color: #f1f3f5 !important;
+    border-color: #555d6b !important;
+}
+
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border: 1px solid #454c59 !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .45) !important;
+    --bs-dropdown-bg: #20232b;
+    --bs-dropdown-color: #e4e6eb;
+}
+
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_items .o_switch_company_item,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_items .o_switch_company_item :is(span, label, .company_label, .btn, .oi),
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .form-control[role="search"],
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown [role="search"] .oi {
+    color: #e4e6eb !important;
+}
+
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_items .o_switch_company_item :is(.bg-white, .bg-light, .text-dark, .text-muted) {
+    background-color: transparent !important;
+    color: #cbd2dc !important;
+}
+
+/* Sale quotations use nested one2many tables and light utility classes in the
+   mobile form layout. Keep those areas on the same dark surface as the sheet. */
+@media (max-width: 767.98px) {
+    body.o_dolan_dark_mode .o_form_view,
+    body.o_dolan_dark_mode .o_form_view .o_form_sheet_bg,
+    body.o_dolan_dark_mode .o_form_view .o_form_sheet_bg > .o_form_sheet,
+    body.o_dolan_dark_mode .o_form_view .o_form_statusbar,
+    body.o_dolan_dark_mode .o_form_view .o_form_sheet .o_notebook,
+    body.o_dolan_dark_mode .o_form_view .o_form_sheet .o_notebook .tab-content,
+    body.o_dolan_dark_mode .o_form_view .o_field_one2many .o_list_renderer,
+    body.o_dolan_dark_mode .o_form_view .o_field_many2many .o_list_renderer,
+    body.o_dolan_dark_mode .o_form_view .o_field_x2many .o_list_renderer,
+    body.o_dolan_dark_mode .o_form_view .o_field_one2many .o_list_table,
+    body.o_dolan_dark_mode .o_form_view .o_field_many2many .o_list_table,
+    body.o_dolan_dark_mode .o_form_view .o_field_x2many .o_list_table {
+        background-color: #20232b !important;
+        color: #e4e6eb !important;
+        border-color: #3a404c !important;
+        --o-view-background-color: #20232b;
+        --bs-table-bg: #20232b;
+        --bs-table-color: #e4e6eb;
+        --bs-table-border-color: #3a404c;
+    }
+
+    body.o_dolan_dark_mode .o_form_view .bg-white,
+    body.o_dolan_dark_mode .o_form_view .bg-light,
+    body.o_dolan_dark_mode .o_form_view .text-dark,
+    body.o_dolan_dark_mode .o_form_view .o_field_one2many .bg-white,
+    body.o_dolan_dark_mode .o_form_view .o_field_one2many .bg-light {
+        background-color: #20232b !important;
+        color: #e4e6eb !important;
+        border-color: #3a404c !important;
+    }
+
+    body.o_dolan_dark_mode .o_form_view .o_field_one2many .o_list_table thead th,
+    body.o_dolan_dark_mode .o_form_view .o_field_one2many .o_list_table tbody td,
+    body.o_dolan_dark_mode .o_form_view .o_field_x2many .o_list_table thead th,
+    body.o_dolan_dark_mode .o_form_view .o_field_x2many .o_list_table tbody td {
+        background-color: #20232b !important;
+        color: #e4e6eb !important;
+        border-color: #3a404c !important;
+    }
+
+    body.o_dolan_dark_mode .o_form_view .o_field_one2many .o_list_table tbody tr:hover td,
+    body.o_dolan_dark_mode .o_form_view .o_field_x2many .o_list_table tbody tr:hover td {
+        background-color: #2b3039 !important;
+    }
+
+    body.o_dolan_dark_mode .o_form_view .o_notebook .nav-link,
+    body.o_dolan_dark_mode .o_form_view .o_notebook .nav-link.active {
+        color: #e4e6eb !important;
+        border-color: #3a404c !important;
+    }
+}
+
+/* Mobile form layouts render each field as a separate white card in several
+   Odoo views. Normalize the full field wrapper, labels and nested widgets for
+   sales, accounting, contacts, CRM and other document forms. */
+@media (max-width: 767.98px) {
+    body.o_dolan_dark_mode .o_form_view .o_form_sheet,
+    body.o_dolan_dark_mode .o_form_view .o_group,
+    body.o_dolan_dark_mode .o_form_view .o_inner_group,
+    body.o_dolan_dark_mode .o_form_view .o_wrap_field,
+    body.o_dolan_dark_mode .o_form_view .o_cell,
+    body.o_dolan_dark_mode .o_form_view .o_form_label,
+    body.o_dolan_dark_mode .o_form_view fieldset,
+    body.o_dolan_dark_mode .o_form_view .o_field_widget,
+    body.o_dolan_dark_mode .o_form_view .o_field_widget > div,
+    body.o_dolan_dark_mode .o_form_view .o_field_widget .o_input_dropdown,
+    body.o_dolan_dark_mode .o_form_view .o_field_many2one_selection,
+    body.o_dolan_dark_mode .o_form_view .o_field_many2many_selection {
+        background-color: transparent !important;
+        color: #e4e6eb !important;
+        border-color: #3a404c !important;
+        --o-view-background-color: #20232b;
+    }
+
+    body.o_dolan_dark_mode .o_form_view .o_form_sheet,
+    body.o_dolan_dark_mode .o_form_view .o_group,
+    body.o_dolan_dark_mode .o_form_view .o_inner_group,
+    body.o_dolan_dark_mode .o_form_view .o_wrap_field,
+    body.o_dolan_dark_mode .o_form_view .o_cell {
+        background-color: #20232b !important;
+    }
+
+    body.o_dolan_dark_mode .o_form_view .o_form_label,
+    body.o_dolan_dark_mode .o_form_view label,
+    body.o_dolan_dark_mode .o_form_view .o_form_uri,
+    body.o_dolan_dark_mode .o_form_view .o_field_widget,
+    body.o_dolan_dark_mode .o_form_view .o_field_widget a,
+    body.o_dolan_dark_mode .o_form_view .o_field_widget span,
+    body.o_dolan_dark_mode .o_form_view .o_field_widget p {
+        color: #d5dae2 !important;
+    }
+
+    body.o_dolan_dark_mode .o_form_view input:not([type="checkbox"]):not([type="radio"]),
+    body.o_dolan_dark_mode .o_form_view textarea,
+    body.o_dolan_dark_mode .o_form_view select,
+    body.o_dolan_dark_mode .o_form_view .o_input,
+    body.o_dolan_dark_mode .o_form_view .o-autocomplete--input,
+    body.o_dolan_dark_mode .o_form_view .o_field_many2one_selection .o_input {
+        background-color: #181b21 !important;
+        color: #f1f3f5 !important;
+        border: 1px solid #555d6b !important;
+        border-radius: 0.3rem !important;
+        box-shadow: none !important;
+    }
+
+    body.o_dolan_dark_mode .o_form_view input::placeholder,
+    body.o_dolan_dark_mode .o_form_view textarea::placeholder {
+        color: #9da7b4 !important;
+        opacity: 1;
+    }
+
+    body.o_dolan_dark_mode .o_form_view .o_field_widget .bg-white,
+    body.o_dolan_dark_mode .o_form_view .o_field_widget .bg-light,
+    body.o_dolan_dark_mode .o_form_view .o_field_widget .text-bg-light,
+    body.o_dolan_dark_mode .o_form_view .o_field_widget .alert-light {
+        background-color: #2b3039 !important;
+        color: #e4e6eb !important;
+        border-color: #454c59 !important;
+    }
+
+    body:not(.o_dolan_dark_mode) .o_form_view .o_form_sheet,
+    body:not(.o_dolan_dark_mode) .o_form_view .o_group,
+    body:not(.o_dolan_dark_mode) .o_form_view .o_inner_group,
+    body:not(.o_dolan_dark_mode) .o_form_view .o_wrap_field,
+    body:not(.o_dolan_dark_mode) .o_form_view .o_cell {
+        background-color: #ffffff !important;
+        color: #212529 !important;
+    }
+
+    body:not(.o_dolan_dark_mode) .o_form_view .o_form_label,
+    body:not(.o_dolan_dark_mode) .o_form_view label,
+    body:not(.o_dolan_dark_mode) .o_form_view .o_field_widget,
+    body:not(.o_dolan_dark_mode) .o_form_view .o_field_widget a,
+    body:not(.o_dolan_dark_mode) .o_form_view .o_field_widget span {
+        color: #343a40 !important;
+    }
+
+    body:not(.o_dolan_dark_mode) .o_form_view input:not([type="checkbox"]):not([type="radio"]),
+    body:not(.o_dolan_dark_mode) .o_form_view textarea,
+    body:not(.o_dolan_dark_mode) .o_form_view select,
+    body:not(.o_dolan_dark_mode) .o_form_view .o_input,
+    body:not(.o_dolan_dark_mode) .o_form_view .o-autocomplete--input {
+        background-color: #ffffff !important;
+        color: #212529 !important;
+        border-color: #adb5bd !important;
+    }
+
+    /* Long invoice and quotation lines remain readable without squeezing the
+       columns into unusable widths on narrow phones. */
+    .o_form_view .o_field_one2many .o_list_renderer,
+    .o_form_view .o_field_many2many .o_list_renderer,
+    .o_form_view .o_field_x2many .o_list_renderer {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Company switcher markup differs between desktop dropdown and mobile menu;
+   cover both containers and Bootstrap utility backgrounds. */
+body.o_dolan_dark_mode .o_switch_company_menu,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown,
+body.o_dolan_dark_mode .o_switch_company_menu .o_switch_company_item,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item,
+body.o_dolan_dark_mode .o_switch_company_menu .dropdown-menu,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .dropdown-menu,
+body.o_dolan_dark_mode .o_switch_company_menu .bg-white,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .bg-white,
+body.o_dolan_dark_mode .o_switch_company_menu .bg-light,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .bg-light {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #454c59 !important;
+    --bs-dropdown-bg: #20232b;
+    --bs-dropdown-color: #e4e6eb;
+}
+
+body.o_dolan_dark_mode .o_switch_company_menu label,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown label,
+body.o_dolan_dark_mode .o_switch_company_menu .company_label,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .company_label,
+body.o_dolan_dark_mode .o_switch_company_menu .btn,
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown .btn {
+    color: #e4e6eb !important;
+}
+
+body.o_dolan_dark_mode .o_switch_company_menu input[type="checkbox"],
+body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
+    accent-color: #b58aa8;
+}
+
+/* Remaining responsive backend surfaces: dialogs, document kanban cards and
+   dashboards. These are shared by quotations, invoices, receipts, delivery
+   slips, CRM, contacts and accounting reports. */
+@media (max-width: 767.98px) {
+    body.o_dolan_dark_mode .modal-content,
+    body.o_dolan_dark_mode .modal-header,
+    body.o_dolan_dark_mode .modal-body,
+    body.o_dolan_dark_mode .modal-footer,
+    body.o_dolan_dark_mode .o_dialog .o_dialog_content,
+    body.o_dolan_dark_mode .o_dialog .o_form_view,
+    body.o_dolan_dark_mode .o_dialog .o_form_sheet_bg,
+    body.o_dolan_dark_mode .o_dialog .o_form_sheet {
+        background-color: #20232b !important;
+        color: #e4e6eb !important;
+        border-color: #3a404c !important;
+    }
+
+    body.o_dolan_dark_mode .o_form_view .o_form_sheet_bg :is(.bg-white, .bg-light, .text-bg-light, .alert-light),
+    body.o_dolan_dark_mode .o_dialog :is(.bg-white, .bg-light, .text-bg-light, .alert-light) {
+        background-color: #2b3039 !important;
+        color: #e4e6eb !important;
+        border-color: #454c59 !important;
+    }
+
+    body.o_dolan_dark_mode .o_form_view .o_form_sheet_bg :is(.text-muted, .text-secondary, .form-text),
+    body.o_dolan_dark_mode .o_dialog :is(.text-muted, .text-secondary, .form-text) {
+        color: #aeb6c2 !important;
+    }
+
+    body.o_dolan_dark_mode :is(.o_dashboard, .o_dashboard_view, .o_account_dashboard, .o_knowledge_dashboard, .o_spreadsheet_dashboard),
+    body.o_dolan_dark_mode :is(.o_dashboard, .o_dashboard_view, .o_account_dashboard, .o_knowledge_dashboard, .o_spreadsheet_dashboard) :is(.card, .o_card, .o_kanban_record, .o_card_record, .o_dashboard_tile, .o_dashboard_kpi),
+    body.o_dolan_dark_mode .o_kanban_view .o_kanban_renderer,
+    body.o_dolan_dark_mode .o_kanban_view .o_kanban_record {
+        background-color: #20232b !important;
+        color: #e4e6eb !important;
+        border-color: #3a404c !important;
+        --o-view-background-color: #20232b;
+        --bs-card-bg: #20232b;
+        --bs-card-color: #e4e6eb;
+    }
+
+    body.o_dolan_dark_mode :is(.o_dashboard, .o_dashboard_view, .o_account_dashboard, .o_knowledge_dashboard, .o_spreadsheet_dashboard) :is(h1, h2, h3, h4, h5, h6, p, label, .text-dark, .text-muted) {
+        color: #d5dae2 !important;
+    }
+
+    body.o_dolan_dark_mode .o_switch_company_menu :is(input, .form-control, .o_input),
+    body.o_dolan_dark_mode .o_switch_company_menu_dropdown :is(input, .form-control, .o_input) {
+        background-color: #181b21 !important;
+        color: #f1f3f5 !important;
+        border-color: #555d6b !important;
+    }
+
+    /* Odoo hides this systray button with d-none below md. Keep the business
+       icon available directly in the mobile navbar, outside the user menu. */
+    .o_main_navbar .o_menu_systray .o_switch_company_menu.d-none {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex: 0 0 36px !important;
+        width: 36px !important;
+        min-width: 36px !important;
+        height: 36px !important;
+        padding: 0 !important;
+        margin: 0 1px !important;
+        border-radius: 8px !important;
+    }
+
+    .o_main_navbar .o_menu_systray .o_switch_company_menu .oi[data-icon="business"] {
+        display: inline-block !important;
+        color: #343a40 !important;
+        font-size: 17px !important;
+        line-height: 1 !important;
+        opacity: 1 !important;
+    }
+
+    body.o_dolan_dark_mode .o_main_navbar .o_menu_systray .o_switch_company_menu {
+        background-color: #292d36 !important;
+        color: #f1f3f5 !important;
+        border: 1px solid #454c59 !important;
+    }
+
+    body.o_dolan_dark_mode .o_main_navbar .o_menu_systray .o_switch_company_menu .oi[data-icon="business"] {
+        color: #f1f3f5 !important;
+    }
+
+    body.o_dolan_dark_mode .o_main_navbar .o_menu_systray .o_switch_company_menu:hover,
+    body.o_dolan_dark_mode .o_main_navbar .o_menu_systray .o_switch_company_menu:focus-visible,
+    body.o_dolan_dark_mode .o_main_navbar .o_menu_systray .o_switch_company_menu.show {
+        background-color: #3a3040 !important;
+        color: #ffffff !important;
+        border-color: #806b7c !important;
+    }
+
+    body:not(.o_dolan_dark_mode) .modal-content,
+    body:not(.o_dolan_dark_mode) .o_dialog .o_form_view,
+    body:not(.o_dolan_dark_mode) .o_dialog .o_form_sheet_bg,
+    body:not(.o_dolan_dark_mode) .o_dialog .o_form_sheet {
+        background-color: #ffffff !important;
+        color: #212529 !important;
+    }
+}
+
+/* Mobile Odoo's responsive form layout paints field labels and address blocks
+   with light utility surfaces. Force those exact title and value nodes to use
+   the dark sheet palette; this covers labels above many2one/address widgets
+   such as Cliente, Dirección de factura, Fecha, Lista de precios and payment
+   terms, regardless of the form model. */
+@media (max-width: 767.98px) {
+    body.o_dolan_dark_mode .o_form_view :is(.o_form_label, .o_field_label, label, .o_wrap_label),
+    body.o_dolan_dark_mode .o_form_view .o_group :is(.o_form_label, .o_field_label, label, .o_wrap_label),
+    body.o_dolan_dark_mode .o_form_view .o_wrap_field :is(.o_form_label, .o_field_label, label, .o_wrap_label) {
+        color: #f1f3f5 !important;
+        background: #20232b !important;
+        background-image: none !important;
+        border-color: transparent !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+        opacity: 1 !important;
+    }
+
+    body.o_dolan_dark_mode .o_form_view .o_group .o_field_widget :is(div, span, p, small, address, dt, dd),
+    body.o_dolan_dark_mode .o_form_view .o_wrap_field .o_field_widget :is(div, span, p, small, address, dt, dd),
+    body.o_dolan_dark_mode .o_form_view .o_field_widget .text-muted,
+    body.o_dolan_dark_mode .o_form_view .o_field_widget .text-secondary {
+        color: #cbd2dc !important;
+        background-color: transparent !important;
+        background-image: none !important;
+        text-shadow: none !important;
+    }
+
+    body.o_dolan_dark_mode .o_form_view .o_group .o_field_widget,
+    body.o_dolan_dark_mode .o_form_view .o_wrap_field .o_field_widget,
+    body.o_dolan_dark_mode .o_form_view .o_group .o_field_widget > div,
+    body.o_dolan_dark_mode .o_form_view .o_wrap_field .o_field_widget > div {
+        color: #cbd2dc !important;
+        background-color: transparent !important;
+        background-image: none !important;
+        border-color: #3a404c !important;
+    }
+
+    body.o_dolan_dark_mode .o_form_view .o_group .o_field_widget :is(input, textarea, select, .o_input),
+    body.o_dolan_dark_mode .o_form_view .o_wrap_field .o_field_widget :is(input, textarea, select, .o_input) {
+        color: #f1f3f5 !important;
+        background-color: #181b21 !important;
+        border-color: #555d6b !important;
+    }
+}
+
+/* Final high-specificity fallback for the mobile menu trigger. Odoo renders
+   this control with a translated aria-label and a fixed English title; style
+   both so framework utility classes cannot leave it transparent. */
+@media (max-width: 767.98px) {
+    body.o_dolan_dark_mode header.o_navbar :is(
+        button.o_mobile_menu_toggle,
+        button[aria-label="Alternar menú"],
+        button[title="Toggle menu"]
+    ) {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 36px !important;
+        min-width: 36px !important;
+        height: 36px !important;
+        padding: 0 !important;
+        margin: 0 4px !important;
+        color: #f1f3f5 !important;
+        background: #292d36 !important;
+        border: 1px solid #596171 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, .35) !important;
+        opacity: 1 !important;
+    }
+
+    body.o_dolan_dark_mode header.o_navbar :is(
+        button.o_mobile_menu_toggle,
+        button[aria-label="Alternar menú"],
+        button[title="Toggle menu"]
+    ):is(:hover, :active, :focus-visible) {
+        color: #ffffff !important;
+        background: #3a3040 !important;
+        border-color: #a8899c !important;
+        box-shadow: 0 0 0 2px rgba(195, 154, 181, .32) !important;
+    }
+
+    body.o_dolan_dark_mode header.o_navbar :is(
+        button.o_mobile_menu_toggle,
+        button[aria-label="Alternar menú"],
+        button[title="Toggle menu"]
+    ) img.o_burger_menu_avatar {
+        border: 1px solid rgba(241, 243, 245, .55) !important;
+        border-radius: 6px !important;
+    }
+
+    /* The mobile burger menu is rendered outside the main action area. Set
+       its own palette so Bootstrap's light utilities do not turn the drawer
+       and company picker white while the rest of the app is in dark mode. */
+    body.o_dolan_dark_mode .o_burger_menu {
+        color: #e8ebf0 !important;
+        background-color: #20232b !important;
+        border-left: 1px solid #3a404c !important;
+    }
+
+    body.o_dolan_dark_mode .o_burger_menu .o_sidebar_topbar {
+        color: #f1f3f5 !important;
+        background-color: #292d36 !important;
+        border-bottom: 1px solid #3a404c !important;
+    }
+
+    body.o_dolan_dark_mode .o_burger_menu .o_sidebar_topbar :is(button, a, span, i, .oi) {
+        color: #f1f3f5 !important;
+    }
+
+    body.o_dolan_dark_mode .o_burger_menu .o_sidebar_topbar :is(button, a):is(:hover, :focus-visible, :active) {
+        color: #ffffff !important;
+        background-color: #3a3040 !important;
+        border-color: #806b7c !important;
+    }
+
+    body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_content,
+    body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies {
+        color: #e8ebf0 !important;
+        background-color: #20232b !important;
+    }
+
+    body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies :is(h1, h2, h3, h4, h5, h6, label, span, a, p, .text-muted, .text-dark) {
+        color: #e8ebf0 !important;
+    }
+
+    body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies :is(.form-control, .o_input, input) {
+        color: #f1f3f5 !important;
+        background-color: #181b21 !important;
+        border-color: #596171 !important;
+    }
+
+    body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies :is(.form-control, .o_input, input)::placeholder {
+        color: #aeb6c2 !important;
+        opacity: 1 !important;
+    }
+
+    body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies :is(.form-check, .o_company, .o_burger_menu_company) {
+        color: #e8ebf0 !important;
+    }
+
+    body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies :is(.form-check, .o_company, .o_burger_menu_company):hover,
+    body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies :is(.form-check, .o_company, .o_burger_menu_company).active,
+    body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies :is(.form-check, .o_company, .o_burger_menu_company).o_active {
+        color: #ffffff !important;
+        background-color: #3a3040 !important;
+    }
+
+    body.o_dolan_dark_mode .o_burger_menu :is(.bg-white, .bg-light, .text-bg-light, .dropdown-menu) {
+        color: #e8ebf0 !important;
+        background-color: #20232b !important;
+        border-color: #3a404c !important;
+    }
+
+    body.o_dolan_dark_mode .o_burger_menu :is(.dropdown-item, .o_nav_entry, a, button) {
+        color: #e8ebf0 !important;
+    }
+
+    body.o_dolan_dark_mode .o_burger_menu :is(.dropdown-item, .o_nav_entry, a, button):is(:hover, :focus-visible, :active) {
+        color: #ffffff !important;
+        background-color: #34303a !important;
+    }
+}
+
+/* Keep the compact mobile systray on one visual baseline. Odoo modules add
+   their own button padding and line-height, which makes the icons drift even
+   though they share the same navbar. */
+@media (max-width: 767.98px) {
+    .o_main_navbar .o_menu_systray {
+        display: flex !important;
+        align-items: center !important;
+        align-self: stretch !important;
+        gap: 2px !important;
+    }
+
+    .o_main_navbar .o_menu_systray > *,
+    .o_main_navbar .o_menu_systray > * > .o-dropdown,
+    .o_main_navbar .o_menu_systray > * > .dropdown {
+        display: inline-flex !important;
+        align-items: center !important;
+        align-self: center !important;
+        justify-content: center !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        margin-block: 0 !important;
+    }
+
+    .o_main_navbar .o_menu_systray > :not(.o_dolan_systray_root) > :is(button, .dropdown-toggle, .o_nav_entry),
+    .o_main_navbar .o_menu_systray .o_dolan_systray_controls > button,
+    .o_main_navbar .o_menu_systray button.o_switch_company_menu {
+        box-sizing: border-box !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: 36px !important;
+        min-height: 36px !important;
+        width: 36px !important;
+        min-width: 36px !important;
+        padding-block: 0 !important;
+        line-height: 1 !important;
+        vertical-align: middle !important;
+    }
+
+    .o_main_navbar .o_menu_systray > :not(.o_dolan_systray_root) > :is(button, .dropdown-toggle, .o_nav_entry) > :is(.oi, .fa, svg, img),
+    .o_main_navbar .o_menu_systray .o_dolan_systray_controls > button > :is(.oi, .fa, svg, img),
+    .o_main_navbar .o_menu_systray button.o_switch_company_menu > :is(.oi, .fa, svg, img) {
+        flex: 0 0 auto !important;
+        vertical-align: middle !important;
+    }
+
+    .o_main_navbar .o_menu_systray > :not(.o_dolan_systray_root) > :is(button, .dropdown-toggle, .o_nav_entry) > svg,
+    .o_main_navbar .o_menu_systray .o_dolan_systray_controls > button > svg,
+    .o_main_navbar .o_menu_systray button.o_switch_company_menu > svg {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    .o_main_navbar .o_menu_systray .o_switch_company_menu.d-none {
+        flex: 0 0 36px !important;
+        width: 36px !important;
+        min-width: 36px !important;
+    }
+
+    /* The standard user dropdown is the first J avatar. Odoo marks it
+       d-none d-md-flex, but the generic systray button rule above sets display;
+       force this exact button off so the BurgerMenu avatar remains the only one. */
+    body .o_main_navbar .o_menu_systray button.o_user_menu {
+        display: none !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Drawer controls live inside the systray component; keep their labels at
+       natural width instead of treating each as a 36px navbar icon. */
+    .o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 4px !important;
+        width: max-content !important;
+        max-width: 100% !important;
+    }
+
+    .o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group > .btn,
+    .o_dolan_home_menu_wrapper .o_dolan_recents > .btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex: 0 0 auto !important;
+        width: auto !important;
+        min-width: max-content !important;
+        white-space: nowrap !important;
+    }
+}

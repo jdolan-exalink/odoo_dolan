@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_dolan_view_planner_item_list" model="ir.ui.view">
+        <field name="name">dolan.view.planner.item.list</field>
+        <field name="model">dolan.view.planner.item</field>
+        <field name="arch" type="xml">
+            <list string="Planificación Multi-Vista (Gantt / Cohort / Grid / Map)" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="category_type"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="partner_id"/>
+                <field name="date_start"/>
+                <field name="date_stop"/>
+                <field name="duration_hours" sum="Total Horas"/>
+                <field name="worked_hours" sum="Total Imputado"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="street_address" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'in_progress'"
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'blocked'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_dolan_view_planner_item_form" model="ir.ui.view">
+        <field name="name">dolan.view.planner.item.form</field>
+        <field name="model">dolan.view.planner.item</field>
+        <field name="arch" type="xml">
+            <form string="Elemento de Planificación Multi-Vista">
+                <header>
+                    <button name="action_geocode_nominatim"
+                            string="Geolocalizar con OpenStreetMap"
+                            type="object"
+                            class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done,blocked"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Ej. Despliegue de Proyecto / Orden de Producción..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Asignación y Categoría">
+                            <field name="category_type"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="partner_id"/>
+                            <field name="progress" widget="progressbar"/>
+                        </group>
+                        <group string="Cronograma (Gantt &amp; Grid)">
+                            <field name="date_start"/>
+                            <field name="date_stop"/>
+                            <field name="duration_hours"/>
+                            <field name="worked_hours"/>
+                            <field name="date_cohort_close"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Geolocalización (OpenStreetMap)" name="geolocation">
+                            <group>
+                                <group>
+                                    <field name="street_address" placeholder="Av. Corrientes 1234, CABA, Argentina"/>
+                                </group>
+                                <group>
+                                    <field name="latitude"/>
+                                    <field name="longitude"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Dependencias Gantt y Notas" name="dependencies">
+                            <group>
+                                <field name="dependency_ids" widget="many2many_tags"/>
+                                <field name="notes"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Calendar View -->
+    <record id="view_dolan_view_planner_item_calendar" model="ir.ui.view">
+        <field name="name">dolan.view.planner.item.calendar</field>
+        <field name="model">dolan.view.planner.item</field>
+        <field name="arch" type="xml">
+            <calendar string="Calendario Operativo" date_start="date_start" date_stop="date_stop" color="user_id">
+                <field name="name"/>
+                <field name="category_type"/>
+                <field name="progress"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Client Action for Interactive OWL 3 Multi-View -->
+    <record id="action_dolan_multiview_suite" model="ir.actions.client">
+        <field name="name">Suite interactiva Gantt / Cohort / Grid / Mapa</field>
+        <field name="tag">dolan_views.multiview_planner</field>
+    </record>
+
+    <!-- Standard Window Action for Planner Records -->
+    <record id="action_dolan_view_planner_items" model="ir.actions.act_window">
+        <field name="name">Elementos Planificados (Gantt / Grid / Map)</field>
+        <field name="res_model">dolan.view.planner.item</field>
+        <field name="view_mode">list,form,calendar</field>
+    </record>
+
+    <!-- Integrado en Proyectos para mantener el Home Menu idéntico 1 a 1 a Odoo 20 -->
+    <menuitem id="menu_dolan_views_root"
+              name="Planificador Gantt / Cohort / Grid / Mapa"
+              parent="project.menu_main_pm"
+              sequence="15"/>
+
+    <menuitem id="menu_dolan_views_interactive"
+              name="Tablero Gantt / Cohort / Grid / Mapa"
+              parent="menu_dolan_views_root"
+              action="action_dolan_multiview_suite"
+              sequence="10"/>
+
+    <menuitem id="menu_dolan_views_records"
+              name="Datos de Planificación"
+              parent="menu_dolan_views_root"
+              action="action_dolan_view_planner_items"
+              sequence="20"/>
+</odoo>

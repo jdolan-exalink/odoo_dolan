@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_scale_device_list" model="ir.ui.view">
+        <field name="name">scale.device.list</field>
+        <field name="model">scale.device</field>
+        <field name="arch" type="xml">
+            <list string="Balanzas" decoration-muted="not active">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="warehouse_id" string="Sucursal"/>
+                <field name="brand"/>
+                <field name="model_name" optional="show"/>
+                <field name="profile_id"/>
+                <field name="product_count" string="Productos"/>
+                <field name="last_export_at" string="Última generación" optional="show"/>
+                <field name="last_export_state" string="Estado" widget="badge"
+                       decoration-info="last_export_state == 'draft'"
+                       decoration-warning="last_export_state == 'blocked'"
+                       decoration-success="last_export_state in ('generated', 'downloaded', 'imported_reported')"
+                       decoration-danger="last_export_state in ('failed', 'import_failed_reported')"/>
+                <field name="active" widget="boolean_toggle" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_scale_device_kanban" model="ir.ui.view">
+        <field name="name">scale.device.kanban</field>
+        <field name="model">scale.device</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="warehouse_id" class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="company_id"/>
+                <field name="warehouse_id"/>
+                <field name="brand"/>
+                <field name="model_name"/>
+                <field name="product_count"/>
+                <field name="last_export_at"/>
+                <field name="last_export_state"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex align-items-start mb-2">
+                            <div class="me-auto">
+                                <div class="fw-bold fs-5"><field name="name"/></div>
+                                <div class="text-muted"><field name="code"/></div>
+                            </div>
+                            <t t-if="record.active.raw_value"><span class="badge text-bg-success">Activa</span></t>
+                            <t t-else=""><span class="badge text-bg-secondary">Inactiva</span></t>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mb-2">
+                            <span class="badge text-bg-primary"><field name="brand"/></span>
+                            <field name="model_name" class="text-muted"/>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Productos</span><strong><field name="product_count"/></strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Última exportación</span><field name="last_export_at" class="text-muted"/>
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-muted">Estado:</span>
+                            <field name="last_export_state" widget="badge"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_scale_device_search" model="ir.ui.view">
+        <field name="name">scale.device.search</field>
+        <field name="model">scale.device</field>
+        <field name="arch" type="xml">
+            <search string="Buscar balanzas">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="warehouse_id"/>
+                <field name="brand"/>
+                <field name="model_name"/>
+                <filter name="active" string="Activas" domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Inactivas" domain="[('active', '=', False)]"/>
+                <filter name="with_exports" string="Con exportaciones" domain="[('last_export_id', '!=', False)]"/>
+                <filter name="by_company" string="Agrupar por empresa" context="{'group_by': 'company_id'}"/>
+                <filter name="by_warehouse" string="Agrupar por sucursal" context="{'group_by': 'warehouse_id'}"/>
+                <filter name="by_brand" string="Agrupar por marca" context="{'group_by': 'brand'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_scale_device_form" model="ir.ui.view">
+        <field name="name">scale.device.form</field>
+        <field name="model">scale.device</field>
+        <field name="arch" type="xml">
+            <form string="Balanza">
+                <header>
+                    <button name="action_preview_export" type="object" string="Previsualizar" icon="fa-eye" class="btn-secondary"
+                            groups="pos_scale_management.group_scale_operator,pos_scale_management.group_scale_admin"/>
+                    <button name="action_generate_export" type="object" string="Generar archivo" icon="fa-download" class="btn-primary"
+                            groups="pos_scale_management.group_scale_branch_manager,pos_scale_management.group_scale_admin"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><label for="name"/><h1><field name="name" placeholder="Ej. Caja 1"/></h1></div>
+                    <group>
+                        <group string="Identificación">
+                            <field name="code" placeholder="Ej. ROSARIO_CAJA_01"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="warehouse_id" string="Sucursal" options="{'no_create': True}"/>
+                            <field name="location" placeholder="Ej. Mostrador principal"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Equipo y perfiles">
+                            <field name="brand"/>
+                            <field name="model_name" placeholder="Modelo de la balanza"/>
+                            <field name="serial_number"/>
+                            <field name="profile_id" options="{'no_create': True}"/>
+                            <field name="barcode_profile_id" options="{'no_create': True}"/>
+                            <field name="pricelist_id" options="{'no_create': True}"/>
+                            <field name="product_count" readonly="1"/>
+                            <field name="last_export_at" readonly="1"/>
+                            <field name="last_export_state" readonly="1" widget="badge"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Productos" name="products">
+                            <div class="alert alert-info" role="status">
+                                Las reglas de exclusión tienen prioridad. Solo se toman productos activos, vendibles y disponibles en POS.
+                            </div>
+                            <field name="product_assignment_ids" context="{'default_device_id': id}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="assignment_type"/>
+                                    <field name="disposition"/>
+                                    <field name="product_id" domain="[('sale_ok', '=', True), ('product_tmpl_id.available_in_pos', '=', True)]"
+                                           invisible="assignment_type != 'product'"/>
+                                    <field name="category_id" invisible="assignment_type != 'category'"/>
+                                    <field name="plu"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                    <field name="note" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Precios" name="prices">
+                            <div class="alert alert-info" role="status">
+                                Prioridad: excepción vigente de esta balanza → lista base asignada → precio estándar del producto. La vista previa muestra origen e impuestos calculados.
+                            </div>
+                            <field name="price_override_ids" context="{'default_device_id': id}">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="price"/>
+                                    <field name="currency_id"/>
+                                    <field name="valid_from"/>
+                                    <field name="valid_to"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                    <field name="note" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Etiquetas y códigos" name="barcodes">
+                            <div class="alert alert-warning" role="alert">
+                                No se asume prefijo ni estructura de etiqueta. Configurá el perfil después de medir un código real. La lectura del POS existente no se modifica hasta validar etiquetas de prueba.
+                            </div>
+                            <field name="barcode_profile_id"/>
+                        </page>
+                        <page string="Exportación" name="export">
+                            <group>
+                                <field name="profile_id"/>
+                                <field name="pricelist_id"/>
+                                <field name="last_export_state" readonly="1"/>
+                            </group>
+                            <div class="alert alert-warning" role="alert">
+                                Kretz/iTegra permanece bloqueado hasta validar un archivo aceptado por iTegra y probar su importación real. No se declara sincronizada una balanza al descargar.
+                            </div>
+                            <button name="action_preview_export" type="object" string="Previsualizar catálogo y precios" icon="fa-eye" class="btn-secondary"/>
+                            <button name="action_generate_export" type="object" string="Solicitar archivo" icon="fa-download" class="btn-primary"
+                                    groups="pos_scale_management.group_scale_branch_manager,pos_scale_management.group_scale_admin"/>
+                        </page>
+                        <page string="Historial" name="history">
+                            <field name="export_job_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="create_date"/>
+                                    <field name="create_uid" string="Usuario"/>
+                                    <field name="profile_id"/>
+                                    <field name="record_count"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="checksum_sha256" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_scale_export_profile_list" model="ir.ui.view">
+        <field name="name">scale.export.profile.list</field>
+        <field name="model">scale.export.profile</field>
+        <field name="arch" type="xml">
+            <list string="Perfiles de exportación">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="brand"/>
+                <field name="adapter_code"/>
+                <field name="format_version"/>
+                <field name="validation_state" widget="badge"
+                       decoration-success="validation_state == 'validated'"
+                       decoration-warning="validation_state != 'validated'"/>
+                <field name="itegra_version"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_scale_export_profile_form" model="ir.ui.view">
+        <field name="name">scale.export.profile.form</field>
+        <field name="model">scale.export.profile</field>
+        <field name="arch" type="xml">
+            <form string="Perfil de exportación">
+                <header>
+                    <button name="action_start_validation" type="object" string="Iniciar validación" class="btn-secondary"
+                            invisible="validation_state == 'in_validation'" groups="pos_scale_management.group_scale_admin"/>
+                    <button name="action_mark_validated" type="object" string="Marcar validado" class="btn-primary"
+                            groups="pos_scale_management.group_scale_admin"/>
+                    <button name="action_reset_validation" type="object" string="Volver a borrador" class="btn-secondary"
+                            groups="pos_scale_management.group_scale_admin"/>
+                    <field name="validation_state" widget="statusbar" statusbar_visible="draft,in_validation,validated"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        No declares compatible un perfil sin importarlo en la versión real de iTegra y verificar producto, PLU y precio en una balanza.
+                    </div>
+                    <group>
+                        <group><field name="name"/><field name="code"/><field name="brand"/><field name="adapter_code"/></group>
+                        <group><field name="format_version"/><field name="itegra_version"/><field name="active"/>
+                            <field name="validated_at" readonly="1"/><field name="validated_by" readonly="1"/></group>
+                    </group>
+                    <notebook>
+                        <page string="Reglas de datos">
+                            <group>
+                                <field name="requires_plu"/><field name="max_plu_length"/>
+                                <field name="price_tax_mode"/><field name="weight_unit"/>
+                                <field name="price_decimals"/><field name="price_rounding"/>
+                            </group>
+                            <field name="notes"/>
+                        </page>
+                        <page string="Evidencia de compatibilidad">
+                            <group><field name="evidence_attachment_id"/><field name="validation_note"/></group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_scale_barcode_profile_list" model="ir.ui.view">
+        <field name="name">scale.barcode.profile.list</field>
+        <field name="model">scale.barcode.profile</field>
+        <field name="arch" type="xml">
+            <list string="Perfiles de etiquetas">
+                <field name="name"/><field name="code"/><field name="barcode_length"/>
+                <field name="prefix"/><field name="value_type"/><field name="decimals"/><field name="active"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_scale_barcode_profile_form" model="ir.ui.view">
+        <field name="name">scale.barcode.profile.form</field>
+        <field name="model">scale.barcode.profile</field>
+        <field name="arch" type="xml">
+            <form string="Perfil de etiqueta">
+                <sheet>
+                    <div class="alert alert-warning" role="alert">Completá las posiciones a partir de una etiqueta Kretz real. El lector del POS no cambia hasta validar pruebas reales.</div>
+                    <group>
+                        <group><field name="name"/><field name="code"/><field name="active"/><field name="barcode_length"/><field name="prefix"/></group>
+                        <group><field name="value_type"/><field name="decimals"/><field name="check_digit"/></group>
+                    </group>
+                    <group string="Segmentos"><field name="product_start"/><field name="product_length"/><field name="value_start"/><field name="value_length"/></group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_scale_assignment_list" model="ir.ui.view">
+        <field name="name">scale.product.assignment.list</field>
+        <field name="model">scale.product.assignment</field>
+        <field name="arch" type="xml">
+            <list string="Productos asignados">
+                <field name="device_id"/><field name="warehouse_id"/>
+                <field name="assignment_type"/><field name="disposition"/>
+                <field name="product_id"/><field name="category_id"/><field name="plu"/><field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_scale_export_job_list" model="ir.ui.view">
+        <field name="name">scale.export.job.list</field>
+        <field name="model">scale.export.job</field>
+        <field name="arch" type="xml">
+            <list string="Exportaciones" decoration-warning="state == 'blocked'" decoration-danger="state in ('failed','import_failed_reported')">
+                <field name="name"/><field name="job_type"/><field name="device_id"/><field name="warehouse_id"/>
+                <field name="company_id" groups="base.group_multi_company"/><field name="profile_id"/>
+                <field name="create_date"/><field name="create_uid" string="Usuario"/>
+                <field name="record_count"/><field name="state" widget="badge"/>
+                <field name="checksum_sha256" optional="hide"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_scale_export_job_form" model="ir.ui.view">
+        <field name="name">scale.export.job.form</field>
+        <field name="model">scale.export.job</field>
+        <field name="arch" type="xml">
+            <form string="Exportación de balanza">
+                <header>
+                    <button name="action_download" type="object" string="Descargar archivo" icon="fa-download"
+                            class="btn-primary" groups="pos_scale_management.group_scale_operator,pos_scale_management.group_scale_admin"
+                            invisible="not file_data"/>
+                    <button name="action_report_import_result" type="object" string="Informar importado en iTegra"
+                            class="btn-primary" groups="pos_scale_management.group_scale_branch_manager,pos_scale_management.group_scale_admin"
+                            context="{'imported': True}" invisible="state not in ('generated','downloaded','pending_import')"/>
+                    <button name="action_report_import_result" type="object" string="Informar error de importación"
+                            class="btn-secondary" groups="pos_scale_management.group_scale_branch_manager,pos_scale_management.group_scale_admin"
+                            context="{'imported': False}" invisible="state not in ('generated','downloaded','pending_import')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,validated,generated,downloaded,pending_import,imported_reported"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group><field name="job_type" readonly="1"/><field name="device_id" readonly="1"/><field name="warehouse_id" readonly="1"/><field name="company_id" readonly="1"/><field name="profile_id" readonly="1"/></group>
+                        <group><field name="create_uid" readonly="1" string="Generado por"/><field name="create_date" readonly="1"/><field name="generated_at" readonly="1"/><field name="record_count" readonly="1"/><field name="checksum_sha256" readonly="1"/></group>
+                    </group>
+                    <div class="alert alert-warning" role="alert" invisible="state != 'blocked'">
+                        No se generó un archivo importable. Corregí las validaciones y esperá la confirmación del adaptador del formato.
+                    </div>
+                    <group><field name="error_report" readonly="1"/><field name="notes"/></group>
+                    <notebook>
+                        <page string="Snapshot de precios y productos"><field name="snapshot_json" readonly="1" widget="text"/></page>
+                        <page string="Archivo"><group><field name="file_name" readonly="1"/><field name="file_data" filename="file_name" readonly="1"/></group></page>
+                        <page string="Resultado informado"><group><field name="imported_reported_at" readonly="1"/><field name="imported_reported_by" readonly="1"/></group></page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_scale_devices" model="ir.actions.act_window">
+        <field name="name">Balanzas</field><field name="res_model">scale.device</field><field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_by_warehouse': 1}</field>
+        <field name="search_view_id" ref="view_scale_device_search"/>
+    </record>
+    <record id="action_scale_assignments" model="ir.actions.act_window">
+        <field name="name">Productos asignados</field><field name="res_model">scale.product.assignment</field><field name="view_mode">list,form</field>
+    </record>
+    <record id="action_scale_export_jobs" model="ir.actions.act_window">
+        <field name="name">Exportaciones</field><field name="res_model">scale.export.job</field><field name="view_mode">list,form</field>
+    </record>
+    <record id="action_scale_export_profiles" model="ir.actions.act_window">
+        <field name="name">Perfiles de exportación</field><field name="res_model">scale.export.profile</field><field name="view_mode">list,form</field>
+    </record>
+    <record id="action_scale_barcode_profiles" model="ir.actions.act_window">
+        <field name="name">Perfiles de etiquetas</field><field name="res_model">scale.barcode.profile</field><field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_scale_warehouse_form" model="ir.ui.view">
+        <field name="name">stock.warehouse.scale.pricelist.form</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="scale_pricelist_id" options="{'no_create': True}" groups="pos_scale_management.group_scale_admin,stock.group_stock_manager"/>
+                <button name="action_export_scale_branch" type="object" string="Exportar balanzas de la sucursal"
+                        class="btn-secondary" icon="fa-download"
+                        groups="pos_scale_management.group_scale_branch_manager,pos_scale_management.group_scale_admin"/>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_scale_root" name="Balanzas" sequence="56"
+              web_icon="pos_scale_management,static/description/icon.svg"
+              groups="pos_scale_management.group_scale_operator,pos_scale_management.group_scale_auditor,pos_scale_management.group_scale_admin"/>
+    <menuitem id="menu_scale_devices" name="Balanzas" parent="menu_scale_root" action="action_scale_devices" sequence="10"
+              groups="pos_scale_management.group_scale_operator,pos_scale_management.group_scale_auditor,pos_scale_management.group_scale_admin"/>
+    <menuitem id="menu_scale_assignments" name="Productos asignados" parent="menu_scale_root" action="action_scale_assignments" sequence="20"
+              groups="pos_scale_management.group_scale_operator,pos_scale_management.group_scale_admin"/>
+    <menuitem id="menu_scale_exports" name="Exportaciones" parent="menu_scale_root" action="action_scale_export_jobs" sequence="30"
+              groups="pos_scale_management.group_scale_operator,pos_scale_management.group_scale_auditor,pos_scale_management.group_scale_admin"/>
+    <menuitem id="menu_scale_configuration" name="Configuración" parent="menu_scale_root" sequence="90"
+              groups="pos_scale_management.group_scale_admin"/>
+    <menuitem id="menu_scale_export_profiles" name="Perfiles de exportación" parent="menu_scale_configuration" action="action_scale_export_profiles" sequence="10"
+              groups="pos_scale_management.group_scale_admin"/>
+    <menuitem id="menu_scale_barcode_profiles" name="Perfiles de etiquetas" parent="menu_scale_configuration" action="action_scale_barcode_profiles" sequence="20"
+              groups="pos_scale_management.group_scale_admin"/>
+</odoo>

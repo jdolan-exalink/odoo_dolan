@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <!-- 1. Extensión OWL 3 de web.NavBar.AppsMenu para renderizar el botón oficial Enterprise 3x3 -->
+    <t t-inherit="web.NavBar.AppsMenu" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_navbar_apps_menu')]" position="replace">
+            <div t-if="!this.isScopedApp" class="o_navbar_apps_menu d-flex align-items-center">
+                <button type="button"
+                        class="btn o_menu_toggle hasImage o_dolan_enterprise_toggle"
+                        data-hotkey="h"
+                        accesskey="h"
+                        title="Todas las Aplicaciones / Menú de Inicio (Alt+H / Alt+Q)"
+                        t-on-click.prevent="() => this.toggleDolanAppDrawer()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 14 14" class="o_menu_toggle_icon">
+                        <g fill="currentColor" id="o_menu_toggle_row_0">
+                            <rect width="3" height="3" x="0" y="0" rx="0.5"/>
+                            <rect width="3" height="3" x="5.5" y="0" rx="0.5"/>
+                            <rect width="3" height="3" x="11" y="0" rx="0.5"/>
+                        </g>
+                        <g fill="currentColor" id="o_menu_toggle_row_1">
+                            <rect width="3" height="3" x="0" y="5.5" rx="0.5"/>
+                            <rect width="3" height="3" x="5.5" y="5.5" rx="0.5"/>
+                            <rect width="3" height="3" x="11" y="5.5" rx="0.5"/>
+                        </g>
+                        <g fill="currentColor" id="o_menu_toggle_row_2">
+                            <rect width="3" height="3" x="0" y="11" rx="0.5"/>
+                            <rect width="3" height="3" x="5.5" y="11" rx="0.5"/>
+                            <rect width="3" height="3" x="11" y="11" rx="0.5"/>
+                        </g>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                         class="o_menu_toggle_arrow" fill="none" stroke="currentColor"
+                         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true" focusable="false">
+                        <path d="M19 12H5"/>
+                        <path d="M11 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                <button type="button"
+                        class="btn o_nav_entry o_dolan_home_btn"
+                        title="Volver a todas las aplicaciones (Alt+H)"
+                        aria-label="Volver al Menú de Inicio"
+                        t-on-click.prevent="() => this.openDolanAppDrawer()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true" focusable="false">
+                        <path d="M3 10.5L12 3l9 7.5"/>
+                        <path d="M5 9.5V21h14V9.5"/>
+                        <path d="M9 21v-6h6v6"/>
+                    </svg>
+                </button>
+            </div>
+        </xpath>
+    </t>
+
+    <!-- 2. Componente Systray: Botón Apps de acceso rápido, Modo Oscuro y Home Menu Overlay -->
+    <t t-name="DOLAN_theme.AppDrawerSystray">
+        <div class="o_dolan_systray_root d-flex align-items-center">
+            <div class="o_dolan_systray_controls d-flex align-items-center gap-1 px-1">
+                <button type="button"
+                        class="btn btn-sm o_nav_entry o_dolan_systray_apps_btn"
+                        title="Todas las Aplicaciones / Menú de Inicio (Alt+H / Alt+Q)"
+                        t-on-click="() => this.toggleDrawer()">
+                    <i class="oi" data-icon="apps" style="font-size: 15px;"/>
+                </button>
+                <button type="button"
+                        class="btn btn-sm o_nav_entry"
+                        title="Alternar Modo Claro / Oscuro"
+                        t-on-click="() => this.toggleDarkMode()">
+                    <DolanIcon name="this.state.darkMode ? 'sun' : 'moon'"/>
+                </button>
+            </div>
+
+            <!-- Home Menu idéntico al DOM de Odoo 20 Enterprise (Odoo 20) -->
+            <t t-if="this.state.isOpen">
+                <div class="o_dolan_home_menu_wrapper" t-on-keydown="(ev) => this.onKeydown(ev)">
+                    <div class="o_home_menu h-100 overflow-auto px-3 d-flex flex-column">
+                        <!-- Buscador instantáneo siempre visible y centrado -->
+                        <div class="o_home_menu_search_bar d-flex justify-content-center my-4">
+                            <div class="position-relative" style="max-width: 440px; width: 100%;">
+                                <span class="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"><DolanIcon name="'search'" size="18"/></span>
+                                <input type="text"
+                                       t-ref="this.searchInputRef"
+                                       class="form-control form-control-lg rounded-pill ps-5 pe-5 bg-white shadow-sm border-0 o_home_menu_search_input"
+                                       style="font-size: 14px;"
+                                       placeholder="Buscar aplicación o menú..."
+                                       aria-label="Buscar aplicación"
+                                       t-att-value="this.state.query"
+                                       t-on-input="(ev) => this.onSearchInput(ev)"/>
+                                <button t-if="this.state.query"
+                                        type="button"
+                                        class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-3 text-muted border-0 p-0"
+                                        t-on-click="() => { this.state.query = ''; this.state.selectedIndex = 0; }">
+                                    <DolanIcon name="'x-circle'" size="22"/>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Selector de Vista: Aplicaciones / Acciones Rápidas -->
+                        <div class="d-flex justify-content-center mb-3">
+                            <div class="btn-group rounded-pill p-1 bg-white shadow-sm border o_dolan_drawer_tab_group" role="group">
+                                <button type="button"
+                                        class="btn btn-sm rounded-pill px-3 py-1 fw-semibold border-0"
+                                        t-att-class="this.state.activeTab === 'apps' ? 'btn-primary text-white' : 'btn-light text-muted'"
+                                        t-on-click="() => this.setTab('apps')">
+                                    <DolanIcon name="'grid'" size="16"/> Aplicaciones
+                                </button>
+                                <button type="button"
+                                        class="btn btn-sm rounded-pill px-3 py-1 fw-semibold border-0"
+                                        t-att-class="this.state.activeTab === 'mine' ? 'btn-primary text-white' : 'btn-light text-muted'"
+                                        t-on-click="() => this.setTab('mine')">
+                                    <DolanIcon name="'dashboard'" size="16"/> Mi Espacio
+                                </button>
+                                <button type="button"
+                                        class="btn btn-sm rounded-pill px-3 py-1 fw-semibold border-0"
+                                        t-att-class="this.state.activeTab === 'workspace' ? 'btn-primary text-white' : 'btn-light text-muted'"
+                                        t-on-click="() => this.setTab('workspace')">
+                                    <DolanIcon name="'bolt'" size="16"/> Acciones Rápidas
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Mi Espacio: KPIs y atención por rol -->
+                        <div t-if="this.state.activeTab === 'mine'" class="container px-0 position-relative z-1 flex-grow-1 o_dolan_mine">
+                            <div class="d-flex flex-wrap justify-content-center gap-2 mb-3" role="group" aria-label="Filtrar por rol">
+                                <button type="button" class="btn btn-sm rounded-pill"
+                                        t-att-class="this.state.roleFilter === 'all' ? 'btn-secondary' : 'btn-outline-secondary'"
+                                        t-att-aria-pressed="this.state.roleFilter === 'all'"
+                                        t-on-click="() => this.setRoleFilter('all')">Todo</button>
+                                <t t-foreach="this.kpiRoles" t-as="r" t-key="r.key">
+                                    <button type="button" class="btn btn-sm rounded-pill"
+                                            t-att-class="this.state.roleFilter === r.key ? 'btn-secondary' : 'btn-outline-secondary'"
+                                            t-att-aria-pressed="this.state.roleFilter === r.key"
+                                            t-on-click="() => this.setRoleFilter(r.key)" t-out="r.label"/>
+                                </t>
+                            </div>
+                            <div t-if="this.state.kpisLoading" class="row g-3 mx-auto o_dolan_kpi_grid" aria-busy="true">
+                                <t t-foreach="[1,2,3,4,5,6]" t-as="n" t-key="n">
+                                    <div class="col-12 col-md-6 col-lg-4"><div class="o_dolan_skeleton rounded-4"/></div>
+                                </t>
+                            </div>
+                            <div t-elif="this.state.kpisError" class="text-center text-muted py-4">
+                                No se pudieron cargar los indicadores.
+                                <button type="button" class="btn btn-link" t-on-click="loadKpis">Reintentar</button>
+                            </div>
+                            <div t-elif="!this.visibleKpis.length" class="text-center text-muted py-4">
+                                Sin indicadores disponibles para tus permisos.
+                            </div>
+                            <div t-else="" class="row g-3 mx-auto o_dolan_kpi_grid">
+                                <t t-foreach="this.visibleKpis" t-as="k" t-key="k.key">
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="o_dolan_kpi card h-100 w-100 border-0 shadow-sm rounded-4 p-3"
+                                             t-attf-class="o_dolan_kpi_#{k.tone}">
+                                            <button type="button" class="o_dolan_kpi_main btn p-0 border-0 text-start w-100 bg-transparent"
+                                                    t-on-click="() => this.openKpi(k)">
+                                                <span class="d-flex align-items-center gap-3">
+                                                    <DolanIcon name="k.icon" size="24"/>
+                                                    <span class="flex-grow-1">
+                                                        <span class="o_dolan_kpi_count d-block fs-3 fw-bold" t-out="k.count"/>
+                                                        <span class="o_dolan_kpi_label d-block small" t-out="k.label"/>
+                                                    </span>
+                                                    <span class="o_dolan_kpi_badge badge rounded-pill"
+                                                          t-out="k.tone === 'critical' ? 'Crítico' : k.tone === 'warning' ? 'Atención' : k.tone === 'action' ? 'Acción' : 'Info'"/>
+                                                </span>
+                                            </button>
+                                            <div t-if="k.count" class="d-flex justify-content-end gap-1 mt-2">
+                                                <button type="button" class="btn btn-sm btn-link text-muted py-0"
+                                                        t-on-click="() => this.snoozeKpi(k)"
+                                                        title="Ocultar durante 24 horas">
+                                                    <DolanIcon name="'clock'" size="16"/>Posponer
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-link text-muted py-0"
+                                                        t-on-click="() => this.dismissKpi(k)"
+                                                        title="Ocultar hasta que aparezcan nuevos casos">
+                                                    <DolanIcon name="'check'" size="16"/>Leído
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                            <div t-if="this.hiddenKpiCount" class="text-center mt-2">
+                                <button type="button" class="btn btn-sm btn-link text-muted" t-on-click="restoreKpis">
+                                    Mostrar <t t-out="this.hiddenKpiCount"/> oculto(s)
+                                </button>
+                            </div>
+                            <div class="d-flex justify-content-center mt-3">
+                                <button type="button" class="btn btn-sm btn-link text-muted" t-on-click="toggleDensity"
+                                        t-att-aria-pressed="this.state.compact">
+                                    <DolanIcon name="'compress'" size="16"/>
+                                    <t t-if="this.state.compact">Densidad: compacta</t>
+                                    <t t-else="">Densidad: normal</t>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Grilla de Aplicaciones en tarjetas Enterprise -->
+                        <div t-if="this.state.activeTab === 'apps'" class="container px-0 position-relative z-1 flex-grow-1">
+                            <div t-if="!this.state.query &amp;&amp; this.recentApps.length" class="d-flex flex-wrap align-items-center justify-content-center gap-2 mt-1 o_dolan_recents">
+                                <span class="small text-muted me-1"><DolanIcon name="'history'" size="16"/>Recientes</span>
+                                <t t-foreach="this.recentApps" t-as="ra" t-key="ra.id">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill"
+                                            t-on-click="() => this.selectApp(ra)" t-out="ra.name"/>
+                                </t>
+                            </div>
+                            <div role="listbox" class="o_apps row user-select-none mt-2 mx-0">
+                                <t t-foreach="this.filteredApps" t-as="app" t-key="app.id">
+                                    <div class="col-3 col-md-2 o_draggable mb-3 px-0 position-relative o_dolan_app_cell">
+                                        <button type="button" class="o_dolan_fav_btn btn btn-sm p-0 border-0 position-absolute"
+                                                t-att-class="this.isFavorite(app) ? 'o_dolan_fav_on' : ''"
+                                                t-att-aria-pressed="this.isFavorite(app) ? 'true' : 'false'"
+                                                t-att-aria-label="'Favorito: ' + app.name"
+                                                t-on-click.stop="() => this.toggleFavorite(app)">
+                                            <DolanIcon name="'star'" size="16" filled="this.isFavorite(app)"/>
+                                        </button>
+                                        <a role="option"
+                                           t-att-aria-selected="app_index === this.state.selectedIndex ? 'true' : 'false'"
+                                           class="o_app o_menuitem d-flex flex-column rounded-4 justify-content-start align-items-center w-100 p-1 p-md-2"
+                                           t-att-class="{'o_focused': app_index === this.state.selectedIndex}"
+                                           t-att-data-menu-xmlid="app.xmlid"
+                                           t-att-href="'/odoo/' + (app.xmlid || ('action-' + app.actionID))"
+                                           t-on-click.prevent="() => this.selectApp(app)">
+                                            <t t-if="this.getAppIconUrl(app)">
+                                                <img class="o_app_icon rounded-3"
+                                                     t-att-alt="app.name"
+                                                     t-att-src="this.getAppIconUrl(app)"/>
+                                            </t>
+                                            <t t-else="">
+                                                <div class="o_app_icon rounded-3">
+                                                    <div class="o_app_icon_fallback">
+                                                        <span t-out="(app.name || 'A').slice(0, 2).toUpperCase()"/>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                            <div class="o_caption text-center text-truncate mt-2 w-100"
+                                                 t-att-title="app.name"
+                                                 t-out="app.name"/>
+                                        </a>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Workspace de Acciones Rápidas y Operaciones -->
+                        <div t-if="this.state.activeTab === 'workspace'" class="container px-0 position-relative z-1 flex-grow-1">
+                            <div class="row g-3 justify-content-center max-w-4xl mx-auto py-2">
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 p-3 o_dolan_action_card cursor-pointer"
+                                         t-on-click="() => this.executeQuickAction('new_invoice')">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="o_dolan_card_icon bg-primary bg-opacity-10 text-primary rounded-3 p-3">
+                                                <DolanIcon name="'file-text'" size="26"/>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Nueva Factura</h6>
+                                                <p class="text-muted small mb-0">Emitir factura A, B o C con CAE</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 p-3 o_dolan_action_card cursor-pointer"
+                                         t-on-click="() => this.executeQuickAction('new_sale')">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="o_dolan_card_icon bg-success bg-opacity-10 text-success rounded-3 p-3">
+                                                <DolanIcon name="'cart'" size="26"/>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Nuevo Presupuesto</h6>
+                                                <p class="text-muted small mb-0">Cotización rápida a cliente</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 p-3 o_dolan_action_card cursor-pointer"
+                                         t-on-click="() => this.executeQuickAction('new_partner')">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="o_dolan_card_icon bg-info bg-opacity-10 text-info rounded-3 p-3">
+                                                <DolanIcon name="'user-plus'" size="26"/>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Nuevo Contacto</h6>
+                                                <p class="text-muted small mb-0">Registrar cliente o proveedor</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 p-3 o_dolan_action_card cursor-pointer"
+                                         t-on-click="() => this.executeQuickAction('new_payment')">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="o_dolan_card_icon bg-warning bg-opacity-10 text-warning rounded-3 p-3">
+                                                <DolanIcon name="'money'" size="26"/>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Registrar Cobranza</h6>
+                                                <p class="text-muted small mb-0">Recibos, cheques y retenciones</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 p-3 o_dolan_action_card cursor-pointer"
+                                         t-on-click="() => this.executeQuickAction('whatsapp')">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="o_dolan_card_icon bg-success bg-opacity-10 text-success rounded-3 p-3">
+                                                <DolanIcon name="'chat'" size="26"/>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-1">WhatsApp Mensajería</h6>
+                                                <p class="text-muted small mb-0">Bandeja WAHA multiempresa</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 p-3 o_dolan_action_card cursor-pointer"
+                                         t-on-click="() => this.executeQuickAction('libro_iva')">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="o_dolan_card_icon bg-secondary bg-opacity-10 text-secondary rounded-3 p-3">
+                                                <DolanIcon name="'bank'" size="26"/>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Libro IVA &amp; SICORE</h6>
+                                                <p class="text-muted small mb-0">Exportación oficial ARCA</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 p-3 o_dolan_action_card cursor-pointer"
+                                         t-on-click="() => this.executeQuickAction('toggle_ai')">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="o_dolan_card_icon bg-primary bg-opacity-10 text-primary rounded-3 p-3">
+                                                <DolanIcon name="'sparkles'" size="26"/>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Asistente DOLAN AI</h6>
+                                                <p class="text-muted small mb-0">Chat Copilot con ChatGPT</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 p-3 o_dolan_action_card cursor-pointer"
+                                         t-on-click="() => this.executeQuickAction('open_search')">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="o_dolan_card_icon bg-dark bg-opacity-10 text-dark rounded-3 p-3">
+                                                <DolanIcon name="'search'" size="26"/>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Búsqueda Global (Ctrl+K)</h6>
+                                                <p class="text-muted small mb-0">Comandos y registros</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

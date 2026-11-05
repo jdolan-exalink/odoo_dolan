@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_mercadopago_settlement_wizard_form" model="ir.ui.view">
+        <field name="name">dolan.mercadopago.settlement.wizard.form</field>
+        <field name="model">dolan.mercadopago.settlement.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Conciliación y Liquidación Mercado Pago">
+                <field name="currency_id" invisible="1"/>
+                <field name="state" invisible="1"/>
+
+                <div class="alert alert-info" role="alert" invisible="state != 'draft'">
+                    <strong>Suba el reporte CSV de Mercado Pago</strong> ("Reporte de Liberaciones" o "Todas las transacciones").
+                    El asistente segregará automáticamente las ventas brutas, la comisión del servicio, el costo financiero de cuotas y las retenciones impositivas (IVA/Ganancias/IIBB), acreditando el importe neto real en la cuenta bancaria de destino.
+                </div>
+
+                <div class="alert alert-success" role="alert" invisible="state != 'done'">
+                    <strong>¡Liquidación procesada con éxito!</strong> Se ha generado el asiento contable balanceado correspondiente a las operaciones seleccionadas.
+                </div>
+
+                <group invisible="state != 'draft'">
+                    <group string="Datos del Asiento">
+                        <field name="company_id" invisible="1"/>
+                        <field name="journal_id" options="{'no_create': True}"/>
+                        <field name="date"/>
+                        <field name="attachment_filename" invisible="1"/>
+                        <field name="attachment_file" filename="attachment_filename"/>
+                    </group>
+                    <group string="Cuentas Contables de Distribución">
+                        <field name="account_net_dest_id" options="{'no_create': True}"/>
+                        <field name="account_mp_clearing_id" options="{'no_create': True}"/>
+                        <field name="account_fee_id" options="{'no_create': True}"/>
+                        <field name="account_financing_id" options="{'no_create': True}"/>
+                        <field name="account_taxes_id" options="{'no_create': True}"/>
+                    </group>
+                </group>
+
+                <group string="Resumen de Liquidación" invisible="state != 'done'">
+                    <group>
+                        <field name="transaction_count"/>
+                        <field name="total_gross" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="total_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                    <group>
+                        <field name="total_financing" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="total_taxes" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="total_net" widget="monetary" options="{'currency_field': 'currency_id'}" class="text-success font-weight-bold"/>
+                        <field name="move_id" readonly="1"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button name="action_process_settlement"
+                            string="Procesar y Contabilizar Liquidación"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_mercadopago_settlement_wizard" model="ir.actions.act_window">
+        <field name="name">Liquidación Mercado Pago</field>
+        <field name="res_model">dolan.mercadopago.settlement.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Conciliar liquidación de Mercado Pago
+            </p>
+            <p>
+                Importe el reporte oficial CSV de Mercado Pago para generar el asiento contable balanceado
+                con apertura de comisiones, costos financieros y retenciones sufridas.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_dolan_mercadopago_settlement"
+              name="Liquidación Mercado Pago"
+              parent="account.menu_finance_entries"
+              action="action_dolan_mercadopago_settlement_wizard"
+              sequence="35"/>
+</odoo>

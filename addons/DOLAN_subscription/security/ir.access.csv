@@ -1,0 +1,9 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_subscription_close_reason_user,dolan.subscription.close.reason.user,dolan.subscription.close.reason,sales_team.group_sale_salesman,r,
+access_dolan_subscription_close_reason_manager,dolan.subscription.close.reason.manager,dolan.subscription.close.reason,sales_team.group_sale_manager,crud,
+access_dolan_subscription_plan_user,dolan.subscription.plan.user,dolan.subscription.plan,sales_team.group_sale_salesman,r,
+access_dolan_subscription_plan_manager,dolan.subscription.plan.manager,dolan.subscription.plan,sales_team.group_sale_manager,crud,
+access_dolan_subscription_user,dolan.subscription.user,dolan.subscription,sales_team.group_sale_salesman,cru,
+access_dolan_subscription_manager,dolan.subscription.manager,dolan.subscription,sales_team.group_sale_manager,crud,
+access_dolan_subscription_line_user,dolan.subscription.line.user,dolan.subscription.line,sales_team.group_sale_salesman,crud,
+access_dolan_subscription_line_manager,dolan.subscription.line.manager,dolan.subscription.line,sales_team.group_sale_manager,crud,

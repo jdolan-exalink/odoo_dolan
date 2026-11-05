@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Clover">
+  <rect width="64" height="64" rx="16" fill="#f1fbf5"/>
+  <g fill="#00a94f">
+    <circle cx="24" cy="22" r="12"/>
+    <circle cx="40" cy="22" r="12"/>
+    <circle cx="24" cy="38" r="12"/>
+    <circle cx="40" cy="38" r="12"/>
+  </g>
+  <path d="M32 36c-1 8-5 13-10 17 8 0 14-5 15-14" fill="#087c42"/>
+</svg>
