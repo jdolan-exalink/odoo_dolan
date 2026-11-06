@@ -12,6 +12,14 @@ curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/boot
 
 Si entraste con un usuario que tiene `sudo` instalado, usá `curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | sudo bash`.
 
+El mismo archivo también actualiza paquetes del sistema desde los repositorios APT configurados, sin abrir el asistente ni crear otro despliegue:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --update-packages
+```
+
+Con un usuario normal, cambiá el final por `| sudo bash -s -- --update-packages`. Este modo actualiza los paquetes Debian/Ubuntu instalados; no actualiza el código de los módulos DOLAN ni reconstruye contenedores Odoo existentes.
+
 El bootstrap verifica que el sistema sea Debian o Ubuntu, instala las herramientas base que falten y, si no encuentra Docker Engine con `docker compose`, configura el repositorio APT oficial de Docker e instala Engine, Buildx y Compose. No elimina paquetes Docker existentes ni borra datos para resolver conflictos: se detiene y los informa para evitar tocar un runtime que ya esté en uso. Después descarga el repositorio temporalmente, abre el asistente interactivo y guarda el despliegue en `/opt/dolan/deployments/<nombre-corto>`.
 
 La terminal debe tener TTY porque el asistente solicita datos y contraseñas. Para conectarte por SSH, usá `ssh -t usuario@servidor`. El primer despliegue descarga imágenes y dependencias, y puede tardar bastante; reservá espacio para Docker, la base PostgreSQL y el modelo local de Whisper.

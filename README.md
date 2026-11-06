@@ -48,6 +48,9 @@ Distribución modular **Open Source (`LGPL-3`)** para **Odoo Community Edition 2
 # Instalación directa como root en Debian/Ubuntu (requiere TTY)
 curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash
 
+# Actualizar paquetes Debian/Ubuntu ya instalados (sin volver a desplegar Odoo)
+curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --update-packages
+
 # Alternativa: con el repositorio ya clonado y Docker instalado
 chmod +x crear_odoo20.sh
 

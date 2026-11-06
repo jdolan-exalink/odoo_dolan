@@ -17,6 +17,9 @@ Uso desde un servidor con curl:
 Si estás conectado como un usuario con sudo:
   curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | sudo bash
 
+Actualizar paquetes del sistema desde los repositorios APT configurados:
+  curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --update-packages
+
 El instalador instala herramientas base y Docker Engine + Docker Compose si faltan,
 clona el repositorio temporalmente y abre el cuestionario interactivo.
 Las instalaciones se guardan en /opt/dolan/deployments/.
@@ -27,12 +30,16 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
   usage
   exit 0
 fi
+MODE="${1:-install}"
+case "$MODE" in
+  install|--update-packages) ;;
+  *) printf 'Opción no reconocida: %s\n' "$MODE" >&2; usage >&2; exit 2 ;;
+esac
 
 fail() { printf 'Error: %s\n' "$*" >&2; exit 1; }
 info() { printf '\n==> %s\n' "$*"; }
 
 [[ "$(id -u)" -eq 0 ]] || fail "Ejecutá como root o usá sudo: curl ... | sudo bash"
-[[ -r /dev/tty ]] || fail "Se necesita una terminal interactiva. Usá SSH con TTY (ssh -t) y volvé a ejecutar el comando."
 [[ -r /etc/os-release ]] || fail "No pude identificar el sistema operativo. Se admite Debian 12+ y Ubuntu 22.04+."
 # shellcheck disable=SC1091
 source /etc/os-release
@@ -62,6 +69,14 @@ fi
 info "Preparando ${PRETTY_NAME:-$OS_ID}"
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
+if [[ "$MODE" == "--update-packages" ]]; then
+  info "Actualizando paquetes disponibles en los repositorios APT configurados"
+  apt-get upgrade -y
+  info "Actualización de paquetes del sistema completada"
+  exit 0
+fi
+
+[[ -r /dev/tty ]] || fail "La instalación requiere una terminal interactiva. Usá SSH con TTY (ssh -t) y volvé a ejecutar el comando."
 apt-get install -y --no-install-recommends \
   ca-certificates curl git dialog python3 python3-venv python3-pip \
   coreutils findutils grep sed gawk util-linux
