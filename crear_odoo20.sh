@@ -55,7 +55,7 @@ USAGE
 PROJECT_NAME=""
 PORT=""
 CALLBACK_PORT="1455"
-ADMIN_PASSWD=""
+ADMIN_PASSWD="${DOLAN_DB_MASTER_PASSWORD:-}"
 PROFILE=""
 CUSTOM_MODULES=""
 COMPANY_NAME=""
@@ -68,7 +68,7 @@ BILLING_POS=""
 POS_POS=""
 INITIAL_ADMIN_EMAIL=""
 INITIAL_ADMIN_NAME=""
-INITIAL_ADMIN_PASSWORD=""
+INITIAL_ADMIN_PASSWORD="${DOLAN_ADMIN_LOGIN_PASSWORD:-}"
 DEPLOY=""
 INTERACTIVE=1
 CHECK_ONLY=0
@@ -587,7 +587,13 @@ if [[ -n "$INIT_DB" ]]; then
 
   if [[ -n "$COMPANY_NAME" ]]; then
     BOOTSTRAP_JSON="$PWD/.dolan-installer.json"
-    trap '[[ -z "${BOOTSTRAP_JSON:-}" ]] || rm -f "$BOOTSTRAP_JSON"' EXIT
+    cleanup_initial_bootstrap() {
+      [[ -z "${BOOTSTRAP_JSON:-}" ]] || rm -f "$BOOTSTRAP_JSON"
+      # The JSON contains the initial admin credential. Remove a container copy
+      # even if the Odoo shell fails or the installer exits unexpectedly.
+      docker compose exec -T -u root odoo rm -f /tmp/dolan-installer.py /tmp/dolan-installer.json >/dev/null 2>&1 || true
+    }
+    trap cleanup_initial_bootstrap EXIT
     COMPANY_NAME="$COMPANY_NAME" COMPANY_CUIT="$COMPANY_CUIT" COMPANY_ADDRESS="$COMPANY_ADDRESS" COMPANY_CITY="$COMPANY_CITY" COMPANY_RESPONSIBILITY="$COMPANY_RESPONSIBILITY" BILLING_POS="$BILLING_POS" POS_POS="$POS_POS" INITIAL_ADMIN_EMAIL="$INITIAL_ADMIN_EMAIL" INITIAL_ADMIN_NAME="$INITIAL_ADMIN_NAME" INITIAL_ADMIN_PASSWORD="$INITIAL_ADMIN_PASSWORD" PROFILE="$PROFILE" DOLAN_ADDONS="$DOLAN_ADDONS" python3 - "$BOOTSTRAP_JSON" <<'PYCONFIG'
 import json, os, sys
 config = {"company_name": os.environ["COMPANY_NAME"], "cuit": os.environ["COMPANY_CUIT"], "address": os.environ["COMPANY_ADDRESS"], "city": os.environ["COMPANY_CITY"], "responsibility": os.environ["COMPANY_RESPONSIBILITY"], "billing_pos": os.environ["BILLING_POS"], "pos_pos": os.environ["POS_POS"], "admin_email": os.environ["INITIAL_ADMIN_EMAIL"], "admin_name": os.environ["INITIAL_ADMIN_NAME"], "admin_password": os.environ["INITIAL_ADMIN_PASSWORD"], "profile": os.environ["PROFILE"], "modules": os.environ["DOLAN_ADDONS"]}
@@ -597,11 +603,20 @@ PYCONFIG
     ODOO_CONTAINER="${CONTAINER_PREFIX}_odoo"
     docker cp "$SCRIPT_DIR/scripts/installer_bootstrap.py" "$ODOO_CONTAINER:/tmp/dolan-installer.py"
     docker cp "$BOOTSTRAP_JSON" "$ODOO_CONTAINER:/tmp/dolan-installer.json"
+    # docker cp preserves the source mode (0600); the copied file is root-owned,
+    # while `docker compose exec odoo` runs as the unprivileged `odoo` user.
+    # Transfer ownership inside the container and retain owner-only access so
+    # the bootstrap can read the initial admin password without exposing it.
+    if ! docker compose exec -T -u root odoo sh -c \
+      "chown odoo:odoo /tmp/dolan-installer.json && chmod 600 /tmp/dolan-installer.json"; then
+      docker compose exec -T -u root odoo rm -f /tmp/dolan-installer.py /tmp/dolan-installer.json >/dev/null 2>&1 || true
+      echo "Error preparando el archivo privado de configuración inicial dentro de Odoo." >&2; exit 1
+    fi
     if ! docker compose exec -T odoo sh -c "odoo shell --config=/etc/odoo/odoo.conf --logfile= --no-http -d '$INIT_DB' < /tmp/dolan-installer.py"; then
-      docker compose exec -T odoo rm -f /tmp/dolan-installer.py /tmp/dolan-installer.json >/dev/null 2>&1 || true
+      docker compose exec -T -u root odoo rm -f /tmp/dolan-installer.py /tmp/dolan-installer.json >/dev/null 2>&1 || true
       echo "Error configurando la empresa y el usuario inicial." >&2; exit 1
     fi
-    docker compose exec -T odoo rm -f /tmp/dolan-installer.py /tmp/dolan-installer.json
+    docker compose exec -T -u root odoo rm -f /tmp/dolan-installer.py /tmp/dolan-installer.json
     rm -f "$BOOTSTRAP_JSON"
     trap - EXIT
   fi

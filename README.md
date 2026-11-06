@@ -9,6 +9,7 @@ Distribución modular **Open Source (`LGPL-3`)** para **Odoo Community Edition 2
 - [`PRD.md`](PRD.md): Documento de Requerimientos de Producto.
 - [`ROADMAP.md`](ROADMAP.md): Seguimiento de etapas y tareas.
 - [`README_INSTALADOR.md`](README_INSTALADOR.md): Requisitos, uso interactivo, perfiles y pasos posteriores al despliegue.
+- [`installer/README.md`](installer/README.md): estado, uso y límites del nuevo CLI/TUI Go DOLAN Installer 2.0 (fase inicial).
 - [`bootstrap.sh`](bootstrap.sh): Bootstrap desde GitHub para Debian y Ubuntu con instalación de dependencias.
 - [`crear_odoo20.sh`](crear_odoo20.sh): Instalador para Linux, Ubuntu/Debian y WSL2.
 - [`crear_odoo20.ps1`](crear_odoo20.ps1): Instalador para Windows PowerShell y Docker Desktop.

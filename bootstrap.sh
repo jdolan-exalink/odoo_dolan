@@ -20,6 +20,9 @@ Si estás conectado como un usuario con sudo:
 Actualizar paquetes del sistema desde los repositorios APT configurados:
   curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --update-packages
 
+Preparar herramientas y Docker para que el CLI Go ejecute el motor local:
+  bash bootstrap.sh --prepare-only
+
 El instalador instala herramientas base y Docker Engine + Docker Compose si faltan,
 clona el repositorio temporalmente y abre el cuestionario interactivo.
 Las instalaciones se guardan en /opt/dolan/deployments/.
@@ -32,7 +35,7 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
 fi
 MODE="${1:-install}"
 case "$MODE" in
-  install|--update-packages) ;;
+  install|--update-packages|--prepare-only) ;;
   *) printf 'Opción no reconocida: %s\n' "$MODE" >&2; usage >&2; exit 2 ;;
 esac
 
@@ -122,6 +125,11 @@ elif command -v service >/dev/null 2>&1; then
 fi
 docker info >/dev/null 2>&1 || fail "Docker está instalado, pero el daemon no responde. Revisá systemd y volvé a ejecutar el bootstrap."
 docker compose version
+
+if [[ "$MODE" == "--prepare-only" ]]; then
+  info "Dependencias del sistema y Docker listos"
+  exit 0
+fi
 
 info "Descargando el instalador DOLAN desde GitHub"
 TMP_ROOT="$(mktemp -d -t dolan-bootstrap.XXXXXX)"
