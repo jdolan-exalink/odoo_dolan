@@ -190,7 +190,7 @@ func (m wizardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m wizardModel) View() tea.View {
 	if m.width < 58 || m.height < 16 {
-		return tea.NewView("DOLAN Installer 2.0\nTerminal pequeña: recomendado 58×16 o superior.\nAmpliá la terminal para continuar.\nEsc cancela")
+		return m.panelView("DOLAN Installer 2.0\nTerminal pequeña: recomendado 58×16 o superior.\nAmpliá la terminal para continuar.\nEsc cancela")
 	}
 	var b strings.Builder
 	b.WriteString(titleStyle.Render("DOLAN Installer 2.0"))
@@ -212,7 +212,7 @@ func (m wizardModel) View() tea.View {
 		if m.err != "" {
 			b.WriteString("\n" + errorStyle.Render(m.err))
 		}
-		return tea.NewView(panelStyle.Width(m.width - 6).Render(b.String()))
+		return m.panelView(b.String())
 	}
 	if m.index == -1 {
 		b.WriteString(sectionStyle.Render("Elegí el perfil de módulos"))
@@ -231,35 +231,108 @@ func (m wizardModel) View() tea.View {
 			b.WriteString("\n")
 		}
 		b.WriteString("\n" + keyStyle.Render("↑/↓") + " elegir  " + keyStyle.Render("Enter") + " continuar  " + keyStyle.Render("F1") + " ayuda")
-		return tea.NewView(panelStyle.Width(m.width - 6).Render(b.String()))
-	}
-	if m.index >= 0 && m.index < len(m.steps) && m.steps[m.index].key == "responsibility" {
-		b.WriteString(sectionStyle.Render("Condición frente a ARCA"))
-		for i, option := range responsibilityOptions {
-			mark := "  "
-			if i == m.responsibilityIndex {
-				mark = "› "
-			}
-			b.WriteString("\n" + mark + option)
-		}
-		b.WriteString("\n\n↑/↓ elegir · Enter continuar · Shift+Tab volver")
-		return tea.NewView(panelStyle.Width(m.width - 6).Render(b.String()))
+		return m.panelView(b.String())
 	}
 	if m.index > len(m.steps)-1 {
 		m.index = len(m.steps) - 1
 	}
+	start, end, page, pages, title := m.pageRange()
+	b.WriteString(sectionStyle.Render(fmt.Sprintf("Bloque %d de %d · %s", page, pages, title)))
+	b.WriteString("\n" + dimStyle.Render("Completá varios datos en este bloque; Enter avanza al siguiente."))
+	b.WriteString("\n\n")
 	current := m.steps[m.index]
-	b.WriteString(sectionStyle.Render(fmt.Sprintf("Paso %02d de %02d · %s", m.index+1, len(m.steps), current.label)))
-	b.WriteString("\n\n" + current.help + "\n\n")
-	b.WriteString(m.input.View())
-	b.WriteString("\n\n" + dimStyle.Render("↑/↓ opciones  ·  Enter/Tab continuar  ·  Shift+Tab volver  ·  F1 ayuda  ·  Esc salir"))
+	for i := start; i < end; i++ {
+		item := m.steps[i]
+		if i == m.index {
+			b.WriteString(selectedStyle.Render("› " + item.label))
+			b.WriteString("\n")
+			if item.key == "responsibility" {
+				for optionIndex, option := range responsibilityOptions {
+					line := "   " + option
+					if optionIndex == m.responsibilityIndex {
+						b.WriteString(selectedStyle.Render("  "+line) + "\n")
+					} else {
+						b.WriteString(line + "\n")
+					}
+				}
+				b.WriteString(dimStyle.Render("  ↑/↓ cambia la opción · Enter confirma"))
+			} else {
+				b.WriteString(m.input.View())
+				b.WriteString("\n" + dimStyle.Render(item.help))
+			}
+			b.WriteString("\n\n")
+			continue
+		}
+		value := m.displayField(item)
+		line := fmt.Sprintf("  %-29s %s", item.label, value)
+		b.WriteString(dimStyle.Render(line) + "\n")
+	}
+	b.WriteString("\n" + dimStyle.Render("Enter/Tab siguiente  ·  Shift+Tab anterior  ·  Esc cancela"))
 	if current.secret {
 		b.WriteString("\n" + dimStyle.Render("Ctrl+P muestra u oculta el campo actual"))
 	}
 	if m.err != "" {
 		b.WriteString("\n\n" + errorStyle.Render(m.err))
 	}
-	return tea.NewView(panelStyle.Width(m.width - 6).Render(b.String()))
+	return m.panelView(b.String())
+}
+
+func (m wizardModel) panelView(content string) tea.View {
+	v := tea.NewView(panelStyle.Width(m.width - 6).Render(content))
+	v.AltScreen = true
+	if mouseCompatible() {
+		v.MouseMode = tea.MouseModeCellMotion
+	}
+	return v
+}
+
+func (m wizardModel) pageRange() (start, end, page, pages int, title string) {
+	groups := []struct {
+		start, end int
+		title      string
+	}{
+		{0, min(3, len(m.steps)), "Empresa"},
+		{3, min(6, len(m.steps)), "Domicilio y condición fiscal"},
+		{6, min(9, len(m.steps)), "Puntos de venta y acceso"},
+		{9, min(12, len(m.steps)), "Administrador"},
+		{12, len(m.steps), "Opciones adicionales"},
+	}
+	active := 0
+	for i, group := range groups {
+		if m.index >= group.start && m.index < group.end {
+			active = i
+			break
+		}
+	}
+	var visible []struct {
+		start, end int
+		title      string
+	}
+	for _, group := range groups {
+		if group.start < group.end {
+			visible = append(visible, group)
+		}
+	}
+	selected := groups[active]
+	return selected.start, selected.end, active + 1, len(visible), selected.title
+}
+
+func (m wizardModel) displayField(item field) string {
+	if item.secret {
+		if m.getField(item.key) != "" || (item.key == "admin_password_confirm" && m.cfg.AdminPassword != "") {
+			return "•••••• configurada"
+		}
+		return "(vacío)"
+	}
+	value := strings.TrimSpace(m.getField(item.key))
+	if value == "" {
+		return "(sin completar)"
+	}
+	maxLen := max(14, min(38, m.width-42))
+	if len([]rune(value)) > maxLen {
+		value = string([]rune(value)[:maxLen-1]) + "…"
+	}
+	return value
 }
 
 func (m *wizardModel) configureInput() {
