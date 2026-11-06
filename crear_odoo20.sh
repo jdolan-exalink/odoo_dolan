@@ -110,9 +110,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$PROFILE" && $INTERACTIVE -eq 1 && -t 0 && $CHECK_ONLY -eq 0 ]]; then
-  if command -v dialog >/dev/null 2>&1; then
-    PROFILE=$(dialog --title "Instalador DOLAN" --menu "Selecciona el perfil" 14 60 5 --mouse core "Facturacion, ventas, remitos, IA/OCR, WhatsApp y tema" comercio "Core + punto de venta" servicios "Core + suscripciones, alquileres y BI" full "Catalogo completo" custom "Elegir modulos" 3>&1 1>&2 2>&3) || exit 1
-  else
+  if command -v dialog >/dev/null 2>&1 && [[ -n "${TERM:-}" && "$TERM" != "dumb" ]]; then
+    PROFILE=$(dialog --title "Instalador DOLAN" --menu "Selecciona el perfil" 14 60 5 --mouse core "Facturacion, ventas, remitos, IA/OCR, WhatsApp y tema" comercio "Core + punto de venta" servicios "Core + suscripciones, alquileres y BI" full "Catalogo completo" custom "Elegir modulos" 3>&1 1>&2 2>&3) || PROFILE=""
+  fi
+  if [[ -z "$PROFILE" ]]; then
+    echo "No se pudo abrir el selector gráfico; continúo con el menú de texto."
     echo "Selecciona perfil:"
     select PROFILE in core comercio servicios full custom; do [[ -n "$PROFILE" ]] && break; done
   fi
@@ -140,11 +142,13 @@ case "$PROFILE" in
     ;;
   custom)
     if [[ -z "$CUSTOM_MODULES" && $INTERACTIVE -eq 1 && -t 0 ]]; then
-      if command -v dialog >/dev/null 2>&1; then
+      if command -v dialog >/dev/null 2>&1 && [[ -n "${TERM:-}" && "$TERM" != "dumb" ]]; then
         dialog_args=(); for i in "${!ALL_DOLAN_MODULES[@]}"; do dialog_args+=("${ALL_DOLAN_MODULES[$i]}" "" off); done
-        CUSTOM_MODULES=$(dialog --title "Catalogo DOLAN" --checklist "Marca modulos para instalar (mouse y barra espaciadora)" 22 75 15 --mouse "${dialog_args[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit 1
+        CUSTOM_MODULES=$(dialog --title "Catalogo DOLAN" --checklist "Marca modulos para instalar (mouse y barra espaciadora)" 22 75 15 --mouse "${dialog_args[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || CUSTOM_MODULES=""
         CUSTOM_MODULES="${CUSTOM_MODULES// /,}"
-      else
+      fi
+      if [[ -z "$CUSTOM_MODULES" ]]; then
+      echo "No se pudo abrir el selector gráfico; continúo con selección por teclado."
       echo "Catalogo DOLAN (numero para marcar/desmarcar; Enter finaliza):"
       declare -A SELECTED=()
       while true; do
@@ -522,7 +526,7 @@ if [[ "${DEPLOY:-n}" =~ ^[SsYy] ]]; then
   echo "3/3 Construyendo y levantando contenedores..."
   docker compose build
   docker compose up -d
-  echo "Odoo 20 DOLAN desplegado en http://localhost:${PORT}"
+  echo "Contenedores iniciados; preparando la base de datos y el acceso inicial..."
 
   if [[ -n "$INIT_DB" ]]; then
     echo "Esperando a que Odoo acepte conexiones HTTP..."
@@ -619,4 +623,11 @@ PYCONFIG
     echo "Pendiente de credenciales externas: servidor de correo y WAHA/WhatsApp."
   fi
   echo "Servicios desplegados: Odoo, PostgreSQL, WAHA y Whisper local. Credenciales WAHA: consultar el archivo .env del proyecto."
+  SERVER_IP="$(hostname -I 2>/dev/null | awk '{print $1}' || true)"
+  if [[ -n "$SERVER_IP" ]]; then
+    echo "Acceso Odoo: http://${SERVER_IP}:${PORT}/web/login"
+  else
+    echo "Acceso Odoo: http://<IP-DEL-SERVIDOR>:${PORT}/web/login"
+  fi
+  echo "Despliegue completado correctamente."
 fi

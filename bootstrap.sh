@@ -135,4 +135,4 @@ install -d -m 0755 "$INSTALL_ROOT"
 cd "$INSTALL_ROOT"
 printf '\nLa instalación persistente quedará en: %s/deployments/<nombre-corto>\n' "$INSTALL_ROOT"
 info "Iniciando el cuestionario de empresa y perfil"
-bash "$TMP_ROOT/repo/crear_odoo20.sh" < /dev/tty
+bash "$TMP_ROOT/repo/crear_odoo20.sh" --deploy < /dev/tty
