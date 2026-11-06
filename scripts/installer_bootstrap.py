@@ -31,9 +31,10 @@ partner_values = {
     "city": config.get("city") or False,
     "l10n_ar_afip_responsibility_type_id": responsibility.id,
 }
-identification_type = env["l10n_latam.identification.type"].sudo().search([("name", "=", "CUIT")], limit=1)
-if identification_type and "l10n_latam_identification_type_id" in partner._fields:
-    partner_values["l10n_latam_identification_type_id"] = identification_type.id
+if "l10n_latam.identification.type" in env.registry.models:
+    identification_type = env["l10n_latam.identification.type"].sudo().search([("name", "=", "CUIT")], limit=1)
+    if identification_type and "l10n_latam_identification_type_id" in partner._fields:
+        partner_values["l10n_latam_identification_type_id"] = identification_type.id
 partner.write(partner_values)
 
 admin = env.ref("base.user_admin").sudo()

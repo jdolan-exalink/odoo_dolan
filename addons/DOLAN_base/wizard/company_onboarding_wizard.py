@@ -71,9 +71,11 @@ class DolanCompanyOnboardingWizard(models.TransientModel):
         company = self.env["res.company"].sudo().create(company_vals)
 
         # Configurar CUIT y responsabilidad ARCA en el partner de la compañía
-        cuit_latam_type = self.env["l10n_latam.identification.type"].search(
-            [("name", "=", "CUIT")], limit=1
-        )
+        cuit_latam_type = False
+        if "l10n_latam.identification.type" in self.env.registry.models:
+            cuit_latam_type = self.env["l10n_latam.identification.type"].search(
+                [("name", "=", "CUIT")], limit=1
+            )
         partner_vals = {
             "vat": self.cuit.replace("-", "").strip(),
             "l10n_ar_afip_responsibility_type_id": self.afip_responsibility_type_id.id,

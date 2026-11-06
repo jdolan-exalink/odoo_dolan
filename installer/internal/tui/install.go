@@ -6,8 +6,10 @@ import (
 	"os"
 	"strings"
 
+	"charm.land/bubbles/v2/spinner"
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/jdolan-exalink/odoo_dolan/installer/internal/core"
 	"github.com/jdolan-exalink/odoo_dolan/installer/internal/engine"
 	"golang.org/x/term"
@@ -19,6 +21,8 @@ type installModel struct {
 	runner        engine.Runner
 	cfg           core.Config
 	viewport      viewport.Model
+	spinner       spinner.Model
+	stage         string
 	lines         []string
 	width, height int
 	done          bool
@@ -37,6 +41,10 @@ func RunInstall(ctx context.Context, cfg core.Config, runner engine.Runner) erro
 	}
 	ctx, cancel := context.WithCancel(ctx)
 	m := installModel{ctx: ctx, cancel: cancel, runner: runner, cfg: cfg, width: 80, height: 24, events: make(chan engine.Event, 64)}
+	m.spinner = spinner.New()
+	m.spinner.Spinner = spinner.Dot
+	m.spinner.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("#20B8AA"))
+	m.stage = "Preparando el servidor"
 	m.viewport = viewport.New(viewport.WithWidth(74), viewport.WithHeight(14))
 	m.viewport.SoftWrap = true
 	m.viewport.MouseWheelEnabled = true
@@ -62,7 +70,7 @@ func (m installModel) Init() tea.Cmd {
 		m.events <- engine.Event{Done: true, Err: err}
 		close(m.events)
 	}()
-	return waitEvent(m.events)
+	return tea.Batch(waitEvent(m.events), func() tea.Msg { return m.spinner.Tick() })
 }
 
 func waitEvent(ch <-chan engine.Event) tea.Cmd {
@@ -80,10 +88,20 @@ func (m installModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.width, m.height = msg.Width, msg.Height
 		m.viewport.SetWidth(max(24, m.width-8))
-		m.viewport.SetHeight(max(6, m.height-10))
+		m.viewport.SetHeight(max(4, m.height-12))
 		return m, nil
+	case spinner.TickMsg:
+		if m.done {
+			return m, nil
+		}
+		var cmd tea.Cmd
+		m.spinner, cmd = m.spinner.Update(msg)
+		return m, cmd
 	case engine.Event:
 		if msg.Line != "" {
+			if stage := stageForLog(msg.Line); stage != "" {
+				m.stage = stage
+			}
 			m.lines = append(m.lines, msg.Line)
 			if len(m.lines) > 3000 {
 				m.lines = m.lines[len(m.lines)-3000:]
@@ -121,6 +139,31 @@ func (m installModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
+func stageForLog(line string) string {
+	s := strings.ToLower(line)
+	switch {
+	case strings.Contains(s, "eliminando deployment"):
+		return "Preparando una instalación limpia"
+	case strings.Contains(s, "apt-get") || strings.Contains(s, "preparando los paquetes") || strings.Contains(s, "instalando dependencias"):
+		return "Instalando dependencias del servidor"
+	case strings.Contains(s, "descargando modulos") || strings.Contains(s, "copiando suite de modulos"):
+		return "Descargando y preparando los módulos"
+	case strings.Contains(s, "docker build") || strings.Contains(s, "building") || strings.Contains(s, "exporting") || strings.Contains(s, "construyendo y levantando contenedores") || strings.Contains(s, "descargando") && strings.Contains(s, "imagen"):
+		return "Construyendo y descargando imágenes"
+	case strings.Contains(s, "docker compose up") || strings.Contains(s, "creating") || strings.Contains(s, "starting") || strings.Contains(s, "started"):
+		return "Iniciando los servicios de Odoo y PostgreSQL"
+	case strings.Contains(s, "esperando") && (strings.Contains(s, "odoo") || strings.Contains(s, "servicio")) || strings.Contains(s, "health"):
+		return "Esperando que Odoo esté listo"
+	case strings.Contains(s, "inicializando db") || strings.Contains(s, "odoo -i") || strings.Contains(s, "initializing") || strings.Contains(s, "loading module") || strings.Contains(s, "cargando módulos") || strings.Contains(s, "modules loaded"):
+		return "Creando la base de datos e instalando módulos"
+	case strings.Contains(s, "configurando la empresa") || strings.Contains(s, "usuario inicial") || strings.Contains(s, "company_onboarding"):
+		return "Configurando la empresa y el usuario administrador"
+	case strings.Contains(s, "manifiesto guardado"):
+		return "Guardando la configuración del despliegue"
+	}
+	return ""
+}
+
 func (m installModel) View() tea.View {
 	if m.width < 45 || m.height < 12 {
 		return tea.NewView("DOLAN Installer 2.0\nTerminal pequeña: recomendado 45×12 o superior.\nCtrl+C cancela de forma controlada.")
@@ -132,6 +175,12 @@ func (m installModel) View() tea.View {
 	b.WriteString("\n")
 	b.WriteString(dimStyle.Render(fmt.Sprintf("%s · %s · %s", m.cfg.Company, m.cfg.Profile, m.cfg.DeploymentPath())))
 	b.WriteString("\n\n")
+	if !m.done {
+		b.WriteString(m.spinner.View())
+		b.WriteString("  ")
+		b.WriteString(sectionStyle.Render(m.stage))
+		b.WriteString("\n\n")
+	}
 	b.WriteString(m.viewport.View())
 	b.WriteString("\n")
 	if m.done {
