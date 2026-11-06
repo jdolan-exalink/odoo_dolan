@@ -23,6 +23,7 @@ type installModel struct {
 	viewport      viewport.Model
 	spinner       spinner.Model
 	stage         string
+	accessURL     string
 	lines         []string
 	width, height int
 	done          bool
@@ -100,6 +101,10 @@ func (m installModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, cmd
 	case engine.Event:
 		if msg.Line != "" {
+			const accessPrefix = "Acceso Odoo: "
+			if strings.HasPrefix(strings.TrimSpace(msg.Line), accessPrefix) {
+				m.accessURL = strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(msg.Line), accessPrefix))
+			}
 			if stage := stageForLog(msg.Line); stage != "" {
 				m.stage = stage
 			}
@@ -202,6 +207,10 @@ func (m installModel) View() tea.View {
 			b.WriteString(errorStyle.Render("Falló el despliegue. Revisá el log privado indicado en el error."))
 		} else {
 			b.WriteString(sectionStyle.Render("Proceso completado; verificá salud con dolan-installer status."))
+			b.WriteString("\nAdministrador: " + m.cfg.AdminEmail)
+			if m.accessURL != "" {
+				b.WriteString("\nAcceso: " + m.accessURL)
+			}
 		}
 		if m.confirmExit {
 			b.WriteString("  " + warnStyle.Render("¿Salir del instalador? ") + keyStyle.Render("Enter") + " confirmar · " + keyStyle.Render("Esc") + " volver")

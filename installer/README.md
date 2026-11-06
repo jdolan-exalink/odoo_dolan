@@ -11,6 +11,7 @@ Implementado:
 - Revisión visible del plan antes de ejecutar cambios al sistema.
 - Reemplazo opcional y explícito de un deployment Compose existente. La pantalla de revisión avisa que se borrarán la carpeta/datos locales, volúmenes e imágenes Compose locales; solo procede si `--reset-existing NOMBRE` coincide exactamente con el proyecto.
 - Instalación local Linux mediante el motor Bash; preparación de paquetes mediante `bootstrap.sh --prepare-only`.
+- Actualización de instalaciones Compose con respaldo previo de PostgreSQL, addons y filestore, actualización de módulos instalados y rebuild del contenedor.
 - `doctor`, `list`, `status` y `logs` para instalaciones Compose locales.
 - Manifiesto local por instalación y logs privados con redacción de secretos.
 - Pruebas Go y compilación cruzada para Linux y Windows.
@@ -19,7 +20,7 @@ Aún no habilitado en esta entrega:
 
 - Instalación, diagnóstico, estado y logs sobre SSH remoto.
 - Instalación local Windows/WSL2 desde el CLI Go.
-- Actualización de Odoo, backup y restore administrados por el CLI.
+- Restore automatizado desde el respaldo de actualización.
 - Binarios publicados, bootstrap remoto firmado y canal de releases.
 - Selector custom de módulos con multiselección de mouse; el wizard admite IDs separados por coma.
 
@@ -57,6 +58,14 @@ curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/boot
 
 Este reset elimina los datos del proyecto indicado sin crear una copia; no lo uses sobre una instancia con información que debas conservar.
 
+Al ejecutar `bootstrap.sh` sin argumentos, el menú inicial ofrece nueva instalación, actualización de Odoo o actualización de paquetes del servidor. Para abrir directamente el actualizador:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | sudo bash -s -- --update
+```
+
+El actualizador pide seleccionar la instalación, guarda DB, addons, filestore y configuración dentro de `backups/` y después actualiza los módulos instalados. Si la migración falla, Odoo queda detenido para proteger la base; el respaldo queda disponible para recuperación manual.
+
 Para listar, revisar y consultar logs:
 
 ```sh
@@ -81,6 +90,7 @@ Campos admitidos: `project_name`, `project_root`, `profile`, `modules`, `company
 
 ## Seguridad y límites operativos
 
+- Odoo 20 requiere un contexto seguro para funciones que usan APIs del navegador, como los recorridos interactivos. En una instalación LAN por `http://IP:puerto`, serví el sistema detrás de HTTPS con un certificado confiable antes de habilitar esas funciones.
 - La ejecución requiere confirmación interactiva antes de instalar paquetes o iniciar Docker.
 - `--dry-run` solo presenta la planificación.
 - El destino existente se rechaza; el instalador no sobrescribe deployments.

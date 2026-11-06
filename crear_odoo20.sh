@@ -334,58 +334,7 @@ EOF
 mkdir -p services/local-whisper
 cp -R "$SCRIPT_DIR/services/local-whisper/." services/local-whisper/
 
-cat > Dockerfile <<EOF
-FROM odoo:${ODOO_VERSION}
-
-USER root
-
-RUN apt-get update && apt-get install -y --no-install-recommends \\
-    git \\
-    build-essential \\
-    libssl-dev \\
-    swig \\
-    python3-dev \\
-    libxml2-dev \\
-    libxslt1-dev \\
-    zlib1g-dev \\
-    libsasl2-dev \\
-    libldap2-dev \\
-    libjpeg-dev \\
-    libtiff-dev \\
-    libopenjp2-7-dev \\
-    libwebp-dev \\
-    && rm -rf /var/lib/apt/lists/*
-
-RUN pip3 install --break-system-packages --ignore-installed typing_extensions
-
-RUN pip3 install --break-system-packages \\
-    git+https://github.com/reingart/pyafipws.git \\
-    m2crypto \\
-    python-barcode \\
-    pdf417gen \\
-    qrcode \\
-    Pillow \\
-    dbf \\
-    future \\
-    httpx \\
-    openpyxl \\
-    ofxparse \\
-    PyMuPDF \\
-    zxing-cpp==3.1.1
-
-RUN python3 - <<'PY2'
-import glob, os
-packages = glob.glob('/usr/local/lib/python*/dist-packages/pyafipws') + \\
-           glob.glob('/usr/local/lib/python*/site-packages/pyafipws')
-for p in packages:
-    cache = os.path.join(p, 'cache')
-    os.makedirs(cache, exist_ok=True)
-    os.chmod(cache, 0o777)
-print('pyafipws cache dirs:', packages)
-PY2
-
-USER odoo
-EOF
+cp "$SCRIPT_DIR/installer/templates/Dockerfile.odoo" Dockerfile
 
 cat > docker-compose.yml <<EOF
 services:
@@ -644,5 +593,7 @@ PYCONFIG
   else
     echo "Acceso Odoo: http://<IP-DEL-SERVIDOR>:${PORT}/web/login"
   fi
+  echo "Usuario administrador inicial: ${INITIAL_ADMIN_EMAIL:-no configurado}. La contraseña no se imprime."
+  echo "Recomendación: configura HTTPS con un certificado confiable antes de habilitar recorridos/modo desarrollador; Odoo 20 no soporta esas funciones en HTTP inseguro."
   echo "Despliegue completado correctamente."
 fi

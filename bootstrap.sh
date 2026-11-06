@@ -20,6 +20,9 @@ Si estás conectado como un usuario con sudo:
 Actualizar paquetes del sistema desde los repositorios APT configurados:
   curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --update-packages
 
+Actualizar módulos Odoo de una instalación existente (respalda DB, addons y filestore):
+  curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --update
+
 Reemplazar una instalación de prueba y volver a abrir el asistente Go:
   curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --reset-existing sodecar
   La eliminación se ejecuta solo después de revisar y confirmar el plan en la TUI.
@@ -37,7 +40,7 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
   usage
   exit 0
 fi
-MODE="${1:-install}"
+MODE="${1:-menu}"
 RESET_EXISTING_NAME=""
 if [[ "$MODE" == "--reset-existing" ]]; then
   RESET_EXISTING_NAME="${2:-}"
@@ -47,7 +50,7 @@ if [[ "$MODE" == "--reset-existing" ]]; then
   }
 fi
 case "$MODE" in
-  install|--update-packages|--prepare-only|--reset-existing) ;;
+  menu|install|--update|--update-packages|--prepare-only|--reset-existing) ;;
   *) printf 'Opción no reconocida: %s\n' "$MODE" >&2; usage >&2; exit 2 ;;
 esac
 
@@ -95,6 +98,32 @@ fi
 apt-get install -y --no-install-recommends \
   ca-certificates curl git dialog python3 python3-venv python3-pip \
   coreutils findutils grep sed gawk util-linux tar
+
+if [[ "$MODE" == "menu" ]]; then
+  if [[ -r /dev/tty ]] && command -v dialog >/dev/null 2>&1 && [[ -n "${TERM:-}" && "$TERM" != "dumb" ]]; then
+    ACTION=$(dialog --title "DOLAN Installer 2.0" --menu "¿Qué querés hacer?" 12 68 3 --mouse \
+      install "Instalar una nueva instancia" \
+      update "Actualizar una instalación existente" \
+      packages "Actualizar paquetes del servidor" 3>&1 1>&2 2>&3) || ACTION=""
+  else
+    ACTION=""
+  fi
+  if [[ -z "${ACTION:-}" ]]; then
+    echo "Elegí una acción:"
+    echo "  1) Nueva instalación"
+    echo "  2) Actualizar instalación existente"
+    echo "  3) Actualizar paquetes del servidor"
+    while true; do
+      read -r -p "Opción [1-3]: " choice < /dev/tty || fail "No se pudo leer la opción desde la terminal."
+      case "$choice" in 1) ACTION=install; break ;; 2) ACTION=update; break ;; 3) ACTION=packages; break ;; esac
+    done
+  fi
+  case "$ACTION" in
+    install|update) MODE="$ACTION" ;;
+    packages) MODE="--update-packages"; apt-get upgrade -y; info "Actualización de paquetes del sistema completada"; exit 0 ;;
+    *) fail "No se seleccionó una acción válida." ;;
+  esac
+fi
 
 docker_compose_ready() {
   command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1
@@ -149,6 +178,12 @@ cleanup() { rm -rf -- "$TMP_ROOT"; }
 trap cleanup EXIT
 git clone --depth 1 --branch "$BRANCH" "$REPOSITORY" "$TMP_ROOT/repo"
 [[ -f "$TMP_ROOT/repo/crear_odoo20.sh" ]] || fail "El repositorio descargado no contiene crear_odoo20.sh."
+
+if [[ "$MODE" == "--update" || "$MODE" == "update" ]]; then
+  [[ -f "$TMP_ROOT/repo/scripts/update_installation.sh" ]] || fail "El repositorio no contiene el actualizador de instalaciones."
+  bash "$TMP_ROOT/repo/scripts/update_installation.sh" --root "$INSTALL_ROOT/deployments" --repo "$TMP_ROOT/repo"
+  exit $?
+fi
 
 # El bootstrap es el punto de entrada desde curl y por eso prepara el toolchain
 # fijado para construir/ejecutar el CLI Go desde el checkout recién descargado.
