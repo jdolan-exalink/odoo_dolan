@@ -29,6 +29,7 @@ type wizardModel struct {
 	review              bool
 	confirmed           bool
 	canceled            bool
+	confirmExit         bool
 	width, height       int
 	showPassword        bool
 }
@@ -103,12 +104,27 @@ func (m wizardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.input.SetWidth(max(24, min(64, m.width-18)))
 		return m, nil
 	case tea.KeyPressMsg:
+		if m.confirmExit {
+			switch msg.String() {
+			case "enter":
+				m.canceled = true
+				return m, tea.Quit
+			case "esc":
+				m.confirmExit = false
+				m.err = ""
+			}
+			return m, nil
+		}
 		switch msg.String() {
-		case "ctrl+c", "esc":
+		case "ctrl+c":
 			m.canceled = true
 			return m, tea.Quit
+		case "esc":
+			m.confirmExit = true
+			m.err = "¿Querés salir del instalador? Enter confirma · Esc vuelve al cuestionario."
+			return m, nil
 		case "f1":
-			m.err = "Teclado: ↑/↓ cambia opción, Enter confirma o avanza, Tab avanza, Shift+Tab vuelve, Ctrl+P muestra/oculta contraseña. Esc cancela antes de iniciar."
+			m.err = "Teclado: ↑/↓ cambia opción, Enter confirma o avanza, Tab avanza, Shift+Tab vuelve, Ctrl+P muestra/oculta contraseña. Esc pregunta antes de salir."
 			return m, nil
 		case "ctrl+p":
 			m.showPassword = !m.showPassword
@@ -190,7 +206,7 @@ func (m wizardModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m wizardModel) View() tea.View {
 	if m.width < 58 || m.height < 16 {
-		return m.panelView("DOLAN Installer 2.0\nTerminal pequeña: recomendado 58×16 o superior.\nAmpliá la terminal para continuar.\nEsc cancela")
+		return m.panelView("DOLAN Installer 2.0\nTerminal pequeña: recomendado 58×16 o superior.\nAmpliá la terminal para continuar.\nEsc consulta antes de salir")
 	}
 	var b strings.Builder
 	b.WriteString(titleStyle.Render("DOLAN Installer 2.0"))
@@ -208,7 +224,7 @@ func (m wizardModel) View() tea.View {
 		} else {
 			b.WriteString("\nLos datos persistentes no se eliminarán automáticamente.\n")
 		}
-		b.WriteString("\n" + keyStyle.Render("Enter") + " confirma e inicia  " + keyStyle.Render("Shift+Tab") + " vuelve  " + keyStyle.Render("Esc") + " cancela")
+		b.WriteString("\n" + keyStyle.Render("Enter") + " confirma e inicia  " + keyStyle.Render("Shift+Tab") + " vuelve  " + keyStyle.Render("Esc") + " consulta antes de salir")
 		if m.err != "" {
 			b.WriteString("\n" + errorStyle.Render(m.err))
 		}
@@ -267,7 +283,7 @@ func (m wizardModel) View() tea.View {
 		line := fmt.Sprintf("  %-29s %s", item.label, value)
 		b.WriteString(dimStyle.Render(line) + "\n")
 	}
-	b.WriteString("\n" + dimStyle.Render("Enter/Tab siguiente  ·  Shift+Tab anterior  ·  Esc cancela"))
+	b.WriteString("\n" + dimStyle.Render("Enter/Tab siguiente  ·  Shift+Tab anterior  ·  Esc consulta antes de salir"))
 	if current.secret {
 		b.WriteString("\n" + dimStyle.Render("Ctrl+P muestra u oculta el campo actual"))
 	}

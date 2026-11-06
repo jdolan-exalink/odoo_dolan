@@ -28,6 +28,7 @@ type installModel struct {
 	done          bool
 	err           error
 	canceled      bool
+	confirmExit   bool
 	events        chan engine.Event
 }
 
@@ -121,6 +122,19 @@ func (m installModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return m, waitEvent(m.events)
 	case tea.KeyPressMsg:
+		if m.done && m.confirmExit {
+			switch msg.String() {
+			case "enter":
+				return m, tea.Quit
+			case "esc":
+				m.confirmExit = false
+			}
+			return m, nil
+		}
+		if m.done && (msg.String() == "esc" || msg.String() == "q") {
+			m.confirmExit = true
+			return m, nil
+		}
 		if msg.String() == "ctrl+c" && !m.done {
 			m.canceled = true
 			m.cancel()
@@ -129,7 +143,7 @@ func (m installModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.viewport.GotoBottom()
 			return m, waitEvent(m.events)
 		}
-		if m.done && (msg.String() == "enter" || msg.String() == "esc" || msg.String() == "q") {
+		if m.done && msg.String() == "enter" {
 			return m, tea.Quit
 		}
 		var cmd tea.Cmd
@@ -189,7 +203,11 @@ func (m installModel) View() tea.View {
 		} else {
 			b.WriteString(sectionStyle.Render("Proceso completado; verificá salud con dolan-installer status."))
 		}
-		b.WriteString("  " + keyStyle.Render("Enter") + " salir")
+		if m.confirmExit {
+			b.WriteString("  " + warnStyle.Render("¿Salir del instalador? ") + keyStyle.Render("Enter") + " confirmar · " + keyStyle.Render("Esc") + " volver")
+		} else {
+			b.WriteString("  " + keyStyle.Render("Enter") + " salir · " + keyStyle.Render("Esc") + " consultar antes de salir")
+		}
 	} else {
 		b.WriteString(warnStyle.Render("Ctrl+C cancela el proceso; no elimina datos persistentes."))
 	}
