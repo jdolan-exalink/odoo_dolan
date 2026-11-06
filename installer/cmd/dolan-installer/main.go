@@ -67,6 +67,7 @@ func runInstall(ctx context.Context, args []string) error {
 	dryRun := fs.Bool("dry-run", false, "Mostrar el plan sin modificar el host")
 	root := fs.String("root", core.DefaultProjectRoot(), "Directorio base de despliegues")
 	name := fs.String("name", "", "Nombre corto del proyecto")
+	resetExisting := fs.String("reset-existing", "", "Borrar un deployment existente con este mismo nombre después de confirmar el plan")
 	profile := fs.String("profile", "", "core, comercio, servicios, full o custom")
 	modules := fs.String("modules", "", "IDs DOLAN separados por coma para custom")
 	company := fs.String("company", "", "Razón social inicial")
@@ -104,6 +105,15 @@ func runInstall(ctx context.Context, args []string) error {
 	}
 	if visited(fs, "name") {
 		cfg.ProjectName = *name
+	}
+	if visited(fs, "reset-existing") {
+		cfg.ResetExistingName = *resetExisting
+		if cfg.ProjectName == "" {
+			cfg.ProjectName = *resetExisting
+		}
+		if cfg.CompanyShort == "" {
+			cfg.CompanyShort = *resetExisting
+		}
 	}
 	if visited(fs, "profile") {
 		cfg.Profile = core.Profile(*profile)
@@ -174,6 +184,9 @@ func runInstall(ctx context.Context, args []string) error {
 		}
 		fmt.Println("Plan de instalación (sin cambios al host):")
 		fmt.Printf("Sistema: %s/%s\nPerfil: %s\nProyecto: %s\nBase: %s\nPuerto: %d\n", runtime.GOOS, runtime.GOARCH, cfg.Profile, cfg.DeploymentPath(), cfg.InitDB, cfg.Port)
+		if cfg.ResetExistingName != "" {
+			fmt.Printf("ATENCIÓN: al confirmar se eliminará el deployment existente %q, sus datos, volúmenes e imágenes locales.\n", cfg.ResetExistingName)
+		}
 		fmt.Printf("Motor Bash: %s\nArgumentos sin secretos: %s\n", filepath.Join(repo, "crear_odoo20.sh"), strings.Join(args, " "))
 		return nil
 	}
@@ -325,6 +338,7 @@ Automatización (el JSON no admite contraseñas; se reciben por entorno):
   DOLAN_ADMIN_LOGIN_PASSWORD='...' dolan-installer install --config install.json --non-interactive
 
 La instalación requiere Linux con Bash, Docker Engine y Compose. Use ` + "`doctor`" + ` antes de instalar.
+Para reemplazar explícitamente una instalación de prueba después de revisar el plan, usá ` + "`install --reset-existing NOMBRE`" + `.
 Windows local/SSH, backup/restore/update de Odoo y diagnósticos remotos no están habilitados en este MVP.
 `)
 }

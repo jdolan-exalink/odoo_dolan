@@ -20,11 +20,15 @@ Si estás conectado como un usuario con sudo:
 Actualizar paquetes del sistema desde los repositorios APT configurados:
   curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --update-packages
 
+Reemplazar una instalación de prueba y volver a abrir el asistente Go:
+  curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --reset-existing sodecar
+  La eliminación se ejecuta solo después de revisar y confirmar el plan en la TUI.
+
 Preparar herramientas y Docker para que el CLI Go ejecute el motor local:
   bash bootstrap.sh --prepare-only
 
 El instalador instala herramientas base y Docker Engine + Docker Compose si faltan,
-clona el repositorio temporalmente y abre el cuestionario interactivo.
+descarga Go verificado, clona el repositorio temporalmente y abre el asistente Go.
 Las instalaciones se guardan en /opt/dolan/deployments/.
 EOF
 }
@@ -34,8 +38,16 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
   exit 0
 fi
 MODE="${1:-install}"
+RESET_EXISTING_NAME=""
+if [[ "$MODE" == "--reset-existing" ]]; then
+  RESET_EXISTING_NAME="${2:-}"
+  [[ "$RESET_EXISTING_NAME" =~ ^[a-z0-9][a-z0-9_-]{0,47}$ ]] || {
+    printf 'Para --reset-existing indicá un nombre corto seguro, por ejemplo sodecar.\n' >&2
+    exit 2
+  }
+fi
 case "$MODE" in
-  install|--update-packages|--prepare-only) ;;
+  install|--update-packages|--prepare-only|--reset-existing) ;;
   *) printf 'Opción no reconocida: %s\n' "$MODE" >&2; usage >&2; exit 2 ;;
 esac
 
@@ -82,7 +94,7 @@ fi
 [[ -r /dev/tty ]] || fail "La instalación requiere una terminal interactiva. Usá SSH con TTY (ssh -t) y volvé a ejecutar el comando."
 apt-get install -y --no-install-recommends \
   ca-certificates curl git dialog python3 python3-venv python3-pip \
-  coreutils findutils grep sed gawk util-linux
+  coreutils findutils grep sed gawk util-linux tar
 
 docker_compose_ready() {
   command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1
@@ -138,9 +150,38 @@ trap cleanup EXIT
 git clone --depth 1 --branch "$BRANCH" "$REPOSITORY" "$TMP_ROOT/repo"
 [[ -f "$TMP_ROOT/repo/crear_odoo20.sh" ]] || fail "El repositorio descargado no contiene crear_odoo20.sh."
 
+# El bootstrap es el punto de entrada desde curl y por eso prepara el toolchain
+# fijado para construir/ejecutar el CLI Go desde el checkout recién descargado.
+GO_VERSION="1.27.3"
+GO_ARCH=""
+GO_SHA256=""
+case "$(dpkg --print-architecture)" in
+  amd64) GO_ARCH="amd64"; GO_SHA256="65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40" ;;
+  arm64) GO_ARCH="arm64"; GO_SHA256="a06e99309dbcbdca1a8ccd2282c3ee146e55930886e26b4f1193269587165f49" ;;
+  *) fail "Arquitectura no soportada para el asistente Go: $(dpkg --print-architecture)." ;;
+esac
+GO_INSTALL_DIR="$INSTALL_ROOT/toolchains/go${GO_VERSION}"
+if [[ ! -x "$GO_INSTALL_DIR/bin/go" ]]; then
+  info "Descargando Go ${GO_VERSION} (${GO_ARCH}) y verificando SHA-256 oficial"
+  GO_ARCHIVE="$TMP_ROOT/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz"
+  curl -fsSL "https://go.dev/dl/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz" -o "$GO_ARCHIVE"
+  printf '%s  %s\n' "$GO_SHA256" "$GO_ARCHIVE" | sha256sum --check --status || fail "El SHA-256 del toolchain Go no coincide; detengo la instalación."
+  tar -C "$TMP_ROOT" -xzf "$GO_ARCHIVE"
+  install -d -m 0755 "$INSTALL_ROOT/toolchains"
+  mv "$TMP_ROOT/go" "$GO_INSTALL_DIR"
+fi
+export PATH="$GO_INSTALL_DIR/bin:$PATH"
+export GOTOOLCHAIN=local
+go version
+
 # Mantener la carpeta de instalación fuera del clon temporal que se elimina al salir.
 install -d -m 0755 "$INSTALL_ROOT"
 cd "$INSTALL_ROOT"
 printf '\nLa instalación persistente quedará en: %s/deployments/<nombre-corto>\n' "$INSTALL_ROOT"
-info "Iniciando el cuestionario de empresa y perfil"
-bash "$TMP_ROOT/repo/crear_odoo20.sh" --deploy < /dev/tty
+info "Iniciando DOLAN Installer 2.0 (asistente Go)"
+cd "$TMP_ROOT/repo/installer"
+if [[ -n "$RESET_EXISTING_NAME" ]]; then
+  go run ./cmd/dolan-installer install --name "$RESET_EXISTING_NAME" --reset-existing "$RESET_EXISTING_NAME" < /dev/tty
+else
+  go run ./cmd/dolan-installer install < /dev/tty
+fi

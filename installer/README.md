@@ -9,6 +9,7 @@ Implementado:
 - Asistente de terminal para empresa, perfil, CUIT, domicilios, puntos de venta y administrador.
 - Perfiles `core`, `comercio`, `servicios`, `full` y `custom`.
 - Revisión visible del plan antes de ejecutar cambios al sistema.
+- Reemplazo opcional y explícito de un deployment Compose existente. La pantalla de revisión avisa que se borrarán la carpeta/datos locales, volúmenes e imágenes Compose locales; solo procede si `--reset-existing NOMBRE` coincide exactamente con el proyecto.
 - Instalación local Linux mediante el motor Bash; preparación de paquetes mediante `bootstrap.sh --prepare-only`.
 - `doctor`, `list`, `status` y `logs` para instalaciones Compose locales.
 - Manifiesto local por instalación y logs privados con redacción de secretos.
@@ -47,6 +48,14 @@ Para probar sin modificar el host:
 ```sh
 go run ./cmd/dolan-installer install --dry-run --company 'Empresa de prueba' --company-short empresaprueba --cuit 30-52722598-8 --address 'Calle 123' --city 'Santa Fe' --admin-email admin@example.com
 ```
+
+El bootstrap de GitHub abre esta TUI tras preparar Docker y descargar un toolchain Go verificado. Para reinstalar deliberadamente un deployment de prueba existente, usá `--reset-existing` con el mismo nombre: la eliminación ocurre luego de completar los datos y confirmar la pantalla final. Ejemplo de bootstrap:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | sudo bash -s -- --reset-existing sodecar
+```
+
+Este reset elimina los datos del proyecto indicado sin crear una copia; no lo uses sobre una instancia con información que debas conservar.
 
 Para listar, revisar y consultar logs:
 

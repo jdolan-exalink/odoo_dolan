@@ -73,12 +73,7 @@ func (r Runner) Install(ctx context.Context, c core.Config, onLog LogFunc) error
 	if err := os.MkdirAll(c.ProjectRoot, 0750); err != nil {
 		return fmt.Errorf("no se pudo preparar la ruta de instalaciones: %w", err)
 	}
-	if _, err := os.Stat(c.DeploymentPath()); err == nil {
-		return fmt.Errorf("el destino ya existe; no voy a sobrescribirlo: %s", c.DeploymentPath())
-	} else if !os.IsNotExist(err) {
-		return err
-	}
-	logPath := filepath.Join(c.ProjectRoot, c.ProjectName+"-install.log")
+	logPath := filepath.Join(c.ProjectRoot, c.ProjectName+"-install-"+time.Now().Format("20060102-150405")+".log")
 	logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
 	if err != nil {
 		return fmt.Errorf("no se pudo crear el log privado: %w", err)
@@ -89,6 +84,9 @@ func (r Runner) Install(ctx context.Context, c core.Config, onLog LogFunc) error
 	prepare.Dir = r.RepoRoot
 	if err := streamCommand(prepare, logFile, onLog, secrets); err != nil {
 		return fmt.Errorf("no se pudieron preparar los paquetes del host: %w (log: %s)", err, logPath)
+	}
+	if err := resetExistingDeployment(ctx, c, logFile, onLog, secrets); err != nil {
+		return fmt.Errorf("no se pudo preparar el destino: %w (log: %s)", err, logPath)
 	}
 	install := exec.CommandContext(ctx, "bash", append([]string{filepath.Join(r.RepoRoot, "crear_odoo20.sh")}, args...)...)
 	install.Dir = r.RepoRoot
@@ -108,6 +106,60 @@ func (r Runner) Install(ctx context.Context, c core.Config, onLog LogFunc) error
 	}
 	if onLog != nil {
 		onLog(Event{Line: fmt.Sprintf("Manifiesto guardado en %s", filepath.Join(c.DeploymentPath(), state.ManifestName))})
+	}
+	return nil
+}
+
+func resetExistingDeployment(ctx context.Context, c core.Config, logFile *os.File, onLog LogFunc, secrets []string) error {
+	target := c.DeploymentPath()
+	info, err := os.Lstat(target)
+	if os.IsNotExist(err) {
+		if c.ResetExistingName != "" {
+			return fmt.Errorf("se solicitó reemplazar %q pero no existe en %s", c.ResetExistingName, target)
+		}
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	if c.ResetExistingName == "" {
+		return fmt.Errorf("el destino ya existe; no se sobrescribe sin --reset-existing: %s", target)
+	}
+	if c.ResetExistingName != c.ProjectName {
+		return errors.New("el nombre a reemplazar debe coincidir exactamente con el nombre del proyecto")
+	}
+	if !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {
+		return errors.New("el destino existente debe ser un directorio real, no un archivo ni un enlace simbólico")
+	}
+	root, err := filepath.EvalSymlinks(c.ProjectRoot)
+	if err != nil {
+		return fmt.Errorf("resolver la ruta base: %w", err)
+	}
+	if filepath.Clean(root) == string(os.PathSeparator) {
+		return errors.New("por seguridad no se puede reemplazar un deployment desde la raíz del sistema")
+	}
+	realTarget, err := filepath.EvalSymlinks(target)
+	if err != nil {
+		return fmt.Errorf("resolver el deployment existente: %w", err)
+	}
+	rel, err := filepath.Rel(root, realTarget)
+	if err != nil || rel == "." || rel == ".." || strings.HasPrefix(rel, ".."+string(os.PathSeparator)) {
+		return errors.New("el deployment a reemplazar debe quedar dentro de la ruta base y no puede ser la ruta base misma")
+	}
+	composeFile := filepath.Join(realTarget, "docker-compose.yml")
+	if st, err := os.Stat(composeFile); err != nil || !st.Mode().IsRegular() {
+		return errors.New("no encontré un docker-compose.yml regular en el deployment; no voy a borrarlo")
+	}
+	if onLog != nil {
+		onLog(Event{Line: fmt.Sprintf("Eliminando deployment confirmado %s y sus volúmenes/imágenes locales", realTarget)})
+	}
+	stop := exec.CommandContext(ctx, "docker", "compose", "down", "--volumes", "--rmi", "local", "--remove-orphans")
+	stop.Dir = realTarget
+	if err := streamCommand(stop, logFile, onLog, secrets); err != nil {
+		return fmt.Errorf("docker compose down: %w", err)
+	}
+	if err := os.RemoveAll(realTarget); err != nil {
+		return fmt.Errorf("borrar la carpeta del deployment y sus datos locales: %w", err)
 	}
 	return nil
 }

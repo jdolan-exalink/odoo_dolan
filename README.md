@@ -92,7 +92,7 @@ powershell -ExecutionPolicy Bypass -File .\crear_odoo20.ps1 `
 - `comercio`: `core` + Punto de Venta.
 - `servicios`: `core` + Suscripciones, Alquileres y BI.
 - `full`: Todo el catálogo DOLAN y las aplicaciones CE de negocio.
-- `custom`: selector multi-selección del catálogo DOLAN. Linux usa `dialog` con mouse si está instalado; PowerShell usa `Out-GridView` si está disponible. Ambos tienen alternativa por teclado.
+- `custom`: selección del catálogo DOLAN. El nuevo asistente Go permite ingresar módulos separados por coma; los instaladores directos Bash y PowerShell conservan sus selectores existentes.
 
 El catálogo se detecta desde las carpetas `addons/DOLAN_*`; actualmente hay **14 módulos**, incluyendo `DOLAN_exchange`. Odoo instala automáticamente las dependencias necesarias. En particular, el manifiesto actual de `DOLAN_ai` depende de BI y cotizaciones, por lo que Odoo también los activará en perfiles que incluyan IA. Se pueden pasar módulos directamente con `--modules A,B,C` o `-Modules A,B,C`.
 

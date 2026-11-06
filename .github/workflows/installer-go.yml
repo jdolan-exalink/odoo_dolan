@@ -28,6 +28,8 @@ jobs:
           cache-dependency-path: installer/go.sum
       - run: go test ./...
       - run: go vet ./...
+      - name: Validate Bash entry points
+        run: bash -n ../bootstrap.sh ../crear_odoo20.sh
       - name: Cross compile supported targets
         shell: bash
         run: |

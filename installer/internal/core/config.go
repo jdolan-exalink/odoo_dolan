@@ -24,25 +24,26 @@ const (
 var Profiles = []Profile{ProfileCore, ProfileCommerce, ProfileServices, ProfileFull, ProfileCustom}
 
 type Config struct {
-	ProjectName    string   `json:"project_name"`
-	ProjectRoot    string   `json:"project_root"`
-	Profile        Profile  `json:"profile"`
-	Modules        []string `json:"modules,omitempty"`
-	Company        string   `json:"company"`
-	CompanyShort   string   `json:"company_short"`
-	CUIT           string   `json:"cuit"`
-	Address        string   `json:"address"`
-	City           string   `json:"city"`
-	Responsibility string   `json:"responsibility"`
-	BillingPOS     int      `json:"billing_pos"`
-	POSPOS         int      `json:"pos_pos"`
-	AdminEmail     string   `json:"admin_email"`
-	AdminName      string   `json:"admin_name"`
-	AdminPassword  string   `json:"-"`
-	MasterPassword string   `json:"-"`
-	Port           int      `json:"port"`
-	CallbackPort   int      `json:"callback_port"`
-	InitDB         string   `json:"init_db"`
+	ProjectName       string   `json:"project_name"`
+	ProjectRoot       string   `json:"project_root"`
+	Profile           Profile  `json:"profile"`
+	Modules           []string `json:"modules,omitempty"`
+	ResetExistingName string   `json:"-"`
+	Company           string   `json:"company"`
+	CompanyShort      string   `json:"company_short"`
+	CUIT              string   `json:"cuit"`
+	Address           string   `json:"address"`
+	City              string   `json:"city"`
+	Responsibility    string   `json:"responsibility"`
+	BillingPOS        int      `json:"billing_pos"`
+	POSPOS            int      `json:"pos_pos"`
+	AdminEmail        string   `json:"admin_email"`
+	AdminName         string   `json:"admin_name"`
+	AdminPassword     string   `json:"-"`
+	MasterPassword    string   `json:"-"`
+	Port              int      `json:"port"`
+	CallbackPort      int      `json:"callback_port"`
+	InitDB            string   `json:"init_db"`
 }
 
 var slugInvalid = regexp.MustCompile(`[^a-z0-9]+`)
