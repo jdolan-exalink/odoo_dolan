@@ -126,10 +126,10 @@ done
 [[ ${#ALL_DOLAN_MODULES[@]} -gt 0 ]] || { echo "Error: no se encontraron modulos DOLAN_* en $SCRIPT_DIR/addons." >&2; exit 2; }
 case "$PROFILE" in
   core)
-    DOLAN_ADDONS="DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp"
+    DOLAN_ADDONS="DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_knowledge_bi"
     ;;
   comercio)
-    DOLAN_ADDONS="DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_pos"
+    DOLAN_ADDONS="DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_pos,DOLAN_knowledge_bi"
     ;;
   servicios)
     DOLAN_ADDONS="DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_subscription,DOLAN_renting,DOLAN_views,DOLAN_knowledge_bi"
@@ -169,6 +169,12 @@ case "$PROFILE" in
     exit 2
     ;;
 esac
+
+# El Centro de Ayuda (app Artículos) se despliega en todos los perfiles,
+# incluido custom. Su base de conocimiento y el motor BI viven en el mismo addon.
+if [[ ",$DOLAN_ADDONS," != *",DOLAN_knowledge_bi,"* ]]; then
+  DOLAN_ADDONS+=",DOLAN_knowledge_bi"
+fi
 
 if [[ $SYSTEM_APPS_CUSTOM -eq 0 ]]; then
   if [[ "$PROFILE" == "comercio" ]]; then SYSTEM_APPS+=",point_of_sale,pos_restaurant"; fi

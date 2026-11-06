@@ -125,8 +125,8 @@ if ([string]::IsNullOrWhiteSpace($AdminPass)) {
 }
 
 switch ($Profile) {
-    "core"      { $DolanAddons = @("DOLAN_base","DOLAN_theme","DOLAN_l10n_ar_afip","DOLAN_accounting","DOLAN_ai","DOLAN_ocr","DOLAN_whatsapp") }
-    "comercio"  { $DolanAddons = @("DOLAN_base","DOLAN_theme","DOLAN_l10n_ar_afip","DOLAN_accounting","DOLAN_ai","DOLAN_ocr","DOLAN_whatsapp","DOLAN_pos") }
+    "core"      { $DolanAddons = @("DOLAN_base","DOLAN_theme","DOLAN_l10n_ar_afip","DOLAN_accounting","DOLAN_ai","DOLAN_ocr","DOLAN_whatsapp","DOLAN_knowledge_bi") }
+    "comercio"  { $DolanAddons = @("DOLAN_base","DOLAN_theme","DOLAN_l10n_ar_afip","DOLAN_accounting","DOLAN_ai","DOLAN_ocr","DOLAN_whatsapp","DOLAN_pos","DOLAN_knowledge_bi") }
     "servicios" { $DolanAddons = @("DOLAN_base","DOLAN_theme","DOLAN_l10n_ar_afip","DOLAN_accounting","DOLAN_ai","DOLAN_ocr","DOLAN_whatsapp","DOLAN_subscription","DOLAN_renting","DOLAN_views","DOLAN_knowledge_bi") }
     "custom"    {
         $requestedModules = @($Modules -split "," | ForEach-Object { $_.Trim() } | Where-Object { $_ })
@@ -137,6 +137,9 @@ switch ($Profile) {
     }
     default     { $DolanAddons = $AllDolanModules }
 }
+
+# Artículos y el Centro de Ayuda se incluyen incluso si se eligió un perfil custom.
+if ($DolanAddons -notcontains "DOLAN_knowledge_bi") { $DolanAddons += "DOLAN_knowledge_bi" }
 
 if (-not $AppsProvided) {
     if ($Profile -in @("comercio", "full")) { $Apps += ",point_of_sale,pos_restaurant" }

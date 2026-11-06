@@ -60,13 +60,13 @@ Se solicitan razón social, nombre corto, CUIT, domicilio, localidad, responsabi
 
 | Perfil | Incluye |
 |---|---|
-| `core` | Facturación ARCA, ventas, remitos/stock, WhatsApp, IA/OCR y tema. |
+| `core` | Facturación ARCA, ventas, remitos/stock, WhatsApp, IA/OCR, tema y Centro de Ayuda **Artículos**. |
 | `comercio` | `core` + Punto de Venta. |
-| `servicios` | `core` + Suscripciones, Alquileres y BI. |
+| `servicios` | `core` + Suscripciones y Alquileres. |
 | `full` | Catálogo completo DOLAN y aplicaciones CE de negocio. |
-| `custom` | Selección múltiple de los módulos DOLAN disponibles en `addons/DOLAN_*`. |
+| `custom` | Selección múltiple de los módulos DOLAN disponibles en `addons/DOLAN_*`; Artículos se agrega automáticamente. |
 
-El catálogo actual contiene 14 carpetas con manifiesto. Odoo puede instalar dependencias adicionales declaradas en los manifiestos; por ejemplo, `DOLAN_ai` depende de BI y cotizaciones.
+El Centro de Ayuda de **Artículos** se instala en todos los perfiles, incluido `custom`. Actualmente comparte addon con el motor de Tableros BI (`DOLAN_knowledge_bi`), por lo que los perfiles `core` y `comercio` también incluyen ese motor. El catálogo actual contiene 14 carpetas con manifiesto. Odoo puede instalar dependencias adicionales declaradas en los manifiestos; por ejemplo, `DOLAN_ai` depende de BI y cotizaciones.
 
 ## Qué queda configurado
 
