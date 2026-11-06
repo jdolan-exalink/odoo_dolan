@@ -444,8 +444,8 @@ func (m *wizardModel) saveCurrent() error {
 	case "admin_name":
 		m.cfg.AdminName = v
 	case "admin_password":
-		if len(v) < 10 {
-			return errors.New("usá al menos 10 caracteres")
+		if len(v) < 8 {
+			return errors.New("usá al menos 8 caracteres")
 		}
 		m.cfg.AdminPassword = v
 	case "admin_password_confirm":

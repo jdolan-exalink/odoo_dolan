@@ -153,8 +153,8 @@ func (c Config) Validate(requireCompany bool) error {
 	if _, err := mail.ParseAddress(c.AdminEmail); err != nil || !strings.Contains(c.AdminEmail, ".") {
 		return errors.New("indicá un correo de administrador válido")
 	}
-	if len(c.AdminPassword) < 10 {
-		return errors.New("la contraseña del administrador debe tener al menos 10 caracteres")
+	if len(c.AdminPassword) < 8 {
+		return errors.New("la contraseña del administrador debe tener al menos 8 caracteres")
 	}
 	if c.InitDB == "" {
 		return errors.New("no se pudo generar el nombre de la base")
