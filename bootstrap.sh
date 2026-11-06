@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Bootstrap para instalar DOLAN ERP en Debian/Ubuntu limpios desde GitHub.
-# Uso: curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | sudo bash
+# Como root: curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash
 set -Eeuo pipefail
 
 REPOSITORY="https://github.com/jdolan-exalink/odoo_dolan.git"
@@ -12,6 +12,9 @@ usage() {
 Instalador inicial DOLAN ERP (Debian / Ubuntu)
 
 Uso desde un servidor con curl:
+  curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash
+
+Si estás conectado como un usuario con sudo:
   curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | sudo bash
 
 El instalador instala herramientas base y Docker Engine + Docker Compose si faltan,
@@ -28,7 +31,7 @@ fi
 fail() { printf 'Error: %s\n' "$*" >&2; exit 1; }
 info() { printf '\n==> %s\n' "$*"; }
 
-[[ "$(id -u)" -eq 0 ]] || fail "Ejecutá el comando con sudo: curl ... | sudo bash"
+[[ "$(id -u)" -eq 0 ]] || fail "Ejecutá como root o usá sudo: curl ... | sudo bash"
 [[ -r /dev/tty ]] || fail "Se necesita una terminal interactiva. Usá SSH con TTY (ssh -t) y volvé a ejecutar el comando."
 [[ -r /etc/os-release ]] || fail "No pude identificar el sistema operativo. Se admite Debian 12+ y Ubuntu 22.04+."
 # shellcheck disable=SC1091

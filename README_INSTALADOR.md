@@ -4,11 +4,13 @@ Esta guía cubre el bootstrap de Linux [`bootstrap.sh`](bootstrap.sh), el instal
 
 ## Instalación directa en Debian o Ubuntu
 
-En un servidor nuevo con conexión a Internet, `curl`, `sudo` y una sesión SSH interactiva, ejecutá:
+En un servidor nuevo con conexión a Internet y una sesión SSH interactiva, ejecutá como `root`:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash
 ```
+
+Si entraste con un usuario que tiene `sudo` instalado, usá `curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | sudo bash`.
 
 El bootstrap verifica que el sistema sea Debian o Ubuntu, instala las herramientas base que falten y, si no encuentra Docker Engine con `docker compose`, configura el repositorio APT oficial de Docker e instala Engine, Buildx y Compose. No elimina paquetes Docker existentes ni borra datos para resolver conflictos: se detiene y los informa para evitar tocar un runtime que ya esté en uso. Después descarga el repositorio temporalmente, abre el asistente interactivo y guarda el despliegue en `/opt/dolan/deployments/<nombre-corto>`.
 
@@ -33,7 +35,7 @@ El acceso a esos repositorios y registros de contenedores debe estar permitido p
 ### Linux, Ubuntu, Debian o WSL2
 
 - Bash 4 o superior.
-- Para el comando directo: Debian o Ubuntu con APT, `curl`, `sudo` y TTY. El bootstrap instala Git, Python 3, `dialog`, utilidades POSIX, Docker Engine y el plugin `docker compose` cuando faltan.
+- Para el comando directo: Debian o Ubuntu con APT, `curl` y TTY; iniciá como root o usá una cuenta con `sudo`. El bootstrap instala Git, Python 3, `dialog`, utilidades POSIX, Docker Engine y el plugin `docker compose` cuando faltan.
 - Para ejecutar `crear_odoo20.sh` directamente: Docker Engine y el plugin `docker compose`, Git, Python 3, `iconv` y utilidades POSIX habituales.
 - Acceso a Internet para clonar repositorios, descargar imágenes y dependencias.
 
