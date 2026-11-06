@@ -12,7 +12,7 @@ Addon `pos_scale_management` para administrar balanzas por empresa y sucursal, u
 - Validación de PLU requerido, duplicados y longitud.
 - Previsualización con snapshot JSON, advertencias y errores.
 - Interfaz de adaptadores, exportación individual y lote ZIP por sucursal con `manifest.json`; el lote aborta completo ante errores. Descargas autenticadas y hash SHA-256, con estado de descarga separado del estado de importación informado manualmente.
-- Perfiles de códigos de barras configurables por longitud, prefijo, posiciones, peso/importe, decimales y dígito EAN-13. No se alteró el escáner del POS.
+- Perfiles de códigos de barras configurables por longitud, prefijo, posiciones, peso/importe, decimales y dígito EAN-13. El POS intercepta etiquetas que coinciden con el perfil de la sucursal, resuelve PLU y agrega producto con peso o importe leído; las etiquetas comunes siguen usando el escáner nativo. PLU duplicados entre balanzas de una misma sucursal se rechazan como ambiguos.
 
 ## Compatibilidad Kretz/iTegra: pendiente de evidencia
 
@@ -23,7 +23,7 @@ Para habilitar el adaptador hacen falta un archivo real aceptado por iTegra, el 
 ## Pendiente del PRD
 
 - Implementar el serializador Kretz/iTegra y superar AC-06, AC-12 y AC-13 con evidencia real.
-- Integrar el perfil de etiquetas con el motor de escaneo del POS existente y pasar regresión con códigos normales (AC-10 y AC-11). El módulo de lectura de inventario `DOLAN_stock_mrp` no sustituye esa integración.
+- Probar el perfil de etiquetas en navegador/lector real y pasar regresión con códigos normales (AC-10 y AC-11). La integración requiere asignar un perfil y PLU a la balanza/sucursal.
 - Probar el flujo completo en navegador Windows y Android y revisar permisos con usuarios reales (AC-08, AC-09 y AC-16).
 - Agregar el panel de indicadores y ampliar la batería para impuestos, vigencias de listas, redondeos, variantes y permisos multiempresa.
 - Manual operativo con capturas y documento de compatibilidad por versión.

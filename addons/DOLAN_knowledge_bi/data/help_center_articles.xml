@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="knowledge_article_help_center" model="dolan.knowledge.article">
+            <field name="name">Centro de Ayuda DOLAN ERP</field>
+            <field name="icon">📚</field>
+            <field name="sequence">1</field>
+            <field name="category">shared</field>
+            <field name="is_favorite" eval="True"/>
+            <field name="is_rag_indexed" eval="True"/>
+            <field name="ai_summary">Índice de guías para instalar, configurar y operar impresoras POS, terminales de cobro, descuentos, facturación ARCA, certificados, contabilidad, compras, gastos y Punto de Venta.</field>
+            <field name="body"><![CDATA[
+                <h2>👋 Bienvenido al Centro de Ayuda</h2>
+                <p>Guías prácticas de la suite DOLAN. Cada artículo explica <strong>dónde entrar, qué configurar, cómo operar y qué revisar si algo falla</strong>.</p>
+                <div class="alert alert-info"><strong>🧭 Cómo usar este índice</strong><br/>Abrí los sub-artículos de esta página desde la pestaña <em>Sub-Artículos</em> o elegí la vista de tarjetas/lista de Artículos. Usá el buscador para localizar términos como “CAE”, “puente”, “diario” o “supervisor”.</div>
+                <h3>📖 Guías disponibles</h3>
+                <ul>
+                    <li>🖨️ <strong>Impresoras del POS:</strong> ePOS Epson, ESC/POS genéricas, cocina y puente de red.</li>
+                    <li>💳 <strong>Terminales de cobro:</strong> Clover, Mercado Pago Point y QR, vinculación, diario y operación segura.</li>
+                    <li>🏷️ <strong>Promociones y descuentos:</strong> campañas, límites, autorizaciones, DNI y devoluciones.</li>
+                    <li>🧾 <strong>Facturación ARCA:</strong> facturas A/B/C, notas, CAE, borradores y empresas.</li>
+                    <li>🔐 <strong>Certificados ARCA:</strong> ambiente, archivos X.509, WSAA y Padrón por CUIT.</li>
+                    <li>📊 <strong>Contabilidad:</strong> diarios, pagos, conciliación, informes y cierres.</li>
+                    <li>🛒 <strong>Compras:</strong> solicitudes de presupuesto, pedidos, recepciones y facturas de proveedor.</li>
+                    <li>🧮 <strong>Gastos:</strong> carga, comprobantes, aprobación y registro contable.</li>
+                    <li>🛍️ <strong>Punto de Venta:</strong> caja, sesiones, productos, cobros, cierres y resolución de incidencias.</li>
+                </ul>
+                <h3>✅ Recorrido recomendado</h3>
+                <p><strong>Primera configuración:</strong> Empresas y permisos → Certificados ARCA → diarios y cuentas → productos/impuestos → POS e impresoras/terminales → prueba controlada → operación diaria.</p>
+                <p><em>Las capturas se incorporarán en una siguiente pasada sobre pantallas reales. Mientras tanto, cada guía usa nombres de menús vigentes, pasos numerados y avisos visuales para evitar confundir pruebas con operaciones reales.</em></p>
+            ]]></field>
+        </record>
+
+        <record id="knowledge_article_help_printers" model="dolan.knowledge.article">
+            <field name="name">Impresoras POS: recibos, cocina y puente ESC/POS</field>
+            <field name="icon">🖨️</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" ref="knowledge_article_help_center"/>
+            <field name="category">shared</field>
+            <field name="is_rag_indexed" eval="True"/>
+            <field name="ai_summary">Configurar impresoras por Punto de Venta en ePOS Print, distinguir Epson ePOS de impresoras ESC/POS genéricas mediante puente, probar tickets y asignar impresoras de cocina por categorías.</field>
+            <field name="body"><![CDATA[
+                <h2>🖨️ Configurar recibos y comandas</h2>
+                <p>La app <strong>ePOS Print</strong> prepara las impresoras nativas del POS para imprimir desde el navegador de la caja. Configurá por separado recibos de cliente y preparación/cocina.</p>
+                <h3>1. Crear la impresora</h3>
+                <ol>
+                    <li>Abrí <strong>ePOS Print → Impresoras</strong> y creá un registro.</li>
+                    <li>Indicá nombre, uso (<em>Recibo</em> o <em>Preparación</em>), ancho del papel y protocolo.</li>
+                    <li>Para Epson compatible, elegí el protocolo <strong>Epson ePOS</strong> e ingresá host/IP y puerto que informa la impresora.</li>
+                    <li>Para una impresora genérica ESC/POS, seleccioná <strong>ESC/POS por puente</strong>. El navegador se conecta al servicio puente y el servicio envía el ticket por TCP a la impresora.</li>
+                </ol>
+                <div class="alert alert-warning"><strong>🔒 Puente ESC/POS</strong><br/>El host/puerto de destino se define en el despliegue del servicio. No publiques el puerto del puente en Internet. Permití únicamente los orígenes Odoo configurados y revisá que el puente alcance la IP de la impresora.</div>
+                <h3>2. Asignarla a una caja</h3>
+                <ol>
+                    <li>Entrá en <strong>ePOS Print → Configurar por Punto de Venta</strong> y abrí la caja correspondiente.</li>
+                    <li>Activá impresoras de recibos o de cocina/comandas.</li>
+                    <li>Seleccioná las impresoras. Para preparación, vinculá las categorías de productos que debe recibir cada estación.</li>
+                    <li>Guardá y recargá la sesión del POS para que tome la nueva configuración.</li>
+                </ol>
+                <h3>3. Probar</h3>
+                <p>Desde <strong>ePOS Print → Impresoras</strong>, abrí el equipo y usá <strong>Imprimir ticket de prueba</strong>. Confirmá que el navegador tenga permiso de red local cuando corresponda y verificá el papel físicamente.</p>
+                <ul><li>✅ Si imprime: revisá ancho, márgenes y corte.</li><li>🟠 Si el puente responde pero no sale papel: verificá IP, puerto 9100, cable/red, papel y estado del equipo.</li><li>🟠 El puente TCP genérico confirma el envío, pero no detecta de forma fiable papel/tapa abierta.</li></ul>
+                <p><strong>Flujo:</strong> POS en navegador → Epson ePOS o servicio puente → impresora de red.</p>
+            ]]></field>
+        </record>
+
+        <record id="knowledge_article_help_terminals" model="dolan.knowledge.article">
+            <field name="name">Terminales de cobro: Clover y Mercado Pago</field>
+            <field name="icon">💳</field>
+            <field name="sequence">20</field>
+            <field name="parent_id" ref="knowledge_article_help_center"/>
+            <field name="category">shared</field>
+            <field name="is_rag_indexed" eval="True"/>
+            <field name="ai_summary">Alta de Clover, Mercado Pago Point y Mercado Pago QR desde Terminales de cobro; asignar compañía y diario, emparejar Clover en el navegador y consultar operaciones.</field>
+            <field name="body"><![CDATA[
+                <h2>💳 Dar de alta un equipo de cobro</h2>
+                <p>Abrí la app <strong>Terminales de cobro → Terminales</strong>. Cada registro representa un equipo/método en una empresa. En comercios vinculá el equipo a la caja; en restaurantes se pueden registrar varias terminales y asignarlas según el flujo de cada caja.</p>
+                <h3>Datos comunes</h3>
+                <ol>
+                    <li>Creá una terminal y asigná <strong>Nombre</strong>, <strong>Empresa</strong> y proveedor.</li>
+                    <li>Seleccioná el <strong>Diario de cobro</strong> de esa misma empresa. Elegí uno existente o creá el diario bancario/de caja adecuado.</li>
+                    <li>Guardá y confirmá en la lista que empresa, diario y proveedor sean los esperados.</li>
+                </ol>
+                <h3>🍀 Clover</h3>
+                <ol>
+                    <li>Elegí Clover e ingresá la IP privada de la terminal, el puerto de conexión y el identificador de la app de integración.</li>
+                    <li>Desde la ficha, pulsá <strong>Integrar ahora</strong> y completá el emparejamiento solicitado por el Clover. El token de acceso se guarda cifrado en el servidor.</li>
+                    <li>Volvé a la ficha y confirmá el estado <strong>Emparejado</strong>. Si cambia la IP o se revoca el vínculo, repetí la integración.</li>
+                </ol>
+                <h3>🟦 Mercado Pago</h3>
+                <p>Para <strong>Point</strong>, cargá el identificador de terminal; para <strong>QR</strong>, el identificador externo de la caja QR. Verificá que el dispositivo/caja pertenezca a la cuenta de Mercado Pago y empresa que se registró.</p>
+                <div class="alert alert-danger"><strong>⚠️ Prueba Clover de $10</strong><br/>El botón de prueba envía un cobro real de $10 ARS a la terminal. Usalo solo con autorización, confirmá el resultado en el dispositivo y en el diario, y conciliá o devolvé el importe según el procedimiento de tu adquirente. Si el resultado queda incierto, no repitas el cobro hasta verificar la terminal.</div>
+                <h3>📋 Seguimiento</h3>
+                <p>Consultá <strong>Terminales de cobro → Operaciones</strong> para revisar estado, importe, referencia y diario asociado. Un estado dudoso requiere verificar el comprobante del proveedor antes de reintentar.</p>
+            ]]></field>
+        </record>
+
+        <record id="knowledge_article_help_discounts" model="dolan.knowledge.article">
+            <field name="name">Promociones y descuentos en el Punto de Venta</field>
+            <field name="icon">🏷️</field>
+            <field name="sequence">30</field>
+            <field name="parent_id" ref="knowledge_article_help_center"/>
+            <field name="category">shared</field>
+            <field name="is_rag_indexed" eval="True"/>
+            <field name="ai_summary">Crear y publicar campañas de descuento, configurar límites manuales, aprobar excepciones con supervisor, usar beneficios por DNI y revertir descuentos con devoluciones POS.</field>
+            <field name="body"><![CDATA[
+                <h2>🏷️ Administrar campañas y descuentos</h2>
+                <h3>Crear una promoción</h3>
+                <ol>
+                    <li>Entrá a <strong>Punto de Venta → Promociones DOLAN → Campañas</strong> y creá un borrador.</li>
+                    <li>Definí empresa, cajas/sucursales, prioridad, vigencia, zona horaria, días y horarios.</li>
+                    <li>Añadí reglas por producto/categoría, exclusiones, cliente, cantidad mínima y beneficio.</li>
+                    <li>Configurá presupuesto y máximo por pedido. Probá el alcance con el simulador y publicá una versión.</li>
+                </ol>
+                <p>Una campaña publicada queda versionada. Para cambiar condiciones, pausala y publicá una nueva versión; no edites manualmente aplicaciones ya registradas.</p>
+                <h3>🙋 Descuento manual y supervisor</h3>
+                <p>En cada POS configurá el límite de caja. El cajero ingresa un motivo; si excede su límite, un supervisor diferente aprueba desde <strong>Promociones DOLAN → Autorizaciones</strong>. Luego el cajero vuelve a iniciar el cobro y revisa el total.</p>
+                <h3>🪪 Beneficio por DNI</h3>
+                <p>Un administrador crea el beneficio desde <strong>Promociones DOLAN → Beneficios de empleados</strong>, define partner, DNI, empresa, cajas, productos, vigencia y topes. En la caja, el cajero pulsa <strong>Beneficio empleado</strong> e ingresa DNI antes del cobro.</p>
+                <div class="alert alert-warning"><strong>📡 Conexión y límites actuales</strong><br/>Las campañas y beneficios sujetos a validación del servidor requieren conexión. La aprobación de supervisor para beneficios por DNI aún no está habilitada. Los descuentos por medio de pago no se publican sin confirmación verificable del adquirente. Si una campaña supera el presupuesto o la validación falla, verificá el total antes de cobrar.</div>
+                <h3>↩️ Devoluciones y auditoría</h3>
+                <p>Para revertir, usá una devolución POS real con la línea original. Revisá <strong>Aplicaciones</strong>, <strong>Auditoría</strong>, <strong>Autorizaciones</strong> y <strong>Alertas</strong> para seguir el historial.</p>
+            ]]></field>
+        </record>
+
+        <record id="knowledge_article_help_billing" model="dolan.knowledge.article">
+            <field name="name">Facturación ARCA: facturas, notas y CAE</field>
+            <field name="icon">🧾</field>
+            <field name="sequence">40</field>
+            <field name="parent_id" ref="knowledge_article_help_center"/>
+            <field name="category">shared</field>
+            <field name="is_rag_indexed" eval="True"/>
+            <field name="ai_summary">Crear facturas A, B o C y notas de crédito/débito en Facturación, revisar cliente, responsabilidad fiscal, compañía, punto de venta, impuestos y CAE.</field>
+            <field name="body"><![CDATA[
+                <h2>🧾 Preparar y emitir un comprobante</h2>
+                <ol>
+                    <li>Elegí la compañía correcta en el selector multiempresa. Revisá que el contacto tenga CUIT y responsabilidad ARCA configurada.</li>
+                    <li>Abrí <strong>Facturación ARCA → Nueva</strong>. También podés consultar facturas existentes en el listado.</li>
+                    <li>Seleccioná cliente, moneda, fecha, productos/cantidades, precios e impuestos. Verificá que el tipo A/B/C corresponda a la condición fiscal de emisor y receptor.</li>
+                    <li>Guardá como borrador y compará base imponible, IVA y total con el resultado esperado. Para factura B a consumidor/cliente según corresponda, revisá la presentación de importes con IVA incluido.</li>
+                    <li>Solicitá CAE cuando el comprobante esté completo y aprobado. Confirmá número, punto de venta, fecha, importe y respuesta de ARCA.</li>
+                </ol>
+                <div class="alert alert-danger"><strong>🚦 CAE significa emisión fiscal</strong><br/>Al obtener CAE, el comprobante queda autorizado en ARCA. No uses comprobantes reales para pruebas. Si la respuesta es incierta, consultá el estado/último autorizado antes de volver a solicitar para evitar duplicados.</div>
+                <h3>📝 Notas de crédito y débito</h3>
+                <p>Creá la nota desde la factura original cuando corresponda; revisá tipo, compañía, punto de venta, documento asociado e importes. Una nota autorizada no se borra para corregirla: seguí el procedimiento fiscal aplicable.</p>
+                <h3>✅ Lista de verificación</h3>
+                <ul><li>Compañía y diario correctos.</li><li>Cliente y responsabilidad ARCA válidos.</li><li>Numeración y punto de venta habilitados.</li><li>Impuestos y moneda revisados.</li><li>Estado CAE visible; si no hay CAE, tratá el documento como borrador/no autorizado.</li></ul>
+                <p>Para cargar certificados y seleccionar el ambiente, consultá <strong>Certificados ARCA: conexión y Padrón</strong>.</p>
+            ]]></field>
+        </record>
+
+        <record id="knowledge_article_help_arca_certificates" model="dolan.knowledge.article">
+            <field name="name">Certificados ARCA: ambiente, conexión y Padrón</field>
+            <field name="icon">🔐</field>
+            <field name="sequence">50</field>
+            <field name="parent_id" ref="knowledge_article_help_center"/>
+            <field name="category">shared</field>
+            <field name="is_rag_indexed" eval="True"/>
+            <field name="ai_summary">Configurar ambiente ARCA, certificado X.509 y clave privada por empresa, probar WSAA/WSFE y elegir certificado compartido para consultar Padrón por CUIT.</field>
+            <field name="body"><![CDATA[
+                <h2>🔐 Conectar la empresa con ARCA</h2>
+                <p>Los certificados y claves privadas son credenciales sensibles. Cargalos únicamente en la instancia autorizada; no los adjuntes a artículos, tickets, repositorios ni chats.</p>
+                <h3>1. Preparar certificado</h3>
+                <ol>
+                    <li>En el portal ARCA generá/asociá el certificado al CUIT emisor y habilitá los servicios web requeridos.</li>
+                    <li>Tené disponibles el certificado público X.509 y su clave privada correspondiente. No renombres ni intercambies archivos de otra empresa sin verificar la autorización.</li>
+                    <li>En Odoo, abrí <strong>Ajustes → Contabilidad → ARCA / AFIP Facturación Electrónica Argentina (DOLAN)</strong>.</li>
+                </ol>
+                <h3>2. Ambiente y prueba</h3>
+                <ol>
+                    <li>Elegí <strong>Homologación</strong> para pruebas o <strong>Producción</strong> para comprobantes fiscales reales.</li>
+                    <li>Seleccioná el certificado y la clave de la empresa, guardá los ajustes y pulsá <strong>Probar Conexión ARCA/AFIP</strong>.</li>
+                    <li>Si falta certificado, se puede iniciar la solicitud CSR desde <strong>Generar Solicitud CSR (X.509)</strong>; luego hay que registrar el certificado emitido en ARCA.</li>
+                </ol>
+                <h3>3. Consulta manual de Padrón por CUIT</h3>
+                <p>La consulta se ejecuta desde el contacto con el botón de búsqueda manual. En Ajustes se puede seleccionar el <strong>Certificado compartido para consultas de Padrón ARCA</strong>; elegí uno autorizado para ese servicio y comprobá razón social, domicilio y responsabilidad antes de guardar el contacto.</p>
+                <div class="alert alert-danger"><strong>🛡️ Producción no es modo de prueba</strong><br/>La consulta del Padrón es de lectura, pero la solicitud de CAE en producción emite un comprobante fiscal. Antes de facturar, verificá CUIT representado, punto de venta, ambiente, numeración e impuestos.</div>
+                <h3>Si falla</h3>
+                <ul><li>Revisá vigencia y correspondencia entre certificado, clave y CUIT.</li><li>Confirmá que el servicio WSFE/WSAA esté delegado en ARCA.</li><li>Verificá fecha/hora del servidor y ambiente seleccionado.</li><li>Leé el detalle de la conexión; no repitas una emisión si la respuesta quedó incierta.</li></ul>
+            ]]></field>
+        </record>
+
+        <record id="knowledge_article_help_accounting" model="dolan.knowledge.article">
+            <field name="name">Contabilidad: diarios, pagos, conciliación e informes</field>
+            <field name="icon">📊</field>
+            <field name="sequence">60</field>
+            <field name="parent_id" ref="knowledge_article_help_center"/>
+            <field name="category">shared</field>
+            <field name="is_rag_indexed" eval="True"/>
+            <field name="ai_summary">Uso diario de Facturación y Contabilidad, selección de empresa, diarios bancarios, pagos, conciliación, cierres e informes contables de Odoo DOLAN.</field>
+            <field name="body"><![CDATA[
+                <h2>📊 Orden de trabajo contable</h2>
+                <p>Elegí primero la compañía correcta en el selector. En instalaciones multiempresa, diarios y movimientos pertenecen a una empresa; no los crees en otra compañía por error.</p>
+                <h3>🏦 Diarios y cuentas</h3>
+                <p>Desde <strong>Contabilidad → Configuración</strong>, revisá diarios de banco, efectivo, ventas y compras. Para cada diario bancario confirmá moneda, empresa, cuentas contables y métodos de pago. En las terminales de cobro, seleccioná el diario donde deben registrarse las operaciones.</p>
+                <h3>💰 Registrar pagos</h3>
+                <ol>
+                    <li>Desde la factura, usá <strong>Registrar pago</strong> y seleccioná diario, método, importe y fecha.</li>
+                    <li>Para un pago parcial, registrá solo el importe recibido; el saldo permanece abierto.</li>
+                    <li>Validá que el asiento y la factura queden conciliados como corresponde.</li>
+                </ol>
+                <h3>🔎 Conciliar bancos</h3>
+                <p>Importá el extracto del banco al diario adecuado, emparejá cada línea con pagos/movimientos existentes y revisá diferencias antes de validar. No crees un pago duplicado para resolver una línea que ya está contabilizada.</p>
+                <h3>📈 Informes y cierre</h3>
+                <p>Usá <strong>Contabilidad → Informes</strong> para Libro Diario, Mayor, balance de sumas y saldos, cuentas por cobrar/pagar e informes fiscales. Filtrá por compañía y fechas, revisá borradores y asientos sin conciliar antes del cierre. Conservá respaldo/exportación según la política contable de la empresa.</p>
+                <div class="alert alert-info"><strong>💡 Consejo</strong><br/>Para comparar empresas, activá las compañías deseadas en el selector y confirmá que el informe acepte el contexto multiempresa; un diario individual sigue siendo de una sola compañía.</div>
+            ]]></field>
+        </record>
+
+        <record id="knowledge_article_help_purchases" model="dolan.knowledge.article">
+            <field name="name">Compras: proveedores, pedidos y recepción</field>
+            <field name="icon">🛒</field>
+            <field name="sequence">70</field>
+            <field name="parent_id" ref="knowledge_article_help_center"/>
+            <field name="category">shared</field>
+            <field name="is_rag_indexed" eval="True"/>
+            <field name="ai_summary">Crear solicitudes de presupuesto y pedidos de compra, seleccionar proveedor, productos, impuestos y fechas, recibir mercancía y registrar factura del proveedor.</field>
+            <field name="body"><![CDATA[
+                <h2>🛒 De una cotización a la compra recibida</h2>
+                <ol>
+                    <li>Abrí <strong>Compras → Solicitudes de presupuesto</strong> y creá una solicitud para el proveedor correcto.</li>
+                    <li>Elegí empresa, proveedor, moneda, fecha prevista y líneas. Confirmá cantidades, precio, impuestos y condiciones.</li>
+                    <li>Enviá la solicitud al proveedor si el correo está configurado. Compará cotizaciones y registrá la adjudicación según el proceso interno.</li>
+                    <li>Confirmá el pedido cuando esté aprobado. La recepción se genera desde el pedido o desde Inventario.</li>
+                    <li>Recibí las cantidades reales; registrá faltantes/daños antes de validar la recepción.</li>
+                    <li>Creá o cargá la factura de proveedor, verificá número fiscal, CUIT, impuestos y total, y luego registrá el pago.</li>
+                </ol>
+                <h3>📦 Control de recepción y factura</h3>
+                <p>La recepción física y la factura del proveedor son documentos distintos. Conciliá pedido, recepción y factura; no marques recibido un producto que aún no llegó. Para servicios sin movimiento de stock, revisá que la línea y cuenta sean apropiadas.</p>
+                <div class="alert alert-warning"><strong>🧾 Impuestos argentinos</strong><br/>No dupliques el IVA: verificá si los precios del proveedor son netos o finales y seleccioná los impuestos de compra correctos para la empresa. Si el comprobante no coincide con la factura recibida, dejalo en borrador hasta resolverlo.</div>
+            ]]></field>
+        </record>
+
+        <record id="knowledge_article_help_expenses" model="dolan.knowledge.article">
+            <field name="name">Gastos: carga, comprobantes y aprobación</field>
+            <field name="icon">🧮</field>
+            <field name="sequence">80</field>
+            <field name="parent_id" ref="knowledge_article_help_center"/>
+            <field name="category">shared</field>
+            <field name="is_rag_indexed" eval="True"/>
+            <field name="ai_summary">Cargar gastos con comprobante, completar empleado, fecha, importe, producto/categoría y empresa, enviar a aprobación, contabilizar y pagar o reembolsar.</field>
+            <field name="body"><![CDATA[
+                <h2>🧮 Registrar un gasto correctamente</h2>
+                <ol>
+                    <li>Entrá a <strong>Gastos → Mis gastos</strong> (o la opción equivalente disponible para tu rol) y creá un gasto.</li>
+                    <li>Adjuntá la imagen/PDF del comprobante. Completá descripción, fecha, importe, moneda, producto/categoría de gasto, empresa y forma de pago.</li>
+                    <li>Revisá impuestos y datos fiscales contra el comprobante original. No uses el OCR como aprobación automática: confirmá importe, IVA y proveedor.</li>
+                    <li>Guardá y enviá el gasto al responsable. Respondé observaciones o corregí el registro antes de reenviarlo.</li>
+                    <li>El aprobador verifica política, comprobante, compañía y cuenta; luego aprueba y contabiliza según el flujo configurado.</li>
+                    <li>Registrá el pago/reembolso en el diario correspondiente y comprobá que quede conciliado.</li>
+                </ol>
+                <h3>🔐 Permisos y configuración</h3>
+                <p>Los gastos pueden depender de Empleados (HR) y de grupos específicos. Si el menú no aparece, pedí al administrador que revise módulos instalados y permisos; ocultar una aplicación en el escritorio no concede ni quita acceso contable.</p>
+                <div class="alert alert-info"><strong>📎 Buen hábito</strong><br/>Conservá el original legible y cargá un gasto por comprobante. Si una factura debe contabilizarse como factura de proveedor, usá Compras/Contabilidad en vez de un reembolso de empleado.</div>
+            ]]></field>
+        </record>
+
+        <record id="knowledge_article_help_pos" model="dolan.knowledge.article">
+            <field name="name">Punto de Venta: apertura, ventas y cierre</field>
+            <field name="icon">🛍️</field>
+            <field name="sequence">90</field>
+            <field name="parent_id" ref="knowledge_article_help_center"/>
+            <field name="category">shared</field>
+            <field name="is_rag_indexed" eval="True"/>
+            <field name="ai_summary">Configurar cajas, abrir sesión POS, vender y cobrar, aplicar descuentos, imprimir recibos/comandas, cerrar sesión y tratar fallos de red sin duplicar operaciones.</field>
+            <field name="body"><![CDATA[
+                <h2>🛍️ Rutina de caja</h2>
+                <h3>Antes de abrir</h3>
+                <ol>
+                    <li>En <strong>Punto de Venta → Configuración</strong>, verificá empresa, diario de efectivo/banco, métodos de pago, productos y categorías.</li>
+                    <li>Confirmá impresoras y estaciones de cocina asignadas. Si se cobra con terminal, verificá diario y estado de vínculo.</li>
+                    <li>Desde la caja, abrí una sesión y registrá el saldo inicial según el fondo real.</li>
+                </ol>
+                <h3>Durante la venta</h3>
+                <ol>
+                    <li>Buscá artículos o escaneá código; verificá cantidad, variante y precio.</li>
+                    <li>Seleccioná cliente cuando sea necesario para factura. Aplicá beneficios/promociones autorizados y revisá el total.</li>
+                    <li>En cobro, seleccioná el medio correcto. Esperá la respuesta de la terminal antes de repetir un intento.</li>
+                    <li>Entregá/imprimí el recibo; las comandas se dirigen por las categorías configuradas.</li>
+                </ol>
+                <h3>🔌 Si se corta la red</h3>
+                <p>Las operaciones locales estándar del POS pueden permanecer pendientes de sincronización, pero validaciones de campañas, beneficios y terminales requieren conexión. No dupliques una venta o cobro mientras su resultado sea incierto. Restablecé red, sincronizá y verificá la sesión, el pedido y el adquirente antes de reintentar.</p>
+                <h3>🌙 Cierre</h3>
+                <p>Contá efectivo, compará con los totales por método y registrá diferencias con una explicación. Cerrá la sesión y verificá que los pedidos se hayan sincronizado. Consultá el diario y operaciones para resolver pagos pendientes.</p>
+                <div class="alert alert-warning"><strong>✅ Antes de cerrar</strong><br/>Revisá ventas sin sincronizar, cobros pendientes/duplicados, saldo de caja, devoluciones y comprobantes que requieran factura fiscal.</div>
+            ]]></field>
+        </record>
+    </data>
+</odoo>

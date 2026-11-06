@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="weekday_monday" model="dolan.discount.weekday"><field name="name">Lunes</field><field name="weekday">0</field></record>
+    <record id="weekday_tuesday" model="dolan.discount.weekday"><field name="name">Martes</field><field name="weekday">1</field></record>
+    <record id="weekday_wednesday" model="dolan.discount.weekday"><field name="name">Miércoles</field><field name="weekday">2</field></record>
+    <record id="weekday_thursday" model="dolan.discount.weekday"><field name="name">Jueves</field><field name="weekday">3</field></record>
+    <record id="weekday_friday" model="dolan.discount.weekday"><field name="name">Viernes</field><field name="weekday">4</field></record>
+    <record id="weekday_saturday" model="dolan.discount.weekday"><field name="name">Sábado</field><field name="weekday">5</field></record>
+    <record id="weekday_sunday" model="dolan.discount.weekday"><field name="name">Domingo</field><field name="weekday">6</field></record>
+</odoo>

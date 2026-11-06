@@ -11,13 +11,18 @@ bloqueado hasta validar el formato con archivos reales e importación de prueba.
     """,
     'author': 'DOLAN Open Source',
     'license': 'LGPL-3',
-    'depends': ['base', 'product', 'stock', 'point_of_sale', 'barcodes'],
+    'depends': ['base', 'product', 'stock', 'point_of_sale', 'pos_stock', 'barcodes'],
     'data': [
         'security/scale_security.xml',
         'security/scale_access.xml',
         'data/scale_data.xml',
         'views/scale_views.xml',
     ],
+    'assets': {
+        'point_of_sale._assets_pos': [
+            'pos_scale_management/static/src/app/scale_barcode_pos.js',
+        ],
+    },
     'installable': True,
     'application': True,
     'auto_install': False,

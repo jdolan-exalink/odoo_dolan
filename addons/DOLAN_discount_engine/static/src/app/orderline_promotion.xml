@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="DOLAN_discount_engine.OrderlinePromotion" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension">
+        <xpath expr="//li[@t-if='vals.discount']" position="after">
+            <li t-foreach="vals.dolanPromotions" t-as="promotion" t-key="promotion_index" class="price-per-unit text-success">
+                <i class="oi oi-check pe-1" role="img" aria-label="Promoción aplicada"/>
+                <t t-out="promotion.name"/> · Ahorro <t t-out="promotion.amount"/>
+            </li>
+        </xpath>
+    </t>
+</templates>

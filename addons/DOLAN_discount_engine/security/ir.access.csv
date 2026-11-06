@@ -1,0 +1,45 @@
+id,name,model_id,group_id/id,operation,domain
+access_discount_campaign_manager,Campañas: administrador,dolan.discount.campaign,DOLAN_discount_engine.group_discount_manager,crud,"[('company_id', 'in', company_ids)]"
+access_discount_campaign_supervisor,Campañas: supervisor,dolan.discount.campaign,DOLAN_discount_engine.group_discount_supervisor,r,"[('company_id', 'in', company_ids)]"
+access_discount_campaign_cashier,Campañas: cajero,dolan.discount.campaign,DOLAN_discount_engine.group_discount_cashier,r,"[('company_id', 'in', company_ids)]"
+access_discount_rule_manager,Reglas: administrador,dolan.discount.rule,DOLAN_discount_engine.group_discount_manager,crud,"[('company_id', 'in', company_ids)]"
+access_discount_rule_supervisor,Reglas: supervisor,dolan.discount.rule,DOLAN_discount_engine.group_discount_supervisor,r,"[('company_id', 'in', company_ids)]"
+access_discount_rule_cashier,Reglas: cajero,dolan.discount.rule,DOLAN_discount_engine.group_discount_cashier,r,"[('company_id', 'in', company_ids)]"
+access_discount_application_manager,Aplicaciones: administrador,dolan.discount.application,DOLAN_discount_engine.group_discount_manager,r,"[('company_id', 'in', company_ids)]"
+access_discount_application_supervisor,Aplicaciones: supervisor,dolan.discount.application,DOLAN_discount_engine.group_discount_supervisor,r,"[('company_id', 'in', company_ids)]"
+access_discount_application_cashier,Aplicaciones: propias,dolan.discount.application,DOLAN_discount_engine.group_discount_cashier,r,"[('company_id', 'in', company_ids), ('actor_id', '=', user.id)]"
+access_discount_weekday_manager,Días: administrador,dolan.discount.weekday,DOLAN_discount_engine.group_discount_manager,r,
+access_discount_weekday_supervisor,Días: supervisor,dolan.discount.weekday,DOLAN_discount_engine.group_discount_supervisor,r,
+access_discount_weekday_cashier,Días: cajero,dolan.discount.weekday,DOLAN_discount_engine.group_discount_cashier,r,
+access_discount_audit_manager,Auditoría: administrador,dolan.discount.audit,DOLAN_discount_engine.group_discount_manager,r,"[('company_id', 'in', company_ids)]"
+access_discount_audit_supervisor,Auditoría: supervisor,dolan.discount.audit,DOLAN_discount_engine.group_discount_supervisor,r,"[('company_id', 'in', company_ids)]"
+access_discount_audit_auditor,Auditoría: auditor,dolan.discount.audit,DOLAN_discount_engine.group_discount_auditor,r,"[('company_id', 'in', company_ids)]"
+access_discount_audit_cashier,Auditoría: propia,dolan.discount.audit,DOLAN_discount_engine.group_discount_cashier,r,"[('company_id', 'in', company_ids), ('actor_id', '=', user.id)]"
+access_discount_approval_cashier,Autorizaciones: solicitudes propias,dolan.discount.approval,DOLAN_discount_engine.group_discount_cashier,r,"[('company_id', 'in', company_ids), ('requested_by_id', '=', user.id)]"
+access_discount_approval_pos_user,Autorizaciones: usuario POS,dolan.discount.approval,point_of_sale.group_pos_user,r,"[('company_id', 'in', company_ids), ('requested_by_id', '=', user.id)]"
+access_discount_approval_supervisor,Autorizaciones: supervisor,dolan.discount.approval,DOLAN_discount_engine.group_discount_supervisor,ru,"[('company_id', 'in', company_ids)]"
+access_discount_approval_manager,Autorizaciones: administrador,dolan.discount.approval,DOLAN_discount_engine.group_discount_manager,ru,"[('company_id', 'in', company_ids)]"
+access_discount_benefit_manager,Beneficios: administrador,dolan.discount.employee.benefit,DOLAN_discount_engine.group_discount_manager,crud,"[('company_id', 'in', company_ids)]"
+access_discount_benefit_supervisor,Beneficios: supervisor,dolan.discount.employee.benefit,DOLAN_discount_engine.group_discount_supervisor,r,"[('company_id', 'in', company_ids)]"
+access_discount_employee_claim_manager,Reservas de empleado: administrador,dolan.discount.employee.claim,DOLAN_discount_engine.group_discount_manager,r,"[('company_id', 'in', company_ids)]"
+access_discount_employee_claim_pos,Reservas de empleado: sesión propia,dolan.discount.employee.claim,point_of_sale.group_pos_user,r,"[('session_id.user_id', '=', user.id), ('company_id', 'in', company_ids)]"
+access_discount_reverse_wizard_supervisor,Reversión: supervisor,dolan.discount.reverse.wizard,DOLAN_discount_engine.group_discount_supervisor,crud,
+access_discount_reverse_wizard_manager,Reversión: administrador,dolan.discount.reverse.wizard,DOLAN_discount_engine.group_discount_manager,crud,
+access_discount_reject_wizard_supervisor,Rechazo: supervisor,dolan.discount.approval.reject.wizard,DOLAN_discount_engine.group_discount_supervisor,crud,
+access_discount_reject_wizard_manager,Rechazo: administrador,dolan.discount.approval.reject.wizard,DOLAN_discount_engine.group_discount_manager,crud,
+access_discount_version_manager,Versiones: administrador,dolan.discount.campaign.version,DOLAN_discount_engine.group_discount_manager,r,"[('company_id', 'in', company_ids)]"
+access_discount_version_supervisor,Versiones: supervisor,dolan.discount.campaign.version,DOLAN_discount_engine.group_discount_supervisor,r,"[('company_id', 'in', company_ids)]"
+access_discount_version_cashier,Versiones: cajero,dolan.discount.campaign.version,DOLAN_discount_engine.group_discount_cashier,r,"[('company_id', 'in', company_ids)]"
+access_discount_version_auditor,Versiones: auditor,dolan.discount.campaign.version,DOLAN_discount_engine.group_discount_auditor,r,"[('company_id', 'in', company_ids)]"
+access_discount_excluded_date_manager,Fechas excluidas: administrador,dolan.discount.excluded.date,DOLAN_discount_engine.group_discount_manager,crud,"[('company_id', 'in', company_ids)]"
+access_discount_excluded_date_supervisor,Fechas excluidas: supervisor,dolan.discount.excluded.date,DOLAN_discount_engine.group_discount_supervisor,r,"[('company_id', 'in', company_ids)]"
+access_discount_alert_manager,Alertas: administrador,dolan.discount.alert,DOLAN_discount_engine.group_discount_manager,ru,"[('company_id', 'in', company_ids)]"
+access_discount_alert_supervisor,Alertas: supervisor,dolan.discount.alert,DOLAN_discount_engine.group_discount_supervisor,ru,"[('company_id', 'in', company_ids)]"
+access_discount_alert_auditor,Alertas: auditor,dolan.discount.alert,DOLAN_discount_engine.group_discount_auditor,r,"[('company_id', 'in', company_ids)]"
+access_discount_reversal_manager,Devoluciones: administrador,dolan.discount.application.reversal,DOLAN_discount_engine.group_discount_manager,r,"[('company_id', 'in', company_ids)]"
+access_discount_reversal_supervisor,Devoluciones: supervisor,dolan.discount.application.reversal,DOLAN_discount_engine.group_discount_supervisor,r,"[('company_id', 'in', company_ids)]"
+access_discount_reversal_auditor,Devoluciones: auditor,dolan.discount.application.reversal,DOLAN_discount_engine.group_discount_auditor,r,"[('company_id', 'in', company_ids)]"
+access_discount_simulator_manager,Simulador: administrador,dolan.discount.simulator,DOLAN_discount_engine.group_discount_manager,crud,
+access_discount_simulator_supervisor,Simulador: supervisor,dolan.discount.simulator,DOLAN_discount_engine.group_discount_supervisor,crud,
+access_discount_simulator_cashier,Simulador: cajero,dolan.discount.simulator,DOLAN_discount_engine.group_discount_cashier,crud,
+access_discount_reservation_pos_user,Reservas de la sesión propia,dolan.discount.reservation,point_of_sale.group_pos_user,r,"[('session_id.user_id', '=', user.id), ('company_id', 'in', company_ids)]"

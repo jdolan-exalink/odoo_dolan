@@ -332,16 +332,21 @@
         <field name="view_mode">kanban,list,form</field>
     </record>
 
-    <!-- Integración directa en el menú raíz Tableros (spreadsheet_dashboard) sin duplicar ícono en Home Menu -->
+    <!-- El flujo DOLAN BI se ofrece desde Facturación; ocultamos el menú raíz
+         Spreadsheet que mostraba una barra adicional y el acceso «Nuevo tablero». -->
+    <record id="spreadsheet_dashboard.spreadsheet_dashboard_menu_root" model="ir.ui.menu">
+        <field name="group_ids" eval="[(6, 0, [ref('base.group_no_one')])]"/>
+    </record>
+
     <menuitem id="menu_dolan_bi_dashboards"
               name="Tableros Gerenciales BI"
-              parent="spreadsheet_dashboard.spreadsheet_dashboard_menu_root"
+              parent="account.menu_finance"
               action="action_dolan_bi_dashboard"
-              sequence="5"/>
+              sequence="70"/>
 
     <menuitem id="menu_dolan_bi_kpi_cards"
               name="Indicadores KPI en Vivo"
-              parent="spreadsheet_dashboard.spreadsheet_dashboard_menu_root"
+              parent="account.menu_finance"
               action="action_dolan_bi_kpi_cards"
-              sequence="6"/>
+              sequence="71"/>
 </odoo>

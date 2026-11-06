@@ -2,7 +2,7 @@
 # Part of DOLAN Suite for Odoo 20 CE. See LICENSE file for full copyright and licensing details.
 {
     'name': 'DOLAN - Base de Conocimiento (Wiki RAG) & Tableros BI',
-    'version': '20.0.1.7.0',
+    'version': '20.0.1.8.0',
     'category': 'Productivity/Knowledge & BI',
     'summary': 'Wiki colaborativa jerárquica con soporte RAG para IA y Tableros Ejecutivos BI en tiempo real',
     'description': """
@@ -45,6 +45,7 @@ Características principales:
         'wizard/bi_dashboard_send_views.xml',
         'report/bi_dashboard_report.xml',
         'data/default_knowledge_and_bi.xml',
+        'data/help_center_articles.xml',
     ],
     'application': True,
     'installable': True,

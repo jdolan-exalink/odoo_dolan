@@ -79,6 +79,66 @@
     <!-- 1. INTEGRACIÓN COMPLETA EN FACTURACIÓN (account.menu_finance)          -->
     <!-- ====================================================================== -->
 
+    <!-- En el tablero de Facturación no ofrecemos crear diarios desde el botón
+         genérico del control panel. Las facturas se crean desde su tarjeta. -->
+    <record id="account.open_account_journal_dashboard_kanban" model="ir.actions.act_window">
+        <field name="context">{'search_default_dashboard': 1, 'create': False}</field>
+    </record>
+    <record id="view_account_journal_dashboard_dolan" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.dolan</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="create">false</attribute>
+            </xpath>
+            <xpath expr="//t[@t-name='JournalBodySalePurchase']//t[@t-if=&quot;journal_type == 'sale'&quot;]/button[@name='action_create_new']" position="replace">
+                <button type="object" name="action_create_new" class="btn btn-primary" groups="account.group_account_invoice">
+                    Nueva
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Facturas de cliente disponibles bajo las compañías activas del usuario.
+         No se fija company_id: las reglas multiempresa de Odoo filtran por
+         allowed_company_ids y siguen al selector de empresas. -->
+    <record id="action_dolan_customer_invoices" model="ir.actions.act_window">
+        <field name="name">Facturas ARCA</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="account.view_out_invoice_tree"/>
+        <field name="domain">[('move_type', '=', 'out_invoice')]</field>
+        <field name="context">{'default_move_type': 'out_invoice'}</field>
+    </record>
+    <record id="action_dolan_customer_invoices_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="account.view_out_invoice_tree"/>
+        <field name="act_window_id" ref="action_dolan_customer_invoices"/>
+    </record>
+
+    <record id="action_dolan_new_customer_invoice" model="ir.actions.act_window">
+        <field name="name">Nueva factura</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_move_type': 'out_invoice'}</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="menu_dolan_customer_invoices_shortcut"
+              name="Facturas ARCA"
+              parent="account.menu_finance"
+              action="action_dolan_customer_invoices"
+              sequence="1"
+              groups="account.group_account_invoice,account.group_account_readonly"/>
+    <menuitem id="menu_dolan_new_customer_invoice"
+              name="Nueva factura"
+              parent="account.menu_finance"
+              action="action_dolan_new_customer_invoice"
+              sequence="2"
+              groups="account.group_account_invoice,account.group_account_user,account.group_account_manager"/>
+
     <!-- Facturación / Contabilidad / Activos y pasivos -->
     <menuitem id="menu_finance_assets_liabilities"
               name="Activos y pasivos"
@@ -279,7 +339,7 @@
               parent="menu_dolan_accounting_root"/>
     <menuitem id="menu_dolan_accounting_vendors" name="Proveedores" sequence="3"
               parent="menu_dolan_accounting_root"/>
-    <menuitem id="menu_dolan_accounting_customers_invoices" name="Facturas" parent="menu_dolan_accounting_customers" action="account.action_move_out_invoice" sequence="10"/>
+    <menuitem id="menu_dolan_accounting_customers_invoices" name="Facturas" parent="menu_dolan_accounting_customers" action="action_dolan_customer_invoices" sequence="10"/>
     <menuitem id="menu_dolan_accounting_customers_refunds" name="Notas de crédito" parent="menu_dolan_accounting_customers" action="account.action_move_out_refund_type_non_legacy" sequence="20"/>
     <menuitem id="menu_dolan_accounting_customers_payments" name="Pagos" parent="menu_dolan_accounting_customers" action="account.action_account_payments" sequence="30"/>
     <menuitem id="menu_dolan_accounting_customers_checks" name="Cheques de terceros" parent="menu_dolan_accounting_customers" action="l10n_latam_check.action_third_party_check" sequence="40"/>

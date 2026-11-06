@@ -1,2 +1,6 @@
 id,name,model_id,group_id/id,operation,domain
 access_dolan_screen_preference_user,dolan.screen.preference user,dolan.screen.preference,base.group_user,cru,"[('user_id', '=', user.id)]"
+access_dolan_desktop_preference_user,dolan.desktop.preference user,dolan.desktop.preference,base.group_user,cru,"[('user_id', '=', user.id)]"
+access_dolan_desktop_folder_user,dolan.desktop.folder user,dolan.desktop.folder,base.group_user,cru,"[('user_id', '=', user.id)]"
+access_dolan_desktop_item_user,dolan.desktop.item user,dolan.desktop.item,base.group_user,crud,"[('user_id', '=', user.id)]"
+access_dolan_desktop_usage_user,dolan.desktop.usage.daily user,dolan.desktop.usage.daily,base.group_user,cru,"[('user_id', '=', user.id)]"

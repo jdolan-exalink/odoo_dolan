@@ -6,3 +6,4 @@ from . import pwa
 from . import global_search
 from . import workspace
 from . import screen_preferences
+from . import desktop

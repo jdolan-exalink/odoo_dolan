@@ -6,3 +6,4 @@ from . import scale_device
 from . import scale_export_job
 from . import stock_warehouse
 from . import res_users
+from . import pos_config

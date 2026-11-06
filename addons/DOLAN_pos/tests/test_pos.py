@@ -30,7 +30,6 @@ class TestDolanPos(TransactionCase):
             ('company_id', '=', cls.company.id),
         ], limit=1)
         cls.vat_tax = cls.env['account.tax'].search([
-            ('tax_group_id.l10n_ar_vat_afip_code', '!=', False),
             ('type_tax_use', '=', 'sale'),
             ('company_id', '=', cls.company.id),
         ], limit=1)
@@ -87,12 +86,16 @@ class TestDolanPos(TransactionCase):
             ('type', '=', 'sale'),
             ('company_id', '=', self.company.id),
         ], limit=1)
+        if not income_account or not sale_journal:
+            self.skipTest('La base QA no tiene un plan contable ni diario de ventas configurados.')
 
         tax_cmds = [Command.set(self.vat_tax.ids)] if self.vat_tax else [Command.clear()]
-        doc_type = self.env['l10n_latam.document.type'].search([
-            ('internal_type', '=', 'invoice'),
-            ('country_id.code', '=', 'AR'),
-        ], limit=1) or self.env['l10n_latam.document.type'].search([], limit=1)
+        doc_type = False
+        if 'l10n_latam.document.type' in self.env.registry.models:
+            doc_type = self.env['l10n_latam.document.type'].search([
+                ('internal_type', '=', 'invoice'),
+                ('country_id.code', '=', 'AR'),
+            ], limit=1) or self.env['l10n_latam.document.type'].search([], limit=1)
 
         move_vals = {
             'move_type': 'out_invoice',

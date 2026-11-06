@@ -1,0 +1,154 @@
+.o_web_login .dolan_login_theme_toggle {
+    position: fixed;
+    z-index: 10;
+    top: 1rem;
+    right: 1rem;
+    display: inline-flex;
+    align-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: .55rem;
+    border: 1px solid rgba(113, 75, 103, .22);
+    border-radius: 999px;
+    color: #51424e;
+    background: rgba(255, 255, 255, .82);
+    box-shadow: 0 5px 18px rgba(27, 31, 38, .1);
+    backdrop-filter: blur(14px) saturate(1.35);
+    -webkit-backdrop-filter: blur(14px) saturate(1.35);
+    font: inherit;
+    cursor: pointer;
+    transition: color .18s ease, background-color .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.o_web_login .dolan_login_theme_toggle:hover,
+.o_web_login .dolan_login_theme_toggle:focus-visible {
+    border-color: #714b67;
+    color: #714b67;
+    transform: translateY(-1px);
+}
+
+.o_web_login .dolan_login_theme_toggle:focus-visible {
+    outline: 3px solid rgba(113, 75, 103, .28);
+    outline-offset: 2px;
+}
+
+.o_web_login .dolan_login_theme_icon {
+    display: none;
+    width: 1.4rem;
+    height: 1.4rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.o_web_login .dolan_login_theme_icon_moon {
+    display: block;
+}
+
+.o_web_login .dolan_login_theme_toggle[aria-pressed="true"] .dolan_login_theme_icon_moon {
+    display: none;
+}
+
+.o_web_login .dolan_login_theme_toggle[aria-pressed="true"] .dolan_login_theme_icon_sun {
+    display: block;
+}
+
+body.o_web_login.o_dolan_dark_mode {
+    color-scheme: dark;
+    color: #e8eaf0;
+    background: #171a21 !important;
+}
+
+body.o_web_login.o_dolan_dark_mode #wrapwrap,
+body.o_web_login.o_dolan_dark_mode main,
+body.o_web_login.o_dolan_dark_mode .container,
+body.o_web_login.o_dolan_dark_mode .o_database_list,
+body.o_web_login.o_dolan_dark_mode .card-body {
+    color: #e8eaf0;
+}
+
+body.o_web_login.o_dolan_dark_mode .o_database_list,
+body.o_web_login.o_dolan_dark_mode .card {
+    border: 1px solid #3a3f4b !important;
+    border-radius: 1rem;
+    background: rgba(36, 40, 50, .94) !important;
+    box-shadow: 0 20px 55px rgba(0, 0, 0, .32);
+}
+
+body.o_web_login.o_dolan_dark_mode .o_database_list .card-body {
+    color: #e8eaf0 !important;
+    background: rgba(36, 40, 50, .94) !important;
+}
+
+body.o_web_login.o_dolan_dark_mode .o_database_list img[alt="Logo"] {
+    padding: .45rem 1rem;
+    border-radius: .65rem;
+    background: #f4f6f9;
+}
+
+body.o_web_login.o_dolan_dark_mode :is(label, .form-label, .text-muted, .text-secondary, p, small, em) {
+    color: #c6cbd5 !important;
+}
+
+body.o_web_login.o_dolan_dark_mode :is(input, select, textarea, .form-control, .o_input) {
+    border-color: #4a5060 !important;
+    color: #f1f3f7 !important;
+    background-color: #1d2028 !important;
+}
+
+body.o_web_login.o_dolan_dark_mode :is(input, select, textarea, .form-control, .o_input)::placeholder {
+    color: #a4aab7 !important;
+    opacity: 1;
+}
+
+body.o_web_login.o_dolan_dark_mode a:not(.btn) {
+    color: #ead7e5 !important;
+}
+
+body.o_web_login.o_dolan_dark_mode .o_database_list :is(.btn-link, button:not(.btn-primary)) {
+    color: #ead7e5 !important;
+}
+
+body.o_web_login.o_dolan_dark_mode .o_database_list .btn:not(.btn-primary):not(.btn-link) {
+    border-color: #4a5060 !important;
+    color: #e8eaf0 !important;
+    background-color: #2b303a !important;
+}
+
+body.o_web_login.o_dolan_dark_mode .o_database_list .passkey_login_link {
+    border-color: #4a5060 !important;
+    color: #e8eaf0 !important;
+    background-color: #2b303a !important;
+}
+
+body.o_web_login.o_dolan_dark_mode .o_database_list .passkey_login_link:hover,
+body.o_web_login.o_dolan_dark_mode .o_database_list .passkey_login_link:focus-visible {
+    border-color: #c69ab9 !important;
+    color: #fff !important;
+    background-color: #373d49 !important;
+}
+
+body.o_web_login.o_dolan_dark_mode .dolan_login_theme_toggle {
+    border-color: rgba(224, 205, 220, .24);
+    color: #f0e6ef;
+    background: rgba(42, 46, 57, .82);
+    box-shadow: 0 7px 22px rgba(0, 0, 0, .24), inset 0 1px rgba(255, 255, 255, .08);
+}
+
+body.o_web_login.o_dolan_dark_mode .dolan_login_theme_toggle:hover,
+body.o_web_login.o_dolan_dark_mode .dolan_login_theme_toggle:focus-visible {
+    border-color: #c69ab9;
+    color: #fff;
+}
+
+@media (max-width: 575.98px) {
+    .o_web_login .dolan_login_theme_toggle {
+        top: .65rem;
+        right: .65rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: .45rem;
+    }
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="menu_dolan_discount_root" name="Promociones DOLAN"
+              web_icon="DOLAN_discount_engine,static/description/icon.svg" sequence="62"
+              groups="DOLAN_discount_engine.group_discount_manager,DOLAN_discount_engine.group_discount_supervisor,DOLAN_discount_engine.group_discount_cashier"/>
+    <menuitem id="menu_dolan_discount_campaigns" name="Campañas"
+              parent="menu_dolan_discount_root" action="action_dolan_discount_campaign" sequence="10"
+              groups="DOLAN_discount_engine.group_discount_manager,DOLAN_discount_engine.group_discount_supervisor,DOLAN_discount_engine.group_discount_cashier"/>
+    <menuitem id="menu_dolan_discount_benefits" name="Beneficios de empleados"
+              parent="menu_dolan_discount_root" action="action_dolan_discount_benefit" sequence="20"
+              groups="DOLAN_discount_engine.group_discount_manager,DOLAN_discount_engine.group_discount_supervisor"/>
+    <menuitem id="menu_dolan_discount_approvals" name="Autorizaciones"
+              parent="menu_dolan_discount_root" action="action_dolan_discount_approval" sequence="30"
+              groups="DOLAN_discount_engine.group_discount_manager,DOLAN_discount_engine.group_discount_supervisor,DOLAN_discount_engine.group_discount_cashier"/>
+    <menuitem id="menu_dolan_discount_applications" name="Descuentos aplicados / Reportes"
+              parent="menu_dolan_discount_root" action="action_dolan_discount_application" sequence="40"
+              groups="DOLAN_discount_engine.group_discount_manager,DOLAN_discount_engine.group_discount_supervisor,DOLAN_discount_engine.group_discount_auditor"/>
+    <menuitem id="menu_dolan_discount_reversals" name="Devoluciones de descuentos"
+              parent="menu_dolan_discount_root" action="action_dolan_discount_reversal" sequence="45"
+              groups="DOLAN_discount_engine.group_discount_manager,DOLAN_discount_engine.group_discount_supervisor,DOLAN_discount_engine.group_discount_auditor"/>
+    <menuitem id="menu_dolan_discount_audit" name="Auditoría"
+              parent="menu_dolan_discount_root" action="action_dolan_discount_audit" sequence="50"
+              groups="DOLAN_discount_engine.group_discount_manager,DOLAN_discount_engine.group_discount_supervisor,DOLAN_discount_engine.group_discount_auditor"/>
+    <menuitem id="menu_dolan_discount_simulator" name="Simulador"
+              parent="menu_dolan_discount_root" action="action_dolan_discount_simulator" sequence="35"
+              groups="DOLAN_discount_engine.group_discount_manager,DOLAN_discount_engine.group_discount_supervisor,DOLAN_discount_engine.group_discount_cashier"/>
+    <menuitem id="menu_dolan_discount_alerts" name="Alertas"
+              parent="menu_dolan_discount_root" action="action_dolan_discount_alert" sequence="55"
+              groups="DOLAN_discount_engine.group_discount_manager,DOLAN_discount_engine.group_discount_supervisor,DOLAN_discount_engine.group_discount_auditor"/>
+</odoo>

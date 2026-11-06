@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_dolan_discount_campaign_list" model="ir.ui.view">
+        <field name="name">dolan.discount.campaign.list</field>
+        <field name="model">dolan.discount.campaign</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'active'" decoration-muted="state in ('paused', 'archived')">
+                <field name="priority" widget="handle"/>
+                <field name="name"/>
+                <field name="code" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="version"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_dolan_discount_campaign_form" model="ir.ui.view">
+        <field name="name">dolan.discount.campaign.form</field>
+        <field name="model">dolan.discount.campaign</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_publish" type="object" string="Publicar versión" class="btn-primary"
+                            groups="DOLAN_discount_engine.group_discount_manager" invisible="state not in ('draft', 'paused')"/>
+                    <button name="action_pause" type="object" string="Pausar" groups="DOLAN_discount_engine.group_discount_manager" invisible="state != 'active'"/>
+                    <button name="action_archive" type="object" string="Archivar" groups="DOLAN_discount_engine.group_discount_manager" invisible="state == 'archived'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,paused,archived"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_title"><label for="name"/><h1><field name="name" placeholder="Ej.: Miércoles de cerdo"/></h1></div>
+                    <group>
+                        <group string="Alcance">
+                            <field name="code"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="pos_config_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="warehouse_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="priority"/>
+                            <field name="budget_amount" optional="hide"/>
+                            <field name="max_discount_per_order" optional="hide"/>
+                        </group>
+                        <group string="Vigencia local">
+                            <field name="timezone"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="weekday_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="time_start" widget="float_time"/>
+                            <field name="time_end" widget="float_time"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Fechas excluidas" name="excluded_dates">
+                            <field name="excluded_date_ids" readonly="state == 'active'">
+                                <list editable="bottom"><field name="date"/><field name="name"/></list>
+                            </field>
+                        </page>
+                        <page string="Reglas" name="rules">
+                            <field name="rule_ids" readonly="state == 'active'">
+                                <list editable="bottom">
+                                    <field name="priority"/>
+                                    <field name="name"/>
+                                    <field name="product_ids" widget="many2many_tags"/>
+                                    <field name="partner_ids" widget="many2many_tags"/>
+                                    <field name="partner_category_ids" widget="many2many_tags"/>
+                                    <field name="category_ids" widget="many2many_tags"/>
+                                    <field name="benefit_type"/>
+                                    <field name="benefit_value"/>
+                                    <field name="payment_method_id"/>
+                                    <field name="stackable"/>
+                                </list>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="priority"/>
+                                            <field name="product_ids" widget="many2many_tags"/>
+                                            <field name="partner_ids" widget="many2many_tags"/>
+                                            <field name="partner_category_ids" widget="many2many_tags"/>
+                                            <field name="category_ids" widget="many2many_tags"/>
+                                            <field name="excluded_product_ids" widget="many2many_tags"/>
+                                            <field name="min_qty"/>
+                                            <field name="benefit_type"/>
+                                            <field name="benefit_value"/>
+                                            <field name="buy_qty" invisible="benefit_type != 'second_unit'"/>
+                                            <field name="get_qty" invisible="benefit_type != 'second_unit'"/>
+                                            <field name="second_unit_percent" invisible="benefit_type != 'second_unit'"/>
+                                            <field name="max_discount_amount"/>
+                                            <field name="payment_method_id"/>
+                                            <field name="stackable"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Publicación" name="publication">
+                            <group>
+                                <field name="version" readonly="1"/>
+                                <field name="published_at" readonly="1"/>
+                                <field name="published_by" readonly="1"/>
+                                <field name="published_checksum" readonly="1"/>
+                            </group>
+                            <field name="published_snapshot" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_dolan_discount_campaign" model="ir.actions.act_window">
+        <field name="name">Campañas</field>
+        <field name="res_model">dolan.discount.campaign</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

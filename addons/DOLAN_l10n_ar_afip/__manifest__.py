@@ -54,6 +54,8 @@ Características principales:
     'assets': {
         'web.assets_backend': [
             'DOLAN_l10n_ar_afip/static/src/js/padron_form_draft.js',
+            'DOLAN_l10n_ar_afip/static/src/js/out_invoice_list.js',
+            'DOLAN_l10n_ar_afip/static/src/xml/out_invoice_list.xml',
         ],
         'web.report_assets_common': [
             'DOLAN_l10n_ar_afip/static/src/css/report_dolan_ar.css',

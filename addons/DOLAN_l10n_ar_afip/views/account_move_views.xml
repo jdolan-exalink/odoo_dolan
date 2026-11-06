@@ -8,6 +8,9 @@
         <field name="arch" type="xml">
             <xpath expr="//list" position="attributes">
                 <attribute name="default_order">invoice_date desc, name desc, id desc</attribute>
+                <attribute name="create">Nueva</attribute>
+                <attribute name="import">false</attribute>
+                <attribute name="js_class">dolan_out_invoice_tree</attribute>
             </xpath>
             <xpath expr="//field[@name='invoice_date']" position="replace">
                 <field name="l10n_ar_invoice_date_display" string="Fecha"/>

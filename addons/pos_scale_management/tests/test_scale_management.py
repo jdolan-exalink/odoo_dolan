@@ -112,6 +112,38 @@ class TestScaleManagement(TransactionCase):
         self.assertEqual(parsed['value_type'], 'weight')
         self.assertEqual(parsed['value'], 1.25)
 
+    def test_pos_receives_branch_label_profile_and_rejects_ambiguous_plu(self):
+        category = self.env['product.category'].create({'name': 'QA etiqueta POS'})
+        first = self._make_product('Carne A QA', category)
+        second = self._make_product('Carne B QA', category)
+        barcode_profile = self.env['scale.barcode.profile'].create({
+            'name': 'Fixture etiqueta POS', 'code': 'POS_SCALE_QA',
+            'barcode_length': 13, 'prefix': '20', 'product_start': 3,
+            'product_length': 5, 'value_start': 8, 'value_length': 5,
+            'value_type': 'weight', 'decimals': 3,
+        })
+        self.device.write({'barcode_profile_id': barcode_profile.id})
+        self.env['scale.product.assignment'].create({
+            'device_id': self.device.id, 'assignment_type': 'product',
+            'product_id': first.id, 'disposition': 'include', 'plu': '12345',
+        })
+        second_device = self.env['scale.device'].create({
+            'name': 'Balanza QA 2', 'code': 'QA-LABEL-2', 'company_id': self.company.id,
+            'warehouse_id': self.warehouse.id, 'brand': 'kretz', 'profile_id': self.profile.id,
+            'barcode_profile_id': barcode_profile.id,
+        })
+        self.env['scale.product.assignment'].create({
+            'device_id': second_device.id, 'assignment_type': 'product',
+            'product_id': second.id, 'disposition': 'include', 'plu': '12345',
+        })
+        config = self.env['pos.config'].create({
+            'name': 'Caja etiqueta QA', 'company_id': self.company.id,
+            'picking_type_id': self.warehouse.out_type_id.id,
+        })
+        payload = config.scale_barcode_profiles
+        self.assertEqual(len(payload), 1)
+        self.assertIs(payload[0]['products']['12345'], False)
+
     def test_validated_generic_adapter_generates_immutable_audited_file(self):
         category = self.env['product.category'].create({'name': 'QA exportación'})
         product = self._make_product('Producto exportación QA', category)

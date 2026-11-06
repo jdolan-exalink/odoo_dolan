@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="DOLANl10nAr.DolanOutInvoiceListButtons"
+       t-inherit="account.AccountMoveListView.Buttons"
+       t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_list_button_add')]" position="replace">
+            <button t-if="!this.env.inDialog and !this.editedRecord and this.activeActions.create"
+                    type="button"
+                    class="btn btn-primary o_list_button_add"
+                    t-att-data-available-offline="this.isNewButtonAvailableOffline"
+                    data-hotkey="c"
+                    t-on-click="this.onClickCreate"
+                    data-bounce-button="">
+                Nueva
+            </button>
+        </xpath>
+    </t>
+</templates>

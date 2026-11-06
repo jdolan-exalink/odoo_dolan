@@ -75,30 +75,9 @@
             <t t-if="this.state.isOpen">
                 <div class="o_dolan_home_menu_wrapper" t-on-keydown="(ev) => this.onKeydown(ev)">
                     <div class="o_home_menu h-100 overflow-auto px-3 d-flex flex-column">
-                        <!-- Buscador instantáneo siempre visible y centrado -->
-                        <div class="o_home_menu_search_bar d-flex justify-content-center my-4">
-                            <div class="position-relative" style="max-width: 440px; width: 100%;">
-                                <span class="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"><DolanIcon name="'search'" size="18"/></span>
-                                <input type="text"
-                                       t-ref="this.searchInputRef"
-                                       class="form-control form-control-lg rounded-pill ps-5 pe-5 bg-white shadow-sm border-0 o_home_menu_search_input"
-                                       style="font-size: 14px;"
-                                       placeholder="Buscar aplicación o menú..."
-                                       aria-label="Buscar aplicación"
-                                       t-att-value="this.state.query"
-                                       t-on-input="(ev) => this.onSearchInput(ev)"/>
-                                <button t-if="this.state.query"
-                                        type="button"
-                                        class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-3 text-muted border-0 p-0"
-                                        t-on-click="() => { this.state.query = ''; this.state.selectedIndex = 0; }">
-                                    <DolanIcon name="'x-circle'" size="22"/>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Selector de Vista: Aplicaciones / Acciones Rápidas -->
-                        <div class="d-flex justify-content-center mb-3">
-                            <div class="btn-group rounded-pill p-1 bg-white shadow-sm border o_dolan_drawer_tab_group" role="group">
+                        <!-- Navegación y búsqueda en una sola fila compacta -->
+                        <div class="o_dolan_home_menu_toolbar d-flex align-items-center gap-3 my-3">
+                            <div class="btn-group rounded-pill p-1 bg-white shadow-sm border o_dolan_drawer_tab_group" role="group" aria-label="Sección del escritorio">
                                 <button type="button"
                                         class="btn btn-sm rounded-pill px-3 py-1 fw-semibold border-0"
                                         t-att-class="this.state.activeTab === 'apps' ? 'btn-primary text-white' : 'btn-light text-muted'"
@@ -111,15 +90,46 @@
                                         t-on-click="() => this.setTab('mine')">
                                     <DolanIcon name="'dashboard'" size="16"/> Mi Espacio
                                 </button>
-                                <button type="button"
-                                        class="btn btn-sm rounded-pill px-3 py-1 fw-semibold border-0"
-                                        t-att-class="this.state.activeTab === 'workspace' ? 'btn-primary text-white' : 'btn-light text-muted'"
-                                        t-on-click="() => this.setTab('workspace')">
-                                    <DolanIcon name="'bolt'" size="16"/> Acciones Rápidas
+                            </div>
+                            <div class="o_home_menu_search_bar flex-grow-1">
+                            <div class="position-relative o_dolan_search_input_wrap">
+                                <span class="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"><DolanIcon name="'search'" size="18"/></span>
+                                <input type="text"
+                                       t-ref="this.searchInputRef"
+                                       class="form-control rounded-pill ps-5 pe-5 bg-white shadow-sm border-0 o_home_menu_search_input"
+                                       style="font-size: 14px;"
+                                       placeholder="Buscar aplicación o menú..."
+                                       aria-label="Buscar aplicación"
+                                       t-att-value="this.state.query"
+                                       t-on-input="(ev) => this.onSearchInput(ev)"/>
+                                <button t-if="this.state.query"
+                                        type="button"
+                                        class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-3 text-muted border-0 p-0"
+                                        t-on-click="() => { this.state.query = ''; this.state.selectedIndex = 0; }">
+                                    <DolanIcon name="'x-circle'" size="22"/>
                                 </button>
+                            </div>
                             </div>
                         </div>
 
+                        <div t-if="this.state.activeTab === 'apps' &amp;&amp; !this.state.query" class="d-flex justify-content-start mb-2 o_dolan_grid_controls">
+                            <div class="btn-group btn-group-sm o_dolan_desktop_sort" role="group" aria-label="Ordenar escritorio">
+                                <button type="button" class="btn btn-outline-secondary" title="Más usadas"
+                                        aria-label="Ordenar por más usadas" t-att-aria-pressed="this.state.sortMode === 'most_used'"
+                                        t-att-class="this.state.sortMode === 'most_used' ? 'btn-primary text-white' : 'btn-outline-secondary'"
+                                        t-on-click="() => this.setDesktopSortMode('most_used')"><DolanIcon name="'history'" size="17"/></button>
+                                <button type="button" class="btn btn-outline-secondary" title="Orden personalizado"
+                                        aria-label="Orden personalizado" t-att-aria-pressed="this.state.sortMode === 'custom'"
+                                        t-att-class="this.state.sortMode === 'custom' ? 'btn-primary text-white' : 'btn-outline-secondary'"
+                                        t-on-click="() => this.setDesktopSortMode('custom')"><DolanIcon name="'grid'" size="17"/></button>
+                                <button type="button" class="btn btn-outline-secondary" title="Orden alfabético"
+                                        aria-label="Orden alfabético" t-att-aria-pressed="this.state.sortMode === 'alphabetical'"
+                                        t-att-class="this.state.sortMode === 'alphabetical' ? 'btn-primary text-white' : 'btn-outline-secondary'"
+                                        t-on-click="() => this.setDesktopSortMode('alphabetical')"><DolanIcon name="'sort-az'" size="17"/></button>
+                                <button type="button" class="btn btn-outline-secondary" title="Nueva carpeta"
+                                        aria-label="Nueva carpeta" t-on-click="() => this.openFolderEditor()"><DolanIcon name="'folder-plus'" size="17"/></button>
+                            </div>
+                        </div>
                         <!-- Mi Espacio: KPIs y atención por rol -->
                         <div t-if="this.state.activeTab === 'mine'" class="container px-0 position-relative z-1 flex-grow-1 o_dolan_mine">
                             <div class="d-flex flex-wrap justify-content-center gap-2 mb-3" role="group" aria-label="Filtrar por rol">
@@ -141,7 +151,7 @@
                             </div>
                             <div t-elif="this.state.kpisError" class="text-center text-muted py-4">
                                 No se pudieron cargar los indicadores.
-                                <button type="button" class="btn btn-link" t-on-click="loadKpis">Reintentar</button>
+                                <button type="button" class="btn btn-link" t-on-click="() => this.loadKpis()">Reintentar</button>
                             </div>
                             <div t-elif="!this.visibleKpis.length" class="text-center text-muted py-4">
                                 Sin indicadores disponibles para tus permisos.
@@ -180,69 +190,196 @@
                                 </t>
                             </div>
                             <div t-if="this.hiddenKpiCount" class="text-center mt-2">
-                                <button type="button" class="btn btn-sm btn-link text-muted" t-on-click="restoreKpis">
+                                <button type="button" class="btn btn-sm btn-link text-muted" t-on-click="() => this.restoreKpis()">
                                     Mostrar <t t-out="this.hiddenKpiCount"/> oculto(s)
-                                </button>
-                            </div>
-                            <div class="d-flex justify-content-center mt-3">
-                                <button type="button" class="btn btn-sm btn-link text-muted" t-on-click="toggleDensity"
-                                        t-att-aria-pressed="this.state.compact">
-                                    <DolanIcon name="'compress'" size="16"/>
-                                    <t t-if="this.state.compact">Densidad: compacta</t>
-                                    <t t-else="">Densidad: normal</t>
                                 </button>
                             </div>
                         </div>
 
                         <!-- Grilla de Aplicaciones en tarjetas Enterprise -->
                         <div t-if="this.state.activeTab === 'apps'" class="container px-0 position-relative z-1 flex-grow-1">
-                            <div t-if="!this.state.query &amp;&amp; this.recentApps.length" class="d-flex flex-wrap align-items-center justify-content-center gap-2 mt-1 o_dolan_recents">
-                                <span class="small text-muted me-1"><DolanIcon name="'history'" size="16"/>Recientes</span>
-                                <t t-foreach="this.recentApps" t-as="ra" t-key="ra.id">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill"
-                                            t-on-click="() => this.selectApp(ra)" t-out="ra.name"/>
-                                </t>
-                            </div>
-                            <div role="listbox" class="o_apps row user-select-none mt-2 mx-0">
-                                <t t-foreach="this.filteredApps" t-as="app" t-key="app.id">
-                                    <div class="col-3 col-md-2 o_draggable mb-3 px-0 position-relative o_dolan_app_cell">
+                            <div role="listbox" class="o_apps row user-select-none mt-2 mx-0 o_dolan_root_app_grid"
+                                 aria-label="Aplicaciones y carpetas">
+                                <t t-foreach="this.desktopTilesToRender" t-as="tile" t-key="tile.key">
+                                  <t t-if="tile.kind === 'folder'">
+                                    <div class="col-3 col-md-2 o_draggable mb-3 px-0 position-relative o_dolan_folder_cell o_dolan_desktop_tile"
+                                         t-att-data-folder-id="tile.folder.id"
+                                         t-att-data-desktop-tile-key="tile.key"
+                                         draggable="false"
+                                         t-att-class="{'o_dolan_drop_active': this.state.desktopDropTargetFolderId === tile.folder.id, 'o_dolan_dragging': this.state.desktopDraggingFolderKey === tile.folder.id}">
+                                        <button type="button" class="o_dolan_fav_btn o_dolan_folder_fav_btn btn btn-sm p-0 border-0 position-absolute"
+                                                t-att-class="tile.folder.is_favorite ? 'o_dolan_fav_on' : ''"
+                                                t-att-aria-pressed="tile.folder.is_favorite ? 'true' : 'false'"
+                                                t-att-aria-label="(tile.folder.is_favorite ? 'Quitar de favoritos: ' : 'Agregar a favoritos: ') + tile.folder.name"
+                                                t-on-click.stop="() => this.toggleFolderFavorite(tile.folder)">
+                                            <DolanIcon name="'star'" size="16" filled="tile.folder.is_favorite"/>
+                                        </button>
+                                        <button type="button" class="o_dolan_folder_tile"
+                                                draggable="false"
+                                                t-on-click="() => this.openDesktopFolder(tile.folder)">
+                                            <span t-if="this.folderPreviewApps(tile.folder).length" class="o_dolan_folder_preview" aria-hidden="true">
+                                                <t t-foreach="this.folderPreviewApps(tile.folder)" t-as="previewApp" t-key="previewApp.id">
+                                                    <span class="o_dolan_folder_preview_icon">
+                                                        <img t-if="this.getAppIconUrl(previewApp)" t-att-src="this.getAppIconUrl(previewApp)" t-att-alt="''" draggable="false"/>
+                                                        <span t-else="" t-out="(previewApp.name || 'A').slice(0, 1).toUpperCase()"/>
+                                                    </span>
+                                                </t>
+                                            </span>
+                                            <span t-else="" class="o_dolan_folder_icon" aria-hidden="true"><DolanIcon name="'folder'" size="34"/></span>
+                                            <span class="o_dolan_folder_count"><t t-out="this.appsInFolder(tile.folder).length"/></span>
+                                        </button>
+                                        <div class="o_caption text-center text-truncate mt-2 w-100"
+                                             t-att-title="tile.folder.name"
+                                             t-out="tile.folder.name"/>
+                                    </div>
+                                  </t>
+                                  <t t-else="">
+                                    <div class="col-3 col-md-2 o_draggable mb-3 px-0 position-relative o_dolan_app_cell"
+                                         t-att-data-menu-key="this.appDesktopKey(tile.app)"
+                                         t-att-data-desktop-tile-key="tile.key"
+                                         draggable="false"
+                                         t-att-class="{'o_dolan_drop_active': this.state.desktopDropTargetKey === this.appDesktopKey(tile.app), 'o_dolan_dragging': this.state.desktopDraggingKey === this.appDesktopKey(tile.app)}">
                                         <button type="button" class="o_dolan_fav_btn btn btn-sm p-0 border-0 position-absolute"
-                                                t-att-class="this.isFavorite(app) ? 'o_dolan_fav_on' : ''"
-                                                t-att-aria-pressed="this.isFavorite(app) ? 'true' : 'false'"
-                                                t-att-aria-label="'Favorito: ' + app.name"
-                                                t-on-click.stop="() => this.toggleFavorite(app)">
-                                            <DolanIcon name="'star'" size="16" filled="this.isFavorite(app)"/>
+                                                t-att-class="this.isFavorite(tile.app) ? 'o_dolan_fav_on' : ''"
+                                                t-att-aria-pressed="this.isFavorite(tile.app) ? 'true' : 'false'"
+                                                t-att-aria-label="'Favorito: ' + tile.app.name"
+                                                t-on-click.stop="() => this.toggleFavorite(tile.app)">
+                                            <DolanIcon name="'star'" size="16" filled="this.isFavorite(tile.app)"/>
                                         </button>
                                         <a role="option"
-                                           t-att-aria-selected="app_index === this.state.selectedIndex ? 'true' : 'false'"
+                                           t-att-aria-selected="tile_index === this.state.selectedIndex ? 'true' : 'false'"
                                            class="o_app o_menuitem d-flex flex-column rounded-4 justify-content-start align-items-center w-100 p-1 p-md-2"
-                                           t-att-class="{'o_focused': app_index === this.state.selectedIndex}"
-                                           t-att-data-menu-xmlid="app.xmlid"
-                                           t-att-href="'/odoo/' + (app.xmlid || ('action-' + app.actionID))"
-                                           t-on-click.prevent="() => this.selectApp(app)">
-                                            <t t-if="this.getAppIconUrl(app)">
+                                           draggable="false"
+                                           t-att-class="{'o_focused': tile_index === this.state.selectedIndex}"
+                                           t-att-data-menu-xmlid="tile.app.xmlid"
+                                           t-att-href="'/odoo/' + (tile.app.xmlid || ('action-' + tile.app.actionID))"
+                                           t-on-click.prevent="() => this.onAppClick(tile.app)">
+                                            <t t-if="this.getAppIconUrl(tile.app)">
                                                 <img class="o_app_icon rounded-3"
-                                                     t-att-alt="app.name"
-                                                     t-att-src="this.getAppIconUrl(app)"/>
+                                                     t-att-alt="tile.app.name"
+                                                     t-att-src="this.getAppIconUrl(tile.app)" draggable="false"/>
                                             </t>
                                             <t t-else="">
                                                 <div class="o_app_icon rounded-3">
                                                     <div class="o_app_icon_fallback">
-                                                        <span t-out="(app.name || 'A').slice(0, 2).toUpperCase()"/>
+                                                        <span t-out="(tile.app.name || 'A').slice(0, 2).toUpperCase()"/>
                                                     </div>
                                                 </div>
                                             </t>
                                             <div class="o_caption text-center text-truncate mt-2 w-100"
-                                                 t-att-title="app.name"
-                                                 t-out="app.name"/>
+                                                 t-att-title="tile.app.name"
+                                                 t-out="tile.app.name"/>
                                         </a>
                                     </div>
+                                  </t>
                                 </t>
+                            </div>
+                            <div t-if="this.openFolder" class="o_dolan_folder_overlay" role="presentation"
+                                 t-on-click="this.closeDesktopFolder">
+                                <section class="o_dolan_folder_dialog" role="dialog" aria-modal="true"
+                                         t-att-aria-label="'Carpeta ' + this.openFolder.name"
+                                         t-att-class="this.state.desktopDropTargetFolderId === this.openFolder.id ? 'o_dolan_drop_active' : ''"
+                                         t-on-click.stop="this.stopFolderOverlayClick">
+                                    <header class="d-flex align-items-center gap-2 mb-3">
+                                        <span class="o_dolan_folder_icon" aria-hidden="true"><DolanIcon name="'folder'" size="28"/></span>
+                                        <h3 class="h5 mb-0 flex-grow-1">
+                                            <input t-if="this.state.folderNameEditId === this.openFolder.id"
+                                                   type="text" class="form-control form-control-sm o_dolan_folder_rename_input"
+                                                   maxlength="60" aria-label="Nombre de la carpeta"
+                                                   t-att-value="this.state.folderNameDraft"
+                                                   t-on-input="this.onFolderRenameInput"
+                                                   t-on-blur="this.commitFolderRename"
+                                                   t-on-keydown="this.onFolderRenameKeydown"/>
+                                            <button t-else="" type="button" class="o_dolan_folder_title"
+                                                    t-att-title="'Renombrar ' + this.openFolder.name"
+                                                    t-on-click.stop="() => this.startFolderRename(this.openFolder)"
+                                                    t-out="this.openFolder.name"/>
+                                        </h3>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                t-on-click="() => this.openFolderEditor(this.openFolder)">Editar</button>
+                                        <button type="button" class="btn-close" aria-label="Cerrar carpeta"
+                                                t-on-click="this.closeDesktopFolder"/>
+                                    </header>
+                                    <div class="row g-2 o_dolan_folder_contents">
+                                        <t t-foreach="this.appsInFolder(this.openFolder)" t-as="app" t-key="app.id">
+                                            <div class="col-4 col-md-3 o_dolan_folder_app"
+                                                 t-att-data-menu-key="this.appDesktopKey(app)"
+                                                 draggable="false"
+                                                 t-att-class="{'o_dolan_dragging': this.state.desktopDraggingKey === this.appDesktopKey(app)}">
+                                                <button type="button" class="o_dolan_folder_app_open"
+                                                        draggable="false"
+                                                        t-on-click="() => this.selectApp(app)">
+                                                    <img t-if="this.getAppIconUrl(app)" t-att-src="this.getAppIconUrl(app)" t-att-alt="''" draggable="false"/>
+                                                    <span t-else="" class="o_dolan_folder_fallback" t-out="(app.name || 'A').slice(0, 2).toUpperCase()"/>
+                                                    <span t-out="app.name"/>
+                                                </button>
+                                            </div>
+                                        </t>
+                                        <div t-if="!this.appsInFolder(this.openFolder).length" class="col-12 text-center text-muted py-4">
+                                            Esta carpeta está vacía.
+                                        </div>
+                                    </div>
+                                    <div class="o_dolan_folder_root_drop">
+                                        Soltá acá una aplicación para devolverla al escritorio
+                                    </div>
+                                    <footer class="d-flex justify-content-between mt-3">
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                                t-on-click="() => this.deleteDesktopFolder(this.openFolder)">Eliminar carpeta</button>
+                                        <button type="button" class="btn btn-sm btn-primary"
+                                                t-on-click="this.closeDesktopFolder">Cerrar</button>
+                                    </footer>
+                                </section>
+                            </div>
+                            <div t-if="this.state.folderDraft" class="o_dolan_folder_overlay" role="presentation"
+                                 t-on-click="() => this.state.folderDraft = null">
+                                <section class="o_dolan_folder_dialog o_dolan_folder_editor" role="dialog" aria-modal="true"
+                                         aria-label="Editar carpeta" t-on-click.stop="this.stopFolderOverlayClick">
+                                    <header class="d-flex align-items-center gap-2 mb-3">
+                                        <span class="o_dolan_folder_icon" aria-hidden="true"><DolanIcon name="'folder'" size="28"/></span>
+                                        <h3 class="h5 mb-0 flex-grow-1">
+                                            <t t-if="this.state.folderDraft.id">Editar carpeta</t>
+                                            <t t-else="">Nueva carpeta</t>
+                                        </h3>
+                                        <button type="button" class="btn-close" aria-label="Cancelar"
+                                                t-on-click="() => this.state.folderDraft = null"/>
+                                    </header>
+                                    <label class="form-label" for="dolan-folder-name">Nombre</label>
+                                    <input id="dolan-folder-name" class="form-control mb-3" maxlength="60"
+                                           t-att-value="this.state.folderDraft.name"
+                                           t-on-input="this.updateFolderDraftName" placeholder="Ej.: Administración"/>
+                                    <div t-if="!this.state.folderDraft.id" class="d-flex flex-wrap gap-2 mb-3" role="group" aria-label="Carpetas sugeridas">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill"
+                                                t-on-click="() => this.setFolderPreset('settings')">Configuración</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill"
+                                                t-on-click="() => this.setFolderPreset('sales')">Ventas</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill"
+                                                t-on-click="() => this.setFolderPreset('accounting')">Contabilidad</button>
+                                    </div>
+                                    <label class="form-label">Aplicaciones de la carpeta</label>
+                                    <div class="o_dolan_folder_picker">
+                                        <t t-foreach="this.folderEditorApps" t-as="app" t-key="app.id">
+                                            <label class="o_dolan_folder_picker_item">
+                                                <input type="checkbox"
+                                                       t-att-checked="this.state.folderDraft.selectedKeys.includes(this.appDesktopKey(app))"
+                                                       t-on-change="() => this.toggleFolderDraftApp(app)"/>
+                                                <img t-if="this.getAppIconUrl(app)" t-att-src="this.getAppIconUrl(app)" t-att-alt="''"/>
+                                                <span t-out="app.name"/>
+                                            </label>
+                                        </t>
+                                    </div>
+                                    <footer class="d-flex justify-content-end gap-2 mt-3">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                                t-on-click="() => this.state.folderDraft = null">Cancelar</button>
+                                        <button type="button" class="btn btn-primary"
+                                                t-att-disabled="this.state.desktopLayoutSaving"
+                                                t-on-click="this.saveFolderDraft">Guardar carpeta</button>
+                                    </footer>
+                                </section>
                             </div>
                         </div>
 
                         <!-- Workspace de Acciones Rápidas y Operaciones -->
-                        <div t-if="this.state.activeTab === 'workspace'" class="container px-0 position-relative z-1 flex-grow-1">
+                        <div t-if="this.state.activeTab === 'mine'" id="dolan-desktop-quick-actions" class="container px-0 position-relative z-1 flex-grow-1 o_dolan_quick_actions_widget">
                             <div class="row g-3 justify-content-center max-w-4xl mx-auto py-2">
                                 <div class="col-12 col-md-6 col-lg-4">
                                     <div class="card h-100 border-0 shadow-sm rounded-4 p-3 o_dolan_action_card cursor-pointer"
@@ -365,6 +502,17 @@
                                 </div>
                             </div>
                         </div>
+
+                        <footer class="o_dolan_density_footer d-flex justify-content-end mt-auto py-3">
+                            <button type="button" class="btn btn-sm btn-link text-muted o_dolan_density_toggle"
+                                    t-on-click="() => this.toggleDensity()"
+                                    t-att-aria-pressed="this.state.compact"
+                                    t-att-aria-label="this.state.compact ? 'Usar densidad normal' : 'Usar densidad compacta'">
+                                <DolanIcon name="'compress'" size="16"/>
+                                <t t-if="this.state.compact">Densidad: compacta</t>
+                                <t t-else="">Densidad: normal</t>
+                            </button>
+                        </footer>
                     </div>
                 </div>
             </t>

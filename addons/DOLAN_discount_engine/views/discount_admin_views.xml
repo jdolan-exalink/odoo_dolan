@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_dolan_discount_benefit_list" model="ir.ui.view">
+        <field name="name">dolan.discount.employee.benefit.list</field>
+        <field name="model">dolan.discount.employee.benefit</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/><field name="partner_id"/><field name="employee_dni" groups="DOLAN_discount_engine.group_discount_manager"/><field name="company_id" groups="base.group_multi_company"/>
+                <field name="benefit_type"/><field name="benefit_value"/><field name="daily_limit"/>
+                <field name="monthly_limit"/><field name="require_approval"/><field name="active"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_dolan_discount_benefit_form" model="ir.ui.view">
+        <field name="name">dolan.discount.employee.benefit.form</field>
+        <field name="model">dolan.discount.employee.benefit</field>
+        <field name="arch" type="xml">
+            <form><sheet>
+                <div class="oe_title"><label for="name"/><h1><field name="name"/></h1></div>
+                <group>
+                    <group string="Beneficiario"><field name="company_id"/><field name="partner_id"/><field name="employee_dni" groups="DOLAN_discount_engine.group_discount_manager"/><field name="pos_config_ids" widget="many2many_tags"/></group>
+                    <group string="Beneficio"><field name="benefit_type"/><field name="benefit_value"/><field name="max_discount_amount"/><field name="allow_self_purchase"/></group>
+                    <group string="Cupos"><field name="per_order_limit"/><field name="daily_limit"/><field name="monthly_limit"/></group>
+                    <group string="Elegibilidad"><field name="product_ids" widget="many2many_tags"/><field name="category_ids" widget="many2many_tags"/><field name="excluded_product_ids" widget="many2many_tags"/></group>
+                    <group string="Vigencia"><field name="date_start"/><field name="date_end"/><field name="active"/></group>
+                </group>
+            </sheet></form>
+        </field>
+    </record>
+    <record id="action_dolan_discount_benefit" model="ir.actions.act_window">
+        <field name="name">Beneficios de empleados</field><field name="res_model">dolan.discount.employee.benefit</field><field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_dolan_discount_approval_list" model="ir.ui.view">
+        <field name="name">dolan.discount.approval.list</field><field name="model">dolan.discount.approval</field>
+        <field name="arch" type="xml"><list decoration-warning="state == 'pending'" decoration-success="state in ('approved', 'used')">
+            <field name="create_date"/><field name="company_id" groups="base.group_multi_company"/><field name="pos_config_id"/>
+            <field name="product_id"/><field name="requested_by_id"/><field name="requested_discount"/><field name="requested_reason"/><field name="approved_by_id"/><field name="state"/><field name="expires_at"/>
+        </list></field>
+    </record>
+    <record id="view_dolan_discount_approval_form" model="ir.ui.view">
+        <field name="name">dolan.discount.approval.form</field><field name="model">dolan.discount.approval</field>
+        <field name="arch" type="xml"><form><header>
+            <button name="action_approve" type="object" string="Autorizar" class="btn-primary" groups="DOLAN_discount_engine.group_discount_supervisor,DOLAN_discount_engine.group_discount_manager" invisible="state != 'pending'"/>
+            <button name="action_open_reject_wizard" type="object" string="Rechazar" groups="DOLAN_discount_engine.group_discount_supervisor,DOLAN_discount_engine.group_discount_manager" invisible="state != 'pending'"/>
+            <field name="state" widget="statusbar" statusbar_visible="pending,approved,rejected,used,expired"/>
+        </header><sheet><group>
+            <field name="name"/><field name="company_id"/><field name="pos_config_id"/><field name="order_uuid"/><field name="line_uuid"/><field name="product_id"/>
+            <field name="requested_by_id"/><field name="requested_discount"/><field name="requested_reason"/><field name="expires_at"/>
+            <field name="approved_by_id"/><field name="authorized_discount"/><field name="approved_at"/><field name="used_at"/><field name="used_order_uuid"/>
+        </group></sheet></form></field>
+    </record>
+    <record id="action_dolan_discount_approval" model="ir.actions.act_window">
+        <field name="name">Autorizaciones</field><field name="res_model">dolan.discount.approval</field><field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_dolan_discount_application_list" model="ir.ui.view">
+        <field name="name">dolan.discount.application.list</field><field name="model">dolan.discount.application</field>
+        <field name="arch" type="xml"><list decoration-muted="state == 'reversed'">
+            <field name="date_order"/><field name="order_id"/><field name="company_id" groups="base.group_multi_company"/><field name="pos_config_id"/>
+            <field name="product_id"/><field name="campaign_id"/><field name="employee_benefit_id"/><field name="rule_id"/><field name="source"/><field name="base_amount"/><field name="discount_amount"/><field name="reversed_amount" optional="hide"/><field name="net_discount_amount"/><field name="tax_amount"/><field name="total_after_discount"/><field name="actor_id"/><field name="state"/>
+        </list></field>
+    </record>
+    <record id="view_dolan_discount_application_form" model="ir.ui.view">
+        <field name="name">dolan.discount.application.form</field><field name="model">dolan.discount.application</field>
+        <field name="arch" type="xml"><form><header>
+            <field name="state" widget="statusbar" statusbar_visible="applied,reversed"/>
+        </header><sheet><group>
+            <field name="order_id"/><field name="order_line_id"/><field name="product_id"/><field name="company_id"/><field name="pos_config_id"/><field name="date_order"/>
+            <field name="campaign_id"/><field name="employee_benefit_id"/><field name="rule_id"/><field name="campaign_version"/><field name="source"/><field name="base_amount"/><field name="discount_amount"/><field name="applied_subtotal"/><field name="tax_amount"/><field name="total_after_discount"/><field name="actor_id"/><field name="approved_by_id"/><field name="rule_snapshot"/><field name="campaign_snapshot"/>
+            <field name="reversed_by_id"/><field name="reversed_at"/><field name="reversal_reason"/>
+        </group></sheet></form></field>
+    </record>
+    <record id="view_dolan_discount_application_pivot" model="ir.ui.view">
+        <field name="name">dolan.discount.application.pivot</field><field name="model">dolan.discount.application</field>
+        <field name="arch" type="xml"><pivot string="Descuentos aplicados">
+            <field name="date_order" interval="month" type="row"/><field name="campaign_id" type="row"/><field name="source" type="row"/>
+            <field name="company_id" type="col"/><field name="net_discount_amount" type="measure"/><field name="base_amount" type="measure"/>
+        </pivot></field>
+    </record>
+    <record id="view_dolan_discount_application_graph" model="ir.ui.view">
+        <field name="name">dolan.discount.application.graph</field><field name="model">dolan.discount.application</field>
+        <field name="arch" type="xml"><graph string="Descuentos aplicados" type="bar">
+            <field name="campaign_id"/><field name="net_discount_amount" type="measure"/>
+        </graph></field>
+    </record>
+    <record id="action_dolan_discount_application" model="ir.actions.act_window">
+        <field name="name">Descuentos aplicados</field><field name="res_model">dolan.discount.application</field><field name="view_mode">list,form,pivot,graph</field>
+    </record>
+    <record id="view_dolan_discount_reversal_list" model="ir.ui.view">
+        <field name="name">dolan.discount.application.reversal.list</field><field name="model">dolan.discount.application.reversal</field>
+        <field name="arch" type="xml"><list create="0" edit="0" delete="0">
+            <field name="create_date"/><field name="company_id" groups="base.group_multi_company"/><field name="campaign_id"/><field name="application_id"/><field name="refund_order_id"/><field name="refund_order_line_id"/><field name="amount"/><field name="quantity_ratio"/><field name="actor_id"/><field name="reason"/>
+        </list></field>
+    </record>
+    <record id="action_dolan_discount_reversal" model="ir.actions.act_window">
+        <field name="name">Devoluciones de descuentos</field><field name="res_model">dolan.discount.application.reversal</field><field name="view_mode">list</field>
+    </record>
+
+    <record id="view_dolan_discount_audit_list" model="ir.ui.view">
+        <field name="name">dolan.discount.audit.list</field><field name="model">dolan.discount.audit</field>
+        <field name="arch" type="xml"><list create="0" edit="0" delete="0">
+            <field name="create_date"/><field name="event"/><field name="company_id" groups="base.group_multi_company"/><field name="campaign_id"/><field name="order_id"/><field name="actor_id"/><field name="approved_by_id"/><field name="reason"/>
+        </list></field>
+    </record>
+    <record id="view_dolan_discount_audit_form" model="ir.ui.view">
+        <field name="name">dolan.discount.audit.form</field><field name="model">dolan.discount.audit</field>
+        <field name="arch" type="xml"><form create="0" edit="0" delete="0"><sheet><group>
+            <field name="name"/><field name="event"/><field name="company_id"/><field name="campaign_id"/><field name="order_id"/><field name="order_line_id"/>
+            <field name="actor_id"/><field name="approved_by_id"/><field name="reason"/><field name="before_snapshot"/><field name="after_snapshot"/>
+        </group></sheet></form></field>
+    </record>
+    <record id="action_dolan_discount_audit" model="ir.actions.act_window">
+        <field name="name">Auditoría de promociones</field><field name="res_model">dolan.discount.audit</field><field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_dolan_discount_reverse_wizard" model="ir.ui.view">
+        <field name="name">dolan.discount.reverse.wizard.form</field><field name="model">dolan.discount.reverse.wizard</field>
+        <field name="arch" type="xml"><form string="Revertir descuento"><group><field name="application_id"/><field name="reason"/></group><footer>
+            <button name="action_confirm" type="object" string="Confirmar reversión" class="btn-primary"/><button string="Cancelar" special="cancel" class="btn-secondary"/>
+        </footer></form></field>
+    </record>
+    <record id="action_discount_reverse_wizard" model="ir.actions.act_window">
+        <field name="name">Revertir descuento</field><field name="res_model">dolan.discount.reverse.wizard</field><field name="view_mode">form</field><field name="target">new</field>
+    </record>
+    <record id="view_dolan_discount_approval_reject_wizard" model="ir.ui.view">
+        <field name="name">dolan.discount.approval.reject.wizard.form</field><field name="model">dolan.discount.approval.reject.wizard</field>
+        <field name="arch" type="xml"><form string="Rechazar solicitud"><group><field name="approval_id"/><field name="reason"/></group><footer>
+            <button name="action_confirm" type="object" string="Rechazar" class="btn-primary"/><button string="Cancelar" special="cancel" class="btn-secondary"/>
+        </footer></form></field>
+    </record>
+    <record id="action_discount_approval_reject_wizard" model="ir.actions.act_window">
+        <field name="name">Rechazar solicitud</field><field name="res_model">dolan.discount.approval.reject.wizard</field><field name="view_mode">form</field><field name="target">new</field>
+    </record>
+</odoo>

@@ -13,4 +13,18 @@
             <meta name="application-name" content="DOLAN"/>
         </xpath>
     </template>
+
+    <template id="login_theme_toggle" inherit_id="web.login">
+        <xpath expr="//form[contains(@t-attf-class, 'oe_login_form')]" position="before">
+            <button type="button" class="dolan_login_theme_toggle" data-dolan-theme-toggle="1"
+                    aria-label="Cambiar a modo oscuro" aria-pressed="false" title="Cambiar a modo oscuro">
+                <svg class="dolan_login_theme_icon dolan_login_theme_icon_moon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                    <path d="M20.2 15.4A8.6 8.6 0 0 1 8.6 3.8 8.7 8.7 0 1 0 20.2 15.4Z"/>
+                </svg>
+                <svg class="dolan_login_theme_icon dolan_login_theme_icon_sun" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                    <circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>
+                </svg>
+            </button>
+        </xpath>
+    </template>
 </odoo>
