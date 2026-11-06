@@ -9,6 +9,7 @@ Distribución modular **Open Source (`LGPL-3`)** para **Odoo Community Edition 2
 - [`PRD.md`](PRD.md): Documento de Requerimientos de Producto.
 - [`ROADMAP.md`](ROADMAP.md): Seguimiento de etapas y tareas.
 - [`README_INSTALADOR.md`](README_INSTALADOR.md): Requisitos, uso interactivo, perfiles y pasos posteriores al despliegue.
+- [`bootstrap.sh`](bootstrap.sh): Bootstrap desde GitHub para Debian y Ubuntu con instalación de dependencias.
 - [`crear_odoo20.sh`](crear_odoo20.sh): Instalador para Linux, Ubuntu/Debian y WSL2.
 - [`crear_odoo20.ps1`](crear_odoo20.ps1): Instalador para Windows PowerShell y Docker Desktop.
 - [`scripts/validate_addons.py`](scripts/validate_addons.py): Validador de QA de addons.
@@ -44,6 +45,10 @@ Distribución modular **Open Source (`LGPL-3`)** para **Odoo Community Edition 2
 
 ### En Linux / Ubuntu / Debian / WSL2
 ```bash
+# Instalación directa de servidor nuevo Debian/Ubuntu (requiere sudo y TTY)
+curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | sudo bash
+
+# Alternativa: con el repositorio ya clonado y Docker instalado
 chmod +x crear_odoo20.sh
 
 # Validar conectividad con las ramas 20.0 de IngAdhoc

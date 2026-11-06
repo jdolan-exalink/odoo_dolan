@@ -1,6 +1,18 @@
 # Instalador de DOLAN ERP para Odoo CE 20
 
-Esta guía cubre los instaladores [`crear_odoo20.sh`](crear_odoo20.sh) y [`crear_odoo20.ps1`](crear_odoo20.ps1). Ambos preparan un despliegue Docker Compose con Odoo, PostgreSQL, WAHA para WhatsApp y Whisper local para dictado.
+Esta guía cubre el bootstrap de Linux [`bootstrap.sh`](bootstrap.sh), el instalador [`crear_odoo20.sh`](crear_odoo20.sh) y el instalador Windows [`crear_odoo20.ps1`](crear_odoo20.ps1). Preparan un despliegue Docker Compose con Odoo, PostgreSQL, WAHA para WhatsApp y Whisper local para dictado.
+
+## Instalación directa en Debian o Ubuntu
+
+En un servidor nuevo con conexión a Internet, `curl`, `sudo` y una sesión SSH interactiva, ejecutá:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | sudo bash
+```
+
+El bootstrap verifica que el sistema sea Debian o Ubuntu, instala las herramientas base que falten y, si no encuentra Docker Engine con `docker compose`, configura el repositorio APT oficial de Docker e instala Engine, Buildx y Compose. No elimina paquetes Docker existentes ni borra datos para resolver conflictos: se detiene y los informa para evitar tocar un runtime que ya esté en uso. Después descarga el repositorio temporalmente, abre el asistente interactivo y guarda el despliegue en `/opt/dolan/deployments/<nombre-corto>`.
+
+La terminal debe tener TTY porque el asistente solicita datos y contraseñas. Para conectarte por SSH, usá `ssh -t usuario@servidor`. El primer despliegue descarga imágenes y dependencias, y puede tardar bastante; reservá espacio para Docker, la base PostgreSQL y el modelo local de Whisper.
 
 ## ¿Tengo que descargar Odoo y los módulos a mano?
 
@@ -21,8 +33,8 @@ El acceso a esos repositorios y registros de contenedores debe estar permitido p
 ### Linux, Ubuntu, Debian o WSL2
 
 - Bash 4 o superior.
-- Docker Engine y el plugin `docker compose`.
-- Git, Python 3, `iconv` y utilidades POSIX habituales.
+- Para el comando directo: Debian o Ubuntu con APT, `curl`, `sudo` y TTY. El bootstrap instala Git, Python 3, `dialog`, utilidades POSIX, Docker Engine y el plugin `docker compose` cuando faltan.
+- Para ejecutar `crear_odoo20.sh` directamente: Docker Engine y el plugin `docker compose`, Git, Python 3, `iconv` y utilidades POSIX habituales.
 - Acceso a Internet para clonar repositorios, descargar imágenes y dependencias.
 
 ### Windows
