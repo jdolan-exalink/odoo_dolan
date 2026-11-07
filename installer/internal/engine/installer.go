@@ -42,7 +42,12 @@ func (r Runner) Plan(c core.Config) ([]string, error) {
 	if err := validationConfig.Validate(true); err != nil {
 		return nil, err
 	}
-	args := []string{"--non-interactive", "--deploy", "--name", c.DeploymentPath(), "--port", fmt.Sprint(c.Port), "--callback-port", fmt.Sprint(c.CallbackPort), "--profile", string(c.Profile), "--company", c.Company, "--company-short", c.ProjectName, "--cuit", c.CUIT, "--address", c.Address, "--city", c.City, "--responsibility", c.Responsibility, "--billing-pos", fmt.Sprint(c.BillingPOS), "--pos-pos", fmt.Sprint(c.POSPOS), "--admin-email", c.AdminEmail, "--admin-name", c.AdminName, "--init-db", c.InitDB}
+	args := []string{"--non-interactive", "--deploy", "--name", c.DeploymentPath(), "--port", fmt.Sprint(c.Port), "--callback-port", fmt.Sprint(c.CallbackPort), "--profile", core.LegacyProfileName(c.Profile), "--company", c.Company, "--company-short", c.ProjectName, "--cuit", c.CUIT, "--address", c.Address, "--city", c.City, "--responsibility", c.Responsibility, "--billing-pos", fmt.Sprint(c.BillingPOS), "--pos-pos", fmt.Sprint(c.POSPOS), "--admin-email", c.AdminEmail, "--admin-name", c.AdminName, "--init-db", c.InitDB}
+	if c.DemoMode == core.DemoDolan {
+		args = append(args, "--demo-mode", "dolan")
+	} else if c.DemoData || c.DemoMode == core.DemoOdoo {
+		args = append(args, "--demo-data")
+	}
 	if len(c.Modules) > 0 {
 		args = append(args, "--modules", strings.Join(c.Modules, ","))
 	}
@@ -100,7 +105,24 @@ func (r Runner) Install(ctx context.Context, c core.Config, onLog LogFunc) error
 	if _, err := os.Stat(filepath.Join(c.DeploymentPath(), "docker-compose.yml")); err != nil {
 		return fmt.Errorf("el motor terminó pero no se encontró docker-compose.yml en el destino: %w", err)
 	}
-	m := state.Manifest{Name: c.ProjectName, Company: c.Company, Profile: string(c.Profile), Database: c.InitDB, Port: c.Port, ProjectPath: c.DeploymentPath(), CreatedAt: time.Now().UTC(), Services: []string{"odoo", "db", "waha", "whisper"}}
+	m := state.Manifest{
+		Name:         c.ProjectName,
+		Deployment:   string(c.Target),
+		VMID:         c.LXC.VMID,
+		OdooVersion:  "20.0",
+		DolanVersion: "20.0.1",
+		Company:      c.Company,
+		Profile:      string(core.CanonicalProfile(c.Profile)),
+		Modules:      c.Modules,
+		DemoData:     c.DemoData || c.DemoMode != core.DemoNone,
+		DemoMode:     string(c.DemoMode),
+		Database:     c.InitDB,
+		Port:         c.Port,
+		CallbackPort: c.CallbackPort,
+		ProjectPath:  c.DeploymentPath(),
+		CreatedAt:    time.Now().UTC(),
+		Services:     []string{"odoo", "db", "waha", "whisper"},
+	}
 	if err := state.Write(c.DeploymentPath(), m); err != nil {
 		return fmt.Errorf("despliegue completado, pero no se pudo guardar el manifiesto: %w", err)
 	}

@@ -29,6 +29,9 @@ param(
     [switch]$Deploy,
     [switch]$NoDeploy,
     [string]$InitDb = "",
+    [switch]$DemoData,
+    [ValidateSet("none", "odoo", "dolan")]
+    [string]$DemoMode = "none",
     [string]$Apps = "contacts,calendar,mail,crm,sale_management,purchase,stock,l10n_ar,l10n_ar_withholding,l10n_ar_pos,l10n_ar_stock,l10n_latam_check,l10n_latam_invoice_document",
     [switch]$Check
 )
@@ -463,21 +466,25 @@ if ($Deploy -and -not $NoDeploy) {
         Write-Host "3/3 Construyendo y levantando contenedores Docker..." -ForegroundColor Cyan
         docker compose build
         if ($LASTEXITCODE -ne 0) { throw "docker compose build fallo (codigo $LASTEXITCODE)." }
-        docker compose up -d
+        if (-not [string]::IsNullOrWhiteSpace($InitDb)) {
+            docker compose up -d db
+        } else {
+            docker compose up -d
+        }
         if ($LASTEXITCODE -ne 0) { throw "docker compose up fallo (codigo $LASTEXITCODE)." }
         Write-Host "Odoo 20 DOLAN desplegado en http://localhost:$Port" -ForegroundColor Green
         Write-Host "WAHA disponible en http://localhost:3000; usuario/clave/API key están en $TargetDir\.env" -ForegroundColor Cyan
         Write-Host "Whisper local se descarga al volumen Docker la primera vez que inicia." -ForegroundColor Cyan
 
         if (-not [string]::IsNullOrWhiteSpace($InitDb)) {
-            Write-Host "Esperando a que Odoo acepte conexiones HTTP..." -ForegroundColor Cyan
-            $OdooReady = $false
+            Write-Host "Esperando a que PostgreSQL esté listo..." -ForegroundColor Cyan
+            $DbReady = $false
             for ($attempt = 0; $attempt -lt 60; $attempt++) {
-                docker compose exec -T odoo python3 -c "import socket; s=socket.create_connection(('127.0.0.1',8069),timeout=1); s.close()" *> $null
-                if ($LASTEXITCODE -eq 0) { $OdooReady = $true; break }
+                docker compose exec -T db pg_isready -U odoo -d postgres *> $null
+                if ($LASTEXITCODE -eq 0) { $DbReady = $true; break }
                 Start-Sleep -Seconds 1
             }
-            if (-not $OdooReady) { throw "Odoo no abrio el puerto HTTP interno tras 60 intentos." }
+            if (-not $DbReady) { throw "PostgreSQL no estuvo listo tras 60 intentos." }
 
             $AvailableDolan = $DolanAddons | Where-Object { Test-Path (Join-Path $AddonsTarget $_) }
             $InstallList = $Apps
@@ -488,8 +495,18 @@ if ($Deploy -and -not $NoDeploy) {
                 $InstallList = "$InstallList,l10n_ar_fiscal_ws"
             }
             Write-Host "Inicializando DB '$InitDb' (perfil: $Profile)..." -ForegroundColor Cyan
-            docker compose exec -T odoo odoo --config=/etc/odoo/odoo.conf --logfile= --stop-after-init --no-http --without-demo --load-language=es_419 -d $InitDb -i $InstallList
+            $DemoArgs = @()
+            if (-not $DemoData -and $DemoMode -eq "none") { $DemoArgs += "--without-demo" }
+            docker compose run --rm --no-deps odoo odoo --config=/etc/odoo/odoo.conf --logfile= --stop-after-init --no-http @DemoArgs --load-language=es_419 -d $InitDb -i $InstallList
             if ($LASTEXITCODE -ne 0) { throw "La inicializacion de Odoo fallo (codigo $LASTEXITCODE)." }
+            if ($DemoMode -eq "dolan") {
+                $seedScript = Join-Path $ScriptDir "scripts\seed_demo_integral.py"
+                docker compose run --rm --no-deps --user root `
+                    -e DOLAN_ALLOW_DEMO_DB=1 `
+                    -v "${seedScript}:/tmp/seed_demo_integral.py:ro" `
+                    odoo sh -c "odoo shell --config=/etc/odoo/odoo.conf --logfile= --no-http -d '$InitDb' < /tmp/seed_demo_integral.py"
+                if ($LASTEXITCODE -ne 0) { throw "No se pudo cargar la semilla demo DOLAN." }
+            }
             docker compose exec -T db psql -U odoo -d $InitDb -c "UPDATE ir_module_module SET application=false WHERE license='OEEL-1' AND application=true;"
             if ($LASTEXITCODE -ne 0) { throw "No se pudieron ocultar los modulos OEEL-1 (codigo $LASTEXITCODE)." }
             docker compose exec -T db psql -U odoo -d $InitDb -c "INSERT INTO ir_config_parameter (key,value,create_uid,create_date,write_uid,write_date) VALUES ('l10n_ar_fiscal_ws.env_type','homologation',1,now(),1,now()) ON CONFLICT (key) DO NOTHING;"
@@ -506,22 +523,22 @@ if ($Deploy -and -not $NoDeploy) {
                     chmod 600 $bootstrapJson
                     if ($LASTEXITCODE -ne 0) { Remove-Item -Force $bootstrapJson; throw "No se pudieron restringir los permisos del archivo temporal de credenciales." }
                 }
-                $odooContainer = "${ContainerPrefix}_odoo"
                 try {
-                    docker cp (Join-Path $ScriptDir "scripts\installer_bootstrap.py") "${odooContainer}:/tmp/dolan-installer.py"
-                    if ($LASTEXITCODE -ne 0) { throw "No se pudo copiar la rutina de alta inicial." }
-                    docker cp $bootstrapJson "${odooContainer}:/tmp/dolan-installer.json"
-                    if ($LASTEXITCODE -ne 0) { throw "No se pudo transferir la configuracion inicial." }
-                    docker compose exec -T odoo sh -c "odoo shell --config=/etc/odoo/odoo.conf --logfile= --no-http -d '$InitDb' < /tmp/dolan-installer.py"
+                    $bootstrapScript = Join-Path $ScriptDir "scripts\installer_bootstrap.py"
+                    docker compose run --rm --no-deps --user root `
+                        -v "${bootstrapScript}:/tmp/dolan-installer.py:ro" `
+                        -v "${bootstrapJson}:/tmp/dolan-installer.json:ro" `
+                        odoo sh -c "odoo shell --config=/etc/odoo/odoo.conf --logfile= --no-http -d '$InitDb' < /tmp/dolan-installer.py"
                     if ($LASTEXITCODE -ne 0) { throw "No se pudo configurar empresa/administrador/PV." }
                 } finally {
-                    docker compose exec -T odoo rm -f /tmp/dolan-installer.py /tmp/dolan-installer.json *> $null
                     Remove-Item -Force $bootstrapJson -ErrorAction SilentlyContinue
                 }
                 Write-Host "Empresa y administrador inicial configurados. Login: $AdminEmail" -ForegroundColor Green
                 Write-Host "Certificado ARCA: cargarlo en Facturacion > Configuracion > ARCA/AFIP > Certificados; seleccionar empresa, CUIT representado y ambiente. No se emite CAE durante el alta." -ForegroundColor Yellow
                 Write-Host "Pendiente: configurar correo saliente y WAHA/WhatsApp." -ForegroundColor Yellow
             }
+            docker compose up -d
+            if ($LASTEXITCODE -ne 0) { throw "No se pudieron publicar los servicios inicializados (codigo $LASTEXITCODE)." }
         }
     } finally {
         Pop-Location

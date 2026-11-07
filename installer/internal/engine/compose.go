@@ -74,10 +74,63 @@ func Resolve(root, name string) (Deployment, error) {
 	}
 	path := filepath.Join(root, name)
 	if _, err := os.Stat(filepath.Join(path, "docker-compose.yml")); err != nil {
-		return Deployment{}, fmt.Errorf("no existe un despliegue Compose llamado %q en %s", name, root)
+		// Also try matching by VMID or InstallationID in discovered deployments
+		if items, dErr := Discover(root); dErr == nil {
+			for _, item := range items {
+				if fmt.Sprint(item.Manifest.VMID) == name || item.Manifest.InstallationID == name {
+					return item, nil
+				}
+			}
+		}
+		return Deployment{}, fmt.Errorf("no existe un despliegue llamado %q en %s", name, root)
 	}
 	m, err := state.Read(path)
 	return Deployment{Name: name, Path: path, Manifest: m, Managed: err == nil}, nil
+}
+
+// Adopt validates an unmanaged installation directory and writes a dolan-installation.json manifest
+// without reinstalling or altering data, only after explicit user consent.
+func Adopt(root, name, company, profile, database string, port int) (Deployment, error) {
+	d, err := Resolve(root, name)
+	if err != nil {
+		return Deployment{}, err
+	}
+	if d.Managed {
+		return d, nil
+	}
+	now := time.Now().UTC()
+	if company == "" {
+		company = d.Name
+	}
+	if profile == "" {
+		profile = "comercio"
+	}
+	if database == "" {
+		database = "odoo_" + d.Name
+	}
+	if port == 0 {
+		port = 8070
+	}
+	m := state.Manifest{
+		Name:         d.Name,
+		Company:      company,
+		Deployment:   "docker",
+		OdooVersion:  "20.0",
+		DolanVersion: "20.0.1",
+		Profile:      profile,
+		Database:     database,
+		Port:         port,
+		ProjectPath:  d.Path,
+		CreatedAt:    now,
+		AdoptedAt:    &now,
+		Services:     []string{"odoo", "db", "waha", "whisper"},
+	}
+	if err := state.Write(d.Path, m); err != nil {
+		return Deployment{}, err
+	}
+	d.Manifest = m
+	d.Managed = true
+	return d, nil
 }
 
 func GetStatus(ctx context.Context, d Deployment) Status {

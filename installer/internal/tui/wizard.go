@@ -48,6 +48,7 @@ func RunWizard(cfg core.Config, modules []string) (core.Config, error) {
 		{"address", "Domicilio fiscal", "Domicilio de la empresa inicial.", false},
 		{"city", "Localidad", "Ciudad o localidad fiscal.", false},
 		{"responsibility", "Responsabilidad ARCA", "Seleccioná la condición fiscal de la empresa.", false},
+		{"demo_data", "Datos de demostración", "Escribí no (limpia, por defecto), odoo (demo estándar) o dolan (demo DOLAN por perfil).", false},
 		{"billing_pos", "Punto de venta de facturación", "Número de PV habilitado en ARCA.", false},
 		{"pos_pos", "Punto de venta de POS", "PV para POS (puede coincidir si así lo configurás en ARCA).", false},
 		{"admin_email", "Correo del administrador", "Este será el usuario de acceso inicial a Odoo.", false},
@@ -216,7 +217,7 @@ func (m wizardModel) View() tea.View {
 	if m.review {
 		b.WriteString(sectionStyle.Render("Revisá el plan antes de modificar el servidor"))
 		b.WriteString("\n\n")
-		b.WriteString(fmt.Sprintf("Perfil:         %s\nEmpresa:        %s\nCUIT:           %s\nProyecto:       %s\nBase de datos:  %s\nAdministrador:  %s\nURL prevista:   http://<IP>:%d/web/login\n\n", m.cfg.Profile, m.cfg.Company, m.cfg.CUIT, m.cfg.DeploymentPath(), m.cfg.InitDB, m.cfg.AdminEmail, m.cfg.Port))
+		b.WriteString(fmt.Sprintf("Perfil:         %s\nEmpresa:        %s\nCUIT:           %s\nProyecto:       %s\nBase de datos:  %s\nDatos demo:     %s\nAdministrador:  %s\nURL prevista:   http://<IP>:%d/web/login\n\n", m.cfg.Profile, m.cfg.Company, m.cfg.CUIT, m.cfg.DeploymentPath(), m.cfg.InitDB, map[bool]string{true: "sí", false: "no"}[m.cfg.DemoData], m.cfg.AdminEmail, m.cfg.Port))
 		b.WriteString(warnStyle.Render("Va a instalar paquetes del sistema, activar Docker, descargar módulos y contenedores, y crear una base nueva."))
 		if m.cfg.ResetExistingName != "" {
 			b.WriteString(errorStyle.Render(fmt.Sprintf("ATENCIÓN: al confirmar se borrarán el deployment %q, su base PostgreSQL, volúmenes Compose e imágenes locales, sin backup.", m.cfg.ResetExistingName)))
@@ -374,12 +375,17 @@ func (m *wizardModel) configureInput() {
 }
 
 func (m *wizardModel) setStepsForProfile() {
-	if m.cfg.Profile == core.ProfileCustom {
-		if len(m.steps) == 15 {
-			m.steps = append(m.steps, field{"modules", "Módulos custom", "Ingresá IDs separados por coma. Disponibles: " + strings.Join(m.modules, ", "), false})
+	modulesStep := -1
+	for i, step := range m.steps {
+		if step.key == "modules" {
+			modulesStep = i
+			break
 		}
-	} else if len(m.steps) == 16 {
-		m.steps = m.steps[:15]
+	}
+	if m.cfg.Profile == core.ProfileCustom && modulesStep == -1 {
+		m.steps = append(m.steps, field{"modules", "Módulos custom", "Ingresá IDs separados por coma. Disponibles: " + strings.Join(m.modules, ", "), false})
+	} else if m.cfg.Profile != core.ProfileCustom && modulesStep >= 0 {
+		m.steps = append(m.steps[:modulesStep], m.steps[modulesStep+1:]...)
 	}
 }
 
@@ -397,6 +403,14 @@ func (m wizardModel) getField(key string) string {
 		return m.cfg.City
 	case "responsibility":
 		return m.cfg.Responsibility
+	case "demo_data":
+		if m.cfg.DemoMode == core.DemoDolan {
+			return "dolan"
+		}
+		if m.cfg.DemoMode == core.DemoOdoo || m.cfg.DemoData {
+			return "odoo"
+		}
+		return "no"
 	case "billing_pos":
 		return fmt.Sprint(m.cfg.BillingPOS)
 	case "pos_pos":
@@ -443,6 +457,20 @@ func (m *wizardModel) saveCurrent() error {
 		m.cfg.City = v
 	case "responsibility":
 		m.cfg.Responsibility = responsibilityOptions[m.responsibilityIndex]
+	case "demo_data":
+		switch strings.ToLower(v) {
+		case "dolan", "demo_dolan", "2":
+			m.cfg.DemoData = true
+			m.cfg.DemoMode = core.DemoDolan
+		case "s", "si", "sí", "y", "yes", "true", "1", "odoo", "demo_odoo":
+			m.cfg.DemoData = true
+			m.cfg.DemoMode = core.DemoOdoo
+		case "n", "no", "false", "0", "none", "limpia":
+			m.cfg.DemoData = false
+			m.cfg.DemoMode = core.DemoNone
+		default:
+			return errors.New("elegí 'no' (instalación limpia), 'odoo' (demo estándar) o 'dolan' (demo DOLAN)")
+		}
 	case "billing_pos":
 		n, err := parsePositive(v)
 		if err != nil {

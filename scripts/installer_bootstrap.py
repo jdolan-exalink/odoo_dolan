@@ -31,8 +31,13 @@ partner_values = {
     "city": config.get("city") or False,
     "l10n_ar_afip_responsibility_type_id": responsibility.id,
 }
-if "l10n_latam.identification.type" in env.registry.models:
-    identification_type = env["l10n_latam.identification.type"].sudo().search([("name", "=", "CUIT")], limit=1)
+try:
+    identification_model = env["l10n_latam.identification.type"].sudo()
+except KeyError:
+    # Some localization combinations do not install this optional model.
+    identification_model = False
+if identification_model:
+    identification_type = identification_model.search([("name", "=", "CUIT")], limit=1)
     if identification_type and "l10n_latam_identification_type_id" in partner._fields:
         partner_values["l10n_latam_identification_type_id"] = identification_type.id
 partner.write(partner_values)
