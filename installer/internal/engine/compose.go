@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"os/exec"
@@ -13,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jdolan-exalink/odoo_dolan/installer/internal/packages"
 	"github.com/jdolan-exalink/odoo_dolan/installer/internal/security"
 	"github.com/jdolan-exalink/odoo_dolan/installer/internal/state"
 )
@@ -201,4 +203,202 @@ func envSecrets(path string) []string {
 		}
 	}
 	return secrets
+}
+
+// DeleteDeployment stops and removes containers, volumes, local images, and the deployment directory
+// after validating that the target is a valid deployment inside root.
+func DeleteDeployment(ctx context.Context, root, name string) (Deployment, error) {
+	d, err := Resolve(root, name)
+	if err != nil {
+		return Deployment{}, err
+	}
+	info, err := os.Lstat(d.Path)
+	if err != nil {
+		return Deployment{}, err
+	}
+	if !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {
+		return Deployment{}, errors.New("el destino a borrar debe ser un directorio real, no un archivo ni un enlace simbólico")
+	}
+	realRoot, err := filepath.EvalSymlinks(root)
+	if err != nil {
+		return Deployment{}, fmt.Errorf("resolver la ruta base: %w", err)
+	}
+	if filepath.Clean(realRoot) == string(os.PathSeparator) {
+		return Deployment{}, errors.New("por seguridad no se puede borrar un deployment desde la raíz del sistema")
+	}
+	realTarget, err := filepath.EvalSymlinks(d.Path)
+	if err != nil {
+		return Deployment{}, fmt.Errorf("resolver el deployment: %w", err)
+	}
+	rel, err := filepath.Rel(realRoot, realTarget)
+	if err != nil || rel == "." || rel == ".." || strings.HasPrefix(rel, ".."+string(os.PathSeparator)) {
+		return Deployment{}, errors.New("el deployment a borrar debe quedar dentro de la ruta base")
+	}
+	composeFile := filepath.Join(realTarget, "docker-compose.yml")
+	if st, err := os.Stat(composeFile); err != nil || !st.Mode().IsRegular() {
+		return Deployment{}, errors.New("no encontré un docker-compose.yml regular en el deployment")
+	}
+	if _, lookErr := exec.LookPath("docker"); lookErr == nil {
+		stop := exec.CommandContext(ctx, "docker", "compose", "down", "--volumes", "--rmi", "local", "--remove-orphans")
+		stop.Dir = realTarget
+		_ = stop.Run()
+	}
+	if err := os.RemoveAll(realTarget); err != nil {
+		return Deployment{}, fmt.Errorf("borrar carpeta del deployment: %w", err)
+	}
+	return d, nil
+}
+
+type ApplyPackageResult struct {
+	Installation     string              `json:"installation"`
+	ManifestUpdated  bool                `json:"manifest_updated"`
+	EnvUpdated       bool                `json:"env_updated"`
+	AddonsSynced     int                 `json:"addons_synced"`
+	ContainerUpdated bool                `json:"container_updated"`
+	Plan             packages.ChangePlan `json:"plan"`
+	Message          string              `json:"message"`
+}
+
+// ApplyPackagePlan persists the updated profile and modules in the deployment manifest,
+// syncs any newly required addons from repoRoot/addons into the deployment's addons directory,
+// updates .env if present, and installs new modules in the running Odoo container if active.
+func ApplyPackagePlan(ctx context.Context, repoRoot string, d Deployment, plan packages.ChangePlan) (ApplyPackageResult, error) {
+	res := ApplyPackageResult{
+		Installation: d.Name,
+		Plan:         plan,
+	}
+	d.Manifest.Profile = string(plan.TargetProfile)
+	d.Manifest.Modules = plan.TargetModules
+	d.Manifest.UpdatedAt = time.Now().UTC()
+	if d.Manifest.Name == "" {
+		d.Manifest.Name = d.Name
+	}
+	if d.Manifest.OdooVersion == "" {
+		d.Manifest.OdooVersion = "20.0"
+	}
+	if d.Manifest.DolanVersion == "" {
+		d.Manifest.DolanVersion = "20.0.1"
+	}
+	if d.Manifest.Deployment == "" {
+		d.Manifest.Deployment = "docker"
+	}
+	if err := state.Write(d.Path, d.Manifest); err != nil {
+		return res, err
+	}
+	res.ManifestUpdated = true
+
+	envPath := filepath.Join(d.Path, ".env")
+	if _, err := os.Stat(envPath); err == nil {
+		if updateEnvFile(envPath, map[string]string{
+			"DOLAN_PROFILE": string(plan.TargetProfile),
+			"DOLAN_MODULES": strings.Join(plan.TargetModules, ","),
+		}) == nil {
+			res.EnvUpdated = true
+		}
+	}
+
+	destAddonsRoot := filepath.Join(d.Path, "addons")
+	if repoRoot != "" {
+		if st, err := os.Stat(destAddonsRoot); err == nil && st.IsDir() {
+			for _, mod := range plan.TargetModules {
+				srcMod := filepath.Join(repoRoot, "addons", mod)
+				dstMod := filepath.Join(destAddonsRoot, mod)
+				if _, sErr := os.Stat(srcMod); sErr == nil {
+					if copyAddonDir(srcMod, dstMod) == nil {
+						res.AddonsSynced++
+					}
+				}
+			}
+		}
+	}
+
+	if len(plan.ToInstall) > 0 {
+		st := GetStatus(ctx, d)
+		odooRunning := false
+		for _, c := range st.Containers {
+			if (c.Service == "odoo" || strings.Contains(c.Name, "odoo")) && c.State == "running" {
+				odooRunning = true
+				break
+			}
+		}
+		if odooRunning {
+			dbName := d.Manifest.Database
+			if dbName == "" {
+				dbName = "odoo_" + d.Name
+			}
+			modsCSV := strings.Join(append([]string{}, plan.ToInstall...), ",")
+			if len(plan.OdooSystemAppsToAdd) > 0 {
+				modsCSV = strings.Join(append(append([]string{}, plan.OdooSystemAppsToAdd...), plan.ToInstall...), ",")
+			}
+			cmd := exec.CommandContext(ctx, "docker", "compose", "exec", "-T", "odoo",
+				"/opt/odoo/odoo-server/odoo-bin", "-c", "/etc/odoo/odoo.conf",
+				"-d", dbName, "-i", modsCSV, "--stop-after-init", "--no-http")
+			cmd.Dir = d.Path
+			if out, err := cmd.CombinedOutput(); err != nil {
+				res.Message = fmt.Sprintf("Manifiesto actualizado, pero odoo-bin devolvió error al inicializar módulos: %v (%s)", err, strings.TrimSpace(string(out)))
+				return res, nil
+			}
+			restart := exec.CommandContext(ctx, "docker", "compose", "restart", "odoo")
+			restart.Dir = d.Path
+			_ = restart.Run()
+			res.ContainerUpdated = true
+			res.Message = fmt.Sprintf("Perfil %s y +%d módulos instalados y activos en %s", plan.TargetProfile, len(plan.ToInstall), d.Name)
+			return res, nil
+		}
+	}
+
+	res.Message = fmt.Sprintf("Perfil %s y módulos (%d en total, +%d nuevos) guardados en %s", plan.TargetProfile, len(plan.TargetModules), len(plan.ToInstall), d.Name)
+	return res, nil
+}
+
+func updateEnvFile(path string, updates map[string]string) error {
+	b, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	lines := strings.Split(string(b), "\n")
+	seen := make(map[string]bool)
+	for i, line := range lines {
+		key, _, ok := strings.Cut(strings.TrimSpace(line), "=")
+		if ok {
+			if newVal, exists := updates[key]; exists {
+				lines[i] = key + "=" + newVal
+				seen[key] = true
+			}
+		}
+	}
+	for k, v := range updates {
+		if !seen[k] {
+			lines = append(lines, k+"="+v)
+		}
+	}
+	return os.WriteFile(path, []byte(strings.Join(lines, "\n")), 0600)
+}
+
+func copyAddonDir(src, dst string) error {
+	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		rel, err := filepath.Rel(src, path)
+		if err != nil {
+			return err
+		}
+		target := filepath.Join(dst, rel)
+		if info.IsDir() {
+			return os.MkdirAll(target, 0755)
+		}
+		in, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer in.Close()
+		out, err := os.OpenFile(target, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, info.Mode()&0777)
+		if err != nil {
+			return err
+		}
+		defer out.Close()
+		_, err = io.Copy(out, in)
+		return err
+	})
 }
