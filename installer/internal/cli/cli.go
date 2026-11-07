@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"bufio"
 	"context"
 	"encoding/json"
 	"errors"
@@ -33,7 +34,6 @@ func Run(args []string) error {
 	defer stop()
 
 	if len(args) == 0 {
-		// If interactive TTY, launch Manager 2.0 TUI Home screen (7.1); otherwise show usage
 		repo, _ := findRepoRoot()
 		if isInteractiveTTY() {
 			return tui.RunManagerTUI(ctx, core.DefaultProjectRoot(), repo)
@@ -48,10 +48,11 @@ func Run(args []string) error {
 
 	switch args[0] {
 	case "tui":
-		repo, _ := findRepoRoot()
-		return tui.RunManagerTUI(ctx, core.DefaultProjectRoot(), repo)
+		return runTUI(ctx, args[1:])
 	case "install":
 		return runInstall(ctx, args[1:])
+	case "delete", "remove", "rm":
+		return runDelete(ctx, args[1:])
 	case "doctor", "diagnostics":
 		return runDiagnostics(ctx, args[1:])
 	case "list":
@@ -80,6 +81,88 @@ func Run(args []string) error {
 	}
 }
 
+func runTUI(ctx context.Context, args []string) error {
+	fs := flag.NewFlagSet("tui", flag.ContinueOnError)
+	fs.SetOutput(io.Discard)
+	root := fs.String("root", core.DefaultProjectRoot(), "Directorio base de despliegues")
+	screen := fs.String("screen", "", "Pantalla inicial opcional (home, packages, delete, backup, restore, updates, diagnostics)")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	repo, _ := findRepoRoot()
+	var initScreen tui.ScreenID
+	switch strings.ToLower(strings.TrimSpace(*screen)) {
+	case "", "home":
+		initScreen = tui.ScreenHome
+	case "packages", "paquetes":
+		initScreen = tui.ScreenManagePackages
+	case "delete", "borrar":
+		initScreen = tui.ScreenDeleteConfirm
+	case "manage", "administrar":
+		initScreen = tui.ScreenManageInstall
+	case "backup", "backups":
+		initScreen = tui.ScreenCreateBackup
+	case "restore", "restaurar":
+		initScreen = tui.ScreenRestoreBackup
+	case "updates", "actualizaciones":
+		initScreen = tui.ScreenUpdates
+	case "diagnostics", "diagnostico":
+		initScreen = tui.ScreenDiagnostics
+	default:
+		initScreen = tui.ScreenID(*screen)
+	}
+	return tui.RunManagerTUIWithScreen(ctx, *root, repo, initScreen)
+}
+
+func runDelete(ctx context.Context, args []string) error {
+	fs := flag.NewFlagSet("delete", flag.ContinueOnError)
+	fs.SetOutput(io.Discard)
+	root := fs.String("root", core.DefaultProjectRoot(), "Directorio base de despliegues")
+	name := fs.String("name", "", "Nombre de la instalación a borrar")
+	installation := fs.String("installation", "", "Alias de --name")
+	confirm := fs.Bool("yes", false, "Confirmar borrado definitivo sin preguntar")
+	asJSON := fs.Bool("json", false, "Salida JSON")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	target := *name
+	if target == "" {
+		target = *installation
+	}
+	if target == "" {
+		return errors.New("delete requiere --name <nombre> (o --installation <nombre>)")
+	}
+	d, err := engine.Resolve(*root, target)
+	if err != nil {
+		return err
+	}
+	if !*confirm {
+		if !isInteractiveTTY() {
+			return errors.New("delete requiere confirmación explícita (--yes) cuando se ejecuta en modo no interactivo")
+		}
+		fmt.Printf("¡ATENCIÓN! Se eliminará definitivamente la instalación %q en %s (contenedores, volúmenes, base de datos y carpeta).\n", d.Name, d.Path)
+		fmt.Printf("Escribí el nombre %q para confirmar el borrado: ", d.Name)
+		reader := bufio.NewReader(os.Stdin)
+		line, _ := reader.ReadString('\n')
+		if strings.TrimSpace(line) != d.Name {
+			return errors.New("confirmación no coincidente; borrado cancelado")
+		}
+	}
+	deleted, err := engine.DeleteDeployment(ctx, *root, d.Name)
+	if err != nil {
+		return err
+	}
+	if *asJSON {
+		return writeJSON(map[string]any{
+			"deleted":      true,
+			"installation": deleted.Name,
+			"path":         deleted.Path,
+		})
+	}
+	fmt.Printf("Instalación %q (%s) eliminada definitivamente.\n", deleted.Name, deleted.Path)
+	return nil
+}
+
 func runInstall(ctx context.Context, args []string) error {
 	fs := flag.NewFlagSet("install", flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
@@ -89,6 +172,7 @@ func runInstall(ctx context.Context, args []string) error {
 	asJSON := fs.Bool("json", false, "Salida JSON del plan")
 	root := fs.String("root", core.DefaultProjectRoot(), "Directorio base de despliegues")
 	target := fs.String("target", "docker", "proxmox-lxc, docker, linux-native o windows")
+	deployment := fs.String("deployment", "", "Alias de --target")
 	vmid := fs.Int("vmid", 105, "VMID para Proxmox LXC")
 	name := fs.String("name", "", "Nombre corto del proyecto")
 	resetExisting := fs.String("reset-existing", "", "Borrar un deployment existente con este mismo nombre después de confirmar el plan")
@@ -131,6 +215,9 @@ func runInstall(ctx context.Context, args []string) error {
 	}
 	if visited(fs, "target") {
 		cfg.Target = core.DeploymentTarget(*target)
+	}
+	if visited(fs, "deployment") {
+		cfg.Target = core.DeploymentTarget(*deployment)
 	}
 	if visited(fs, "vmid") {
 		cfg.LXC.VMID = *vmid
@@ -340,6 +427,8 @@ func runAdopt(args []string) error {
 	fs.SetOutput(io.Discard)
 	root := fs.String("root", core.DefaultProjectRoot(), "Directorio base")
 	name := fs.String("installation", "", "Nombre de la instalación a adoptar")
+	nameAlias := fs.String("name", "", "Alias de --installation")
+	pathArg := fs.String("path", "", "Ruta de la instalación a adoptar")
 	company := fs.String("company", "", "Razón social")
 	profile := fs.String("profile", "comercio", "Perfil de la instalación")
 	db := fs.String("db", "", "Base de datos principal")
@@ -349,13 +438,21 @@ func runAdopt(args []string) error {
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
-	if *name == "" {
-		return errors.New("adopt requiere --installation <nombre>")
+	target := *name
+	if target == "" {
+		target = *nameAlias
+	}
+	if target == "" && *pathArg != "" {
+		*root = filepath.Dir(*pathArg)
+		target = filepath.Base(*pathArg)
+	}
+	if target == "" {
+		return errors.New("adopt requiere --installation <nombre> (o --name / --path)")
 	}
 	if !*confirm {
 		return errors.New("adopt requiere confirmación explícita (--yes) para registrar el manifiesto sin modificar datos")
 	}
-	d, err := engine.Adopt(*root, *name, *company, *profile, *db, *port)
+	d, err := engine.Adopt(*root, target, *company, *profile, *db, *port)
 	if err != nil {
 		return err
 	}
@@ -466,20 +563,38 @@ func runBackup(_ context.Context, args []string) error {
 	fs.SetOutput(io.Discard)
 	root := fs.String("root", core.DefaultProjectRoot(), "Directorio base de instalaciones")
 	installation := fs.String("installation", "", "Nombre, ID o VMID de la instalación")
+	nameAlias := fs.String("name", "", "Alias de --installation")
 	destDir := fs.String("dest", "", "Directorio o archivo destino para el backup")
+	dirAlias := fs.String("dir", "", "Alias de --dest para backup list")
 	file := fs.String("file", "", "Archivo .dolanbak")
+	outAlias := fs.String("out", "", "Alias de --file para backup create")
 	bType := fs.String("type", "full", "Tipo de backup: full, db o config")
 	includeFS := fs.Bool("filestore", true, "Incluir filestore")
 	verifyAfter := fs.Bool("verify", true, "Verificar integridad al finalizar")
+	encryptFlag := fs.Bool("encrypt", false, "Cifrar backup con DOLAN_BACKUP_PASSPHRASE")
 	asJSON := fs.Bool("json", false, "Salida JSON")
 	if err := fs.Parse(args[1:]); err != nil {
 		return err
 	}
 	passphrase := os.Getenv("DOLAN_BACKUP_PASSPHRASE")
+	if *encryptFlag && passphrase == "" {
+		return errors.New("--encrypt requiere definir DOLAN_BACKUP_PASSPHRASE en el entorno")
+	}
+	targetInst := *installation
+	if targetInst == "" {
+		targetInst = *nameAlias
+	}
+	targetFile := *file
+	if targetFile == "" {
+		targetFile = *outAlias
+	}
 
 	switch sub {
 	case "list":
 		searchDir := *destDir
+		if searchDir == "" {
+			searchDir = *dirAlias
+		}
 		if searchDir == "" {
 			searchDir = filepath.Join(*root, "backups")
 		}
@@ -509,29 +624,28 @@ func runBackup(_ context.Context, args []string) error {
 		return nil
 
 	case "create":
-		if *installation == "" {
-			return errors.New("backup create requiere --installation <id|nombre|vmid>")
+		if targetInst == "" {
+			return errors.New("backup create requiere --installation <id|nombre|vmid> (o --name)")
 		}
 		var instManifest state.Manifest
 		var srcDir string
-		if d, err := engine.Resolve(*root, *installation); err == nil {
+		if d, err := engine.Resolve(*root, targetInst); err == nil {
 			instManifest = d.Manifest
 			srcDir = d.Path
 			if instManifest.Name == "" {
 				instManifest.Name = d.Name
 			}
 		} else {
-			// Support creating a logical portable backup for an LXC VMID or named target
 			instManifest = state.Manifest{
-				Name:        *installation,
-				Company:     *installation,
+				Name:        targetInst,
+				Company:     targetInst,
 				Deployment:  "proxmox-lxc",
 				OdooVersion: "20.0",
 				Profile:     "comercio",
-				Database:    "odoo_" + core.Slugify(*installation),
+				Database:    "odoo_" + core.Slugify(targetInst),
 			}
 		}
-		outPath := *file
+		outPath := targetFile
 		if outPath == "" {
 			baseDir := *destDir
 			if baseDir == "" {
@@ -561,10 +675,10 @@ func runBackup(_ context.Context, args []string) error {
 		return nil
 
 	case "verify":
-		if *file == "" {
+		if targetFile == "" {
 			return errors.New("backup verify requiere --file <archivo.dolanbak>")
 		}
-		rep, err := backup.Verify(*file, passphrase)
+		rep, err := backup.Verify(targetFile, passphrase)
 		if *asJSON {
 			_ = writeJSON(rep)
 		}
@@ -595,6 +709,8 @@ func runRestore(_ context.Context, args []string) error {
 	fs.SetOutput(io.Discard)
 	file := fs.String("file", "", "Archivo .dolanbak")
 	target := fs.String("target", "proxmox-lxc", "Destino: lxc, proxmox-lxc, docker, linux-native")
+	targetProvider := fs.String("target-provider", "", "Alias de --target")
+	targetPath := fs.String("target-path", "", "Ruta de destino para restaurar")
 	vmid := fs.Int("vmid", 110, "VMID destino en Proxmox")
 	overwrite := fs.Bool("overwrite", false, "Sobrescribir instalación existente (requiere --yes y backup previo)")
 	confirm := fs.Bool("yes", false, "Confirmar restauración")
@@ -606,11 +722,14 @@ func runRestore(_ context.Context, args []string) error {
 		return errors.New("restore requiere --file <archivo.dolanbak>")
 	}
 	targetNorm := *target
+	if *targetProvider != "" {
+		targetNorm = *targetProvider
+	}
 	if targetNorm == "lxc" {
 		targetNorm = "proxmox-lxc"
 	}
 	passphrase := os.Getenv("DOLAN_BACKUP_PASSPHRASE")
-	plan, err := backup.PlanRestore(*file, passphrase, targetNorm, *vmid, "", *overwrite, packages.AllCatalogIDs(), 80*1024*1024*1024)
+	plan, err := backup.PlanRestore(*file, passphrase, targetNorm, *vmid, *targetPath, *overwrite, packages.AllCatalogIDs(), 80*1024*1024*1024)
 	if err != nil {
 		return err
 	}
@@ -646,7 +765,7 @@ func runRestore(_ context.Context, args []string) error {
 	return nil
 }
 
-func runPackages(_ context.Context, args []string) error {
+func runPackages(ctx context.Context, args []string) error {
 	if len(args) == 0 {
 		return errors.New("indicá una acción para packages: list, plan o apply")
 	}
@@ -655,7 +774,11 @@ func runPackages(_ context.Context, args []string) error {
 	fs.SetOutput(io.Discard)
 	root := fs.String("root", core.DefaultProjectRoot(), "Directorio base")
 	installation := fs.String("installation", "", "ID, nombre o VMID de la instalación")
+	nameAlias := fs.String("name", "", "Alias de --installation")
+	currentProfFlag := fs.String("current-profile", "", "Perfil actual (para simulaciones sin instalación)")
 	profile := fs.String("profile", "", "Perfil objetivo (basico, servicios, comercio, completo)")
+	targetProfFlag := fs.String("target-profile", "", "Alias de --profile")
+	installedFlag := fs.String("installed", "", "Módulos actualmente instalados separados por coma")
 	addMods := fs.String("add", "", "Módulos a agregar separados por coma")
 	removeMods := fs.String("remove", "", "Módulos a desinstalar separados por coma")
 	planFile := fs.String("plan", "", "Archivo JSON de plan para apply")
@@ -665,17 +788,45 @@ func runPackages(_ context.Context, args []string) error {
 		return err
 	}
 
+	targetInst := *installation
+	if targetInst == "" {
+		targetInst = *nameAlias
+	}
+	if targetInst == "" {
+		if items, err := engine.Discover(*root); err == nil && len(items) == 1 {
+			targetInst = items[0].Name
+		}
+	}
+
 	var currentProfile = core.ProfileServices
-	var currentMods = core.FindProfileInfo(core.ProfileServices).DolanModules
-	if *installation != "" {
-		if d, err := engine.Resolve(*root, *installation); err == nil && d.Managed {
-			currentProfile = core.Profile(d.Manifest.Profile)
+	if *currentProfFlag != "" {
+		currentProfile = core.CanonicalProfile(core.Profile(*currentProfFlag))
+	}
+	var currentMods = core.FindProfileInfo(currentProfile).DolanModules
+
+	if targetInst != "" {
+		if d, err := engine.Resolve(*root, targetInst); err == nil && d.Managed {
+			if *currentProfFlag == "" && d.Manifest.Profile != "" {
+				currentProfile = core.CanonicalProfile(core.Profile(d.Manifest.Profile))
+			}
 			if len(d.Manifest.Modules) > 0 {
 				currentMods = d.Manifest.Modules
 			} else {
 				currentMods = core.FindProfileInfo(currentProfile).DolanModules
 			}
 		}
+	}
+	if *installedFlag != "" {
+		currentMods = split(*installedFlag)
+	}
+
+	targetProfileStr := *profile
+	if targetProfileStr == "" {
+		targetProfileStr = *targetProfFlag
+	}
+	targetProfile := core.CanonicalProfile(core.Profile(targetProfileStr))
+	if targetProfileStr == "" {
+		targetProfile = currentProfile
 	}
 
 	switch sub {
@@ -704,10 +855,11 @@ func runPackages(_ context.Context, args []string) error {
 		return nil
 
 	case "plan":
-		if *installation == "" {
-			return errors.New("packages plan requiere --installation <id|nombre>")
+		planTargetName := targetInst
+		if planTargetName == "" {
+			planTargetName = "simulacion"
 		}
-		plan, err := packages.PlanChange(*installation, currentProfile, core.Profile(*profile), currentMods, split(*addMods), split(*removeMods))
+		plan, err := packages.PlanChange(planTargetName, currentProfile, targetProfile, currentMods, split(*addMods), split(*removeMods))
 		if err != nil {
 			if *asJSON {
 				_ = writeJSON(plan)
@@ -725,14 +877,15 @@ func runPackages(_ context.Context, args []string) error {
 		}
 		fmt.Printf("Plan de paquetes para %s (%s -> %s):\n", plan.Installation, plan.CurrentProfile, plan.TargetProfile)
 		fmt.Printf("Módulos a instalar (+%d): %s\n", len(plan.ToInstall), strings.Join(plan.ToInstall, ", "))
+		fmt.Printf("Total módulos activos tras el cambio: %d\n", len(plan.TargetModules))
 		for _, w := range plan.Warnings {
 			fmt.Println("Aviso: " + w)
 		}
 		return nil
 
 	case "apply":
-		if *installation == "" {
-			return errors.New("packages apply requiere --installation <id|nombre>")
+		if targetInst == "" {
+			return errors.New("packages apply requiere --installation <id|nombre> (o --name)")
 		}
 		var plan packages.ChangePlan
 		if *planFile != "" {
@@ -745,25 +898,28 @@ func runPackages(_ context.Context, args []string) error {
 			}
 		} else {
 			var err error
-			plan, err = packages.PlanChange(*installation, currentProfile, core.Profile(*profile), currentMods, split(*addMods), split(*removeMods))
+			plan, err = packages.PlanChange(targetInst, currentProfile, targetProfile, currentMods, split(*addMods), split(*removeMods))
 			if err != nil {
 				return err
 			}
 		}
-		if d, err := engine.Resolve(*root, *installation); err == nil {
-			d.Manifest.Profile = string(plan.TargetProfile)
-			d.Manifest.Modules = plan.TargetModules
-			if err := state.Write(d.Path, d.Manifest); err != nil {
-				return err
-			}
+		d, err := engine.Resolve(*root, targetInst)
+		if err != nil {
+			return err
+		}
+		repo, _ := findRepoRoot()
+		applyRes, err := engine.ApplyPackagePlan(ctx, repo, d, plan)
+		if err != nil {
+			return err
 		}
 		if *asJSON {
-			return writeJSON(map[string]any{
+			return writeJSON( map[string]any{
 				"applied": true,
+				"result":  applyRes,
 				"plan":    plan,
 			})
 		}
-		fmt.Printf("Cambios aplicados a %s: perfil=%s (+%d módulos).\n", *installation, plan.TargetProfile, len(plan.ToInstall))
+		fmt.Println(applyRes.Message)
 		return nil
 	default:
 		return fmt.Errorf("subcomando de packages desconocido: %q", sub)
@@ -837,11 +993,12 @@ func printUsage() {
 Uso: dolan <comando> [opciones]
 
 Comandos principales:
-  tui                      Abrir el administrador interactivo TUI (pantallas 7.1–7.16)
+  tui                      Abrir el administrador interactivo TUI (--screen packages|delete|home)
   status                   Estado del host o de una instalación (--installation, --json)
   list                     Listar instalaciones detectadas (--root, --json)
   adopt                    Adoptar una instalación existente con consentimiento (--installation, --yes)
   install                  Asistente de nueva instalación o modo declarativo (--config, --non-interactive, --dry-run)
+  delete | remove          Borrar una instalación existente con confirmación (--name, --root, --yes, --json)
   backup list|create|verify Motor de backups lógicos portables .dolanbak (--installation, --file, --json)
   restore [plan|run]       Preflight de compatibilidad, restauración y migración (--file, --target, --json)
   packages list|plan|apply Gestión incremental de perfiles y módulos sin reinstalar (--installation, --profile, --json)

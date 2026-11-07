@@ -51,7 +51,7 @@ FROM_SOURCE=0
 REQUIRE_DOCKER=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    install|tui|status|--update|--update-packages|--prepare-only)
+    install|tui|status|delete|--delete|modify-packages|--modify-packages|--update|--update-packages|--prepare-only)
       [[ "$MODE" == "menu" ]] || { printf 'Indicá una sola acción.\n' >&2; exit 2; }
       MODE="$1"
       shift
@@ -88,7 +88,10 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 if [[ -n "$UPDATE_NAME" || "$UPDATE_ROOT" != "$INSTALL_ROOT/deployments" ]]; then
-  [[ "$MODE" == "--update" ]] || { printf '--root y --name solo se usan con --update.\n' >&2; exit 2; }
+  case "$MODE" in
+    --update|update|delete|--delete|modify-packages|--modify-packages) ;;
+    *) printf '--root y --name solo se usan con --update, --delete o --modify-packages.\n' >&2; exit 2 ;;
+  esac
 fi
 
 fail() { printf 'Error: %s\n' "$*" >&2; exit 1; }
@@ -138,25 +141,38 @@ apt-get install -y --no-install-recommends \
 
 if [[ "$MODE" == "menu" ]]; then
   if [[ -r /dev/tty ]] && command -v dialog >/dev/null 2>&1 && [[ -n "${TERM:-}" && "$TERM" != "dumb" ]]; then
-    ACTION=$(dialog --title "DOLAN Installer 2.0" --menu "¿Qué querés hacer?" 12 68 3 --mouse \
+    ACTION=$(dialog --title "DOLAN Manager 2.0" --menu "¿Qué querés hacer?" 16 74 6 --mouse \
+      tui "Abrir panel completo DOLAN Manager 2.0 (TUI)" \
       install "Instalar una nueva instancia" \
+      modify-packages "Modificar paquetes / perfil de una instalación" \
       update "Actualizar una instalación existente" \
-      packages "Actualizar paquetes del servidor" 3>&1 1>&2 2>&3) || ACTION=""
+      delete "Borrar una instalación existente" \
+      packages "Actualizar paquetes del servidor (APT)" 3>&1 1>&2 2>&3) || ACTION=""
   else
     ACTION=""
   fi
   if [[ -z "${ACTION:-}" ]]; then
     echo "Elegí una acción:"
-    echo "  1) Nueva instalación"
-    echo "  2) Actualizar instalación existente"
-    echo "  3) Actualizar paquetes del servidor"
+    echo "  1) Abrir panel completo DOLAN Manager 2.0 (TUI)"
+    echo "  2) Nueva instalación"
+    echo "  3) Modificar paquetes / perfil de una instalación"
+    echo "  4) Actualizar instalación existente"
+    echo "  5) Borrar instalación existente"
+    echo "  6) Actualizar paquetes del servidor (APT)"
     while true; do
-      read -r -p "Opción [1-3]: " choice < /dev/tty || fail "No se pudo leer la opción desde la terminal."
-      case "$choice" in 1) ACTION=install; break ;; 2) ACTION=update; break ;; 3) ACTION=packages; break ;; esac
+      read -r -p "Opción [1-6]: " choice < /dev/tty || fail "No se pudo leer la opción desde la terminal."
+      case "$choice" in
+        1) ACTION=tui; break ;;
+        2) ACTION=install; break ;;
+        3) ACTION=modify-packages; break ;;
+        4) ACTION=update; break ;;
+        5) ACTION=delete; break ;;
+        6) ACTION=packages; break ;;
+      esac
     done
   fi
   case "$ACTION" in
-    install|update) MODE="$ACTION" ;;
+    tui|install|modify-packages|update|delete) MODE="$ACTION" ;;
     packages) MODE="--update-packages"; apt-get upgrade -y; info "Actualización de paquetes del sistema completada"; exit 0 ;;
     *) fail "No se seleccionó una acción válida." ;;
   esac
@@ -288,9 +304,17 @@ cd "$TMP_ROOT/repo/installer"
 if [[ -n "$RESET_EXISTING_NAME" ]]; then
   "$DOLAN_BIN" install --name "$RESET_EXISTING_NAME" --reset-existing "$RESET_EXISTING_NAME" < /dev/tty
 elif [[ "$MODE" == "tui" ]]; then
-  "$DOLAN_BIN" tui < /dev/tty
+  "$DOLAN_BIN" tui --root "$UPDATE_ROOT" < /dev/tty
+elif [[ "$MODE" == "modify-packages" || "$MODE" == "--modify-packages" ]]; then
+  "$DOLAN_BIN" tui --root "$UPDATE_ROOT" --screen packages < /dev/tty
+elif [[ "$MODE" == "delete" || "$MODE" == "--delete" ]]; then
+  if [[ -n "$UPDATE_NAME" ]]; then
+    "$DOLAN_BIN" delete --root "$UPDATE_ROOT" --name "$UPDATE_NAME" < /dev/tty
+  else
+    "$DOLAN_BIN" tui --root "$UPDATE_ROOT" --screen delete < /dev/tty
+  fi
 elif [[ "$MODE" == "status" ]]; then
-  "$DOLAN_BIN" status
+  "$DOLAN_BIN" status --root "$UPDATE_ROOT"
 else
-  "$DOLAN_BIN" install < /dev/tty
+  "$DOLAN_BIN" install --root "$UPDATE_ROOT" < /dev/tty
 fi
