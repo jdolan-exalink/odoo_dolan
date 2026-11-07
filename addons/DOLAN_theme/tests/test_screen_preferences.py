@@ -62,8 +62,26 @@ class TestScreenPreferences(TransactionCase):
 
     def test_workspace_preferences_are_personal_and_validate_widget_keys(self):
         Preference = self.env["dolan.workspace.preference"].with_user(self.user)
-        preference = Preference.create({"role_filter": "ventas", "visible_widget_keys": ["quotes_open"]})
+        preference = Preference.create({
+            "role_filter": "ventas", "visible_widget_keys": ["quotes_open"],
+            "indicator_mode": "custom", "visible_section_keys": ["attention", "activity"],
+            "workspace_order": ["activity", "attention"],
+            "workspace_sizes": {"attention": "large"}, "quick_action_keys": ["new_sale"],
+            "kpi_states": {"quotes_open": {"dismissedCount": 2}},
+        })
         self.assertEqual(preference.role_filter, "ventas")
         self.assertEqual(preference.visible_widget_keys, ["quotes_open"])
+        self.assertEqual(preference.indicator_mode, "custom")
+        self.assertEqual(preference.visible_section_keys, ["attention", "activity"])
+        self.assertEqual(preference.workspace_order, ["activity", "attention"])
+        self.assertEqual(preference.workspace_sizes, {"attention": "large"})
+        self.assertEqual(preference.quick_action_keys, ["new_sale"])
+        self.assertEqual(preference.kpi_states["quotes_open"]["dismissedCount"], 2)
         with self.assertRaises(ValidationError):
             preference.write({"visible_widget_keys": ["account.secret_model"]})
+        with self.assertRaises(ValidationError):
+            preference.write({"visible_section_keys": ["untrusted_section"]})
+        with self.assertRaises(ValidationError):
+            preference.write({"quick_action_keys": ["delete_database"]})
+        with self.assertRaises(ValidationError):
+            preference.write({"workspace_sizes": {"activity": "gigantic"}})

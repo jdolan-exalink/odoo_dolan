@@ -4,11 +4,12 @@ export const DOLAN_ACTION_ICONS = {
     search: "search", plus: "plus", folder: "folder", "folder-plus": "folder-plus",
     star: "star", "sort-az": "arrows-sort", history: "history", settings: "settings",
     check: "circle-check", "alert-triangle": "alert-triangle", "alert-circle": "info-circle",
-    calendar: "calendar-event", pencil: "adjustments", cart: "shopping-cart", "user-plus": "user-plus",
+    calendar: "calendar-event", pencil: "adjustments", cart: "shopping-cart", store: "building-store", "user-plus": "user-plus",
     money: "cash", chat: "messages", bank: "building-store", sparkles: "sparkles", sun: "sun",
     moon: "moon", truck: "devices", factory: "tool", wrench: "tool", tasks: "clipboard-check",
     grid: "layout-grid", dashboard: "layout-dashboard", bolt: "sparkles", clock: "history",
     compress: "arrows-sort", "file-text": "file-text", "x-circle": "x",
+    "chart-bar": "chart-bar",
 };
 
 const STYLE_ASSET_KEYS = {

@@ -1,0 +1,169 @@
+/* Mi Espacio 3.0: uses the active DOLAN theme tokens in light, dark and contrast modes. */
+.o_dolan_workspace_3 {
+    --ws-bg: var(--dolan-color-surface, var(--bs-body-bg, #fff));
+    --ws-card: var(--dolan-color-surface-raised, var(--bs-secondary-bg, #f4f5f7));
+    --ws-border: var(--dolan-color-border, #d7dbe2);
+    --ws-text: var(--dolan-color-text, var(--bs-body-color, #252a34));
+    --ws-muted: var(--dolan-color-text-muted, #737b8c);
+    --ws-accent: var(--dolan-primary, #7938d2);
+    color: var(--ws-text);
+    width: 100%;
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: clamp(.75rem, 2vw, 1.5rem) clamp(.5rem, 1vw, 1rem) 1rem;
+}
+/* Odoo's backend heading rules set headings to a fixed light-mode color.
+   Re-apply the workspace token explicitly so titles stay readable in dark mode. */
+.o_dolan_workspace_3 :is(h1, h2, h3, h4, strong) { color: var(--ws-text); }
+.o_dolan_workspace_3 .o_dolan_workspace_panel > header h2 { color: var(--ws-text); }
+.o_dolan_workspace_3 .o_dolan_workspace_metric_main > span { color: var(--ws-text); }
+.o_dolan_workspace_3 .o_dolan_workspace_action { color: var(--ws-text); }
+.o_dolan_workspace_header,
+.o_dolan_workspace_identity,
+.o_dolan_workspace_header_actions,
+.o_dolan_workspace_panel > header,
+.o_dolan_workspace_pos_main,
+.o_dolan_workspace_editor > header {
+    display: flex;
+    align-items: center;
+}
+.o_dolan_workspace_header { justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.o_dolan_workspace_identity { gap: .85rem; min-width: 0; }
+.o_dolan_workspace_avatar {
+    display: grid; place-items: center; width: 58px; height: 58px; flex: 0 0 auto;
+    color: #fff; border-radius: 50%; background: linear-gradient(145deg, var(--ws-accent), #4e71cf);
+}
+.o_dolan_workspace_identity h1 { margin: 0; font-size: clamp(1.35rem, 2.5vw, 1.9rem); font-weight: 700; }
+.o_dolan_workspace_identity p { margin: .1rem 0 0; color: var(--ws-muted); }
+.o_dolan_workspace_header_actions { gap: .7rem; }
+.o_dolan_workspace_clock { color: var(--ws-muted); white-space: nowrap; font-size: .9rem; }
+.o_dolan_workspace_spaces { display: flex; align-items: center; flex-wrap: wrap; gap: .45rem; margin: 0 0 1rem; }
+.o_dolan_workspace_space,
+.o_dolan_workspace_mode button {
+    display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+    min-height: 38px; padding: .45rem .8rem; color: var(--ws-text); background: var(--ws-card);
+    border: 1px solid var(--ws-border); border-radius: 999px; font-weight: 600;
+}
+.o_dolan_workspace_space:hover, .o_dolan_workspace_mode button:hover { border-color: var(--ws-accent); }
+.o_dolan_workspace_space.is-active, .o_dolan_workspace_mode button.is-active {
+    color: #fff; background: var(--ws-accent); border-color: var(--ws-accent);
+}
+.o_dolan_workspace_mode { display: inline-flex; gap: .25rem; margin-left: auto; padding: .2rem; border: 1px solid var(--ws-border); border-radius: 999px; }
+.o_dolan_workspace_mode button { min-height: 32px; padding: .3rem .7rem; background: transparent; border-color: transparent; font-size: .84rem; }
+.o_dolan_workspace_grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: .9rem; }
+.o_dolan_workspace_section { min-width: 0; order: 0; }
+.o_dolan_workspace_size_small { grid-column: span 4; }
+.o_dolan_workspace_size_medium { grid-column: span 6; }
+.o_dolan_workspace_size_large { grid-column: span 8; }
+.o_dolan_workspace_size_full { grid-column: 1 / -1; }
+.o_dolan_workspace_pos.o_dolan_workspace_size_medium { grid-column: span 5; }
+.o_dolan_workspace_quick_actions.o_dolan_workspace_size_medium { grid-column: span 7; }
+.o_dolan_workspace_pos {
+    display: flex; flex-direction: column; justify-content: center; min-height: 126px; padding: 1rem;
+    color: var(--ws-text); background: var(--ws-card); border: 1px solid var(--ws-accent); border-radius: 18px;
+}
+.o_dolan_workspace_pos_main { gap: .85rem; min-width: 0; }
+.o_dolan_workspace_pos_copy { min-width: 0; flex: 1; }
+.o_dolan_workspace_pos_copy h2 { margin: 0; font-size: 1.05rem; font-weight: 700; overflow-wrap: anywhere; }
+.o_dolan_workspace_pos_copy p { margin: .15rem 0 0; color: var(--ws-muted); font-size: .9rem; }
+.o_dolan_workspace_status, .o_dolan_workspace_severity {
+    display: inline-flex; align-items: center; gap: .3rem; width: fit-content; padding: .26rem .55rem;
+    border-radius: 999px; font-size: .78rem; font-weight: 700; white-space: nowrap;
+}
+.o_dolan_workspace_status.is-open { color: #087b4b; background: color-mix(in srgb, #22c77a 18%, transparent); }
+.o_dolan_workspace_status.is-closed { color: var(--ws-muted); background: color-mix(in srgb, var(--ws-muted) 12%, transparent); }
+.o_dolan_workspace_pos_open { display: grid; place-items: center; flex: 0 0 38px; width: 38px; height: 38px; color: var(--ws-text); background: transparent; border: 0; border-radius: 50%; }
+.o_dolan_workspace_pos_open:hover { background: color-mix(in srgb, var(--ws-accent) 15%, transparent); }
+.o_dolan_workspace_pos_list { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .65rem; }
+.o_dolan_workspace_pos_choice { display: flex; flex-direction: column; gap: .1rem; text-align: left; color: var(--ws-text); background: transparent; border: 1px solid var(--ws-border); border-radius: 10px; padding: .45rem .6rem; }
+.o_dolan_workspace_pos_choice small { color: var(--ws-muted); }
+.o_dolan_workspace_quick_actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; }
+.o_dolan_workspace_action {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .45rem;
+    min-height: 112px; padding: .6rem .35rem; color: var(--ws-text); background: var(--ws-card);
+    border: 1px solid var(--ws-border); border-radius: 15px; text-align: center; font-size: .84rem; line-height: 1.2;
+}
+.o_dolan_workspace_action:hover { border-color: var(--ws-accent); transform: translateY(-1px); }
+.o_dolan_workspace_action_icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 13px; }
+.o_dolan_workspace_action_icon.tone-primary { color: #9b65e8; background: color-mix(in srgb, #9b65e8 16%, transparent); }
+.o_dolan_workspace_action_icon.tone-success { color: #19a766; background: color-mix(in srgb, #19a766 15%, transparent); }
+.o_dolan_workspace_action_icon.tone-info { color: #339de0; background: color-mix(in srgb, #339de0 15%, transparent); }
+.o_dolan_workspace_action_icon.tone-warning { color: #d88821; background: color-mix(in srgb, #e59b31 17%, transparent); }
+.o_dolan_workspace_action_icon.tone-secondary { color: #5b75cf; background: color-mix(in srgb, #5b75cf 16%, transparent); }
+.o_dolan_workspace_action_icon.tone-dark { color: var(--ws-text); background: color-mix(in srgb, var(--ws-muted) 15%, transparent); }
+.o_dolan_workspace_panel { padding: 1rem; background: var(--ws-card); border: 1px solid var(--ws-border); border-radius: 18px; }
+.o_dolan_workspace_panel > header { justify-content: space-between; gap: .6rem; min-height: 34px; padding-bottom: .65rem; margin-bottom: .65rem; border-bottom: 1px solid var(--ws-border); }
+.o_dolan_workspace_panel > header h2 { display: flex; align-items: center; gap: .55rem; margin: 0; font-size: 1.15rem; font-weight: 700; }
+.o_dolan_workspace_badge { padding: .3rem .65rem; border-radius: 999px; color: var(--ws-accent); background: color-mix(in srgb, var(--ws-accent) 16%, transparent); font-size: .8rem; font-weight: 700; }
+.o_dolan_workspace_attention_grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; }
+.o_dolan_workspace_metric { display: flex; flex-direction: column; justify-content: space-between; min-height: 142px; padding: .7rem; border: 1px solid var(--ws-border); border-radius: 14px; }
+.o_dolan_workspace_metric.tone-critical { border-color: color-mix(in srgb, #ef5267 70%, var(--ws-border)); background: color-mix(in srgb, #ef5267 8%, transparent); }
+.o_dolan_workspace_metric.tone-warning, .o_dolan_workspace_metric.tone-action { border-color: color-mix(in srgb, #e59b31 60%, var(--ws-border)); background: color-mix(in srgb, #e59b31 7%, transparent); }
+.o_dolan_workspace_metric_main { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: .3rem .6rem; padding: 0; color: var(--ws-text); border: 0; background: transparent; text-align: left; }
+.o_dolan_workspace_metric_main > strong { font-size: 2rem; line-height: 1; }
+.o_dolan_workspace_metric_main > span { grid-column: 1 / -1; font-weight: 600; }
+.o_dolan_workspace_metric footer { display: flex; align-items: center; gap: .3rem; }
+.o_dolan_workspace_metric footer button { margin-left: auto; padding: .2rem; color: var(--ws-muted); background: transparent; border: 0; }
+.o_dolan_workspace_metric footer button + button { margin-left: 0; }
+.o_dolan_workspace_severity.tone-critical { color: #b42338; background: color-mix(in srgb, #ef5267 20%, transparent); }
+.o_dolan_workspace_severity.tone-warning, .o_dolan_workspace_severity.tone-action { color: #8b560a; background: color-mix(in srgb, #e59b31 20%, transparent); }
+.o_dolan_workspace_severity.tone-info { color: #176aa7; background: color-mix(in srgb, #339de0 18%, transparent); }
+.o_dolan_workspace_summary_grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .55rem; }
+.o_dolan_workspace_summary_card { display: flex; flex-direction: column; align-items: center; gap: .3rem; min-height: 132px; padding: .65rem .45rem; color: var(--ws-text); background: transparent; border: 1px solid var(--ws-border); border-radius: 14px; text-align: center; }
+.o_dolan_workspace_summary_card strong { font-size: 1.65rem; line-height: 1; }
+.o_dolan_workspace_summary_card span { color: var(--ws-muted); font-size: .84rem; line-height: 1.25; }
+.o_dolan_workspace_other_grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+.o_dolan_workspace_other_card { display: grid; grid-template-columns: auto auto 1fr auto; align-items: center; gap: .6rem; min-height: 64px; padding: .65rem; color: var(--ws-text); background: transparent; border: 1px solid var(--ws-border); border-radius: 12px; text-align: left; }
+.o_dolan_workspace_other_card strong { font-size: 1.25rem; }
+.o_dolan_workspace_other_card span { color: var(--ws-muted); font-size: .85rem; }
+.o_dolan_workspace_activity_list { display: flex; flex-direction: column; }
+.o_dolan_workspace_activity_item { display: grid; grid-template-columns: 28px minmax(0,1fr) auto; align-items: center; gap: .6rem; min-height: 48px; padding: .45rem .2rem; color: var(--ws-text); background: transparent; border: 0; border-bottom: 1px solid var(--ws-border); text-align: left; }
+.o_dolan_workspace_activity_item:last-child { border-bottom: 0; }
+.o_dolan_workspace_activity_item > span { display: flex; flex-direction: column; min-width: 0; }
+.o_dolan_workspace_activity_item strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .9rem; }
+.o_dolan_workspace_activity_item small, .o_dolan_workspace_activity_item time { color: var(--ws-muted); font-size: .78rem; }
+.o_dolan_workspace_empty { margin: 0; padding: 1.1rem .5rem; color: var(--ws-muted); text-align: center; }
+.o_dolan_workspace_skeleton { min-height: 76px; border-radius: 12px; background: linear-gradient(90deg, color-mix(in srgb, var(--ws-muted) 8%, transparent) 25%, color-mix(in srgb, var(--ws-muted) 16%, transparent) 37%, color-mix(in srgb, var(--ws-muted) 8%, transparent) 63%); background-size: 400% 100%; animation: o_dolan_workspace_shimmer 1.4s ease infinite; }
+@keyframes o_dolan_workspace_shimmer { to { background-position: -100% 50%; } }
+.o_dolan_workspace_editor { margin: 0 0 1rem; padding: 1rem; background: var(--ws-card); border: 1px solid var(--ws-border); border-radius: 16px; }
+.o_dolan_workspace_editor > header { justify-content: space-between; margin-bottom: .8rem; }
+.o_dolan_workspace_editor_grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.o_dolan_workspace_editor h2 { margin: 0 0 .55rem; font-size: .95rem; }
+.o_dolan_workspace_editor_row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .3rem 0; border-bottom: 1px solid var(--ws-border); }
+.o_dolan_workspace_editor_row label, .o_dolan_workspace_editor_options label { display: flex; align-items: center; gap: .45rem; color: var(--ws-text); }
+.o_dolan_workspace_editor_row input, .o_dolan_workspace_editor_options input { accent-color: var(--ws-accent); }
+.o_dolan_workspace_reorder { display: flex; align-items: center; gap: .25rem; }
+.o_dolan_workspace_reorder .form-select { width: auto; min-width: 112px; color: var(--ws-text); background-color: var(--ws-bg); border-color: var(--ws-border); }
+.o_dolan_workspace_editor_options { display: grid; grid-template-columns: 1fr 1fr; gap: .45rem .65rem; }
+.o_dolan_workspace_3 :is(button, select, input):focus-visible { outline: 2px solid var(--ws-accent); outline-offset: 2px; }
+@media (min-width: 1440px) {
+    .o_dolan_workspace_quick_actions { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+    .o_dolan_workspace_action { min-height: 96px; font-size: .78rem; }
+    .o_dolan_workspace_action_icon { width: 38px; height: 38px; }
+}
+@media (max-width: 1023px) {
+    .o_dolan_workspace_pos.o_dolan_workspace_size_medium, .o_dolan_workspace_quick_actions.o_dolan_workspace_size_medium { grid-column: span 12; }
+    .o_dolan_workspace_quick_actions { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+    .o_dolan_workspace_header { align-items: flex-start; }
+    .o_dolan_workspace_avatar { width: 44px; height: 44px; }
+    .o_dolan_workspace_header_actions { align-items: flex-end; flex-direction: column; }
+    .o_dolan_workspace_clock { font-size: .75rem; }
+    .o_dolan_workspace_spaces { flex-wrap: nowrap; overflow-x: auto; padding: .15rem .1rem .45rem; }
+    .o_dolan_workspace_space { white-space: nowrap; }
+    .o_dolan_workspace_mode { flex: 0 0 100%; margin-left: 0; }
+    .o_dolan_workspace_mode button { flex: 1; padding-inline: .35rem; }
+    .o_dolan_workspace_grid { display: flex; flex-direction: column; }
+    .o_dolan_workspace_quick_actions { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .o_dolan_workspace_action { min-height: 92px; font-size: .72rem; }
+    .o_dolan_workspace_action_icon { width: 38px; height: 38px; }
+    .o_dolan_workspace_attention_grid { grid-template-columns: 1fr; }
+    .o_dolan_workspace_metric { min-height: 118px; }
+    .o_dolan_workspace_summary_grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .o_dolan_workspace_other_grid { grid-template-columns: 1fr; }
+    .o_dolan_workspace_editor_grid { grid-template-columns: 1fr; }
+    .o_dolan_workspace_editor_row { align-items: flex-start; flex-direction: column; }
+    .o_dolan_workspace_reorder { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) { .o_dolan_workspace_skeleton { animation: none; } }
