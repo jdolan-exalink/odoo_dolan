@@ -47,11 +47,21 @@ MODE="menu"
 RESET_EXISTING_NAME=""
 UPDATE_ROOT="$INSTALL_ROOT/deployments"
 UPDATE_NAME=""
+FROM_SOURCE=0
+REQUIRE_DOCKER=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    install|--update|--update-packages|--prepare-only)
+    install|tui|status|--update|--update-packages|--prepare-only)
       [[ "$MODE" == "menu" ]] || { printf 'Indicá una sola acción.\n' >&2; exit 2; }
       MODE="$1"
+      shift
+      ;;
+    --from-source)
+      FROM_SOURCE=1
+      shift
+      ;;
+    --require-docker)
+      REQUIRE_DOCKER=1
       shift
       ;;
     --reset-existing)
@@ -156,50 +166,58 @@ docker_compose_ready() {
   command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1
 }
 
-if ! docker_compose_ready; then
-  # Avoid silently removing or replacing an existing distro/third-party runtime.
-  conflicts=()
-  for package in docker.io docker-compose podman-docker containerd runc; do
-    if dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q 'install ok installed'; then
-      conflicts+=("$package")
+is_proxmox_host() {
+  [[ -d /etc/pve ]] || command -v pveversion >/dev/null 2>&1
+}
+
+if is_proxmox_host && [[ "$REQUIRE_DOCKER" -eq 0 && "$MODE" != "--prepare-only" ]]; then
+  info "Host Proxmox VE detectado (no se fuerza Docker en el hipervisor; se administrarán LXC nativos)"
+else
+  if ! docker_compose_ready; then
+    # Avoid silently removing or replacing an existing distro/third-party runtime.
+    conflicts=()
+    for package in docker.io docker-compose podman-docker containerd runc; do
+      if dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q 'install ok installed'; then
+        conflicts+=("$package")
+      fi
+    done
+    if ((${#conflicts[@]})); then
+      fail "Encontré paquetes Docker incompatibles instalados (${conflicts[*]}). No los voy a quitar automáticamente. Revisá el runtime existente y, cuando esté resuelto, ejecutá de nuevo el bootstrap."
     fi
-  done
-  if ((${#conflicts[@]})); then
-    fail "Encontré paquetes Docker incompatibles instalados (${conflicts[*]}). No los voy a quitar automáticamente. Revisá el runtime existente y, cuando esté resuelto, ejecutá de nuevo el bootstrap."
+
+    info "Configurando el repositorio oficial de Docker"
+    install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL "https://download.docker.com/linux/${OS_ID}/gpg" -o /etc/apt/keyrings/docker.asc
+    chmod a+r /etc/apt/keyrings/docker.asc
+    ARCH="$(dpkg --print-architecture)"
+    printf 'Types: deb\nURIs: https://download.docker.com/linux/%s\nSuites: %s\nComponents: stable\nArchitectures: %s\nSigned-By: /etc/apt/keyrings/docker.asc\n' \
+      "$OS_ID" "$OS_CODENAME" "$ARCH" > /etc/apt/sources.list.d/docker.sources
+    apt-get update
+
+    if ! command -v docker >/dev/null 2>&1; then
+      info "Instalando Docker Engine y el plugin Compose"
+      apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    else
+      info "Instalando el plugin oficial Docker Compose"
+      apt-get install -y docker-compose-plugin
+    fi
   fi
 
-  info "Configurando el repositorio oficial de Docker"
-  install -m 0755 -d /etc/apt/keyrings
-  curl -fsSL "https://download.docker.com/linux/${OS_ID}/gpg" -o /etc/apt/keyrings/docker.asc
-  chmod a+r /etc/apt/keyrings/docker.asc
-  ARCH="$(dpkg --print-architecture)"
-  printf 'Types: deb\nURIs: https://download.docker.com/linux/%s\nSuites: %s\nComponents: stable\nArchitectures: %s\nSigned-By: /etc/apt/keyrings/docker.asc\n' \
-    "$OS_ID" "$OS_CODENAME" "$ARCH" > /etc/apt/sources.list.d/docker.sources
-  apt-get update
-
-  if ! command -v docker >/dev/null 2>&1; then
-    info "Instalando Docker Engine y el plugin Compose"
-    apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-  else
-    info "Instalando el plugin oficial Docker Compose"
-    apt-get install -y docker-compose-plugin
+  if command -v systemctl >/dev/null 2>&1; then
+    systemctl enable --now docker
+  elif command -v service >/dev/null 2>&1; then
+    service docker start
   fi
+  docker info >/dev/null 2>&1 || fail "Docker está instalado, pero el daemon no responde. Revisá systemd y volvé a ejecutar el bootstrap."
+  docker compose version
 fi
-
-if command -v systemctl >/dev/null 2>&1; then
-  systemctl enable --now docker
-elif command -v service >/dev/null 2>&1; then
-  service docker start
-fi
-docker info >/dev/null 2>&1 || fail "Docker está instalado, pero el daemon no responde. Revisá systemd y volvé a ejecutar el bootstrap."
-docker compose version
 
 if [[ "$MODE" == "--prepare-only" ]]; then
   info "Dependencias del sistema y Docker listos"
   exit 0
 fi
 
-info "Descargando el instalador DOLAN desde GitHub"
+info "Descargando el repositorio e instalador DOLAN desde GitHub"
 TMP_ROOT="$(mktemp -d -t dolan-bootstrap.XXXXXX)"
 cleanup() { rm -rf -- "$TMP_ROOT"; }
 trap cleanup EXIT
@@ -214,38 +232,65 @@ if [[ "$MODE" == "--update" || "$MODE" == "update" ]]; then
   exit $?
 fi
 
-# El bootstrap es el punto de entrada desde curl y por eso prepara el toolchain
-# fijado para construir/ejecutar el CLI Go desde el checkout recién descargado.
 GO_VERSION="1.27.3"
 GO_ARCH=""
 GO_SHA256=""
 case "$(dpkg --print-architecture)" in
   amd64) GO_ARCH="amd64"; GO_SHA256="65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40" ;;
   arm64) GO_ARCH="arm64"; GO_SHA256="a06e99309dbcbdca1a8ccd2282c3ee146e55930886e26b4f1193269587165f49" ;;
-  *) fail "Arquitectura no soportada para el asistente Go: $(dpkg --print-architecture)." ;;
+  *) fail "Arquitectura no soportada para DOLAN Manager: $(dpkg --print-architecture)." ;;
 esac
-GO_INSTALL_DIR="$INSTALL_ROOT/toolchains/go${GO_VERSION}"
-if [[ ! -x "$GO_INSTALL_DIR/bin/go" ]]; then
-  info "Descargando Go ${GO_VERSION} (${GO_ARCH}) y verificando SHA-256 oficial"
-  GO_ARCHIVE="$TMP_ROOT/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz"
-  curl -fsSL "https://go.dev/dl/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz" -o "$GO_ARCHIVE"
-  printf '%s  %s\n' "$GO_SHA256" "$GO_ARCHIVE" | sha256sum --check --status || fail "El SHA-256 del toolchain Go no coincide; detengo la instalación."
-  tar -C "$TMP_ROOT" -xzf "$GO_ARCHIVE"
-  install -d -m 0755 "$INSTALL_ROOT/toolchains"
-  mv "$TMP_ROOT/go" "$GO_INSTALL_DIR"
+
+DOLAN_BIN="/usr/local/bin/dolan"
+RELEASE_BASE="${DOLAN_RELEASE_URL:-https://github.com/jdolan-exalink/odoo_dolan/releases/latest/download}"
+BINARY_NAME="dolan-linux-${GO_ARCH}"
+PRECOMPILED_READY=0
+
+if [[ "$FROM_SOURCE" -eq 0 ]]; then
+  if curl -fsSL "${RELEASE_BASE}/${BINARY_NAME}" -o "$TMP_ROOT/${BINARY_NAME}" 2>/dev/null && \
+     curl -fsSL "${RELEASE_BASE}/SHA256SUMS" -o "$TMP_ROOT/SHA256SUMS" 2>/dev/null; then
+    EXPECTED_HASH="$(awk -v bin="$BINARY_NAME" '$2 == bin || $2 == "*"bin {print $1; exit}' "$TMP_ROOT/SHA256SUMS")"
+    if [[ -n "$EXPECTED_HASH" ]] && printf '%s  %s\n' "$EXPECTED_HASH" "$TMP_ROOT/${BINARY_NAME}" | sha256sum --check --status; then
+      info "Binario precompilado ${BINARY_NAME} verificado con SHA-256"
+      install -m 0755 "$TMP_ROOT/${BINARY_NAME}" "$DOLAN_BIN"
+      ln -sf "$DOLAN_BIN" /usr/local/bin/dolan-installer
+      PRECOMPILED_READY=1
+    fi
+  fi
 fi
-export PATH="$GO_INSTALL_DIR/bin:$PATH"
-export GOTOOLCHAIN=local
-go version
+
+if [[ "$PRECOMPILED_READY" -eq 0 ]]; then
+  GO_INSTALL_DIR="$INSTALL_ROOT/toolchains/go${GO_VERSION}"
+  if [[ ! -x "$GO_INSTALL_DIR/bin/go" ]]; then
+    info "Descargando Go ${GO_VERSION} (${GO_ARCH}) y verificando SHA-256 oficial"
+    GO_ARCHIVE="$TMP_ROOT/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz"
+    curl -fsSL "https://go.dev/dl/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz" -o "$GO_ARCHIVE"
+    printf '%s  %s\n' "$GO_SHA256" "$GO_ARCHIVE" | sha256sum --check --status || fail "El SHA-256 del toolchain Go no coincide; detengo la instalación."
+    tar -C "$TMP_ROOT" -xzf "$GO_ARCHIVE"
+    install -d -m 0755 "$INSTALL_ROOT/toolchains"
+    mv "$TMP_ROOT/go" "$GO_INSTALL_DIR"
+  fi
+  export PATH="$GO_INSTALL_DIR/bin:$PATH"
+  export GOTOOLCHAIN=local
+  go version
+  info "Compilando binario local dolan (${GO_ARCH})"
+  (cd "$TMP_ROOT/repo/installer" && go build -o "$DOLAN_BIN" ./cmd/dolan)
+  chmod 0755 "$DOLAN_BIN"
+  ln -sf "$DOLAN_BIN" /usr/local/bin/dolan-installer
+fi
 
 # Mantener la carpeta de instalación fuera del clon temporal que se elimina al salir.
 install -d -m 0755 "$INSTALL_ROOT"
 cd "$INSTALL_ROOT"
 printf '\nLa instalación persistente quedará en: %s/deployments/<nombre-corto>\n' "$INSTALL_ROOT"
-info "Iniciando DOLAN Installer 2.0 (asistente Go)"
+info "Iniciando DOLAN Manager 2.0"
 cd "$TMP_ROOT/repo/installer"
 if [[ -n "$RESET_EXISTING_NAME" ]]; then
-  go run ./cmd/dolan-installer install --name "$RESET_EXISTING_NAME" --reset-existing "$RESET_EXISTING_NAME" < /dev/tty
+  "$DOLAN_BIN" install --name "$RESET_EXISTING_NAME" --reset-existing "$RESET_EXISTING_NAME" < /dev/tty
+elif [[ "$MODE" == "tui" ]]; then
+  "$DOLAN_BIN" tui < /dev/tty
+elif [[ "$MODE" == "status" ]]; then
+  "$DOLAN_BIN" status
 else
-  go run ./cmd/dolan-installer install < /dev/tty
+  "$DOLAN_BIN" install < /dev/tty
 fi

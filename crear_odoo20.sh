@@ -41,6 +41,8 @@ Uso: crear_odoo20.sh [opciones]
       --no-deploy         No desplegar (solo generar el proyecto)
       --init-db NOMBRE    Crear/inicializar la DB NOMBRE tras el deploy con
                           el perfil seleccionado, idioma es_AR/es_419 y ocultar OEEL-1
+      --demo-data         Instalar los datos de demostración de Odoo en los módulos
+                          seleccionados (por defecto se omiten)
       --apps "A,B,C"      Lista personalizada de apps CE base a instalar en --init-db
       --check             Solo validar conectividad a los repos de IngAdhoc y salir
       --non-interactive   No preguntar nada; usa argumentos o valores por defecto
@@ -69,6 +71,8 @@ DEPLOY=""
 INTERACTIVE=1
 CHECK_ONLY=0
 INIT_DB=""
+DEMO_DATA=0
+DEMO_MODE="none"
 
 # Apps CE de negocio base equivalentes a la demo Odoo 20
 SYSTEM_APPS="contacts,calendar,mail,crm,sale_management,purchase,stock,l10n_ar,l10n_ar_withholding,l10n_ar_pos,l10n_ar_stock,l10n_latam_check,l10n_latam_invoice_document"
@@ -97,6 +101,8 @@ while [[ $# -gt 0 ]]; do
     --deploy) DEPLOY="S"; shift ;;
     --no-deploy) DEPLOY="n"; shift ;;
     --init-db) INIT_DB="$2"; shift 2 ;;
+    --demo-data) DEMO_DATA=1; DEMO_MODE="odoo"; shift ;;
+    --demo-mode) DEMO_MODE="$2"; [[ "$DEMO_MODE" != "none" ]] && DEMO_DATA=1; shift 2 ;;
     --apps) SYSTEM_APPS="$2"; SYSTEM_APPS_CUSTOM=1; shift 2 ;;
     --check) CHECK_ONLY=1; shift ;;
     --non-interactive) INTERACTIVE=0; shift ;;
@@ -504,25 +510,13 @@ cd ..
 if [[ "${DEPLOY:-n}" =~ ^[SsYy] ]]; then
   echo "3/3 Construyendo y levantando contenedores..."
   docker compose build
-  docker compose up -d
-  echo "Contenedores iniciados; preparando la base de datos y el acceso inicial..."
-
   if [[ -n "$INIT_DB" ]]; then
-    echo "Esperando a que Odoo acepte conexiones HTTP..."
-    ODOO_READY=0
-    for _attempt in $(seq 1 60); do
-      if docker compose exec -T odoo python3 -c \
-        'import socket; s=socket.create_connection(("127.0.0.1",8069),timeout=1); s.close()' \
-        >/dev/null 2>&1; then
-        ODOO_READY=1
-        break
-      fi
-      sleep 1
-    done
-    if [[ "$ODOO_READY" -ne 1 ]]; then
-      echo "Error: Odoo no abrió el puerto HTTP interno tras 60 intentos." >&2
-      exit 1
-    fi
+    # Keep the HTTP service offline until every module and the initial admin
+    # have been configured; otherwise first-login assets can race registry init.
+    docker compose up -d db
+    echo "PostgreSQL iniciado; Odoo se publicará después de inicializar la base."
+  else
+    docker compose up -d
   fi
 fi
 
@@ -549,12 +543,27 @@ if [[ -n "$INIT_DB" ]]; then
   fi
 
   echo "Inicializando DB '${INIT_DB}' con idioma es_419/es_AR y perfil '${PROFILE}'..."
+  echo "Esperando a que PostgreSQL esté listo..."
+  DB_READY=0
+  for _attempt in $(seq 1 60); do
+    if docker compose exec -T db pg_isready -U odoo -d postgres >/dev/null 2>&1; then
+      DB_READY=1
+      break
+    fi
+    sleep 1
+  done
+  if [[ "$DB_READY" -ne 1 ]]; then
+    echo "Error: PostgreSQL no estuvo listo tras 60 intentos." >&2
+    exit 1
+  fi
   # At this point the script is running from the generated project directory.
   # PROJECT_NAME may itself be relative (for example tmp/odoo-qa), so joining
   # it again here would point at a non-existent nested path.
   INIT_LOG="$PWD/odoo-init.log"
-  if MSYS_NO_PATHCONV=1 docker compose exec -T odoo odoo --config=/etc/odoo/odoo.conf --logfile= \
-    --stop-after-init --no-http --without-demo --load-language=es_419 \
+  DEMO_ARGS=()
+  if [[ "$DEMO_DATA" -eq 0 ]]; then DEMO_ARGS+=(--without-demo); fi
+  if MSYS_NO_PATHCONV=1 docker compose run --rm --no-deps odoo odoo --config=/etc/odoo/odoo.conf --logfile= \
+    --stop-after-init --no-http "${DEMO_ARGS[@]}" --load-language=es_419 \
     -d "$INIT_DB" -i "$INSTALL_LIST" >"$INIT_LOG" 2>&1; then
     grep -E "ERROR|CRITICAL|Modules loaded|Registry loaded" "$INIT_LOG" | tail -10 || true
   else
@@ -568,9 +577,6 @@ if [[ -n "$INIT_DB" ]]; then
     BOOTSTRAP_JSON="$PWD/.dolan-installer.json"
     cleanup_initial_bootstrap() {
       [[ -z "${BOOTSTRAP_JSON:-}" ]] || rm -f "$BOOTSTRAP_JSON"
-      # The JSON contains the initial admin credential. Remove a container copy
-      # even if the Odoo shell fails or the installer exits unexpectedly.
-      docker compose exec -T -u root odoo rm -f /tmp/dolan-installer.py /tmp/dolan-installer.json >/dev/null 2>&1 || true
     }
     trap cleanup_initial_bootstrap EXIT
     COMPANY_NAME="$COMPANY_NAME" COMPANY_CUIT="$COMPANY_CUIT" COMPANY_ADDRESS="$COMPANY_ADDRESS" COMPANY_CITY="$COMPANY_CITY" COMPANY_RESPONSIBILITY="$COMPANY_RESPONSIBILITY" BILLING_POS="$BILLING_POS" POS_POS="$POS_POS" INITIAL_ADMIN_EMAIL="$INITIAL_ADMIN_EMAIL" INITIAL_ADMIN_NAME="$INITIAL_ADMIN_NAME" INITIAL_ADMIN_PASSWORD="$INITIAL_ADMIN_PASSWORD" PROFILE="$PROFILE" DOLAN_ADDONS="$DOLAN_ADDONS" python3 - "$BOOTSTRAP_JSON" <<'PYCONFIG'
@@ -579,23 +585,12 @@ config = {"company_name": os.environ["COMPANY_NAME"], "cuit": os.environ["COMPAN
 with open(sys.argv[1], 'w', encoding='utf-8') as f: json.dump(config, f)
 PYCONFIG
     chmod 600 "$BOOTSTRAP_JSON"
-    ODOO_CONTAINER="${CONTAINER_PREFIX}_odoo"
-    docker cp "$SCRIPT_DIR/scripts/installer_bootstrap.py" "$ODOO_CONTAINER:/tmp/dolan-installer.py"
-    docker cp "$BOOTSTRAP_JSON" "$ODOO_CONTAINER:/tmp/dolan-installer.json"
-    # docker cp preserves the source mode (0600); the copied file is root-owned,
-    # while `docker compose exec odoo` runs as the unprivileged `odoo` user.
-    # Transfer ownership inside the container and retain owner-only access so
-    # the bootstrap can read the initial admin password without exposing it.
-    if ! docker compose exec -T -u root odoo sh -c \
-      "chown odoo:odoo /tmp/dolan-installer.json && chmod 600 /tmp/dolan-installer.json"; then
-      docker compose exec -T -u root odoo rm -f /tmp/dolan-installer.py /tmp/dolan-installer.json >/dev/null 2>&1 || true
-      echo "Error preparando el archivo privado de configuración inicial dentro de Odoo." >&2; exit 1
-    fi
-    if ! docker compose exec -T odoo sh -c "odoo shell --config=/etc/odoo/odoo.conf --logfile= --no-http -d '$INIT_DB' < /tmp/dolan-installer.py"; then
-      docker compose exec -T -u root odoo rm -f /tmp/dolan-installer.py /tmp/dolan-installer.json >/dev/null 2>&1 || true
+    if ! docker compose run --rm --no-deps --user root \
+      -v "$SCRIPT_DIR/scripts/installer_bootstrap.py:/tmp/dolan-installer.py:ro" \
+      -v "$BOOTSTRAP_JSON:/tmp/dolan-installer.json:ro" \
+      odoo sh -c "odoo shell --config=/etc/odoo/odoo.conf --logfile= --no-http -d '$INIT_DB' < /tmp/dolan-installer.py"; then
       echo "Error configurando la empresa y el usuario inicial." >&2; exit 1
     fi
-    docker compose exec -T -u root odoo rm -f /tmp/dolan-installer.py /tmp/dolan-installer.json
     rm -f "$BOOTSTRAP_JSON"
     trap - EXIT
   fi
@@ -611,6 +606,16 @@ PYCONFIG
      ON CONFLICT (key) DO NOTHING;" 2>/dev/null || true
 
   echo "DB '${INIT_DB}' lista y preconfigurada para Argentina."
+  if [[ "$DEMO_MODE" == "dolan" ]]; then
+    echo "Cargando semilla de demostración DOLAN (${PROFILE}) con aislamiento externo..."
+    docker compose run --rm --no-deps --user root \
+      -e DOLAN_ALLOW_DEMO_DB=1 \
+      -v "$SCRIPT_DIR/scripts/seed_demo_integral.py:/tmp/seed_demo_integral.py:ro" \
+      odoo sh -c "odoo shell --config=/etc/odoo/odoo.conf --logfile= --no-http -d '$INIT_DB' < /tmp/seed_demo_integral.py"
+    echo "Datos de demostración de Odoo y escenarios DOLAN instalados (modo DEMO aislado)."
+  elif [[ "$DEMO_DATA" -eq 1 ]]; then
+    echo "Datos de demostración de Odoo instalados para los módulos seleccionados."
+  fi
   if [[ -n "$COMPANY_NAME" ]]; then
     echo "Acceso inicial: $INITIAL_ADMIN_EMAIL (contrasena definida durante la instalacion)."
     echo "Certificado ARCA: carga el certificado y la clave privada en Facturacion > Configuracion > ARCA / AFIP > Certificados; luego selecciona la empresa, CUIT representado y ambiente. No se solicito ni emitio ningun CAE."
@@ -625,5 +630,7 @@ PYCONFIG
   fi
   echo "Usuario administrador inicial: ${INITIAL_ADMIN_EMAIL:-no configurado}. La contraseña no se imprime."
   echo "Recomendación: configura HTTPS con un certificado confiable antes de habilitar recorridos/modo desarrollador; Odoo 20 no soporta esas funciones en HTTP inseguro."
+  docker compose up -d
+  echo "Servicios publicados después de completar la instalación."
   echo "Despliegue completado correctamente."
 fi

@@ -1,8 +1,20 @@
-# Instalador de DOLAN ERP para Odoo CE 20
+# Instalador y Administrador de Ciclo de Vida — DOLAN Manager 2.0 (Odoo CE 20)
 
-Esta guía cubre el bootstrap de Linux [`bootstrap.sh`](bootstrap.sh), el instalador [`crear_odoo20.sh`](crear_odoo20.sh) y el instalador Windows [`crear_odoo20.ps1`](crear_odoo20.ps1). Preparan un despliegue Docker Compose con Odoo, PostgreSQL, WAHA para WhatsApp y Whisper local para dictado.
+Esta guía cubre el punto de entrada [`bootstrap.sh`](bootstrap.sh) (Linux/Proxmox VE), [`bootstrap.ps1`](bootstrap.ps1) (Windows), el administrador de ciclo de vida Go [`installer/`](installer/README.md) (`dolan` / `dolan-installer`), el motor [`crear_odoo20.sh`](crear_odoo20.sh) y el instalador Windows [`crear_odoo20.ps1`](crear_odoo20.ps1). Preparan y administran despliegues en Proxmox LXC (Debian 13 nativo), Docker Compose (con Odoo, PostgreSQL, WAHA para WhatsApp y Whisper local para dictado), Linux nativo y Windows.
 
-## Instalación directa en Debian o Ubuntu
+## Novedades de DOLAN Manager 2.0
+
+- **TUI interactiva de 16 pantallas (`dolan tui`) y CLI no interactiva (`dolan <comando> --json`)** sobre el mismo motor:
+  - Detección pasiva del entorno (`Proxmox VE`, `Proxmox LXC`, `Docker Host`, `Linux nativo`, `Windows`) sin alterar instalaciones existentes.
+  - Adopción explícita de instalaciones previas (`dolan adopt --path ... --name ... --yes`).
+  - Provisión nativa en **Proxmox LXC (Debian 13 sin privilegios, PostgreSQL 17 y Odoo 20 nativos sin Docker dentro de LXC)** además de Docker Compose, Linux nativo y Windows.
+  - Perfiles funcionales: `Básico` (`core`), `Servicios`, `Comercio`, `Completo` (`full`) y `Personalizado` (`custom`), con cambio incremental de perfil y agregado de módulos sin reinstalar (`dolan packages plan/apply`).
+  - **Datos de demostración opcionales** al crear una nueva base (`--demo-mode none|odoo|dolan`), con aislamiento de servicios externos (ARCA forzado en homologación y servidores de correo saliente desactivados en modo demo).
+  - **Backups lógicos portables (`.dolanbak`)** con verificación SHA-256 por artefacto, cifrado opcional AES-256-GCM y sanitización de secretos (`dolan backup create|verify|list`).
+  - **Restauración y migración entre proveedores** (`Docker ↔ Proxmox LXC`, `Linux nativo → LXC`, `LXC → LXC`) con preflight de 14 validaciones (`dolan restore plan|run`).
+  - Consultá la referencia completa de comandos y arquitectura en [`installer/README.md`](installer/README.md).
+
+## Instalación directa en Debian, Ubuntu o Proxmox VE
 
 En un servidor nuevo con conexión a Internet y una sesión SSH interactiva, ejecutá como `root`:
 
@@ -20,7 +32,10 @@ curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/boot
 
 Con un usuario normal, cambiá el final por `| sudo bash -s -- --update-packages`. Este modo actualiza los paquetes Debian/Ubuntu instalados; no actualiza el código de los módulos DOLAN ni reconstruye contenedores Odoo existentes.
 
-El bootstrap verifica que el sistema sea Debian o Ubuntu, instala las herramientas base que falten y, si no encuentra Docker Engine con `docker compose`, configura el repositorio APT oficial de Docker e instala Engine, Buildx y Compose. No elimina paquetes Docker existentes ni borra datos para resolver conflictos: se detiene y los informa para evitar tocar un runtime que ya esté en uso. Después descarga el toolchain Go fijado (valida su SHA-256 oficial), descarga el repositorio temporalmente, abre DOLAN Installer 2.0 y guarda el despliegue en `/opt/dolan/deployments/<nombre-corto>`.
+El bootstrap verifica que el sistema sea Debian o Ubuntu, instala las herramientas base que falten y:
+- Si detecta un hipervisor **Proxmox VE**, no fuerza la instalación de Docker Engine en el host; permite crear y administrar contenedores LXC Debian 13 nativos.
+- Si es un servidor Linux para Docker y no encuentra Docker Engine con `docker compose`, configura el repositorio APT oficial de Docker e instala Engine, Buildx y Compose. No elimina paquetes Docker existentes ni borra datos para resolver conflictos: se detiene y los informa para evitar tocar un runtime que ya esté en uso.
+- Descarga el binario precompilado `dolan` (verificando su `SHA256SUMS`) o, si aún no hay release binario publicado para ese tag, descarga Go 1.27.3 oficial verificado por SHA-256 y compila `/usr/local/bin/dolan` (`/usr/local/bin/dolan-installer`).
 
 Para repetir deliberadamente un despliegue de prueba existente, indicá el nombre corto del proyecto:
 
@@ -34,11 +49,11 @@ La terminal debe tener TTY porque el asistente solicita datos y contraseñas. Pa
 
 ## ¿Tengo que descargar Odoo y los módulos a mano?
 
-No hace falta descargar por separado el código de Odoo, IngAdhoc, WAHA ni las dependencias de Python. El instalador descarga o construye lo necesario. Sí necesitás clonar este repositorio y tener Docker, Git y conexión a Internet.
+No hace falta descargar por separado el código de Odoo, IngAdhoc, WAHA ni las dependencias de Python. El instalador descarga o construye lo necesario. Sí necesitás clonar este repositorio y tener Docker (o Proxmox LXC), Git y conexión a Internet.
 
 Durante la instalación se descargan o construyen:
 
-- La imagen oficial de PostgreSQL y la imagen base de Odoo CE 20.
+- La imagen oficial de PostgreSQL y la imagen base de Odoo CE 20 (o los paquetes nativos PostgreSQL 17 y Odoo 20 en Proxmox LXC Debian 13).
 - Siete repositorios IngAdhoc en la rama `20.0`.
 - Los paquetes del sistema y de Python requeridos por Odoo, ARCA y los módulos DOLAN.
 - La imagen de WAHA desde `devlikeapro/waha:latest`, fijada por digest en el artefacto generado.
@@ -48,24 +63,30 @@ El acceso a esos repositorios y registros de contenedores debe estar permitido p
 
 ## Requisitos del equipo que instala
 
-### Linux, Ubuntu, Debian o WSL2
+### Linux, Ubuntu, Debian, Proxmox VE o WSL2
 
 - Bash 4 o superior.
-- Para el comando directo: Debian o Ubuntu con APT, `curl` y TTY; iniciá como root o usá una cuenta con `sudo`. El bootstrap instala Git, Python 3, `dialog`, utilidades POSIX, `tar`, Docker Engine y el plugin `docker compose` cuando faltan; descarga Go 1.27.3 desde el sitio oficial y verifica su hash.
+- Para el comando directo: Debian 12+, Proxmox VE 8/9 o Ubuntu 22.04+ con APT, `curl` y TTY; iniciá como root o usá una cuenta con `sudo`.
 - Para ejecutar `crear_odoo20.sh` directamente: Docker Engine y el plugin `docker compose`, Git, Python 3, `iconv` y utilidades POSIX habituales.
 - Acceso a Internet para clonar repositorios, descargar imágenes y dependencias.
 
 ### Windows
 
 - Windows 10/11 con Docker Desktop iniciado y soporte de contenedores Linux.
-- PowerShell 5.1 o PowerShell 7.
+- PowerShell 5.1 o PowerShell 7 (`bootstrap.ps1` o `crear_odoo20.ps1`).
 - Git para Windows y acceso a Internet.
 
-El selector gráfico de perfiles usa `Out-GridView` si está disponible; si no, se ofrece el menú de teclado. En Linux, el selector con mouse requiere `dialog`; sin él se usa el menú de teclado.
+El selector gráfico de perfiles usa `Out-GridView` si está disponible; si no, se ofrece el menú de teclado. En Linux, el selector con mouse requiere `dialog` o la TUI de `dolan`; sin él se usa el menú de teclado.
 
 ## Inicio interactivo
 
-### Linux
+### Administrador de Ciclo de Vida (TUI Go)
+
+```bash
+dolan tui
+```
+
+### Linux (Motor Bash directo)
 
 Desde la carpeta raíz del repositorio:
 
@@ -79,28 +100,28 @@ chmod +x crear_odoo20.sh
 Desde la carpeta raíz del repositorio:
 
 ```powershell
+powershell -ExecutionPolicy Bypass -File .\bootstrap.ps1
+# o directamente el generador Compose:
 powershell -ExecutionPolicy Bypass -File .\crear_odoo20.ps1
 ```
 
-El asistente permite elegir el perfil, ingresar los datos iniciales de la empresa y decidir si despliega en ese momento. La carpeta se crea como `deployments/<nombre-corto>` y la base como `odoo_<nombre-corto>`.
+El asistente permite elegir el perfil, el modo de datos de demostración (`Sin datos demo` por defecto, `Demo Odoo` o `Demo DOLAN`), ingresar los datos iniciales de la empresa y decidir si despliega en ese momento. La carpeta se crea como `deployments/<nombre-corto>` y la base como `odoo_<nombre-corto>`.
 
 Se solicitan razón social, nombre corto, CUIT, domicilio, localidad, responsabilidad frente a ARCA, PV de facturación, PV de PoS y datos del administrador. La contraseña del usuario administrador se pide sin mostrarla y se confirma. La contraseña maestra del gestor de bases de Odoo es distinta.
 
 ## Perfiles
 
-| Perfil | Incluye |
-|---|---|
-| `core` | Facturación ARCA, ventas, remitos/stock, WhatsApp, IA/OCR, tema y Centro de Ayuda **Artículos**. |
-| `comercio` | `core` + Punto de Venta. |
-| `servicios` | `core` + Suscripciones y Alquileres. |
-| `full` | Catálogo completo DOLAN y aplicaciones CE de negocio. |
-| `custom` | Selección múltiple de los módulos DOLAN disponibles en `addons/DOLAN_*`; Artículos se agrega automáticamente. |
-
-El Centro de Ayuda de **Artículos** se instala en todos los perfiles, incluido `custom`. Actualmente comparte addon con el motor de Tableros BI (`DOLAN_knowledge_bi`), por lo que los perfiles `core` y `comercio` también incluyen ese motor. El catálogo actual contiene 14 carpetas con manifiesto. Odoo puede instalar dependencias adicionales declaradas en los manifiestos; por ejemplo, `DOLAN_ai` depende de BI y cotizaciones.
+| Perfil | Alias | Incluye |
+|---|---|---|
+| `Básico` | `core`, `basico` | Facturación ARCA (`DOLAN_l10n_ar_afip`, `DOLAN_accounting`), ventas, remitos/stock, WhatsApp (`DOLAN_whatsapp`), IA/OCR (`DOLAN_ai`, `DOLAN_ocr`), tema (`DOLAN_theme`), `DOLAN_base` y Centro de Ayuda **Artículos** (`DOLAN_knowledge_bi`). |
+| `Servicios` | `servicios` | `Básico` + Suscripciones (`DOLAN_subscription`) y Alquileres (`DOLAN_renting`). |
+| `Comercio` | `comercio` | `Básico` + Punto de Venta (`DOLAN_pos`, `DOLAN_discount_engine`, `DOLAN_payment_terminal`, `ePOS_print`, `pos_scale_management`). |
+| `Completo` | `full`, `completo` | Los 18 módulos del catálogo DOLAN (`DOLAN_*`, `ePOS_print`, `pos_scale_management`) y aplicaciones CE de negocio. |
+| `Personalizado` | `custom` | Selección libre de los 18 módulos del catálogo con resolución automática de dependencias; Artículos (`DOLAN_knowledge_bi`) se incluye siempre. |
 
 ## Qué queda configurado
 
-- Contenedores de Odoo, PostgreSQL, WAHA y Whisper local.
+- Contenedores de Odoo, PostgreSQL, WAHA y Whisper local (o servicios nativos en Proxmox LXC).
 - Base inicial con el perfil elegido, idioma español y aplicaciones CE asociadas.
 - Empresa principal con razón social, CUIT, domicilio y responsabilidad ARCA.
 - Usuario administrador con el correo y contraseña ingresados.
@@ -120,7 +141,20 @@ Whisper local queda disponible en la red interna de Docker como `http://whisper:
 
 ## Comandos útiles
 
-Los siguientes comandos se ejecutan desde el directorio del despliegue, por ejemplo `deployments/empresa1`:
+Con el administrador `dolan`:
+
+```bash
+dolan status
+dolan list
+dolan backup create --name empresa1 --out ./empresa1.dolanbak
+dolan backup verify --file ./empresa1.dolanbak
+dolan restore plan --file ./empresa1.dolanbak --target-provider proxmox-lxc --target-path /var/lib/dolan/empresa1 --vmid 105
+dolan packages list
+dolan update check
+dolan diagnostics
+```
+
+Desde el directorio de un despliegue Docker Compose (`deployments/empresa1`):
 
 ```bash
 docker compose ps
@@ -141,6 +175,7 @@ Los flags existentes permiten ejecutar sin el asistente. Ejemplo Bash; reemplaz�
 ./crear_odoo20.sh --non-interactive \
   --name deployments/empresa1 \
   --profile full \
+  --demo-mode none \
   --deploy \
   --init-db odoo_empresa1 \
   --company "Empresa 1 S.A." \
@@ -156,7 +191,7 @@ Los flags existentes permiten ejecutar sin el asistente. Ejemplo Bash; reemplaz�
   --admin-login-pass 'CAMBIAR_POR_UNA_CLAVE_SEGURA'
 ```
 
-En PowerShell, los parámetros equivalentes son `-Profile`, `-Modules`, `-Company`, `-CompanyShort`, `-Cuit`, `-Address`, `-City`, `-Responsibility`, `-BillingPos`, `-PosPos`, `-AdminEmail`, `-AdminName` y `-AdminLoginPass`. Evitá colocar contraseñas reales en comandos que queden en el historial; para una instalación manual, usá el asistente interactivo.
+En PowerShell, los parámetros equivalentes son `-Profile`, `-DemoMode`, `-Modules`, `-Company`, `-CompanyShort`, `-Cuit`, `-Address`, `-City`, `-Responsibility`, `-BillingPos`, `-PosPos`, `-AdminEmail`, `-AdminName` y `-AdminLoginPass`. Evitá colocar contraseñas reales en comandos que queden en el historial; para una instalación manual, usá el asistente interactivo.
 
 Para revisar conectividad con las ramas IngAdhoc:
 

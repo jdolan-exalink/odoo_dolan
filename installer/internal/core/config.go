@@ -14,36 +14,131 @@ import (
 type Profile string
 
 const (
+	ProfileBasic    Profile = "basico"
 	ProfileCore     Profile = "core"
 	ProfileCommerce Profile = "comercio"
 	ProfileServices Profile = "servicios"
+	ProfileComplete Profile = "completo"
 	ProfileFull     Profile = "full"
 	ProfileCustom   Profile = "custom"
 )
 
-var Profiles = []Profile{ProfileCore, ProfileCommerce, ProfileServices, ProfileFull, ProfileCustom}
+var Profiles = []Profile{ProfileBasic, ProfileCore, ProfileCommerce, ProfileServices, ProfileComplete, ProfileFull, ProfileCustom}
+
+func CanonicalProfile(p Profile) Profile {
+	switch strings.ToLower(strings.TrimSpace(string(p))) {
+	case "core", "basico", "básico":
+		return ProfileBasic
+	case "servicios":
+		return ProfileServices
+	case "comercio":
+		return ProfileCommerce
+	case "full", "completo":
+		return ProfileComplete
+	case "custom", "personalizado":
+		return ProfileCustom
+	default:
+		return p
+	}
+}
+
+func LegacyProfileName(p Profile) string {
+	switch CanonicalProfile(p) {
+	case ProfileBasic:
+		return "core"
+	case ProfileComplete:
+		return "full"
+	case ProfileServices:
+		return "servicios"
+	case ProfileCommerce:
+		return "comercio"
+	case ProfileCustom:
+		return "custom"
+	default:
+		return string(p)
+	}
+}
+
+type DemoMode string
+
+const (
+	DemoNone  DemoMode = "none"
+	DemoOdoo  DemoMode = "odoo"
+	DemoDolan DemoMode = "dolan"
+)
+
+type DeploymentTarget string
+
+const (
+	TargetProxmoxLXC  DeploymentTarget = "proxmox-lxc"
+	TargetDocker      DeploymentTarget = "docker"
+	TargetLinuxNative DeploymentTarget = "linux-native"
+	TargetWindows     DeploymentTarget = "windows"
+)
+
+type LXCConfig struct {
+	Name          string `json:"name,omitempty"`
+	VMID          int    `json:"vmid,omitempty"`
+	Template      string `json:"template,omitempty"`
+	CPU           int    `json:"cpu,omitempty"`
+	RAMMB         int    `json:"ram_mb,omitempty"`
+	DiskGB        int    `json:"disk_gb,omitempty"`
+	Storage       string `json:"storage,omitempty"`
+	Bridge        string `json:"bridge,omitempty"`
+	VLAN          string `json:"vlan,omitempty"`
+	IP            string `json:"ip,omitempty"`
+	DNS           string `json:"dns,omitempty"`
+	StartOnBoot   bool   `json:"start_on_boot"`
+	EnableBackups bool   `json:"enable_backups"`
+	Validated     bool   `json:"validated"`
+}
+
+func DefaultLXCConfig() LXCConfig {
+	return LXCConfig{
+		Name:          "dolan-erp",
+		VMID:          105,
+		Template:      "Debian 13",
+		CPU:           4,
+		RAMMB:         8192,
+		DiskGB:        80,
+		Storage:       "local-lvm",
+		Bridge:        "vmbr0",
+		VLAN:          "Sin VLAN",
+		IP:            "DHCP",
+		DNS:           "Automático",
+		StartOnBoot:   true,
+		EnableBackups: true,
+	}
+}
 
 type Config struct {
-	ProjectName       string   `json:"project_name"`
-	ProjectRoot       string   `json:"project_root"`
-	Profile           Profile  `json:"profile"`
-	Modules           []string `json:"modules,omitempty"`
-	ResetExistingName string   `json:"-"`
-	Company           string   `json:"company"`
-	CompanyShort      string   `json:"company_short"`
-	CUIT              string   `json:"cuit"`
-	Address           string   `json:"address"`
-	City              string   `json:"city"`
-	Responsibility    string   `json:"responsibility"`
-	BillingPOS        int      `json:"billing_pos"`
-	POSPOS            int      `json:"pos_pos"`
-	AdminEmail        string   `json:"admin_email"`
-	AdminName         string   `json:"admin_name"`
-	AdminPassword     string   `json:"-"`
-	MasterPassword    string   `json:"-"`
-	Port              int      `json:"port"`
-	CallbackPort      int      `json:"callback_port"`
-	InitDB            string   `json:"init_db"`
+	Target            DeploymentTarget `json:"target,omitempty"`
+	LXC               LXCConfig        `json:"lxc,omitempty"`
+	ProjectName       string           `json:"project_name"`
+	ProjectRoot       string           `json:"project_root"`
+	Profile           Profile          `json:"profile"`
+	Modules           []string         `json:"modules,omitempty"`
+	ResetExistingName string           `json:"-"`
+	Company           string           `json:"company"`
+	CompanyShort      string           `json:"company_short"`
+	Country           string           `json:"country,omitempty"`
+	Language          string           `json:"language,omitempty"`
+	CUIT              string           `json:"cuit"`
+	Address           string           `json:"address"`
+	City              string           `json:"city"`
+	Responsibility    string           `json:"responsibility"`
+	BillingPOS        int              `json:"billing_pos"`
+	POSPOS            int              `json:"pos_pos"`
+	AdminEmail        string           `json:"admin_email"`
+	AdminName         string           `json:"admin_name"`
+	AdminPassword     string           `json:"-"`
+	MasterPassword    string           `json:"-"`
+	Port              int              `json:"port"`
+	CallbackPort      int              `json:"callback_port"`
+	InitDB            string           `json:"init_db"`
+	DemoData          bool             `json:"demo_data,omitempty"`
+	DemoMode          DemoMode         `json:"demo_mode,omitempty"`
+	DemoProfile       string           `json:"demo_profile,omitempty"`
 }
 
 var slugInvalid = regexp.MustCompile(`[^a-z0-9]+`)
@@ -70,7 +165,22 @@ func DefaultProjectRoot() string {
 }
 
 func NewConfig() Config {
-	return Config{Profile: ProfileCore, Responsibility: "Responsable Inscripto", BillingPOS: 1, POSPOS: 1, Port: 8070, CallbackPort: 1455, AdminName: "Administrador", ProjectRoot: DefaultProjectRoot()}
+	return Config{
+		Target:         TargetDocker,
+		LXC:            DefaultLXCConfig(),
+		Profile:        ProfileCore,
+		Country:        "Argentina",
+		Language:       "Español (Argentina)",
+		Responsibility: "Responsable Inscripto",
+		BillingPOS:     1,
+		POSPOS:         1,
+		Port:           8070,
+		CallbackPort:   1455,
+		AdminName:      "Administrador",
+		ProjectRoot:    DefaultProjectRoot(),
+		DemoMode:       DemoNone,
+		DemoProfile:    "Según paquete seleccionado",
+	}
 }
 
 func (c *Config) Normalize() {
@@ -101,6 +211,35 @@ func (c *Config) Normalize() {
 	if c.AdminName == "" {
 		c.AdminName = "Administrador"
 	}
+	if c.Country == "" {
+		c.Country = "Argentina"
+	}
+	if c.Language == "" {
+		c.Language = "Español (Argentina)"
+	}
+	if c.Target == "" {
+		c.Target = TargetDocker
+	}
+	if c.LXC.VMID == 0 {
+		def := DefaultLXCConfig()
+		if c.ProjectName != "" {
+			def.Name = "dolan-" + c.ProjectName
+		}
+		c.LXC = def
+	}
+	if c.DemoMode == "" {
+		if c.DemoData {
+			c.DemoMode = DemoOdoo
+		} else {
+			c.DemoMode = DemoNone
+		}
+	}
+	if c.DemoMode != DemoNone {
+		c.DemoData = true
+	}
+	if c.DemoProfile == "" {
+		c.DemoProfile = "Según paquete seleccionado"
+	}
 }
 
 func (c Config) DeploymentPath() string {
@@ -109,7 +248,7 @@ func (c Config) DeploymentPath() string {
 
 func (c Config) Validate(requireCompany bool) error {
 	if !containsProfile(c.Profile) {
-		return fmt.Errorf("perfil inválido %q: elegí core, comercio, servicios, full o custom", c.Profile)
+		return fmt.Errorf("perfil inválido %q: elegí basico/core, comercio, servicios, completo/full o custom", c.Profile)
 	}
 	if !regexp.MustCompile(`^[a-z0-9][a-z0-9_-]{0,47}$`).MatchString(c.ProjectName) {
 		return errors.New("el nombre corto debe contener hasta 48 letras minúsculas, números, guion o guion bajo")
@@ -126,8 +265,19 @@ func (c Config) Validate(requireCompany bool) error {
 	if c.Port == c.CallbackPort {
 		return errors.New("el puerto HTTP y el puerto OAuth no pueden coincidir")
 	}
-	if c.Profile == ProfileCustom && len(c.Modules) == 0 {
+	if CanonicalProfile(c.Profile) == ProfileCustom && len(c.Modules) == 0 {
 		return errors.New("el perfil custom requiere al menos un módulo")
+	}
+	if c.Target == TargetProxmoxLXC {
+		if c.LXC.VMID < 100 || c.LXC.VMID > 999999999 {
+			return errors.New("el VMID de Proxmox LXC debe ser mayor o igual a 100")
+		}
+		if c.LXC.CPU < 1 || c.LXC.RAMMB < 1024 || c.LXC.DiskGB < 10 {
+			return errors.New("recursos LXC insuficientes: mínimo 1 CPU, 1024 MB RAM y 10 GB disco")
+		}
+	}
+	if c.DemoMode != DemoNone && c.DemoMode != DemoOdoo && c.DemoMode != DemoDolan {
+		return fmt.Errorf("modo demo inválido %q: usá none, odoo o dolan", c.DemoMode)
 	}
 	if !requireCompany {
 		return nil

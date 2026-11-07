@@ -30,10 +30,17 @@ jobs:
       - run: go vet ./...
       - name: Validate Bash entry points
         run: bash -n ../bootstrap.sh ../crear_odoo20.sh
-      - name: Cross compile supported targets
+      - name: Cross compile supported targets and generate SHA256SUMS
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p /tmp/dolan-dist
           for target in linux/amd64 linux/arm64 windows/amd64 windows/arm64; do
-            GOOS="${target%/*}" GOARCH="${target#*/}" go build -o /tmp/dolan-installer-"${target//\//-}" ./cmd/dolan-installer
+            os="${target%/*}"
+            arch="${target#*/}"
+            ext=""
+            if [[ "$os" == "windows" ]]; then ext=".exe"; fi
+            GOOS="$os" GOARCH="$arch" go build -trimpath -ldflags="-s -w" -o "/tmp/dolan-dist/dolan-${os}-${arch}${ext}" ./cmd/dolan
+            GOOS="$os" GOARCH="$arch" go build -trimpath -ldflags="-s -w" -o "/tmp/dolan-dist/dolan-installer-${os}-${arch}${ext}" ./cmd/dolan-installer
           done
+          (cd /tmp/dolan-dist && sha256sum dolan-* > SHA256SUMS && sha256sum --check SHA256SUMS)
