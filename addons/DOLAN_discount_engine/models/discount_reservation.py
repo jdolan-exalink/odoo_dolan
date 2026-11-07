@@ -14,7 +14,10 @@ class DolanDiscountReservation(models.Model):
     config_id = fields.Many2one(related='session_id.config_id', store=True, index=True)
     company_id = fields.Many2one(related='session_id.company_id', store=True, index=True)
     expires_at = fields.Datetime(required=True, index=True)
-    proposals = fields.Json(required=True, default=list)
+    # Empty proposal sets are valid for idempotent POS preauthorization. Odoo
+    # stores an empty list as SQL NULL for Json fields, so this field must be
+    # nullable and consumers should continue normalizing it with ``or []``.
+    proposals = fields.Json(default=list)
     payment_allocations = fields.Json(default=list, copy=False)
     state = fields.Selection([('reserved', 'Reservado'), ('consumed', 'Consumido'), ('released', 'Liberado')],
                              required=True, default='reserved', index=True)
@@ -186,4 +189,4 @@ class DolanDiscountReservation(models.Model):
             if actual_methods != expected_methods:
                 raise UserError(_('El medio de pago de la venta no coincide con el que autorizó la promoción. Volvé a caja y revisá el cobro.'))
         reservation.write({'state': 'consumed'})
-        return reservation.proposals
+        return reservation.proposals or []

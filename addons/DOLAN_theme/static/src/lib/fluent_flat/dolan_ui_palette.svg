@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none">
+  <defs>
+    <linearGradient id="dolan" x1="18" y1="16" x2="78" y2="80" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8D45D8"/>
+      <stop offset="1" stop-color="#16A6A2"/>
+    </linearGradient>
+  </defs>
+  <path d="M48 10C27 10 10 27 10 48s17 38 38 38h7a10 10 0 0 0 6-18 6 6 0 0 1 4-10h7a14 14 0 0 0 14-14C86 25 69 10 48 10Z" fill="url(#dolan)"/>
+  <circle cx="29" cy="43" r="5" fill="#FFD166"/>
+  <circle cx="39" cy="28" r="5" fill="#F78FB3"/>
+  <circle cx="57" cy="27" r="5" fill="#5ED6CF"/>
+  <circle cx="70" cy="39" r="5" fill="#F4F6FF"/>
+</svg>

@@ -1,4 +1,4 @@
-FROM odoo:20.0
+FROM odoo:20.0@sha256:a97a7665e2b9fd890e12785491a2c91d779f800bcbc30873dada1c8748b28f1c
 
 USER root
 
@@ -33,8 +33,27 @@ RUN pip3 install --break-system-packages \
     httpx \
     openpyxl \
     ofxparse \
-    PyMuPDF \
+    pypdfium2==5.10.1 \
     zxing-cpp==3.1.1
+
+RUN python3 - <<'PY'
+import glob, os, shutil
+from pathlib import Path
+import importlib.metadata
+dist = importlib.metadata.distribution("pypdfium2")
+target = Path("/opt/dolan/licenses/pypdfium2")
+target.mkdir(parents=True, exist_ok=True)
+license_paths = [path for path in (dist.files or []) if "/licenses/" in str(path).replace("\\", "/")]
+if not license_paths:
+    raise SystemExit("pypdfium2 wheel did not provide its required license notices")
+for relative_path in license_paths:
+    source = Path(dist.locate_file(relative_path))
+    if source.is_file():
+        parts = Path(str(relative_path).replace("\\", "/")).parts
+        destination = target.joinpath(*parts[parts.index("licenses") + 1:])
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, destination)
+PY
 
 RUN python3 - <<'PY2'
 import glob, os
@@ -46,5 +65,8 @@ for p in packages:
     os.chmod(cache, 0o777)
 print('pyafipws cache dirs:', packages)
 PY2
+
+COPY LICENSE /opt/dolan/licenses/DOLAN-LICENSE.txt
+COPY THIRD_PARTY_NOTICES.md /opt/dolan/licenses/THIRD_PARTY_NOTICES.md
 
 USER odoo

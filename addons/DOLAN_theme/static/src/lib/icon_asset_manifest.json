@@ -1,0 +1,1873 @@
+{
+  "assets": [
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Abacus/3D/abacus_3d.png",
+      "local_path": "fluent/accounting.png",
+      "sha256": "85d0c6771052754de74aef75c4643daea9ad29150b7093d185425cb3c13abaf2"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Balance scale/3D/balance_scale_3d.png",
+      "local_path": "fluent/scale.png",
+      "sha256": "442cfa3f13a9052484475e388e021f248fc39d20a8a7f36b30ea70adcad0d217"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Chart increasing/3D/chart_increasing_3d.png",
+      "local_path": "fluent/sales.png",
+      "sha256": "dd5e6b29aa4067c5a4d9e152119497832d70e094b380998e5f5b0c51abbb3a64"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Bookmark tabs/3D/bookmark_tabs_3d.png",
+      "local_path": "fluent/articles.png",
+      "sha256": "4cc582223682c9f9fa752603eb0ab9e4a789f8d00ac90b107d170241d828ae7c"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Busts in silhouette/3D/busts_in_silhouette_3d.png",
+      "local_path": "fluent/contacts.png",
+      "sha256": "1169de2f4d600067bc3a135d584cbbfc38ef5212148089dcaff7dedb0dc3d805"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Tear-off calendar/3D/tear-off_calendar_3d.png",
+      "local_path": "fluent/calendar.png",
+      "sha256": "fc08a373de7a26317a13fe68af10dab54b2ea52493a5e6cc12746318d0ee9d35"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Convenience store/3D/convenience_store_3d.png",
+      "local_path": "fluent/pos.png",
+      "sha256": "cdc2ef03afe122787dda924fc1a2fbaeb114afe4372bb28aef68a61d915d61c5"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Credit card/3D/credit_card_3d.png",
+      "local_path": "fluent/payment.png",
+      "sha256": "8988e8c1f850752f517c28b46f7745c54621c79679cfa1b387e73741d2ba4935"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Factory/3D/factory_3d.png",
+      "local_path": "fluent/manufacturing.png",
+      "sha256": "4b2d8cb50ffd54b8958d33dc19c4a0164e0fba762384d108e3863bfa91633b22"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/File folder/3D/file_folder_3d.png",
+      "local_path": "fluent/folder.png",
+      "sha256": "d07ff91df2a4ad9f08e281e9b99ad66924b6db0c0afd2a938feca4dd6b7a9039"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Gear/3D/gear_3d.png",
+      "local_path": "fluent/settings.png",
+      "sha256": "415296d4fadabc2e0f6593143ea632948fef20a1cd73fbbc3dbda571f0421988"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Handshake/3D/handshake_3d.png",
+      "local_path": "fluent/crm.png",
+      "sha256": "fd0c3ae54cf208f371636263f4c972b54ac929fef0455b9d15ce72c04fee0f2b"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Megaphone/3D/megaphone_3d.png",
+      "local_path": "fluent/marketing.png",
+      "sha256": "78fd3bd1d93600888d4b06e157672c2dfb8058aaeb0f924fc461ca6af6e44c29"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Office worker/Default/3D/office_worker_3d_default.png",
+      "local_path": "fluent/employees.png",
+      "sha256": "f74f2bc64a4a9b9ec332cf688cf8025ba44acd263a987bff32fd0146dde229d3"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Package/3D/package_3d.png",
+      "local_path": "fluent/inventory.png",
+      "sha256": "9c7c74bb551e7f0a3a088791ac715c4ece8c45b2d1910915bc34159f148dee0e"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Printer/3D/printer_3d.png",
+      "local_path": "fluent/printer.png",
+      "sha256": "1106aee713a1c4e1368f0e9d41276439d8c540193a1b1dbc413ec0ee80054ea3"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Receipt/3D/receipt_3d.png",
+      "local_path": "fluent/invoicing.png",
+      "sha256": "3a0d1b4ab48e5f181211f55d954de2e915db0a9749258c75cae8cff92f1983ba"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Robot/3D/robot_3d.png",
+      "local_path": "fluent/ai.png",
+      "sha256": "3f9b5a00b53c8bddda36b6a3f68d00718d9d7d8c04f986a3248e55ae93a7961b"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Rocket/3D/rocket_3d.png",
+      "local_path": "fluent/projects.png",
+      "sha256": "4636925a1dfc76a45dc83c08b983699d39143a0978f794a4e2dfb6cbffdcd7ab"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Shopping bags/3D/shopping_bags_3d.png",
+      "local_path": "fluent/purchases.png",
+      "sha256": "b4c45c21e13eb6f3f2bbfba7a48f57db27a43bf0bb4734fdb7cb0b560f5d51bd"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Speech balloon/3D/speech_balloon_3d.png",
+      "local_path": "fluent/whatsapp.png",
+      "sha256": "b9bdb19ef2e550923bc4f541de049f1633883619564b2aa140a968eaf1d69a0d"
+    },
+    {
+      "library": "fluent",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Toolbox/3D/toolbox_3d.png",
+      "local_path": "fluent/maintenance.png",
+      "sha256": "904e3e9b5e16bfd6473ea1303ac6a60b2100ebb2078ccfcfe4ea7598bfd21052"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/search.svg",
+      "local_path": "tabler/search.svg",
+      "sha256": "383fab23bc3ce760f47be13a055f28256a68469fb4cf9d8ca33fcb09bcd53f51"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/plus.svg",
+      "local_path": "tabler/plus.svg",
+      "sha256": "5c22bc4601782a1aba6f67a6a97fbb864c6cf75a4aa1f012ae3f8478d1b128d2"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/folder.svg",
+      "local_path": "tabler/folder.svg",
+      "sha256": "22e5e5fb9d77af98510337902fe0a3f008b412ddd7d51ce9b4960def073b43f1"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/folder-plus.svg",
+      "local_path": "tabler/folder-plus.svg",
+      "sha256": "a2d115a0cee8847cbaccabc6b2a425a61c2dbac8fee4454df579a965afdf7766"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/star.svg",
+      "local_path": "tabler/star.svg",
+      "sha256": "db32f571d306a19532772fb182d0d94aafe36175c7d9d4352519da92448016ee"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/arrows-sort.svg",
+      "local_path": "tabler/arrows-sort.svg",
+      "sha256": "f46cf2df60f77bc119d4d84d558505be491ef78f172a5ab8bda364e42a1e0c83"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/history.svg",
+      "local_path": "tabler/history.svg",
+      "sha256": "cb6871740e98093d7df375eecd0784703ae937cc368a4ece50d6801fd9b083b0"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/settings.svg",
+      "local_path": "tabler/settings.svg",
+      "sha256": "98f10cef0571a9bbaf954c8a5d368107c247215fad68bc62a6b2c7dfc0e29642"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/circle-check.svg",
+      "local_path": "tabler/circle-check.svg",
+      "sha256": "f0f158c6028e8de9560c183971f31c5c22bc31c073c5c7bc600cb93d1099a541"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/alert-triangle.svg",
+      "local_path": "tabler/alert-triangle.svg",
+      "sha256": "831c9ac434a14b8e8855775810cd971cff0457330010a4c3c81f74233dbee5ff"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/circle-x.svg",
+      "local_path": "tabler/circle-x.svg",
+      "sha256": "e9942ba5ec60cccabd09921f35a36d33d6ebee6bb2691d9118c599b585161d1e"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/info-circle.svg",
+      "local_path": "tabler/info-circle.svg",
+      "sha256": "4ec9a20592f2de6ae26dd315885ce7419a9b0bd8bcafee7c1276b773fae4cc67"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/layout-dashboard.svg",
+      "local_path": "tabler/layout-dashboard.svg",
+      "sha256": "0664c70d5eb6bf3d4f9d7f9662f7e567b2c8a738ab6c4cc077e84301d5ee8335"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/layout-grid.svg",
+      "local_path": "tabler/layout-grid.svg",
+      "sha256": "b21a4a4192302eab66d931a280dfe8cbc20331f411aea3b36b5f978417c59ffc"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/menu-2.svg",
+      "local_path": "tabler/menu-2.svg",
+      "sha256": "73f96e4a42a45e666b5288cc65ace689e977c4080abf6af3249a0e015bb493f9"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/sun.svg",
+      "local_path": "tabler/sun.svg",
+      "sha256": "6eaf26aaf098f0acd1e7f5c3ea616f14c55576577e83f5f53a97990f25183272"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/moon.svg",
+      "local_path": "tabler/moon.svg",
+      "sha256": "a0ae8e9b875db0f914d5d7702afaf87b1ae78fcc09acc1ae4dca63c930e49b43"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/x.svg",
+      "local_path": "tabler/x.svg",
+      "sha256": "f443b1f763bd3dc0f867c0a6d721b6e1f5ef79a6886e67d937ec05c60b170e16"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/sparkles.svg",
+      "local_path": "tabler/sparkles.svg",
+      "sha256": "ee4f1a0b730b29fd4db3588e5c5a768d973ad09ac8c79a6d062eadd9570d4dc3"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/calendar-event.svg",
+      "local_path": "tabler/calendar-event.svg",
+      "sha256": "737c8baa8b1e780f1b8607e35ac8f8055606a3838cf8dddc74dfdcd2d18763dd"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/calendar.svg",
+      "local_path": "tabler/calendar.svg",
+      "sha256": "3b730cb35ece33d9006e99dea428b2591ef2b34098f3d307ca447c6bf15f1206"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/user-plus.svg",
+      "local_path": "tabler/user-plus.svg",
+      "sha256": "00ba766196b1ab731e756ae0467e78b77fbea2aa93f2ec9132983e6ed2c688be"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/receipt.svg",
+      "local_path": "tabler/receipt.svg",
+      "sha256": "9bd5b9bda43f68819c944e4718ecd21816acca02c460fa440e3115f90867fa05"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/building-store.svg",
+      "local_path": "tabler/building-store.svg",
+      "sha256": "fcd1800b036392038c81202e9da63ad819e1f1d855d598219cd0626c93ead2d3"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/devices.svg",
+      "local_path": "tabler/devices.svg",
+      "sha256": "864f112928418591ebdc73ebf360e1b00d9bd00bbb0b0b554b4ac7501040fb05"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/adjustments.svg",
+      "local_path": "tabler/adjustments.svg",
+      "sha256": "1dde3d78cce8d1121669b1683d04a7b0f9827ea00cbdd3a4088d8c8178a22b39"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/briefcase.svg",
+      "local_path": "tabler/briefcase.svg",
+      "sha256": "708d57b94742b35c407bedc009979a50aa05f9625afe12c02681cdb96747e0ef"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/briefcase-2.svg",
+      "local_path": "tabler/briefcase-2.svg",
+      "sha256": "db07391a16e7f31e2d756d3e198bb12191f9ba172b27961d2cdcca8c7043034e"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/file-text.svg",
+      "local_path": "tabler/file-text.svg",
+      "sha256": "5a507e45f809734928f827d960a310e7eb5ac64a62d3aba6400a1467abfa2763"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/users.svg",
+      "local_path": "tabler/users.svg",
+      "sha256": "c79f85681fe557f28ee516dc7585bc54f7534eb82ab60fd42ad33efcd42fdd7a"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/users-group.svg",
+      "local_path": "tabler/users-group.svg",
+      "sha256": "2d196e620662a694bf579893db6a4d3b42557a2a6484174fe46029f2bcbae731"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/chart-bar.svg",
+      "local_path": "tabler/chart-bar.svg",
+      "sha256": "82bf5a10950444061d530a7e6c5900b4840781e2f8c32dd69e74c4c1ae0b44e2"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/chart-line.svg",
+      "local_path": "tabler/chart-line.svg",
+      "sha256": "c2660f7c2c80a2f000bfdce7c3c4df58b7ed34380c03aea76fe93deae384a6cf"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/shopping-cart.svg",
+      "local_path": "tabler/shopping-cart.svg",
+      "sha256": "69245eba99a477b46c1b589b4c2118011cd752b40b60304af2e2d3614fb14bdd"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/barcode.svg",
+      "local_path": "tabler/barcode.svg",
+      "sha256": "1da657c89555e1cbf23358a7e7249ba8357e4a33336a6e07df1a97d49101efb8"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/cash-register.svg",
+      "local_path": "tabler/cash-register.svg",
+      "sha256": "47ca67b6e17c080803d6489a99c3d5a85d5024c0f170f5606fc69a1b144f49fd"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/cash.svg",
+      "local_path": "tabler/cash.svg",
+      "sha256": "0d3e21a18929b9f818266519540fedfcce6f18301c115871ab516f97bc6eff5b"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/scale.svg",
+      "local_path": "tabler/scale.svg",
+      "sha256": "ca6917cf16d76c701864c660e9fdf74ca09440d77925041c562195bc093dbe77"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/wallet.svg",
+      "local_path": "tabler/wallet.svg",
+      "sha256": "53bfc8a360c3afa434e20042750f42b62cbc8df9ef4ae9c604423ddaa6294376"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/messages.svg",
+      "local_path": "tabler/messages.svg",
+      "sha256": "4e62579f877cad24b2605bf2cea5513f91d831d252624af9770a40c1b66e7cca"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/clipboard-check.svg",
+      "local_path": "tabler/clipboard-check.svg",
+      "sha256": "9ac8da82e556cead2c68457f3da2361df5102beccccc8c3f68d5a43a7064fb64"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/chart-pie.svg",
+      "local_path": "tabler/chart-pie.svg",
+      "sha256": "ece41182a90d31c3b7aa8a58fe66ff57551f8055a98ebe8b976262658ceb4e53"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/bell.svg",
+      "local_path": "tabler/bell.svg",
+      "sha256": "477add236d7e12253cf4672b7a915efa65f6f47c147581206fe8ee8a1714fa6a"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/sort-ascending.svg",
+      "local_path": "tabler/sort-ascending.svg",
+      "sha256": "12d766adeaaacc058d24d94f383236ca58302d82d853278bece70b06e9346e59"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/invoice.svg",
+      "local_path": "tabler/invoice.svg",
+      "sha256": "f47afde0acd68cecda22186839baf48b65e357efe5c066d44a17441a4419c11d"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/package.svg",
+      "local_path": "tabler/package.svg",
+      "sha256": "6f9fd82dda992c750dce88a7e626272769e11d0c9d6fc0defe78214fe527030e"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/tool.svg",
+      "local_path": "tabler/tool.svg",
+      "sha256": "e668da241a54daaeec62e1aff639da665ee6b38a2c103775bb8f1aaf9d256c28"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/book-2.svg",
+      "local_path": "tabler/book-2.svg",
+      "sha256": "417bb06d9a6cb238ac4cf28eac944dc9d87051d22948798d5cb66188c23f6e24"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/robot.svg",
+      "local_path": "tabler/robot.svg",
+      "sha256": "c4dd9bc10e479f5089db8c6e67106995fb00eb918de868cea3e63d8451b84b18"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/brand-openai.svg",
+      "local_path": "tabler/brand-openai.svg",
+      "sha256": "a89678ee9aa37674c7061137666aff61fc505d5d04e1180dc5f53d9c46cd2af2"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/outline/building-factory.svg",
+      "local_path": "tabler/building-factory.svg",
+      "sha256": "a82a3077992e190508671908f941342742c8c8eb41d7d50f84e8068ef8df39d2"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/filled/star.svg",
+      "local_path": "tabler/filled/star.svg",
+      "sha256": "80d24a0a662d6f75e7420fee30bd4942cbbd295097bb0ce2fabbee1d92adccc0"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/filled/circle-check.svg",
+      "local_path": "tabler/filled/circle-check.svg",
+      "sha256": "c97f7118e8eea509624430c767b1dfdfdb3b63b08f22b31a1957d5a350e6afca"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/filled/folder.svg",
+      "local_path": "tabler/filled/folder.svg",
+      "sha256": "ab5483785164f8df172e7ca0c4b47ed567915d8bde9eef025f571a82bd54886b"
+    },
+    {
+      "library": "tabler",
+      "commit": "8d4fecf58167041e6ddccd9b06a08a17b4154030",
+      "upstream_path": "icons/filled/bookmark.svg",
+      "local_path": "tabler/filled/bookmark.svg",
+      "sha256": "5f12cb09c998b42ad8da798960ce3b588f61f6a4a42afc1ec2ba918f9798158a"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Receipt/3D/receipt_3d.png",
+      "local_path": "fluent_3d/invoicing.png",
+      "sha256": "3a0d1b4ab48e5f181211f55d954de2e915db0a9749258c75cae8cff92f1983ba"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Receipt/Flat/receipt_flat.svg",
+      "local_path": "fluent_flat/invoicing.svg",
+      "sha256": "4e2009039c9c93a6e5a225b09771beccadcdd1689ba479e346db360cbb04b141"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Receipt/SVG/ic_fluent_receipt_24_filled.svg",
+      "local_path": "fluent_filled/invoicing.svg",
+      "sha256": "9125b9dcc1047b4c94aa3e7ba298d7f48fb1a7ceb616de09f0efc4c892dab375"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Receipt/SVG/ic_fluent_receipt_24_regular.svg",
+      "local_path": "fluent_regular/invoicing.svg",
+      "sha256": "9c8656de0ac51b5d315b8008e2bc274d0fa4e9f9cb192913be9a633972b51cf3"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Chart increasing/3D/chart_increasing_3d.png",
+      "local_path": "fluent_3d/sales.png",
+      "sha256": "dd5e6b29aa4067c5a4d9e152119497832d70e094b380998e5f5b0c51abbb3a64"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Chart increasing/Flat/chart_increasing_flat.svg",
+      "local_path": "fluent_flat/sales.svg",
+      "sha256": "14a9b313b7a7c4ecda0e228349ecdc62ecadf739b1f77bed40f96a61d8debd77"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Chart Multiple/SVG/ic_fluent_chart_multiple_24_filled.svg",
+      "local_path": "fluent_filled/sales.svg",
+      "sha256": "a15bafec8fd014ff55edbd918e44a9729558cc9ecf07130669d20f06f78c9cf4"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Chart Multiple/SVG/ic_fluent_chart_multiple_24_regular.svg",
+      "local_path": "fluent_regular/sales.svg",
+      "sha256": "8a98bc75a89056858a67d2b9661162c750b96ddd396a25a4c00342040ea62dda"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Toolbox/3D/toolbox_3d.png",
+      "local_path": "fluent_3d/utilities.png",
+      "sha256": "904e3e9b5e16bfd6473ea1303ac6a60b2100ebb2078ccfcfe4ea7598bfd21052"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Toolbox/Flat/toolbox_flat.svg",
+      "local_path": "fluent_flat/utilities.svg",
+      "sha256": "67f5ed8b660b2d7758e33a5323bd39d2272e694bded66269895f860308f371ae"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Toolbox/SVG/ic_fluent_toolbox_24_filled.svg",
+      "local_path": "fluent_filled/utilities.svg",
+      "sha256": "45deb613e5d2ea1a9b38f320be5f9f2a386ceef71bcf71b2b62d025061be9b6d"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Toolbox/SVG/ic_fluent_toolbox_24_regular.svg",
+      "local_path": "fluent_regular/utilities.svg",
+      "sha256": "2b3111535038a6ea14123d6c3658bd0e2186dc8d1a5775fcb9fb707c664504bb"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Handshake/3D/handshake_3d.png",
+      "local_path": "fluent_3d/crm.png",
+      "sha256": "fd0c3ae54cf208f371636263f4c972b54ac929fef0455b9d15ce72c04fee0f2b"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Handshake/Flat/handshake_flat.svg",
+      "local_path": "fluent_flat/crm.svg",
+      "sha256": "74badb40d98913d22d7902612f80be661049e6a2702fdd93c53c8a00448c4991"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Handshake/SVG/ic_fluent_handshake_24_filled.svg",
+      "local_path": "fluent_filled/crm.svg",
+      "sha256": "f4b9b1603587cbd36135464848e0c6da7e786a1eb56145a4f5f8d904597f5184"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Handshake/SVG/ic_fluent_handshake_24_regular.svg",
+      "local_path": "fluent_regular/crm.svg",
+      "sha256": "f66cef95210fbe4b94a749b14a365f329f64221b9a1277f2c011e1ef750109c5"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Convenience store/3D/convenience_store_3d.png",
+      "local_path": "fluent_3d/pos.png",
+      "sha256": "cdc2ef03afe122787dda924fc1a2fbaeb114afe4372bb28aef68a61d915d61c5"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Convenience store/Flat/convenience_store_flat.svg",
+      "local_path": "fluent_flat/pos.svg",
+      "sha256": "5bd0361205da86888bf682e68e9c9c60e0268dcedca0507600d6620a90859e37"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Store Microsoft/SVG/ic_fluent_store_microsoft_24_filled.svg",
+      "local_path": "fluent_filled/pos.svg",
+      "sha256": "2bd4130213fabdb53acb756dd8e53f28a3b92b6f4d84a5f53882384cd3a85062"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Store Microsoft/SVG/ic_fluent_store_microsoft_24_regular.svg",
+      "local_path": "fluent_regular/pos.svg",
+      "sha256": "6e06438e357a0de8d58364a455ed2efd1bfa2a3fc55d1f39e70201663faf7582"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Bar chart/3D/bar_chart_3d.png",
+      "local_path": "fluent_3d/dashboards.png",
+      "sha256": "0d83833e992b128aa00b85220fc2f777516bbdeb92e9e1e019a7b715ecc6ef97"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Bar chart/Flat/bar_chart_flat.svg",
+      "local_path": "fluent_flat/dashboards.svg",
+      "sha256": "8f9acef233193cf40091997d162302a09b17182ef443ecfc7616df3d433e92d7"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Data Bar Vertical/SVG/ic_fluent_data_bar_vertical_24_filled.svg",
+      "local_path": "fluent_filled/dashboards.svg",
+      "sha256": "1c7c7fe9ad94e935caa8094a36a3935f76cf2da777fec74e2531929e1f1c0b76"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Data Bar Vertical/SVG/ic_fluent_data_bar_vertical_24_regular.svg",
+      "local_path": "fluent_regular/dashboards.svg",
+      "sha256": "20adbb64bea9c1361ff37cf029e634f9811f908929ab543b05ac8d10ecb7fb63"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Robot/3D/robot_3d.png",
+      "local_path": "fluent_3d/ai.png",
+      "sha256": "3f9b5a00b53c8bddda36b6a3f68d00718d9d7d8c04f986a3248e55ae93a7961b"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Robot/Flat/robot_flat.svg",
+      "local_path": "fluent_flat/ai.svg",
+      "sha256": "b0230656b224612c482eb5a4ea4e4c4c9123da5732dde2daaa95c22b7e3eda31"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Bot/SVG/ic_fluent_bot_24_filled.svg",
+      "local_path": "fluent_filled/ai.svg",
+      "sha256": "f0e47e84654dc7be354cbb0b3b47556255061bc5f937009d6d05d2b24a96e5f3"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Bot/SVG/ic_fluent_bot_24_regular.svg",
+      "local_path": "fluent_regular/ai.svg",
+      "sha256": "21d386d9d42af428d5b58076795ef40cef8c0567b0a8bfc376ff8d2f4139246b"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Purse/3D/purse_3d.png",
+      "local_path": "fluent_3d/expenses.png",
+      "sha256": "da3b5da309d81e7757d6d06c566c6da7bf2c9031546a201ce2fa950a715af61f"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Purse/Flat/purse_flat.svg",
+      "local_path": "fluent_flat/expenses.svg",
+      "sha256": "a88863a1add0d13478f16f8dd172c47034b74904e809e196e7b25bffb65bf591"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Wallet/SVG/ic_fluent_wallet_24_filled.svg",
+      "local_path": "fluent_filled/expenses.svg",
+      "sha256": "3cc753b122955138ef0f8d63cba744f68a186251a973899bc511fdee663f1b6d"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Wallet/SVG/ic_fluent_wallet_24_regular.svg",
+      "local_path": "fluent_regular/expenses.svg",
+      "sha256": "35a57a7898d185a7e300ea8aaefc3316809a99e90cd8b514dddb3bcc5ea24878"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Books/3D/books_3d.png",
+      "local_path": "fluent_3d/articles.png",
+      "sha256": "36f75eaa1e1a849fc950f43962b447c206d96244858468240a6a81beaa97f7be"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Books/Flat/books_flat.svg",
+      "local_path": "fluent_flat/articles.svg",
+      "sha256": "61caafd5a25b1b8451ca63cb2a5f85b371dae1f37fafac0b246eeee25ae09bd9"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Book Open/SVG/ic_fluent_book_open_24_filled.svg",
+      "local_path": "fluent_filled/articles.svg",
+      "sha256": "4ec46e9155630691c963ac5a8736352764c17581a07e60ccd3d0490b3f5843cf"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Book Open/SVG/ic_fluent_book_open_24_regular.svg",
+      "local_path": "fluent_regular/articles.svg",
+      "sha256": "b5ab4c38a49738c72abf398595451715cae447432cbdf7ad3bdc7cb808391181"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Alarm clock/3D/alarm_clock_3d.png",
+      "local_path": "fluent_3d/attendance.png",
+      "sha256": "1aa6929e1baa440db535fd321868dc76ddd888bf3e4f4333d37800ff2ec41c74"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Alarm clock/Flat/alarm_clock_flat.svg",
+      "local_path": "fluent_flat/attendance.svg",
+      "sha256": "61d930860f85ae1590dc9299357f659688f502d39659f4b809b8592286d235ca"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Clock/SVG/ic_fluent_clock_24_filled.svg",
+      "local_path": "fluent_filled/attendance.svg",
+      "sha256": "4a1a1d8650df0ef74f9060a7379202f0fb750a1e34a57e072f0df2b7de4c97e2"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Clock/SVG/ic_fluent_clock_24_regular.svg",
+      "local_path": "fluent_regular/attendance.svg",
+      "sha256": "428b1dec917464a354c8df20a707674fc1c11e3f6613078f2870b96af476fff5"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Tear-off calendar/3D/tear-off_calendar_3d.png",
+      "local_path": "fluent_3d/calendar.png",
+      "sha256": "fc08a373de7a26317a13fe68af10dab54b2ea52493a5e6cc12746318d0ee9d35"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Tear-off calendar/Flat/tear-off_calendar_flat.svg",
+      "local_path": "fluent_flat/calendar.svg",
+      "sha256": "cdb4ca975c9453fdba40c0cbf20b2d58c91dd7bcfd8dd1be3c85720f275077a6"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Calendar/SVG/ic_fluent_calendar_24_filled.svg",
+      "local_path": "fluent_filled/calendar.svg",
+      "sha256": "f088bdd0e64f4470c39822717086438093ae75ee8603e57eac8b4b8bce55f53a"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Calendar/SVG/ic_fluent_calendar_24_regular.svg",
+      "local_path": "fluent_regular/calendar.svg",
+      "sha256": "cd62abf47e4cf40045ac02249775235d79918e982cadd167869ec9c68413ce5e"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Headphone/3D/headphone_3d.png",
+      "local_path": "fluent_3d/livechat.png",
+      "sha256": "e7c26d433340b1706f20c733558da412cbf70b1a95048d51a80eb0ed2c0a02c9"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Headphone/Flat/headphone_flat.svg",
+      "local_path": "fluent_flat/livechat.svg",
+      "sha256": "3fbb49598e0e1709efffb34da184b104e9a66ba43de555fdb1e494f85da938f3"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Headset/SVG/ic_fluent_headset_24_filled.svg",
+      "local_path": "fluent_filled/livechat.svg",
+      "sha256": "f960561b4a1204a01cb580a17d75b2883577867a5ffc3ebcb16b5a3286314936"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Headset/SVG/ic_fluent_headset_24_regular.svg",
+      "local_path": "fluent_regular/livechat.svg",
+      "sha256": "29d0141900e6e4d0c04ae79dcb295aa41c8b5f8e1b83a5ada0fe2c8cd4a0cc5a"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Abacus/3D/abacus_3d.png",
+      "local_path": "fluent_3d/accounting.png",
+      "sha256": "85d0c6771052754de74aef75c4643daea9ad29150b7093d185425cb3c13abaf2"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Abacus/Flat/abacus_flat.svg",
+      "local_path": "fluent_flat/accounting.svg",
+      "sha256": "68ff052d52ed48420fa5b1803199b460abd9642a65329ba8811f8879122fd407"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Calculator/SVG/ic_fluent_calculator_24_filled.svg",
+      "local_path": "fluent_filled/accounting.svg",
+      "sha256": "8312c0d0974cf3e4d289fd38be94ad9a97d8bf0b3fb0e093b405537f496db2bd"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Calculator/SVG/ic_fluent_calculator_24_regular.svg",
+      "local_path": "fluent_regular/accounting.svg",
+      "sha256": "8ad166237cc17d0ddea059a1a00299520d4ef36d98652a73c28abc773ff5d166"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Shopping bags/3D/shopping_bags_3d.png",
+      "local_path": "fluent_3d/purchases.png",
+      "sha256": "b4c45c21e13eb6f3f2bbfba7a48f57db27a43bf0bb4734fdb7cb0b560f5d51bd"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Shopping bags/Flat/shopping_bags_flat.svg",
+      "local_path": "fluent_flat/purchases.svg",
+      "sha256": "de7604ec8452339a8578f8ca501cc27b5ed634f86fa205fb9d99949564ed4c27"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Shopping Bag/SVG/ic_fluent_shopping_bag_24_filled.svg",
+      "local_path": "fluent_filled/purchases.svg",
+      "sha256": "7eea53bb1858a4bf36555f4d38c56866c8176309f4507f685a0a27d18cc34b3c"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Shopping Bag/SVG/ic_fluent_shopping_bag_24_regular.svg",
+      "local_path": "fluent_regular/purchases.svg",
+      "sha256": "ab74d31393034da590ca6d4ac0c44283115aca4c3e903e51a726b5231a6050e2"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Card index dividers/3D/card_index_dividers_3d.png",
+      "local_path": "fluent_3d/contacts.png",
+      "sha256": "a995ccc3acb244234587675ffab838abc50fab89b5b2170922dc47e8eed91433"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Card index dividers/Flat/card_index_dividers_flat.svg",
+      "local_path": "fluent_flat/contacts.svg",
+      "sha256": "adce13caa056f7901ae849f35c6e7664f17ec773ea4f6e8ae9e58720e0d40824"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Contact Card/SVG/ic_fluent_contact_card_24_filled.svg",
+      "local_path": "fluent_filled/contacts.svg",
+      "sha256": "7228d6c92dd09409be759e8b4c64d385b99987eadec618aa06d3de3d018869be"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Contact Card/SVG/ic_fluent_contact_card_24_regular.svg",
+      "local_path": "fluent_regular/contacts.svg",
+      "sha256": "6541722b5741eb2f59b05d651a49de8b6d7263fee2d41f0a06ac0b594a9ae476"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Speech balloon/3D/speech_balloon_3d.png",
+      "local_path": "fluent_3d/conversations.png",
+      "sha256": "b9bdb19ef2e550923bc4f541de049f1633883619564b2aa140a968eaf1d69a0d"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Speech balloon/Flat/speech_balloon_flat.svg",
+      "local_path": "fluent_flat/conversations.svg",
+      "sha256": "c4be7c14dc5cba1ef942fac013bc96e661400cd3a8f82cac517ae1a67730d742"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Chat/SVG/ic_fluent_chat_24_filled.svg",
+      "local_path": "fluent_filled/conversations.svg",
+      "sha256": "59ab34547401a615b142045b681798de229a54d7c35404ba7b15d9f09d5d41c0"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Chat/SVG/ic_fluent_chat_24_regular.svg",
+      "local_path": "fluent_regular/conversations.svg",
+      "sha256": "b50d0088cae4c28f153fe0c69e672833c6b9852c0c038a66dabf721ef505fa88"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Admission tickets/3D/admission_tickets_3d.png",
+      "local_path": "fluent_3d/events.png",
+      "sha256": "e9b2b406070c40ec04f03ef3e5b8f6ce3cdef642e9fe25d4570af3514827f3fa"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Admission tickets/Flat/admission_tickets_flat.svg",
+      "local_path": "fluent_flat/events.svg",
+      "sha256": "96ae145a286f38b0558be905c3f3c5d9ad30086b73e478c704324ade9615ef26"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Ticket Diagonal/SVG/ic_fluent_ticket_diagonal_24_filled.svg",
+      "local_path": "fluent_filled/events.svg",
+      "sha256": "1f6afeec77eb52ac07fe7736cc6ff0465f2b60c1b711bb0ae7a5c20948a6e35b"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Ticket Diagonal/SVG/ic_fluent_ticket_diagonal_24_regular.svg",
+      "local_path": "fluent_regular/events.svg",
+      "sha256": "94ce6777e456c8a84dfd7365e043ffcfcb4509eb01ef9a1ed66b94355b8cbf8f"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Package/3D/package_3d.png",
+      "local_path": "fluent_3d/inventory.png",
+      "sha256": "9c7c74bb551e7f0a3a088791ac715c4ece8c45b2d1910915bc34159f148dee0e"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Package/Flat/package_flat.svg",
+      "local_path": "fluent_flat/inventory.svg",
+      "sha256": "173fea15b8c06ddaf9d853f7bbb6ae63b3fc3573b29bdcda90f32b4881cebd1e"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Box/SVG/ic_fluent_box_24_filled.svg",
+      "local_path": "fluent_filled/inventory.svg",
+      "sha256": "c905667d290b8047d10a109f9c3b4ac40f28bb0bbda632e03a2bd44bc4623e4e"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Box/SVG/ic_fluent_box_24_regular.svg",
+      "local_path": "fluent_regular/inventory.svg",
+      "sha256": "5169e7048c6d4d805468b9f9257a14240e306b99b6c5f63cef552f0ad990035e"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Clipboard/3D/clipboard_3d.png",
+      "local_path": "fluent_3d/activities.png",
+      "sha256": "cbe87f41d539362944c6a37aeb67387f118740eb1414377619dd8ed368a069a2"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Clipboard/Flat/clipboard_flat.svg",
+      "local_path": "fluent_flat/activities.svg",
+      "sha256": "5dd75dcc972921307f88665bbbcdda8ceb3cdf0fae4009ea35a14f3d56720d61"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Clipboard Task/SVG/ic_fluent_clipboard_task_24_filled.svg",
+      "local_path": "fluent_filled/activities.svg",
+      "sha256": "0b642c96115fa1964c1741436619d0a68ec3e081299a16e85008fbf0c2a16de8"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Clipboard Task/SVG/ic_fluent_clipboard_task_24_regular.svg",
+      "local_path": "fluent_regular/activities.svg",
+      "sha256": "10abd7d0d2b180e3f689fb1ab8a169baf43245c90c79704331d6914ac3ba1fd2"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Fork and knife/3D/fork_and_knife_3d.png",
+      "local_path": "fluent_3d/lunch.png",
+      "sha256": "c0f2eda50812fe77a3612fa2932915ec066c5051a4f44b65673e7f1f7941f63d"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Fork and knife/Flat/fork_and_knife_flat.svg",
+      "local_path": "fluent_flat/lunch.svg",
+      "sha256": "91f107d17858644deda72ee29d0097b3fc1b0ec2b7d6d44308e2f1560661e6ef"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Food/SVG/ic_fluent_food_24_filled.svg",
+      "local_path": "fluent_filled/lunch.svg",
+      "sha256": "7c7870a9371266ef9eb1e41ac212c2434a59caceed1eadc0925a96abf81c88a6"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Food/SVG/ic_fluent_food_24_regular.svg",
+      "local_path": "fluent_regular/lunch.svg",
+      "sha256": "a50323fb6e4d9ea01fb2eb97603acf74c433d3aa48d541dc1b1e4b6479a60aaa"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Wrench/3D/wrench_3d.png",
+      "local_path": "fluent_3d/maintenance.png",
+      "sha256": "0a87edecc4a5f6c4e7dcf19d688044fe2c1ac7402929a35ac0e269a62d56f607"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Wrench/Flat/wrench_flat.svg",
+      "local_path": "fluent_flat/maintenance.svg",
+      "sha256": "5912603149e42ba40e591bcc9ac502ee4d736d59b8b14f825d72423c25c741f9"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Wrench/SVG/ic_fluent_wrench_24_filled.svg",
+      "local_path": "fluent_filled/maintenance.svg",
+      "sha256": "66b4adaa77e673108f63dc06c61b489369ee98aa86ae6ac597c5903a9725e886"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Wrench/SVG/ic_fluent_wrench_24_regular.svg",
+      "local_path": "fluent_regular/maintenance.svg",
+      "sha256": "3168b7f69953de91c47c613dd5133bd5911dc284b0954f872a11cc8d58af2743"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Factory/3D/factory_3d.png",
+      "local_path": "fluent_3d/manufacturing.png",
+      "sha256": "4b2d8cb50ffd54b8958d33dc19c4a0164e0fba762384d108e3863bfa91633b22"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Factory/Flat/factory_flat.svg",
+      "local_path": "fluent_flat/manufacturing.svg",
+      "sha256": "15bbd6ce98f345a130697d4ec9ed423f9e1978a504b8d6eb0ddb75dd508a090a"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Building Factory/SVG/ic_fluent_building_factory_24_filled.svg",
+      "local_path": "fluent_filled/manufacturing.svg",
+      "sha256": "d40678a7d3574460b052785943aadcaebffc855aa82401d323c64ff54176a727"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Building Factory/SVG/ic_fluent_building_factory_24_regular.svg",
+      "local_path": "fluent_regular/manufacturing.svg",
+      "sha256": "875ddef1ab35ab00b794b1d07812e3624fcd10b2f5b58e850be453c9ed1d6d8c"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Envelope/3D/envelope_3d.png",
+      "local_path": "fluent_3d/email_marketing.png",
+      "sha256": "9671859aa64b65b6977b7ab6adc2e64220e75edf531a8e67c4b76e01ace04230"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Envelope/Flat/envelope_flat.svg",
+      "local_path": "fluent_flat/email_marketing.svg",
+      "sha256": "e2f0739473e576e4e5431b91cc2bfc033ba3f77fc177e6ea535857a6fcbee328"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Mail/SVG/ic_fluent_mail_24_filled.svg",
+      "local_path": "fluent_filled/email_marketing.svg",
+      "sha256": "ef6b379661338bdbe3ecaddc3df2f8b61013ac2a8ed04b0e630776e587dbeb6e"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Mail/SVG/ic_fluent_mail_24_regular.svg",
+      "local_path": "fluent_regular/email_marketing.svg",
+      "sha256": "8a357361d0bacd8cdf3fef11e5cb1629de3b08aeaf8fca2d8df01cba9350bb6c"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Mobile phone/3D/mobile_phone_3d.png",
+      "local_path": "fluent_3d/sms_marketing.png",
+      "sha256": "c72cf9f888cb74cb8852679184e0dac945ed0340839c98a86c653f51e1e3504d"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Mobile phone/Flat/mobile_phone_flat.svg",
+      "local_path": "fluent_flat/sms_marketing.svg",
+      "sha256": "c4e7af28d354c77de7606e2c9f0bdd1764da5dc97f0894252430d8a0ce151979"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Phone/SVG/ic_fluent_phone_24_filled.svg",
+      "local_path": "fluent_filled/sms_marketing.svg",
+      "sha256": "0a1695f8adcf9aaeec5a902d3e5a593bc7dfa1dcbf402406eaab90aa0a78a8ea"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Phone/SVG/ic_fluent_phone_24_regular.svg",
+      "local_path": "fluent_regular/sms_marketing.svg",
+      "sha256": "2ab5b662ebee978ca7d8383ce3c56268bea950f0ff353e33a722c68650e91705"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Cooking/3D/cooking_3d.png",
+      "local_path": "fluent_3d/kitchen.png",
+      "sha256": "bb6b8501b89493b8bf29209b87f14bfc0a347750ab693ce21fe81741c2128fe4"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Cooking/Flat/cooking_flat.svg",
+      "local_path": "fluent_flat/kitchen.svg",
+      "sha256": "79b564a7785fb57fd55082fe030b428762b00f30d7720d1665116602f5ee42b6"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Food Pizza/SVG/ic_fluent_food_pizza_24_filled.svg",
+      "local_path": "fluent_filled/kitchen.svg",
+      "sha256": "39793dd1da4f2100a585623ee4eecbe524164e043fb9581b64ecabb8420ad1a8"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Food Pizza/SVG/ic_fluent_food_pizza_24_regular.svg",
+      "local_path": "fluent_regular/kitchen.svg",
+      "sha256": "59d3927c0095eb839532758ab954fefae698e5d6cc6005db9db6c6dc6b4c4696"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Rocket/3D/rocket_3d.png",
+      "local_path": "fluent_3d/projects.png",
+      "sha256": "4636925a1dfc76a45dc83c08b983699d39143a0978f794a4e2dfb6cbffdcd7ab"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Rocket/Flat/rocket_flat.svg",
+      "local_path": "fluent_flat/projects.svg",
+      "sha256": "006881aa54230e43c80d6806f377dbde817ee8d96a663f0439dd3da759231ff6"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Rocket/SVG/ic_fluent_rocket_24_filled.svg",
+      "local_path": "fluent_filled/projects.svg",
+      "sha256": "717a93f4a4a221afd7a3487879e56c72b1649791de2ad2e7df68c73fd4dd772f"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Rocket/SVG/ic_fluent_rocket_24_regular.svg",
+      "local_path": "fluent_regular/projects.svg",
+      "sha256": "a27a82a458bdbaa86d5bf73edf1165ff5dbd669978a966a215c6b3a9a683f6e2"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Hammer and wrench/3D/hammer_and_wrench_3d.png",
+      "local_path": "fluent_3d/repairs.png",
+      "sha256": "573a9abccd004b5ef5fbf513f720cc48e835c52e01563d2064b9480bb0e6ee90"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Hammer and wrench/Flat/hammer_and_wrench_flat.svg",
+      "local_path": "fluent_flat/repairs.svg",
+      "sha256": "aeba2573073aa5444353188fa25527105b584e7bd5649016b95ee8e528deeb5b"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Wrench Screwdriver/SVG/ic_fluent_wrench_screwdriver_24_filled.svg",
+      "local_path": "fluent_filled/repairs.svg",
+      "sha256": "1603735e0c249377a935c6956102fc18af1497b5d55921af49d7897b7e029521"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Wrench Screwdriver/SVG/ic_fluent_wrench_screwdriver_24_regular.svg",
+      "local_path": "fluent_regular/repairs.svg",
+      "sha256": "e82eee377d985ce0b0deb0a61ddd11a0eec69ad3ebb86eb243e6d907717175ef"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Repeat button/3D/repeat_button_3d.png",
+      "local_path": "fluent_3d/subscriptions.png",
+      "sha256": "1c33a4d05ad83f57c2f43771c22c791eff5c6bcb6281dd65416dd057d9b68ea7"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Repeat button/Flat/repeat_button_flat.svg",
+      "local_path": "fluent_flat/subscriptions.svg",
+      "sha256": "ddfb16bb8fccc859415e522c114bd1170aef87a07d6787e275cec638945333d1"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Arrow Sync/SVG/ic_fluent_arrow_sync_24_filled.svg",
+      "local_path": "fluent_filled/subscriptions.svg",
+      "sha256": "03bca2fe274f38012fed0d74137562ef5010e801259993d77d5dd1ae3c83b48b"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Arrow Sync/SVG/ic_fluent_arrow_sync_24_regular.svg",
+      "local_path": "fluent_regular/subscriptions.svg",
+      "sha256": "335f10b5e955ab19116bceea8910dc2c41279f00eff3e3310a78f0a9897b502d"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Hammer/3D/hammer_3d.png",
+      "local_path": "fluent_3d/workshop.png",
+      "sha256": "a021c0ea3c9525e9acbf61319b1da28f68dabb0db9e3b1e7415553045f87390c"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Hammer/Flat/hammer_flat.svg",
+      "local_path": "fluent_flat/workshop.svg",
+      "sha256": "86b2baa0a38274350b8f6d6744f14af55c1fdcedddb300df1a971da3c0f6160a"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Building Shop/SVG/ic_fluent_building_shop_24_filled.svg",
+      "local_path": "fluent_filled/workshop.svg",
+      "sha256": "38b4b4383cd8372891174f3f152a7f544618685aedaa7af0ab62665e4e9b8b9f"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Building Shop/SVG/ic_fluent_building_shop_24_regular.svg",
+      "local_path": "fluent_regular/workshop.svg",
+      "sha256": "e768184571d83803227898e6f16728fb0a519e33d98d8ad55160c065580e39c6"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Beach with umbrella/3D/beach_with_umbrella_3d.png",
+      "local_path": "fluent_3d/vacations.png",
+      "sha256": "f1be4e3c04f152edd10eb5d44d850d09b8b3166cc27ca76db1aa19e0106a7cbb"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Beach with umbrella/Flat/beach_with_umbrella_flat.svg",
+      "local_path": "fluent_flat/vacations.svg",
+      "sha256": "bcad305b52211e9b6bcba819c82206f54febe1c324a9d754edffbaa6a88c8ca1"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Beach/SVG/ic_fluent_beach_24_filled.svg",
+      "local_path": "fluent_filled/vacations.svg",
+      "sha256": "53e428e66b1bcd23d0c3f1b72e22b63beff24766d1a013bcb6c1353e48b52570"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Beach/SVG/ic_fluent_beach_24_regular.svg",
+      "local_path": "fluent_regular/vacations.svg",
+      "sha256": "bca1b78f0f7e00e45d5dea66619cd7ceb4e4529a378657a38fc6db1315949a5e"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Key/3D/key_3d.png",
+      "local_path": "fluent_3d/rentals.png",
+      "sha256": "ae59ce2b8dcfaa1afcdfe91bde7cc88cf06a8493686a6676706d1c891bb349eb"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Key/Flat/key_flat.svg",
+      "local_path": "fluent_flat/rentals.svg",
+      "sha256": "c735dd90a9396d5b7c8cf5cbb297360a52c373d2f1c353fc343228587c0daf57"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Key/SVG/ic_fluent_key_24_filled.svg",
+      "local_path": "fluent_filled/rentals.svg",
+      "sha256": "c302e5c15f60d9797687b513053f8d99dd44905104fc46d82c6c4761994b3905"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Key/SVG/ic_fluent_key_24_regular.svg",
+      "local_path": "fluent_regular/rentals.svg",
+      "sha256": "9c151d942a2913b332c092c6f68b1b1b4e3ece5a3241fe8223e0e821e809afc6"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Link/3D/link_3d.png",
+      "local_path": "fluent_3d/link_tracker.png",
+      "sha256": "5183597c8e1b092dadb3c88607c9b1405c1bea3b82219edc50caa4a8590fd8a8"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Link/Flat/link_flat.svg",
+      "local_path": "fluent_flat/link_tracker.svg",
+      "sha256": "93f7e972523733ff5b0402979b271d0d044ed87ae5bd6a215aca935f50668368"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Link/SVG/ic_fluent_link_24_filled.svg",
+      "local_path": "fluent_filled/link_tracker.svg",
+      "sha256": "350eb5e75bf3c74fc67599ad8192dd48d9d5a1b7a2465d16ffbeca132e9e2000"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Link/SVG/ic_fluent_link_24_regular.svg",
+      "local_path": "fluent_regular/link_tracker.svg",
+      "sha256": "9344f3f8f7ca5dd276209c62cb357ecb6fe0ca154997884ebf95775b5893ee40"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Telephone receiver/3D/telephone_receiver_3d.png",
+      "local_path": "fluent_3d/whatsapp.png",
+      "sha256": "ee86ef399ada86680a826260e9855aec82c756345a02c93f5b036a41c076acb2"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Telephone receiver/Flat/telephone_receiver_flat.svg",
+      "local_path": "fluent_flat/whatsapp.svg",
+      "sha256": "6fb03db26a15f2edcef92f468d7c96dbe6359bb112d4cbdd963b599b76583d14"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Chat Multiple/SVG/ic_fluent_chat_multiple_24_filled.svg",
+      "local_path": "fluent_filled/whatsapp.svg",
+      "sha256": "99cf757fc05077bf6807660c4cb5c96cdc951df1f047575643773bdaee711056"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Chat Multiple/SVG/ic_fluent_chat_multiple_24_regular.svg",
+      "local_path": "fluent_regular/whatsapp.svg",
+      "sha256": "a1edd43d6cf706c43495ae1bd89df94c330dca525cd9736dbadb07baaf76d269"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Printer/3D/printer_3d.png",
+      "local_path": "fluent_3d/printer.png",
+      "sha256": "1106aee713a1c4e1368f0e9d41276439d8c540193a1b1dbc413ec0ee80054ea3"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Printer/Flat/printer_flat.svg",
+      "local_path": "fluent_flat/printer.svg",
+      "sha256": "de3a2a47f4737a52de6825f785f32e7c9aae8c3297770824c222fc3b8a4f40bf"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Document Print/SVG/ic_fluent_document_print_24_filled.svg",
+      "local_path": "fluent_filled/printer.svg",
+      "sha256": "dd22610fc3e49c6c5090da91a55df0f4352c86c0b73090341b77e38fe1e1382d"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Document Print/SVG/ic_fluent_document_print_24_regular.svg",
+      "local_path": "fluent_regular/printer.svg",
+      "sha256": "0506a23d11cc691f7c7862236c040afdbeb6de4bfa47bd489456d5dd3750e95b"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Balance scale/3D/balance_scale_3d.png",
+      "local_path": "fluent_3d/scale.png",
+      "sha256": "442cfa3f13a9052484475e388e021f248fc39d20a8a7f36b30ea70adcad0d217"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Balance scale/Flat/balance_scale_flat.svg",
+      "local_path": "fluent_flat/scale.svg",
+      "sha256": "f75950390efcd4ee62a6c370f9b9cc5edbc2a14758d5769015965327eb52a6c1"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Scales/SVG/ic_fluent_scales_24_filled.svg",
+      "local_path": "fluent_filled/scale.svg",
+      "sha256": "04a6b72a24ac51bb2d47e91db717c74ad51d68e5151f98027a21794e92ccba07"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Scales/SVG/ic_fluent_scales_24_regular.svg",
+      "local_path": "fluent_regular/scale.svg",
+      "sha256": "948d8148eb752ab853156088f6d2ec13f1fb4242cf31a6328420aa2690dfff7e"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Credit card/3D/credit_card_3d.png",
+      "local_path": "fluent_3d/payment_terminal.png",
+      "sha256": "8988e8c1f850752f517c28b46f7745c54621c79679cfa1b387e73741d2ba4935"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Credit card/Flat/credit_card_flat.svg",
+      "local_path": "fluent_flat/payment_terminal.svg",
+      "sha256": "cc56d2b655d42827e5676676fe0c388d30f92fa6a78aa79ec745acf44603de90"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Payment/SVG/ic_fluent_payment_24_filled.svg",
+      "local_path": "fluent_filled/payment_terminal.svg",
+      "sha256": "fbd194fe3053c5cc19da9d8c2e4c49c11116b82cfaed2cd9c214b00df6db67d9"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Payment/SVG/ic_fluent_payment_24_regular.svg",
+      "local_path": "fluent_regular/payment_terminal.svg",
+      "sha256": "e662f1eb9ffb9c6bea7e9160642b167c5094e0ddcd247ca3b57db3c93fea0322"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Gear/3D/gear_3d.png",
+      "local_path": "fluent_3d/settings.png",
+      "sha256": "415296d4fadabc2e0f6593143ea632948fef20a1cd73fbbc3dbda571f0421988"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Gear/Flat/gear_flat.svg",
+      "local_path": "fluent_flat/settings.svg",
+      "sha256": "aa29c243268210ec43b76c90e21067fa579e8836c4c5c6e81e521676b55d0a02"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Settings/SVG/ic_fluent_settings_24_filled.svg",
+      "local_path": "fluent_filled/settings.svg",
+      "sha256": "2589414cde89eb4e7db788669c977ab4923053bf999b7eb2ed02b083b731a412"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Settings/SVG/ic_fluent_settings_24_regular.svg",
+      "local_path": "fluent_regular/settings.svg",
+      "sha256": "4ad64ef21ae421bb1977eae50c3dde17f88da234e209d4a69593753f9fce1548"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Card file box/3D/card_file_box_3d.png",
+      "local_path": "fluent_3d/barcode.png",
+      "sha256": "49caddf1f3b463f0b6e797dd03b6ff555d56dc55c53e76edbd0513c048e89bef"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Card file box/Flat/card_file_box_flat.svg",
+      "local_path": "fluent_flat/barcode.svg",
+      "sha256": "e065f17fedbd197de8c932ac3c11d4af24f5fce732395659ee4550342db9ba60"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Barcode Scanner/SVG/ic_fluent_barcode_scanner_24_filled.svg",
+      "local_path": "fluent_filled/barcode.svg",
+      "sha256": "4152beaa6e83172a82edaed70b746129d6f2985dc5fafd2216390d991f93a5eb"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Barcode Scanner/SVG/ic_fluent_barcode_scanner_24_regular.svg",
+      "local_path": "fluent_regular/barcode.svg",
+      "sha256": "b942b03910b4df20635acc27a26b8782c310f92a42e828d43d051d8f6e8ecac4"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Ballot box with ballot/3D/ballot_box_with_ballot_3d.png",
+      "local_path": "fluent_3d/surveys.png",
+      "sha256": "f4e58f05c6f101734dcbd19d252ba78144782fb69ab6cdeb90372ea9b243664d"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Ballot box with ballot/Flat/ballot_box_with_ballot_flat.svg",
+      "local_path": "fluent_flat/surveys.svg",
+      "sha256": "2fae17dc26c8c399dce6b3d16b8d4e532f5358aefed9671d40642d714d18fb4b"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Poll Horizontal/SVG/ic_fluent_poll_horizontal_24_filled.svg",
+      "local_path": "fluent_filled/surveys.svg",
+      "sha256": "861d1aff6cd4da74395ca0cf31ce60b87fba732fd59809e6e791035de5d18758"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Poll Horizontal/SVG/ic_fluent_poll_horizontal_24_regular.svg",
+      "local_path": "fluent_regular/surveys.svg",
+      "sha256": "012cce02f8c74df2ff9162ec301378889bf58e870beb992f97b07ef1e9cde74d"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Broom/3D/broom_3d.png",
+      "local_path": "fluent_3d/data_cleaning.png",
+      "sha256": "67676a5b71c3f30d5d4c249631b511f084c5423330ef200951f9d0a8dc832380"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Broom/Flat/broom_flat.svg",
+      "local_path": "fluent_flat/data_cleaning.svg",
+      "sha256": "baf7d9e66e1fc25e64e9b70bb24f98126637e707b81ebaa38d15aa5160a802fe"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Broom Sparkle/SVG/ic_fluent_broom_sparkle_20_filled.svg",
+      "local_path": "fluent_filled/data_cleaning.svg",
+      "sha256": "655ab2c599b2464136aefea4157b90a818003223cf4822e21b371e9e2a4e69df"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Broom Sparkle/SVG/ic_fluent_broom_sparkle_20_regular.svg",
+      "local_path": "fluent_regular/data_cleaning.svg",
+      "sha256": "0c202c368ee73a78f480ec44c9b80f7b3cf4e7792ac64dce90b90425e222aac2"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Briefcase/3D/briefcase_3d.png",
+      "local_path": "fluent_3d/recruitment.png",
+      "sha256": "b1cee11c4212de4d401109251f79ee875762b88d8b64d89a82847b8ebc0878e0"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Briefcase/Flat/briefcase_flat.svg",
+      "local_path": "fluent_flat/recruitment.svg",
+      "sha256": "ca7076aa7ff3c46453bab418f26658e8605c4496b5a6f5ce388ce5b57e6a2378"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Briefcase Search/SVG/ic_fluent_briefcase_search_24_filled.svg",
+      "local_path": "fluent_filled/recruitment.svg",
+      "sha256": "485436c1cd35ea03a1c886a253c197c250578e9e6550230d6c4ba8847d91d01e"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Briefcase Search/SVG/ic_fluent_briefcase_search_24_regular.svg",
+      "local_path": "fluent_regular/recruitment.svg",
+      "sha256": "f017fde6ac7b8a867a9b11b1bfee51008536cf228ec600b782417f1c8ed1bbd9"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Automobile/3D/automobile_3d.png",
+      "local_path": "fluent_3d/fleet.png",
+      "sha256": "0fabb870cfe90fb7ba7cebfa689a0e62012ff5658fd6cab05898573d9d268b73"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Automobile/Flat/automobile_flat.svg",
+      "local_path": "fluent_flat/fleet.svg",
+      "sha256": "ee2b938fa933f199c2160a6bc86f2a9f76af657f9188cd3aacadf038afffe3e1"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Vehicle Car/SVG/ic_fluent_vehicle_car_24_filled.svg",
+      "local_path": "fluent_filled/fleet.svg",
+      "sha256": "27b4b64cab8779ac449993cb8ba3bdd5d46f853ae1e3d21202d4e3c0b06d6cc4"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Vehicle Car/SVG/ic_fluent_vehicle_car_24_regular.svg",
+      "local_path": "fluent_regular/fleet.svg",
+      "sha256": "a9cb8a7c8134a184addc0dce528c608800781fd1fd9c50cb07e6e908966be5db"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Puzzle piece/3D/puzzle_piece_3d.png",
+      "local_path": "fluent_3d/applications.png",
+      "sha256": "c0f47e02e87bd61118985d8ab7b5f40fe302c82e6bb7ae6a7b7add2eefc6de7a"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Puzzle piece/Flat/puzzle_piece_flat.svg",
+      "local_path": "fluent_flat/applications.svg",
+      "sha256": "13e3543045a021629b05172fd0842f56cb581fb0c7955fe6e2eb089d8f12d8fa"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Apps List Detail/SVG/ic_fluent_apps_list_detail_24_filled.svg",
+      "local_path": "fluent_filled/applications.svg",
+      "sha256": "3d42ac62abe99ffe2845e98f637494bb6132025d0e679b23712a40faf89eb49b"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Apps List Detail/SVG/ic_fluent_apps_list_detail_24_regular.svg",
+      "local_path": "fluent_regular/applications.svg",
+      "sha256": "02c839f786f6c5826dc1bac0944a8fc1e80905f26cd1cab5442bc5f4f4f45998"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Office worker/Default/3D/office_worker_3d_default.png",
+      "local_path": "fluent_3d/employees.png",
+      "sha256": "f74f2bc64a4a9b9ec332cf688cf8025ba44acd263a987bff32fd0146dde229d3"
+    },
+    {
+      "library": "fluent_emoji",
+      "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+      "upstream_path": "assets/Office worker/Default/Flat/office_worker_flat_default.svg",
+      "local_path": "fluent_flat/employees.svg",
+      "sha256": "413d6379f79a4da79668eef741c14dbc90eac971aed7c9f903a16345b012f846"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Person/SVG/ic_fluent_person_24_filled.svg",
+      "local_path": "fluent_filled/employees.svg",
+      "sha256": "268621d882ede76765c6532746d97f2a0bc8d3c55c6fc29fe18fd85e8cd66bcc"
+    },
+    {
+      "library": "fluent_system_icons",
+      "commit": "e15fc0de25fab983e3e42bac8798be69a85c23bf",
+      "upstream_path": "assets/Person/SVG/ic_fluent_person_24_regular.svg",
+      "local_path": "fluent_regular/employees.svg",
+      "sha256": "7ed3f4e8d371cb199792b626418f3fb54dc8a36fa64fae46a0a8bcaeeb51cb11"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "fluent_flat/whatsapp_brand.svg",
+      "local_path": "fluent_flat/whatsapp_brand.svg",
+      "sha256": "59677960c27d7e8be53a615961cb15a588a9d9577f3bb7a6df44f39799698533"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "fluent_filled/whatsapp_brand.svg",
+      "local_path": "fluent_filled/whatsapp_brand.svg",
+      "sha256": "1ea7065d7d83905fcef2811082f37e8e936342daa2c89c7c33d1c49212c50068"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "fluent_regular/whatsapp_brand.svg",
+      "local_path": "fluent_regular/whatsapp_brand.svg",
+      "sha256": "4fe168e058dcf79f90908541260a97d9fd5140b810a5499150b20e8799d5b2ab"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "tabler/whatsapp_brand.svg",
+      "local_path": "tabler/whatsapp_brand.svg",
+      "sha256": "4fe168e058dcf79f90908541260a97d9fd5140b810a5499150b20e8799d5b2ab"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "fluent_flat/scale_modern.svg",
+      "local_path": "fluent_flat/scale_modern.svg",
+      "sha256": "33d6a661a2252987f444232ec19dbc23818b3b5dfffc8afa98cd6e7d1858968b"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "fluent_filled/scale_modern.svg",
+      "local_path": "fluent_filled/scale_modern.svg",
+      "sha256": "c12d6fc7215320848b48183316759dded8d0a8551a87fda05c2d86aea256d53e"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "fluent_regular/scale_modern.svg",
+      "local_path": "fluent_regular/scale_modern.svg",
+      "sha256": "f64c9fb79503671cf2e10bd39d5a5749667d8c43dc7075bf17a5a698d105a4ba"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "tabler/scale_modern.svg",
+      "local_path": "tabler/scale_modern.svg",
+      "sha256": "249e4bb950f40c5120bbedc8d3bf4369023cd7a332f8a77e9f0e28b0cc13efc5"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "fluent_flat/barcode_label.svg",
+      "local_path": "fluent_flat/barcode_label.svg",
+      "sha256": "013966feec326f0638abba8ba3bc4553e8275fc6c3c90308a9a0ebf1d16dc671"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "fluent_filled/barcode_label.svg",
+      "local_path": "fluent_filled/barcode_label.svg",
+      "sha256": "643cd6263e51e81799eafec8d78cfeff3fad421673188c122d148fbc27c69955"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "fluent_regular/barcode_label.svg",
+      "local_path": "fluent_regular/barcode_label.svg",
+      "sha256": "2f77166daf10e2f95e1e63d8dd31b57ff495647677c2a73dd99bed1dbf9fab91"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "tabler/barcode_label.svg",
+      "local_path": "tabler/barcode_label.svg",
+      "sha256": "79c085c8ff7e5ebb255e1d7c3b2defc95958e0f7cb8eb42036dc0975ca398538"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "fluent_flat/dolan_ui_palette.svg",
+      "local_path": "fluent_flat/dolan_ui_palette.svg",
+      "sha256": "7e2eb88146ab8ce649820b35f882e0d01dbabee2eaeb0acfd5867bc335cbbae4"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-07",
+      "upstream_path": "fluent_regular/whatsapp_mask.svg",
+      "local_path": "fluent_regular/whatsapp_mask.svg",
+      "sha256": "d0e771b2c902ab7472c4b2ee7772be5d5685e3f62a25db30a5980a190490b916"
+    }
+  ]
+}

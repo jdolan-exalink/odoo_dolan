@@ -17,10 +17,9 @@ done
 [[ -d "$ROOT" ]] || { echo "No existe la carpeta de instalaciones: $ROOT" >&2; exit 1; }
 [[ -d "$REPO" && -f "$REPO/crear_odoo20.sh" ]] || { echo "No encuentro el checkout actualizado del repositorio." >&2; exit 1; }
 
-mapfile -t DEPLOYMENTS < <(find "$ROOT" -mindepth 2 -maxdepth 2 -type f -name docker-compose.yml -printf '%h\n' | sort)
-((${#DEPLOYMENTS[@]})) || { echo "No encontré instalaciones Docker Compose en $ROOT."; exit 0; }
-
 if [[ -z "$SELECTED" ]]; then
+  mapfile -t DEPLOYMENTS < <(find "$ROOT" -mindepth 2 -maxdepth 2 -type f -name docker-compose.yml -printf '%h\n' | sort)
+  ((${#DEPLOYMENTS[@]})) || { echo "No encontré instalaciones Docker Compose en $ROOT."; exit 0; }
   if [[ -r /dev/tty ]] && command -v dialog >/dev/null 2>&1 && [[ -n "${TERM:-}" && "$TERM" != "dumb" ]]; then
     options=()
     for path in "${DEPLOYMENTS[@]}"; do
@@ -53,15 +52,26 @@ with open(sys.argv[1], encoding="utf-8") as f:
 PY
 )
 fi
+if [[ -z "$DB_NAME" && -f "$PROJECT/.env" ]]; then
+  DB_NAME=$(python3 - "$PROJECT/.env" <<'PY'
+import sys
+for line in open(sys.argv[1], encoding="utf-8"):
+    key, sep, value = line.strip().partition("=")
+    if sep and key == "DB_NAME":
+        print(value.strip().strip("\"'"))
+        break
+PY
+)
+fi
 if [[ -z "$DB_NAME" ]]; then
   read -r -p "Nombre de la base de datos a actualizar: " DB_NAME < /dev/tty
 fi
 [[ "$DB_NAME" =~ ^[a-z][a-z0-9_]{0,62}$ ]] || { echo "Nombre de base inválido." >&2; exit 1; }
 
 if [[ -r /dev/tty ]] && command -v dialog >/dev/null 2>&1 && [[ -n "${TERM:-}" && "$TERM" != "dumb" ]]; then
-  dialog --title "Confirmar actualización" --yesno "Se actualizarán los módulos instalados de Odoo a la última versión disponible y se reconstruirá el contenedor.\n\nInstalación: $(basename "$PROJECT")\nBase: $DB_NAME\n\nAntes se guardará un respaldo de la base, los addons y el filestore. ¿Continuar?" 13 74 || exit 0
+  dialog --title "Confirmar actualización" --yesno "Se actualizarán los módulos incluidos en distribution.lock.json y se reconstruirá el contenedor con su receta actual.\n\nInstalación: $(basename "$PROJECT")\nBase: $DB_NAME\n\nAntes se guardará un respaldo de la base, los addons y el filestore. ¿Continuar?" 13 74 || exit 0
 else
-  echo "Se actualizarán los módulos instalados de Odoo y se reconstruirá el contenedor."
+  echo "Se actualizarán los módulos fijados en distribution.lock.json y se reconstruirá el contenedor con su receta actual."
   echo "Se guardará un respaldo de la base, los addons y el filestore."
   read -r -p "¿Continuar? [s/N]: " answer < /dev/tty
   [[ "$answer" =~ ^[SsYy]$ ]] || exit 0
@@ -85,31 +95,34 @@ docker compose ps >/dev/null || { echo "No responde Docker Compose para $PROJECT
 
 echo "1/5 Resguardando base de datos..."
 umask 077
-docker compose exec -T db pg_dump -U odoo -Fc --no-owner "$DB_NAME" > "$BACKUP/database.dump"
+docker compose exec -T db sh -c 'exec pg_dump -U "${POSTGRES_USER:-odoo}" -Fc --no-owner "$1"' sh "$DB_NAME" > "$BACKUP/database.dump"
 [[ -s "$BACKUP/database.dump" ]] || { echo "El respaldo de la base quedó vacío." >&2; exit 1; }
 echo "2/5 Resguardando addons y archivos adjuntos..."
 tar -czf "$BACKUP/addons.tar.gz" -C "$PROJECT" addons
-tar -czf "$BACKUP/deployment-config.tar.gz" -C "$PROJECT" Dockerfile docker-compose.yml odoo.conf services/local-whisper
+CONFIG_PATHS=()
+for path in Dockerfile docker-compose.yml .env odoo.conf services/local-whisper certs; do
+  [[ -e "$PROJECT/$path" ]] && CONFIG_PATHS+=("$path")
+done
+((${#CONFIG_PATHS[@]})) && tar -czf "$BACKUP/deployment-config.tar.gz" -C "$PROJECT" "${CONFIG_PATHS[@]}"
 if [[ -d "$PROJECT/odoo-data/filestore/$DB_NAME" ]]; then
   tar -czf "$BACKUP/filestore.tar.gz" -C "$PROJECT/odoo-data/filestore" "$DB_NAME"
+elif docker compose exec -T odoo test -d "/var/lib/odoo/filestore/$DB_NAME"; then
+  docker compose exec -T odoo tar -czf - -C /var/lib/odoo/filestore "$DB_NAME" > "$BACKUP/filestore.tar.gz"
+  [[ -s "$BACKUP/filestore.tar.gz" ]] || { echo "El respaldo del filestore quedó vacío." >&2; exit 1; }
+else
+  echo "Aviso: no encontré un filestore para $DB_NAME; se guardó la base de datos." >&2
 fi
 
 STAGE="$WORK/addons"
 mkdir -p "$STAGE"
-AR_REPOS=(
-  "https://github.com/ingadhoc/odoo-argentina-ce.git"
-  "https://github.com/ingadhoc/odoo-argentina.git"
-  "https://github.com/ingadhoc/argentina-sale.git"
-  "https://github.com/ingadhoc/account-financial-tools.git"
-  "https://github.com/ingadhoc/account-invoicing.git"
-  "https://github.com/ingadhoc/account-payment.git"
-  "https://github.com/ingadhoc/sale.git"
-)
-echo "3/5 Descargando la última versión de los módulos..."
-for repo in "${AR_REPOS[@]}"; do
-  name="$(basename "$repo" .git)"
+echo "3/5 Descargando las revisiones fijadas de los módulos..."
+while IFS=$'\t' read -r name repo commit; do
   checkout="$WORK/$name"
-  git clone --quiet --depth 1 --branch 20.0 "$repo" "$checkout"
+  git init -q "$checkout"
+  git -C "$checkout" remote add origin "$repo"
+  git -C "$checkout" fetch --quiet --depth 1 origin "$commit"
+  git -C "$checkout" checkout --quiet --detach FETCH_HEAD
+  [[ "$(git -C "$checkout" rev-parse HEAD)" == "$commit" ]] || { echo "Commit IngAdhoc no coincide: $name" >&2; exit 1; }
   shopt -s nullglob
   for module_dir in "$checkout"/*/; do
     [[ -f "$module_dir/__manifest__.py" ]] || continue
@@ -117,7 +130,7 @@ for repo in "${AR_REPOS[@]}"; do
     [[ -e "$STAGE/$module" ]] || cp -a "$module_dir" "$STAGE/$module"
   done
   rm -rf -- "$checkout"
-done
+done < <(python3 "$REPO/scripts/distribution_lock.py" adhoc)
 if [[ -f "$STAGE/l10n_ar_fiscal_ws/__manifest__.py" ]]; then
   sed -i 's/"installable": False/"installable": True/' "$STAGE/l10n_ar_fiscal_ws/__manifest__.py"
 fi
@@ -138,15 +151,34 @@ for module in "${MODULE_DIRS[@]}"; do
   cp -a "$STAGE/$module" "$PROJECT/addons/$module"
 done
 cp -a "$REPO/services/local-whisper/." "$PROJECT/services/local-whisper/" 2>/dev/null || true
-cp "$REPO/installer/templates/Dockerfile.odoo" "$PROJECT/Dockerfile"
-docker compose build --pull odoo
+# Keep the Dockerfile selected when this deployment was installed. The update
+# must not silently switch the Odoo base image/dependency recipe.
+echo "Conservando el Dockerfile existente; no se actualizará la imagen base implícitamente."
+docker compose build odoo
 echo "5/5 Actualizando todos los módulos instalados de la base..."
-docker compose run --rm --no-deps odoo odoo --config=/etc/odoo/odoo.conf --logfile= --stop-after-init --no-http -d "$DB_NAME" -u all
+docker compose run --rm --no-deps odoo --logfile= --stop-after-init --no-http -d "$DB_NAME" -u all
 docker compose up -d odoo
 RESTART_NEEDED=0
 
+echo "Esperando a que Odoo responda después de la actualización..."
+PORT=$(docker compose port odoo 8069 | awk -F: 'NF {print $NF}' | tail -n 1)
+[[ "$PORT" =~ ^[0-9]+$ ]] || PORT=8069
+HEALTHY=0
+for attempt in $(seq 1 60); do
+  HTTP_STATUS=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 3 "http://127.0.0.1:${PORT}/web/login" 2>/dev/null || true)
+  if [[ "$HTTP_STATUS" =~ ^(200|303)$ ]]; then
+    HEALTHY=1
+    break
+  fi
+  sleep 2
+done
+if [[ "$HEALTHY" -ne 1 ]]; then
+  echo "ERROR: Odoo no respondió en http://127.0.0.1:${PORT}/web/login después de 120 segundos." >&2
+  docker compose ps >&2 || true
+  echo "El respaldo previo sigue disponible en $BACKUP." >&2
+  exit 1
+fi
+
 printf '\nActualización finalizada.\nRespaldo: %s\n' "$BACKUP"
 SERVER_IP="$(hostname -I 2>/dev/null | awk '{print $1}' || true)"
-PORT="$(awk -F: '/"[0-9]+:8069"/ {gsub(/[^0-9]/,"",$1); print $1; exit}' "$PROJECT/docker-compose.yml" 2>/dev/null || true)"
-[[ -n "$PORT" ]] || PORT=8070
 if [[ -n "$SERVER_IP" ]]; then echo "Acceso Odoo: http://${SERVER_IP}:${PORT}/web/login"; fi

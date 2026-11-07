@@ -1,0 +1,13 @@
+title = "DOLAN secret scanning"
+
+[extend]
+useDefault = true
+
+# Gitleaks generic-api-key mistakes this Odoo fiscal field identifier for a
+# credential. Allow only that exact literal; other tokens, paths and rules
+# remain scanned normally.
+[[allowlists]]
+description = "False positive: Odoo field name, not a credential"
+regexTarget = "secret"
+targetRules = ["generic-api-key"]
+regexes = ['''^l10n_ar_afip_(?:auth_code|result)$''']

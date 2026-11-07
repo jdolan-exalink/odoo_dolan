@@ -1,0 +1,201 @@
+/* DOLAN UI 2.0 — semantic tokens.
+ * Keep this file ahead of component styles in web.assets_backend.
+ * Existing selectors can migrate to these variables incrementally.
+ */
+:root {
+    color-scheme: light;
+
+    --dolan-color-canvas: #f7f8fc;
+    --dolan-color-surface: #ffffff;
+    --dolan-color-surface-raised: #ffffff;
+    --dolan-color-text: #172033;
+    --dolan-color-text-muted: #667085;
+    --dolan-color-border: #e4e7ef;
+    --dolan-color-primary: #7938d2;
+    --dolan-color-primary-hover: #682bc0;
+    --dolan-color-secondary: #017e84;
+    --dolan-color-success: #138a55;
+    --dolan-color-warning: #a15c00;
+    --dolan-color-danger: #c03543;
+    --dolan-color-info: #1769aa;
+    --dolan-color-focus: #7938d2;
+
+    --dolan-font-family: inherit;
+    --dolan-font-size-xs: 0.75rem;
+    --dolan-font-size-sm: 0.875rem;
+    --dolan-font-size-md: 1rem;
+    --dolan-font-size-lg: 1.25rem;
+    --dolan-font-size-xl: 1.5rem;
+
+    --dolan-space-1: 0.25rem;
+    --dolan-space-2: 0.5rem;
+    --dolan-space-3: 0.75rem;
+    --dolan-space-4: 1rem;
+    --dolan-space-6: 1.5rem;
+    --dolan-space-8: 2rem;
+
+    --dolan-radius-sm: 0.375rem;
+    --dolan-radius-md: 0.625rem;
+    --dolan-radius-lg: 0.875rem;
+    --dolan-radius-pill: 999px;
+    --dolan-border-width: 1px;
+    --dolan-shadow-sm: 0 1px 3px rgb(16 24 40 / 8%);
+    --dolan-shadow-md: 0 8px 24px rgb(16 24 40 / 12%);
+    --dolan-elevation-overlay: 0 16px 48px rgb(16 24 40 / 20%);
+
+    --dolan-motion-fast: 120ms;
+    --dolan-motion-normal: 180ms;
+    --dolan-motion-slow: 260ms;
+    --dolan-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+    --dolan-icon-navigation: 22px;
+    --dolan-icon-action: 20px;
+    --dolan-icon-status: 28px;
+    --dolan-icon-shortcut: 36px;
+    --dolan-icon-launcher: 64px;
+    --dolan-icon-folder-preview: 22px;
+    --dolan-icon-tabler-filter: brightness(0) saturate(100%) invert(34%) sepia(36%) saturate(1341%) hue-rotate(229deg) brightness(90%) contrast(92%);
+}
+
+body.o_dolan_dark_mode {
+    color-scheme: dark;
+
+    --dolan-color-canvas: #151824;
+    --dolan-color-surface: #202431;
+    --dolan-color-surface-raised: #292e3d;
+    --dolan-color-text: #f5f6fa;
+    --dolan-color-text-muted: #a6adbd;
+    --dolan-color-border: #353b4b;
+    --dolan-color-primary: #a46aff;
+    --dolan-color-primary-hover: #b98dff;
+    --dolan-color-secondary: #5fd0c5;
+    --dolan-color-success: #51c48a;
+    --dolan-color-warning: #ffc166;
+    --dolan-color-danger: #ff7d88;
+    --dolan-color-info: #75baff;
+    --dolan-color-focus: #b98dff;
+
+    --dolan-shadow-sm: 0 1px 3px rgb(0 0 0 / 22%);
+    --dolan-shadow-md: 0 8px 24px rgb(0 0 0 / 28%);
+    --dolan-elevation-overlay: 0 16px 48px rgb(0 0 0 / 42%);
+    --dolan-icon-tabler-filter: brightness(0) saturate(100%) invert(77%) sepia(29%) saturate(778%) hue-rotate(214deg) brightness(103%) contrast(102%);
+}
+
+.o_dolan_tabler_icon_asset { filter: var(--dolan-icon-tabler-filter); object-fit: contain; }
+.o_dolan_icon_asset { display: inline-block; flex: 0 0 auto; object-fit: contain; vertical-align: middle; }
+
+/* Variante de accesibilidad: alto contraste, diferenciada del oscuro normal. */
+body.o_dolan_high_contrast {
+    color-scheme: dark;
+    --dolan-color-canvas: #000000;
+    --dolan-color-surface: #050505;
+    --dolan-color-surface-raised: #111111;
+    --dolan-color-text: #ffffff;
+    --dolan-color-text-muted: #f0f0f0;
+    --dolan-color-border: #ffffff;
+    --dolan-color-primary: #ffff00;
+    --dolan-color-primary-hover: #ffff80;
+    --dolan-color-secondary: #00ffff;
+    --dolan-color-success: #00ff66;
+    --dolan-color-warning: #ffff00;
+    --dolan-color-danger: #ff5b5b;
+    --dolan-color-info: #55ddff;
+    --dolan-color-focus: #ffff00;
+    --dolan-border-width: 2px;
+    --dolan-shadow-sm: none;
+    --dolan-shadow-md: none;
+    --dolan-elevation-overlay: 0 0 0 3px #ffff00;
+}
+body.o_dolan_high_contrast :is(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 3px solid #ffff00 !important;
+    outline-offset: 3px !important;
+}
+body.o_dolan_high_contrast :is(.o_form_sheet, .o_kanban_record, .dropdown-menu, .o_popover, .modal-content, .o_dolan_home_menu_wrapper) {
+    border: 2px solid #fff !important;
+}
+body.o_dolan_high_contrast,
+body.o_dolan_high_contrast :is(.o_web_client, .o_action_manager, .o_action, .o_content, .o_view_controller, .o_control_panel, .o_form_sheet_bg, .o_list_view, .o_kanban_view, .o_search_panel, .o_base_settings, .o_settings_container, .o_setting_container, .settings_tab, .app_settings_block, .modal-content, .modal-header, .modal-body, .modal-footer, .dropdown-menu, .o_popover, .o-autocomplete) {
+    color: #fff !important;
+    background-color: #000 !important;
+    border-color: #fff !important;
+}
+body.o_dolan_high_contrast :is(.o_form_sheet, .o_kanban_record, .o_kanban_group, .o_list_table, .o_list_table thead, .o_list_table tbody tr, .o_search_panel, .dropdown-menu, .o_popover, .modal-content) {
+    color: #fff !important;
+    background: #000 !important;
+    border: 2px solid #fff !important;
+}
+body.o_dolan_high_contrast :is(.o_form_view, .o_list_view, .o_kanban_view, .o_control_panel, .o_search_panel) :is(h1, h2, h3, h4, h5, h6, label, th, td, span, p, .text-muted, .text-secondary, .o_form_label) {
+    color: #fff !important;
+}
+body.o_dolan_high_contrast :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea, .form-control, .o_input, .form-select) {
+    color: #fff !important;
+    background: #000 !important;
+    border: 2px solid #fff !important;
+}
+body.o_dolan_high_contrast :is(input[type="checkbox"], input[type="radio"]) { accent-color: #ffff00 !important; }
+body.o_dolan_high_contrast :is(a, .btn-link, .o_form_view a, .o_list_view a) {
+    color: #ffff00 !important;
+}
+body.o_dolan_high_contrast :is(.btn-primary, button.btn-primary, .o_dolan_home_menu_wrapper .btn-primary) {
+    color: #000 !important;
+    background: #ffff00 !important;
+    border: 2px solid #ffff00 !important;
+}
+body.o_dolan_high_contrast :is(.btn, button, .dropdown-item, .o_nav_entry):focus-visible,
+body.o_dolan_high_contrast :is(.btn, button, .dropdown-item, .o_nav_entry):hover {
+    color: #000 !important;
+    background-color: #00ffff !important;
+    outline: 3px solid #ffff00 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --dolan-motion-fast: 0ms;
+        --dolan-motion-normal: 0ms;
+        --dolan-motion-slow: 0ms;
+    }
+}
+
+/* Fase 1: migrate the launcher shell to semantic tokens first. */
+.o_dolan_home_menu_wrapper,
+.o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group,
+.o_dolan_home_menu_wrapper .o_dolan_search_input_wrap,
+.o_dolan_home_menu_wrapper .o_dolan_quick_actions_widget,
+.o_dolan_home_menu_wrapper .o_dolan_kpi_card,
+.o_dolan_home_menu_wrapper .o_dolan_app_cell,
+.o_dolan_home_menu_wrapper .o_dolan_folder_cell {
+    color: var(--dolan-color-text);
+}
+
+.o_dolan_home_menu_wrapper .o_dolan_app_cell,
+.o_dolan_home_menu_wrapper .o_dolan_folder_cell,
+.o_dolan_home_menu_wrapper .o_dolan_kpi_card,
+.o_dolan_home_menu_wrapper .o_dolan_quick_actions_widget {
+    transition-duration: var(--dolan-motion-fast);
+    transition-timing-function: var(--dolan-ease-standard);
+}
+
+.o_dolan_home_menu_wrapper :is(input, select, textarea):focus-visible,
+.o_dolan_home_menu_wrapper :is(button, a, [tabindex]):focus-visible {
+    outline: 2px solid var(--dolan-color-focus);
+    outline-offset: 2px;
+}
+
+.o_dolan_home_menu_wrapper .o_dolan_workspace_config {
+    color: var(--dolan-color-text);
+    background: var(--dolan-color-surface);
+    border: var(--dolan-border-width) solid var(--dolan-color-border);
+    border-radius: var(--dolan-radius-md);
+    box-shadow: var(--dolan-shadow-sm);
+}
+
+.o_dolan_home_menu_wrapper .o_dolan_workspace_widget_option {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--dolan-space-2);
+    padding: var(--dolan-space-2) var(--dolan-space-3);
+    color: var(--dolan-color-text);
+    background: var(--dolan-color-surface-raised);
+    border: var(--dolan-border-width) solid var(--dolan-color-border);
+    border-radius: var(--dolan-radius-pill);
+}

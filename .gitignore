@@ -2,20 +2,26 @@ backups/*.dump
 backups/*.zip
 backups/*.tar.gz
 backups/_restore_work/
+backups/**
 __pycache__/
 *.pyc
 /TEST/
 /certs/
 /BACKs/
 /tmp/
+/.ci-tmp/
 .env
 .env.*
 !.env.example
 /deployments/
 *.crt
+*.der
 *.key
 *.pem
+*.p12
+*.pfx
 *.dump
+*.bak
 backups/*.sql
 
 # Local/customer-specific operational artifacts (never publish credentials, DB snapshots, or live audit evidence).

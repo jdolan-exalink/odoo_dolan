@@ -7,6 +7,7 @@ import io
 import json
 import logging
 import re
+import threading
 import urllib.parse
 
 from odoo import api, fields, models, _
@@ -40,6 +41,7 @@ MAX_SCANNED_PDF_IMAGE_BYTES = 8 * 1024 * 1024
 MAX_QR_IMAGE_BYTES = 8 * 1024 * 1024
 MAX_QR_PDF_INPUT_BYTES = 40 * 1024 * 1024
 MAX_QR_IMAGE_PIXELS = 20_000_000
+PDFIUM_RENDER_LOCK = threading.RLock()
 ARCA_QR_NUMERIC_FIELD_PATTERN = re.compile(
     r'(?<!\\)(?P<prefix>"(?:ver|cuit|ptoVta|tipoCmp|nroCmp|importe|ctz|tipoDocRec|nroDocRec)"\s*:\s*)'
     r'0+(?P<number>\d+(?:\.\d+)?)(?=\s*[,}])'
@@ -187,30 +189,40 @@ class DolanOcrExtractor(models.AbstractModel):
     def _render_pdf_pages_for_qr(self, pdf_bytes):
         """Render up to eight bounded PDF pages for on-device QR decoding only."""
         try:
-            import pymupdf
+            import pypdfium2 as pdfium
         except ImportError:
-            _logger.warning('La lectura de QR en PDF requiere PyMuPDF en el servidor.')
+            _logger.warning('La lectura de QR en PDF requiere pypdfium2 en el servidor.')
             return []
 
+        with PDFIUM_RENDER_LOCK:
+            return self._render_pdf_pages_for_qr_locked(pdfium, pdf_bytes)
+
+    @api.model
+    def _render_pdf_pages_for_qr_locked(self, pdfium, pdf_bytes):
         try:
-            document = pymupdf.open(stream=pdf_bytes, filetype='pdf')
+            document = pdfium.PdfDocument(pdf_bytes)
             rendered = []
             total_bytes = 0
-            for page_number in range(min(document.page_count, MAX_SCANNED_PDF_PAGES)):
-                page = document.load_page(page_number)
-                rect = page.rect
-                estimated_pixels = (rect.width * 160 / 72) * (rect.height * 160 / 72)
-                if estimated_pixels > MAX_QR_IMAGE_PIXELS:
-                    continue
-                image_bytes = page.get_pixmap(
-                    dpi=160,
-                    colorspace=pymupdf.csRGB,
-                    alpha=False,
-                ).tobytes('png')
-                if total_bytes + len(image_bytes) > MAX_QR_IMAGE_BYTES:
-                    break
-                rendered.append(image_bytes)
-                total_bytes += len(image_bytes)
+            for page_number in range(min(len(document), MAX_SCANNED_PDF_PAGES)):
+                page = document[page_number]
+                try:
+                    width, height = page.get_size()
+                    scale = 160 / 72
+                    if width * scale * height * scale > MAX_QR_IMAGE_PIXELS:
+                        continue
+                    bitmap = page.render(scale=scale)
+                    try:
+                        image_buffer = io.BytesIO()
+                        bitmap.to_pil().save(image_buffer, format='PNG')
+                        image_bytes = image_buffer.getvalue()
+                    finally:
+                        bitmap.close()
+                    if total_bytes + len(image_bytes) > MAX_QR_IMAGE_BYTES:
+                        break
+                    rendered.append(image_bytes)
+                    total_bytes += len(image_bytes)
+                finally:
+                    page.close()
             return rendered
         except Exception as exc:
             _logger.debug('No se pudo renderizar un PDF para decodificar QR (%s).', type(exc).__name__)
@@ -310,28 +322,46 @@ class DolanOcrExtractor(models.AbstractModel):
     def _render_scanned_pdf_pages(self, pdf_bytes):
         """Render a bounded scanned PDF to PNG pages for the configured vision provider."""
         try:
-            import pymupdf
+            import pypdfium2 as pdfium
         except ImportError as exc:
-            raise UserError(_('El OCR de PDFs escaneados requiere PyMuPDF en el servidor.')) from exc
+            raise UserError(_('El OCR de PDFs escaneados requiere pypdfium2 en el servidor.')) from exc
 
+        with PDFIUM_RENDER_LOCK:
+            return self._render_scanned_pdf_pages_locked(pdfium, pdf_bytes)
+
+    @api.model
+    def _render_scanned_pdf_pages_locked(self, pdfium, pdf_bytes):
         try:
-            document = pymupdf.open(stream=pdf_bytes, filetype='pdf')
-            if not document.page_count:
+            document = pdfium.PdfDocument(pdf_bytes)
+            if not len(document):
                 raise UserError(_('El PDF no contiene páginas para digitalizar.'))
-            if document.page_count > MAX_SCANNED_PDF_PAGES:
+            if len(document) > MAX_SCANNED_PDF_PAGES:
                 raise UserError(_(
                     'El PDF tiene %s páginas; el OCR visual admite hasta %s por comprobante.'
-                ) % (document.page_count, MAX_SCANNED_PDF_PAGES))
+                ) % (len(document), MAX_SCANNED_PDF_PAGES))
 
             rendered = []
             total_bytes = 0
-            for page in document:
-                pixmap = page.get_pixmap(dpi=160, colorspace=pymupdf.csRGB, alpha=False)
-                image_bytes = pixmap.tobytes('png')
-                total_bytes += len(image_bytes)
-                if total_bytes > MAX_SCANNED_PDF_IMAGE_BYTES:
-                    raise UserError(_('Las imágenes del PDF superan el límite de tamaño para OCR visual.'))
-                rendered.append(('image/png', image_bytes))
+            scale = 160 / 72
+            for page_number in range(len(document)):
+                page = document[page_number]
+                try:
+                    width, height = page.get_size()
+                    if width * scale * height * scale > MAX_QR_IMAGE_PIXELS:
+                        raise UserError(_('Una página del PDF supera el límite de resolución para OCR visual.'))
+                    bitmap = page.render(scale=scale)
+                    try:
+                        image_buffer = io.BytesIO()
+                        bitmap.to_pil().save(image_buffer, format='PNG')
+                        image_bytes = image_buffer.getvalue()
+                    finally:
+                        bitmap.close()
+                    total_bytes += len(image_bytes)
+                    if total_bytes > MAX_SCANNED_PDF_IMAGE_BYTES:
+                        raise UserError(_('Las imágenes del PDF superan el límite de tamaño para OCR visual.'))
+                    rendered.append(('image/png', image_bytes))
+                finally:
+                    page.close()
             return rendered
         except UserError:
             raise

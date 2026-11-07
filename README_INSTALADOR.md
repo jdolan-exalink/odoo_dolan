@@ -41,7 +41,7 @@ Durante la instalación se descargan o construyen:
 - La imagen oficial de PostgreSQL y la imagen base de Odoo CE 20.
 - Siete repositorios IngAdhoc en la rama `20.0`.
 - Los paquetes del sistema y de Python requeridos por Odoo, ARCA y los módulos DOLAN.
-- La imagen de WAHA desde `devlikeapro/waha:latest`.
+- La imagen de WAHA desde `devlikeapro/waha:latest`, fijada por digest en el artefacto generado.
 - El contenedor local Whisper y su modelo (`small` por defecto). El primer inicio necesita Internet para descargar el modelo y puede tardar.
 
 El acceso a esos repositorios y registros de contenedores debe estar permitido por el firewall. No se necesitan certificados ARCA para construir el despliegue.

@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="icon_app_invoicing" model="dolan.icon.assignment">
+        <field name="semantic_id">app.invoicing</field>
+        <field name="fluent_3d_asset">invoicing</field>
+        <field name="fluent_flat_asset">invoicing</field>
+        <field name="fluent_filled_asset">invoicing</field>
+        <field name="fluent_regular_asset">invoicing</field>
+        <field name="fluent_asset">invoicing</field>
+        <field name="tabler_asset">invoice</field>
+    </record>
+    <record id="icon_app_sales" model="dolan.icon.assignment">
+        <field name="semantic_id">app.sales</field>
+        <field name="fluent_3d_asset">sales</field>
+        <field name="fluent_flat_asset">sales</field>
+        <field name="fluent_filled_asset">sales</field>
+        <field name="fluent_regular_asset">sales</field>
+        <field name="fluent_asset">sales</field>
+        <field name="tabler_asset">chart-line</field>
+    </record>
+    <record id="icon_utilities" model="dolan.icon.assignment">
+        <field name="semantic_id">app.utilities</field>
+        <field name="fluent_3d_asset">utilities</field>
+        <field name="fluent_flat_asset">utilities</field>
+        <field name="fluent_filled_asset">utilities</field>
+        <field name="fluent_regular_asset">utilities</field>
+        <field name="tabler_asset">adjustments</field>
+    </record>
+    <record id="icon_app_crm" model="dolan.icon.assignment">
+        <field name="semantic_id">app.crm</field>
+        <field name="fluent_3d_asset">crm</field>
+        <field name="fluent_flat_asset">crm</field>
+        <field name="fluent_filled_asset">crm</field>
+        <field name="fluent_regular_asset">crm</field>
+        <field name="fluent_asset">crm</field>
+        <field name="tabler_asset">users-group</field>
+    </record>
+    <record id="icon_app_pos" model="dolan.icon.assignment">
+        <field name="semantic_id">app.pos</field>
+        <field name="fluent_3d_asset">pos</field>
+        <field name="fluent_flat_asset">pos</field>
+        <field name="fluent_filled_asset">pos</field>
+        <field name="fluent_regular_asset">pos</field>
+        <field name="fluent_asset">pos</field>
+        <field name="tabler_asset">building-store</field>
+    </record>
+    <record id="icon_dashboards" model="dolan.icon.assignment">
+        <field name="semantic_id">app.dashboards</field>
+        <field name="fluent_3d_asset">dashboards</field>
+        <field name="fluent_flat_asset">dashboards</field>
+        <field name="fluent_filled_asset">dashboards</field>
+        <field name="fluent_regular_asset">dashboards</field>
+        <field name="tabler_asset">chart-bar</field>
+    </record>
+    <record id="icon_app_ai" model="dolan.icon.assignment">
+        <field name="semantic_id">app.ai</field>
+        <field name="fluent_3d_asset">ai</field>
+        <field name="fluent_flat_asset">ai</field>
+        <field name="fluent_filled_asset">ai</field>
+        <field name="fluent_regular_asset">ai</field>
+        <field name="fluent_asset">ai</field>
+        <field name="tabler_asset">robot</field>
+    </record>
+    <record id="icon_expenses" model="dolan.icon.assignment">
+        <field name="semantic_id">app.expenses</field>
+        <field name="fluent_3d_asset">expenses</field>
+        <field name="fluent_flat_asset">expenses</field>
+        <field name="fluent_filled_asset">expenses</field>
+        <field name="fluent_regular_asset">expenses</field>
+        <field name="tabler_asset">wallet</field>
+    </record>
+    <record id="icon_app_articles" model="dolan.icon.assignment">
+        <field name="semantic_id">app.articles</field>
+        <field name="fluent_3d_asset">articles</field>
+        <field name="fluent_flat_asset">articles</field>
+        <field name="fluent_filled_asset">articles</field>
+        <field name="fluent_regular_asset">articles</field>
+        <field name="fluent_asset">articles</field>
+        <field name="tabler_asset">book-2</field>
+    </record>
+    <record id="icon_attendance" model="dolan.icon.assignment">
+        <field name="semantic_id">app.attendance</field>
+        <field name="fluent_3d_asset">attendance</field>
+        <field name="fluent_flat_asset">attendance</field>
+        <field name="fluent_filled_asset">attendance</field>
+        <field name="fluent_regular_asset">attendance</field>
+    </record>
+    <record id="icon_app_calendar" model="dolan.icon.assignment">
+        <field name="semantic_id">app.calendar</field>
+        <field name="fluent_3d_asset">calendar</field>
+        <field name="fluent_flat_asset">calendar</field>
+        <field name="fluent_filled_asset">calendar</field>
+        <field name="fluent_regular_asset">calendar</field>
+        <field name="fluent_asset">calendar</field>
+        <field name="tabler_asset">calendar-event</field>
+    </record>
+    <record id="icon_livechat" model="dolan.icon.assignment">
+        <field name="semantic_id">app.livechat</field>
+        <field name="fluent_3d_asset">livechat</field>
+        <field name="fluent_flat_asset">livechat</field>
+        <field name="fluent_filled_asset">livechat</field>
+        <field name="fluent_regular_asset">livechat</field>
+    </record>
+    <record id="icon_app_accounting" model="dolan.icon.assignment">
+        <field name="semantic_id">app.accounting</field>
+        <field name="fluent_3d_asset">accounting</field>
+        <field name="fluent_flat_asset">accounting</field>
+        <field name="fluent_filled_asset">accounting</field>
+        <field name="fluent_regular_asset">accounting</field>
+        <field name="fluent_asset">accounting</field>
+        <field name="tabler_asset">chart-pie</field>
+    </record>
+    <record id="icon_app_purchases" model="dolan.icon.assignment">
+        <field name="semantic_id">app.purchases</field>
+        <field name="fluent_3d_asset">purchases</field>
+        <field name="fluent_flat_asset">purchases</field>
+        <field name="fluent_filled_asset">purchases</field>
+        <field name="fluent_regular_asset">purchases</field>
+        <field name="fluent_asset">purchases</field>
+        <field name="tabler_asset">shopping-cart</field>
+    </record>
+    <record id="icon_app_contacts" model="dolan.icon.assignment">
+        <field name="semantic_id">app.contacts</field>
+        <field name="fluent_3d_asset">contacts</field>
+        <field name="fluent_flat_asset">contacts</field>
+        <field name="fluent_filled_asset">contacts</field>
+        <field name="fluent_regular_asset">contacts</field>
+        <field name="fluent_asset">contacts</field>
+        <field name="tabler_asset">users-group</field>
+    </record>
+    <record id="icon_conversations" model="dolan.icon.assignment">
+        <field name="semantic_id">app.conversations</field>
+        <field name="fluent_3d_asset">conversations</field>
+        <field name="fluent_flat_asset">conversations</field>
+        <field name="fluent_filled_asset">conversations</field>
+        <field name="fluent_regular_asset">conversations</field>
+        <field name="tabler_asset">messages</field>
+    </record>
+    <record id="icon_events" model="dolan.icon.assignment">
+        <field name="semantic_id">app.events</field>
+        <field name="fluent_3d_asset">events</field>
+        <field name="fluent_flat_asset">events</field>
+        <field name="fluent_filled_asset">events</field>
+        <field name="fluent_regular_asset">events</field>
+        <field name="tabler_asset">calendar</field>
+    </record>
+    <record id="icon_app_inventory" model="dolan.icon.assignment">
+        <field name="semantic_id">app.inventory</field>
+        <field name="fluent_3d_asset">inventory</field>
+        <field name="fluent_flat_asset">inventory</field>
+        <field name="fluent_filled_asset">inventory</field>
+        <field name="fluent_regular_asset">inventory</field>
+        <field name="fluent_asset">inventory</field>
+        <field name="tabler_asset">package</field>
+    </record>
+    <record id="icon_activities" model="dolan.icon.assignment">
+        <field name="semantic_id">app.activities</field>
+        <field name="fluent_3d_asset">activities</field>
+        <field name="fluent_flat_asset">activities</field>
+        <field name="fluent_filled_asset">activities</field>
+        <field name="fluent_regular_asset">activities</field>
+        <field name="tabler_asset">clipboard-check</field>
+    </record>
+    <record id="icon_lunch" model="dolan.icon.assignment">
+        <field name="semantic_id">app.lunch</field>
+        <field name="fluent_3d_asset">lunch</field>
+        <field name="fluent_flat_asset">lunch</field>
+        <field name="fluent_filled_asset">lunch</field>
+        <field name="fluent_regular_asset">lunch</field>
+    </record>
+    <record id="icon_app_maintenance" model="dolan.icon.assignment">
+        <field name="semantic_id">app.maintenance</field>
+        <field name="fluent_3d_asset">maintenance</field>
+        <field name="fluent_flat_asset">maintenance</field>
+        <field name="fluent_filled_asset">maintenance</field>
+        <field name="fluent_regular_asset">maintenance</field>
+        <field name="fluent_asset">maintenance</field>
+        <field name="tabler_asset">tool</field>
+    </record>
+    <record id="icon_app_manufacturing" model="dolan.icon.assignment">
+        <field name="semantic_id">app.manufacturing</field>
+        <field name="fluent_3d_asset">manufacturing</field>
+        <field name="fluent_flat_asset">manufacturing</field>
+        <field name="fluent_filled_asset">manufacturing</field>
+        <field name="fluent_regular_asset">manufacturing</field>
+        <field name="fluent_asset">manufacturing</field>
+        <field name="tabler_asset">building-factory</field>
+    </record>
+    <record id="icon_email_marketing" model="dolan.icon.assignment">
+        <field name="semantic_id">app.email_marketing</field>
+        <field name="fluent_3d_asset">email_marketing</field>
+        <field name="fluent_flat_asset">email_marketing</field>
+        <field name="fluent_filled_asset">email_marketing</field>
+        <field name="fluent_regular_asset">email_marketing</field>
+    </record>
+    <record id="icon_sms_marketing" model="dolan.icon.assignment">
+        <field name="semantic_id">app.sms_marketing</field>
+        <field name="fluent_3d_asset">sms_marketing</field>
+        <field name="fluent_flat_asset">sms_marketing</field>
+        <field name="fluent_filled_asset">sms_marketing</field>
+        <field name="fluent_regular_asset">sms_marketing</field>
+    </record>
+    <record id="icon_kitchen" model="dolan.icon.assignment">
+        <field name="semantic_id">app.kitchen</field>
+        <field name="fluent_3d_asset">kitchen</field>
+        <field name="fluent_flat_asset">kitchen</field>
+        <field name="fluent_filled_asset">kitchen</field>
+        <field name="fluent_regular_asset">kitchen</field>
+    </record>
+    <record id="icon_app_projects" model="dolan.icon.assignment">
+        <field name="semantic_id">app.projects</field>
+        <field name="fluent_3d_asset">projects</field>
+        <field name="fluent_flat_asset">projects</field>
+        <field name="fluent_filled_asset">projects</field>
+        <field name="fluent_regular_asset">projects</field>
+        <field name="fluent_asset">projects</field>
+        <field name="tabler_asset">briefcase-2</field>
+    </record>
+    <record id="icon_repairs" model="dolan.icon.assignment">
+        <field name="semantic_id">app.repairs</field>
+        <field name="fluent_3d_asset">repairs</field>
+        <field name="fluent_flat_asset">repairs</field>
+        <field name="fluent_filled_asset">repairs</field>
+        <field name="fluent_regular_asset">repairs</field>
+    </record>
+    <record id="icon_subscriptions" model="dolan.icon.assignment">
+        <field name="semantic_id">app.subscriptions</field>
+        <field name="fluent_3d_asset">subscriptions</field>
+        <field name="fluent_flat_asset">subscriptions</field>
+        <field name="fluent_filled_asset">subscriptions</field>
+        <field name="fluent_regular_asset">subscriptions</field>
+        <field name="tabler_asset">arrows-sort</field>
+    </record>
+    <record id="icon_workshop" model="dolan.icon.assignment">
+        <field name="semantic_id">app.workshop</field>
+        <field name="fluent_3d_asset">workshop</field>
+        <field name="fluent_flat_asset">workshop</field>
+        <field name="fluent_filled_asset">workshop</field>
+        <field name="fluent_regular_asset">workshop</field>
+    </record>
+    <record id="icon_vacations" model="dolan.icon.assignment">
+        <field name="semantic_id">app.vacations</field>
+        <field name="fluent_3d_asset">vacations</field>
+        <field name="fluent_flat_asset">vacations</field>
+        <field name="fluent_filled_asset">vacations</field>
+        <field name="fluent_regular_asset">vacations</field>
+    </record>
+    <record id="icon_rentals" model="dolan.icon.assignment">
+        <field name="semantic_id">app.rentals</field>
+        <field name="fluent_3d_asset">rentals</field>
+        <field name="fluent_flat_asset">rentals</field>
+        <field name="fluent_filled_asset">rentals</field>
+        <field name="fluent_regular_asset">rentals</field>
+    </record>
+    <record id="icon_link_tracker" model="dolan.icon.assignment">
+        <field name="semantic_id">app.link_tracker</field>
+        <field name="fluent_3d_asset">link_tracker</field>
+        <field name="fluent_flat_asset">link_tracker</field>
+        <field name="fluent_filled_asset">link_tracker</field>
+        <field name="fluent_regular_asset">link_tracker</field>
+    </record>
+    <record id="icon_app_whatsapp" model="dolan.icon.assignment">
+        <field name="semantic_id">app.whatsapp</field>
+        <field name="fluent_3d_asset">whatsapp</field>
+        <field name="fluent_flat_asset">whatsapp_brand</field>
+        <field name="fluent_filled_asset">whatsapp_brand</field>
+        <field name="fluent_regular_asset">whatsapp_brand</field>
+        <field name="fluent_asset">whatsapp</field>
+        <field name="tabler_asset">messages</field>
+    </record>
+    <record id="icon_app_printer" model="dolan.icon.assignment">
+        <field name="semantic_id">app.printer</field>
+        <field name="fluent_3d_asset">printer</field>
+        <field name="fluent_flat_asset">printer</field>
+        <field name="fluent_filled_asset">printer</field>
+        <field name="fluent_regular_asset">printer</field>
+        <field name="fluent_asset">printer</field>
+        <field name="tabler_asset">printer</field>
+    </record>
+    <record id="icon_app_scale" model="dolan.icon.assignment">
+        <field name="semantic_id">app.scale</field>
+        <field name="fluent_3d_asset">scale</field>
+        <field name="fluent_flat_asset">scale_modern</field>
+        <field name="fluent_filled_asset">scale_modern</field>
+        <field name="fluent_regular_asset">scale_modern</field>
+        <field name="fluent_asset">scale</field>
+        <field name="tabler_asset">scale_modern</field>
+    </record>
+    <record id="icon_app_payment_terminal" model="dolan.icon.assignment">
+        <field name="semantic_id">app.payment_terminal</field>
+        <field name="fluent_3d_asset">payment_terminal</field>
+        <field name="fluent_flat_asset">payment_terminal</field>
+        <field name="fluent_filled_asset">payment_terminal</field>
+        <field name="fluent_regular_asset">payment_terminal</field>
+        <field name="fluent_asset">payment</field>
+        <field name="tabler_asset">cash-register</field>
+    </record>
+    <record id="icon_app_settings" model="dolan.icon.assignment">
+        <field name="semantic_id">app.settings</field>
+        <field name="fluent_3d_asset">settings</field>
+        <field name="fluent_flat_asset">settings</field>
+        <field name="fluent_filled_asset">settings</field>
+        <field name="fluent_regular_asset">settings</field>
+        <field name="fluent_asset">settings</field>
+        <field name="tabler_asset">settings</field>
+    </record>
+    <record id="icon_barcode" model="dolan.icon.assignment">
+        <field name="semantic_id">app.barcode</field>
+        <field name="fluent_3d_asset">barcode</field>
+        <field name="fluent_flat_asset">barcode_label</field>
+        <field name="fluent_filled_asset">barcode_label</field>
+        <field name="fluent_regular_asset">barcode_label</field>
+        <field name="tabler_asset">barcode_label</field>
+    </record>
+    <record id="icon_surveys" model="dolan.icon.assignment">
+        <field name="semantic_id">app.surveys</field>
+        <field name="fluent_3d_asset">surveys</field>
+        <field name="fluent_flat_asset">surveys</field>
+        <field name="fluent_filled_asset">surveys</field>
+        <field name="fluent_regular_asset">surveys</field>
+        <field name="tabler_asset">clipboard-check</field>
+    </record>
+    <record id="icon_data_cleaning" model="dolan.icon.assignment">
+        <field name="semantic_id">app.data_cleaning</field>
+        <field name="fluent_3d_asset">data_cleaning</field>
+        <field name="fluent_flat_asset">data_cleaning</field>
+        <field name="fluent_filled_asset">data_cleaning</field>
+        <field name="fluent_regular_asset">data_cleaning</field>
+    </record>
+    <record id="icon_recruitment" model="dolan.icon.assignment">
+        <field name="semantic_id">app.recruitment</field>
+        <field name="fluent_3d_asset">recruitment</field>
+        <field name="fluent_flat_asset">recruitment</field>
+        <field name="fluent_filled_asset">recruitment</field>
+        <field name="fluent_regular_asset">recruitment</field>
+        <field name="tabler_asset">briefcase</field>
+    </record>
+    <record id="icon_fleet" model="dolan.icon.assignment">
+        <field name="semantic_id">app.fleet</field>
+        <field name="fluent_3d_asset">fleet</field>
+        <field name="fluent_flat_asset">fleet</field>
+        <field name="fluent_filled_asset">fleet</field>
+        <field name="fluent_regular_asset">fleet</field>
+        <field name="tabler_asset">devices</field>
+    </record>
+    <record id="icon_applications" model="dolan.icon.assignment">
+        <field name="semantic_id">app.applications</field>
+        <field name="fluent_3d_asset">applications</field>
+        <field name="fluent_flat_asset">applications</field>
+        <field name="fluent_filled_asset">applications</field>
+        <field name="fluent_regular_asset">applications</field>
+        <field name="tabler_asset">layout-grid</field>
+    </record>
+    <record id="icon_app_employees" model="dolan.icon.assignment">
+        <field name="semantic_id">app.employees</field>
+        <field name="fluent_3d_asset">employees</field>
+        <field name="fluent_flat_asset">employees</field>
+        <field name="fluent_filled_asset">employees</field>
+        <field name="fluent_regular_asset">employees</field>
+        <field name="fluent_asset">employees</field>
+        <field name="tabler_asset">briefcase</field>
+    </record>
+</odoo>

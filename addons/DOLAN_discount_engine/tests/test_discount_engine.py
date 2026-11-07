@@ -27,7 +27,9 @@ class TestDolanDiscountEngine(TransactionCase):
         # Use the day after the explicit action_pause() operations in tests so
         # the simulated clock observes the campaign as paused. 13:00 UTC is
         # 10:00 in Buenos Aires.
-        cls.at = datetime(2026, 11, 6, 13, 0, 0)
+        # Evaluate after the test's pause actions (which close published
+        # versions at the current database timestamp).
+        cls.at = datetime(2026, 11, 8, 13, 0, 0)
 
     def _campaign(self, name='Campaña QA', priority=10, weekday=False, time_start=0.0, time_end=24.0):
         campaign = self.env['dolan.discount.campaign'].create({
@@ -35,7 +37,7 @@ class TestDolanDiscountEngine(TransactionCase):
             'company_id': self.company.id,
             'timezone': 'America/Argentina/Buenos_Aires',
             'date_start': datetime(2026, 11, 4),
-            'date_end': datetime(2026, 11, 6, 23, 59, 59),
+            'date_end': datetime(2026, 11, 10, 23, 59, 59),
             'weekday_ids': [Command.set([self.env.ref('DOLAN_discount_engine.weekday_thursday').id])] if weekday else [],
             'time_start': time_start,
             'time_end': time_end,

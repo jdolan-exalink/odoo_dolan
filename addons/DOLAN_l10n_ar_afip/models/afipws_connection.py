@@ -326,7 +326,9 @@ class L10nArAfipwsConnection(models.Model):
             'FECompUltimoAutorizado': 'FECompUltimoAutorizado',
             'FECompConsultar': 'FECompConsultar',
             'FEParamGetTiposTributos': 'FEParamGetTiposTributos',
-            'FEParamGetCondicionIvaReceptor': 'FEParamGetCondicionIvaReceptor',
+            # The official WSFEv1 SOAP body element includes "Frente" while
+            # SOAPAction and the response result use "CondicionIvaReceptor".
+            'FEParamGetCondicionIvaReceptor': 'FEParamGetCondicionFrenteIvaReceptor',
         }
         if method not in supported_methods:
             raise UserError(_('Consulta WSFE no soportada.'))

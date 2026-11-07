@@ -2,7 +2,7 @@
 .SYNOPSIS
     Autoinstalador DOLAN para Odoo 20 CE + Localizacion Argentina + Suite DOLAN_* (Windows PowerShell)
 .DESCRIPTION
-    Adaptacion a PowerShell de crear_odoo20.sh. Descarga los 6 repositorios de IngAdhoc (branch 20.0),
+    Adaptacion a PowerShell de crear_odoo20.sh. Descarga los repositorios IngAdhoc fijados en distribution.lock.json,
     vincula los modulos propios ./addons/DOLAN_*, genera Dockerfile + docker-compose.yml + odoo.conf,
     y opcionalmente despliega e inicializa la base de datos en espanol argentino.
 #>
@@ -53,24 +53,17 @@ if (-not [string]::IsNullOrWhiteSpace($InitDb) -and (-not $Deploy -or $NoDeploy)
     throw "-InitDb requiere -Deploy y no puede combinarse con -NoDeploy."
 }
 
-$ArRepos = @(
-    "https://github.com/ingadhoc/odoo-argentina-ce.git",
-    "https://github.com/ingadhoc/odoo-argentina.git",
-    "https://github.com/ingadhoc/argentina-sale.git",
-    "https://github.com/ingadhoc/account-financial-tools.git",
-    "https://github.com/ingadhoc/account-invoicing.git",
-    "https://github.com/ingadhoc/account-payment.git",
-    "https://github.com/ingadhoc/sale.git"
-)
+$DistributionLock = Get-Content (Join-Path $ScriptDir "distribution.lock.json") -Raw | ConvertFrom-Json
+$ArRepos = @($DistributionLock.ingadhoc)
 
 if ($Check) {
     $allOk = $true
     foreach ($repo in $ArRepos) {
-        $out = git ls-remote --heads $repo $OdooVersion
-        if ($out -match $OdooVersion) {
-            Write-Host "OK: $repo ($OdooVersion accesible)" -ForegroundColor Green
+        $out = git ls-remote --heads $repo.repository $repo.branch
+        if ($out -match $repo.branch) {
+            Write-Host "OK: $($repo.name) (commit fijado $($repo.commit), upstream accesible)" -ForegroundColor Green
         } else {
-            Write-Host "FALLO: $repo (branch $OdooVersion inaccesible)" -ForegroundColor Red
+            Write-Host "FALLO: $($repo.name) (branch $($repo.branch) inaccesible)" -ForegroundColor Red
             $allOk = $false
         }
     }
@@ -244,8 +237,10 @@ if ($env:OS -eq "Windows_NT") {
     chmod 600 $EnvPath
     if ($LASTEXITCODE -ne 0) { throw "No se pudieron restringir los permisos del archivo .env del despliegue." }
 }
-[System.IO.File]::WriteAllText((Join-Path $TargetDir ".dockerignore"), ".env`n.git`naddons`ndb-data`nodoo-data`nservices`n", [System.Text.UTF8Encoding]::new($false))
-[System.IO.File]::WriteAllText((Join-Path $TargetDir ".gitignore"), ".env`naddons`ndb-data`nodoo-data`nwaha-data`nwhisper-models`n", [System.Text.UTF8Encoding]::new($false))
+[System.IO.File]::WriteAllText((Join-Path $TargetDir ".dockerignore"), ".env`n.env.*`n!.env.example`n.git`naddons`ndb-data`nodoo-data`nservices`ncerts`nbackups`nprivate-backups`nTEST`n*.crt`n*.der`n*.key`n*.pem`n*.p12`n*.pfx`n*.dump`n*.sql`n*.bak`n", [System.Text.UTF8Encoding]::new($false))
+[System.IO.File]::WriteAllText((Join-Path $TargetDir ".gitignore"), ".env`naddons`ndb-data`nodoo-data`nwaha-data`nwhisper-models`ncerts`nbackups`nprivate-backups`nTEST`n*.crt`n*.der`n*.key`n*.pem`n*.p12`n*.pfx`n*.dump`n*.sql`n*.bak`n", [System.Text.UTF8Encoding]::new($false))
+Copy-Item -Force (Join-Path $ScriptDir "LICENSE") (Join-Path $TargetDir "LICENSE")
+Copy-Item -Force (Join-Path $ScriptDir "docs\THIRD_PARTY_NOTICES.md") (Join-Path $TargetDir "THIRD_PARTY_NOTICES.md")
 Copy-Item -Recurse -Force (Join-Path $ScriptDir "services\local-whisper\*") (Join-Path $TargetDir "services\local-whisper")
 
 # Sign in with ChatGPT redirects to a loopback port. Keep the default 1455,
@@ -292,10 +287,32 @@ RUN pip3 install --break-system-packages \
     httpx \
     openpyxl \
     ofxparse \
-    PyMuPDF \
+    pypdfium2==5.10.1 \
     zxing-cpp==3.1.1
 
+RUN python3 - <<'PY'
+import importlib.metadata
+import shutil
+from pathlib import Path
+dist = importlib.metadata.distribution("pypdfium2")
+target = Path("/opt/dolan/licenses/pypdfium2")
+target.mkdir(parents=True, exist_ok=True)
+license_paths = [path for path in (dist.files or []) if "/licenses/" in str(path).replace("\\", "/")]
+if not license_paths:
+    raise SystemExit("pypdfium2 wheel did not provide its required license notices")
+for relative_path in license_paths:
+    source = Path(dist.locate_file(relative_path))
+    if source.is_file():
+        parts = Path(str(relative_path).replace("\\", "/")).parts
+        destination = target.joinpath(*parts[parts.index("licenses") + 1:])
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, destination)
+PY
+
 RUN python3 -c "import glob, os; [os.makedirs(os.path.join(p, 'cache'), exist_ok=True) or os.chmod(os.path.join(p, 'cache'), 0o777) for p in glob.glob('/usr/local/lib/python*/dist-packages/pyafipws') + glob.glob('/usr/local/lib/python*/site-packages/pyafipws')]"
+
+COPY LICENSE /opt/dolan/licenses/DOLAN-LICENSE.txt
+COPY THIRD_PARTY_NOTICES.md /opt/dolan/licenses/THIRD_PARTY_NOTICES.md
 
 USER odoo
 "@
@@ -304,7 +321,7 @@ Set-Content -Encoding UTF8 -Path (Join-Path $TargetDir "Dockerfile") -Value $Doc
 $ComposeContent = @"
 services:
   db:
-    image: postgres:17
+    image: postgres:17-alpine@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b
     container_name: ${ContainerPrefix}_db
     environment:
       POSTGRES_DB: postgres
@@ -321,7 +338,7 @@ services:
     restart: always
 
   waha:
-    image: devlikeapro/waha:latest
+    image: devlikeapro/waha:latest@sha256:2fc1787ddbd343ed2e7d59482846d1b22aa5ca134e29aa8d42d0e88c54e24779
     container_name: ${ContainerPrefix}_waha
     restart: unless-stopped
     environment:
@@ -403,13 +420,17 @@ default_productivity_apps = True
 Set-Content -Encoding UTF8 -Path (Join-Path $TargetDir "odoo.conf") -Value $ConfContent
 
 $AddonsTarget = Join-Path $TargetDir "addons"
-Write-Host "1/3 Descargando modulos de IngAdhoc (branch $OdooVersion)..." -ForegroundColor Cyan
+Write-Host "1/3 Descargando modulos IngAdhoc fijados en distribution.lock.json..." -ForegroundColor Cyan
 foreach ($repo in $ArRepos) {
-    $repoName = [System.IO.Path]::GetFileNameWithoutExtension($repo)
+    $repoName = $repo.name
     $tmpClone = Join-Path $AddonsTarget "_tmp_$repoName"
     Write-Host "  -> $repoName"
-    git clone --depth 1 --branch $OdooVersion $repo $tmpClone
-    if ($LASTEXITCODE -ne 0) { throw "No se pudo clonar $repo (codigo $LASTEXITCODE)." }
+    git init $tmpClone
+    git -C $tmpClone remote add origin $repo.repository
+    git -C $tmpClone fetch --depth 1 origin $repo.commit
+    git -C $tmpClone checkout --detach FETCH_HEAD
+    if ($LASTEXITCODE -ne 0) { throw "No se pudo descargar $repoName (codigo $LASTEXITCODE)." }
+    if ((git -C $tmpClone rev-parse HEAD).Trim() -ne $repo.commit) { throw "Commit IngAdhoc no coincide: $repoName" }
     Get-ChildItem -Path $tmpClone -Directory | Where-Object {
         $_.Name -ne ".git" -and (Test-Path (Join-Path $_.FullName "__manifest__.py"))
     } | ForEach-Object {

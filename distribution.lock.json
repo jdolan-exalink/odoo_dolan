@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-11-07",
+  "lock_status": "partial",
+  "odoo": {
+    "repository": "https://github.com/odoo/odoo.git",
+    "series": "20.0",
+    "commit": "ccf00443c56e7528e8d64ccd093b235a9c611536"
+  },
+  "ingadhoc": [
+    {"name": "odoo-argentina-ce", "repository": "https://github.com/ingadhoc/odoo-argentina-ce.git", "branch": "20.0", "commit": "2da399800bdfecd1548a9154438684f365ab7963"},
+    {"name": "odoo-argentina", "repository": "https://github.com/ingadhoc/odoo-argentina.git", "branch": "20.0", "commit": "e4c35668d2afd2f00a687170b4a2fc76465cf045"},
+    {"name": "argentina-sale", "repository": "https://github.com/ingadhoc/argentina-sale.git", "branch": "20.0", "commit": "947cf70a5140a993700fddb0bc2764bd2b983d94"},
+    {"name": "account-financial-tools", "repository": "https://github.com/ingadhoc/account-financial-tools.git", "branch": "20.0", "commit": "27facedfb5f99a7c465135a608e4e160438febb9"},
+    {"name": "account-invoicing", "repository": "https://github.com/ingadhoc/account-invoicing.git", "branch": "20.0", "commit": "02306f98cd2c20cf3f5ca7378fe548acfd98c378"},
+    {"name": "account-payment", "repository": "https://github.com/ingadhoc/account-payment.git", "branch": "20.0", "commit": "a733d7132b27e0af9d761e8eb342e6f400741a26"},
+    {"name": "sale", "repository": "https://github.com/ingadhoc/sale.git", "branch": "20.0", "commit": "bf14f60cb7ef991538e4b411e1555956947377d4"}
+  ],
+  "images": {
+    "odoo_base": {"reference": "python:3.12-slim-bookworm", "digest": "sha256:935c3c5b12357a7e10caa9c1e6ca5692344d97cf229832ef584be2cec9fc03df"},
+    "odoo_installer_base": {"reference": "odoo:20.0", "digest": "sha256:a97a7665e2b9fd890e12785491a2c91d779f800bcbc30873dada1c8748b28f1c"},
+    "postgres": {"reference": "postgres:17-alpine", "digest": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b"},
+    "waha": {"reference": "devlikeapro/waha:latest", "digest": "sha256:2fc1787ddbd343ed2e7d59482846d1b22aa5ca134e29aa8d42d0e88c54e24779"},
+    "whisper_base": {"reference": "python:3.11-slim-bookworm", "digest": "sha256:a83ba18aef0f865b1a4a611c2cf460fe446f2795673bbb9fe43be570439e3b39"},
+    "escpos_base": {"reference": "python:3.12-slim", "digest": "sha256:4840d514c583a4d3d8cad3940e68dee6f0f6f3635c12fcd0a3d74c21a5b93a54"}
+  },
+  "python_dependencies": {
+    "status": "unlocked",
+    "notes": "Odoo requirements and DOLAN build extras are resolved at image build; installer templates use a different package set. Pinning needs an isolated successful build to capture and verify wheel hashes."
+  },
+  "system_dependencies": {
+    "status": "unlocked",
+    "notes": "APT repositories are not snapshot-pinned. wkhtmltopdf is version-tagged but its downloaded artifact has no checked-in checksum."
+  }
+}

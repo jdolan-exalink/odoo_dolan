@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Component, t, useProps } from "@odoo/owl";
+import { resolveActionIconAsset, resolveIconAsset } from "./dolan_icon_registry";
 
 /**
  * Iconos SVG propios (24x24, trazo). No dependen de Font Awesome ni de ninguna fuente
@@ -43,6 +44,9 @@ export const DOLAN_ICON_PATHS = {
         "M17.7 17.7l1.4 1.4", "M2 12h2", "M20 12h2", "M4.9 19.1l1.4-1.4", "M17.7 6.3l1.4-1.4",
     ],
     moon: ["M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"],
+    contrast: [CIRCLE, "M12 3v18", "M12 3a9 9 0 0 0 0 18"],
+    "device-desktop": ["M4 4h16v12H4z", "M8 20h8", "M12 16v4"],
+    palette: ["M12 3a9 9 0 1 0 0 18h1.5a2.5 2.5 0 0 0 1.7-4.3 1.5 1.5 0 0 1 1-2.7H19a3 3 0 0 0 3-3c0-4.4-4.5-8-10-8z", "M7.5 10h.01", "M10 7.5h.01", "M14 7.5h.01", "M17 10h.01"],
     "alert-triangle": [
         "M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z",
         "M12 9v4", "M12 17h.01",
@@ -79,11 +83,52 @@ export class DolanIcon extends Component {
         name: t.string(),
         size: t.number().optional(),
         filled: t.boolean().optional(),
+        iconStyle: t.string().optional(),
     });
 
     get paths() {
         const key = ALIASES[this.props.name] || this.props.name;
         return DOLAN_ICON_PATHS[key] || DOLAN_ICON_PATHS.bolt;
+    }
+
+    get assetUrl() {
+        const name = this.props.name || "";
+        if (name.startsWith("app.")) {
+            return resolveIconAsset(name, this.props.iconStyle || document.body.dataset.dolanIconStyle || "fluent", window.dolanUiIconAssignments || {});
+        }
+        const key = ALIASES[name] || name;
+        if (key === "folder") {
+            const style = document.body.dataset.dolanIconStyle || "fluent_3d_classic";
+            if (["fluent_3d_classic", "fluent_3d_soft", "fluent"].includes(style)) {
+                return "/DOLAN_theme/static/src/lib/fluent/folder.png";
+            }
+            const filled = ["fluent_filled_pro", "fluent_filled_duotone", "tabler"].includes(style) || this.props.filled;
+            return filled
+                ? "/DOLAN_theme/static/src/lib/tabler/filled/folder.svg"
+                : "/DOLAN_theme/static/src/lib/tabler/folder.svg";
+        }
+        return resolveActionIconAsset(key, this.props.filled);
+    }
+
+    get isActionIconAsset() {
+        const name = this.props.name || "";
+        const key = ALIASES[name] || name;
+        // UI/action glyphs use a CSS mask so they inherit the active palette
+        // through currentColor. App artwork and the Fluent folder stay images.
+        return Boolean(this.assetUrl) && !name.startsWith("app.") && key !== "folder";
+    }
+
+    get actionIconStyle() {
+        return `--dolan-action-icon-image: url("${this.assetUrl}"); width: ${this.size}px; height: ${this.size}px;`;
+    }
+
+    get isTablerAsset() {
+        return this.assetUrl?.includes("/static/src/lib/tabler/") || false;
+    }
+
+    get assetClass() {
+        const style = this.props.iconStyle || document.body.dataset.dolanIconStyle || "fluent_3d_classic";
+        return `${this.isTablerAsset ? "o_dolan_tabler_icon_asset " : ""}o_dolan_icon_variant_${style}`;
     }
 
     get size() {

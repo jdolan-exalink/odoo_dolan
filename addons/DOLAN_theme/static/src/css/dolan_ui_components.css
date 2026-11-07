@@ -1,0 +1,209 @@
+/* DOLAN UI 2.0 — token migration for common backend surfaces.
+   Deliberately excludes the transaction POS and print/report documents. */
+body.o_dolan_dark_mode :is(.o_content, .o_view_controller, .o_control_panel, .o_search_panel, .o_cp_bottom),
+body.o_dolan_dark_mode :is(.o_form_view, .o_list_view, .o_kanban_view, .o_graph_view, .o_pivot),
+body.o_dolan_dark_mode :is(.o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu, .o-autocomplete) {
+    color: var(--dolan-color-text);
+    background-color: var(--dolan-color-canvas);
+    border-color: var(--dolan-color-border);
+}
+
+body:not(.o_dolan_dark_mode) :is(.o_form_sheet_bg, .o_list_view, .o_kanban_view, .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
+    color: var(--dolan-color-text);
+    border-color: var(--dolan-color-border);
+}
+
+body:not(.o_dolan_dark_mode) :is(.o_form_sheet, .o_kanban_record, .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
+    background-color: var(--dolan-color-surface);
+}
+
+body:not(.o_dolan_dark_mode) :is(.o_form_view, .o_list_view, .o_kanban_view, .modal, .o_popover, .dropdown-menu)
+:is(input:not([type="checkbox"]):not([type="radio"]), textarea, select, .o_input, .form-control, .form-select) {
+    color: var(--dolan-color-text);
+    background-color: var(--dolan-color-surface);
+    border-color: var(--dolan-color-border);
+}
+
+body.o_dolan_dark_mode :is(.o_form_sheet_bg, .o_form_sheet, .o_form_view .oe_title, .o_kanban_record, .o_kanban_group),
+body.o_dolan_dark_mode :is(.modal-header, .modal-body, .modal-footer, .o_popover .popover-body, .o-dropdown--menu .dropdown-item) {
+    color: var(--dolan-color-text);
+    background-color: var(--dolan-color-surface);
+    border-color: var(--dolan-color-border);
+}
+
+body.o_dolan_dark_mode :is(.o_form_view, .o_list_view, .o_kanban_view, .modal, .o_popover, .dropdown-menu)
+:is(input:not([type="checkbox"]):not([type="radio"]), textarea, select, .o_input, .form-control, .form-select) {
+    color: var(--dolan-color-text);
+    background-color: var(--dolan-color-surface-raised);
+    border-color: var(--dolan-color-border);
+}
+
+body.o_dolan_dark_mode :is(.o_form_view, .o_list_view, .o_kanban_view, .modal, .o_popover, .dropdown-menu)
+:is(input, textarea, select, .o_input, .form-control, .form-select)::placeholder {
+    color: var(--dolan-color-text-muted);
+    opacity: 1;
+}
+
+body.o_dolan_dark_mode :is(.o_form_view, .o_list_view, .o_kanban_view, .modal, .o_popover)
+:is(button, .btn, a.btn):focus-visible,
+body.o_dolan_dark_mode :is(.o_form_view, .o_list_view, .o_kanban_view, .modal, .o_popover)
+:is(input, textarea, select, .o_input, .form-control, .form-select):focus {
+    outline-color: var(--dolan-color-focus);
+    border-color: var(--dolan-color-focus);
+    box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--dolan-color-focus) 24%, transparent);
+}
+
+body.o_dolan_dark_mode .o_list_view .o_list_table {
+    --ListRenderer-thead-bg-color: var(--dolan-color-surface-raised);
+    --ListRenderer-thead-color: var(--dolan-color-text);
+    --ListRenderer-thead-border-bottom-color: var(--dolan-color-border);
+    --ListRenderer-tbody-color: var(--dolan-color-text);
+    --ListRenderer-tbody-bg-color: var(--dolan-color-surface);
+    --ListRenderer-tbody-border-color: var(--dolan-color-border);
+}
+
+body.o_dolan_dark_mode .o_list_view .o_data_row:hover,
+body.o_dolan_dark_mode .o_dropdown_menu .dropdown-item:hover,
+body.o_dolan_dark_mode .dropdown-menu .dropdown-item:hover {
+    color: var(--dolan-color-text);
+    background-color: var(--dolan-color-surface-raised);
+}
+
+body.o_dolan_dark_mode .o_form_view :is(.o_horizontal_separator, .o_form_label, .o_field_widget),
+body.o_dolan_dark_mode .o_list_view :is(.o_data_cell, .o_list_table th),
+body.o_dolan_dark_mode .o_kanban_view :is(.o_kanban_record, .o_kanban_header_title) {
+    color: var(--dolan-color-text);
+}
+
+body.o_dolan_dark_mode :is(.text-muted, .o_form_view .text-muted, .o_list_view .text-muted, .o_kanban_view .text-muted) {
+    color: var(--dolan-color-text-muted) !important;
+}
+
+body.o_dolan_dark_mode :is(.o_form_view, .o_list_view, .o_kanban_view, .modal, .o_popover) :is(.btn-outline-secondary, .btn-light) {
+    color: var(--dolan-color-text);
+    background-color: var(--dolan-color-surface-raised);
+    border-color: var(--dolan-color-border);
+}
+
+@media (max-width: 767.98px) {
+    body.o_dolan_dark_mode :is(.o_form_sheet_bg, .o_form_sheet, .o_list_view, .o_kanban_view, .modal-content) {
+        border-radius: var(--dolan-radius-md);
+    }
+}
+/* Selector compacto de tema, colores e iconos para la sesión actual. */
+.o_dolan_theme_picker { position: relative; }
+.o_dolan_theme_picker_menu {
+    position: absolute;
+    z-index: 1100;
+    top: calc(100% + .5rem);
+    right: 0;
+    width: min(24rem, calc(100vw - 1rem));
+    max-height: min(80vh, 42rem);
+    overflow: auto;
+    color: var(--dolan-color-text);
+    background: var(--dolan-color-surface-raised);
+    border: 1px solid var(--dolan-color-border);
+    border-radius: .9rem;
+    box-shadow: var(--dolan-elevation-overlay);
+}
+.o_dolan_theme_picker_menu header { border-bottom: 1px solid var(--dolan-color-border); }
+.o_dolan_theme_picker_section { padding: .75rem 1rem; border-bottom: 1px solid var(--dolan-color-border); }
+.o_dolan_theme_picker_label { display: block; margin-bottom: .5rem; color: var(--dolan-color-text-muted); font-size: .78rem; font-weight: 700; }
+.o_dolan_theme_picker_grid { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; }
+.o_dolan_theme_picker_grid .btn { display: flex; align-items: center; justify-content: flex-start; gap: .45rem; }
+.o_dolan_theme_picker_grid .o_dolan_theme_mode_choice { color: var(--dolan-color-text); background: var(--dolan-color-surface); border: 1px solid var(--dolan-color-border); font-weight: 650; }
+.o_dolan_theme_picker_grid .o_dolan_theme_mode_choice.is-selected { color: #fff; background: var(--dolan-color-primary); border-color: var(--dolan-color-primary); box-shadow: 0 0 0 2px var(--dolan-color-primary-soft); }
+.o_dolan_theme_swatch { display: flex; align-items: center; gap: .5rem; min-width: 0; color: var(--dolan-color-text); border: 1px solid var(--dolan-color-border); }
+.o_dolan_theme_swatch.is-selected { position: relative; outline: 3px solid var(--dolan-color-primary) !important; outline-offset: 1px; border-color: var(--dolan-color-primary) !important; background: var(--dolan-color-primary-soft) !important; box-shadow: inset 0 0 0 2px var(--dolan-color-primary), 0 0 0 2px var(--dolan-color-primary-soft) !important; }
+.o_dolan_theme_swatch_colors { display: inline-flex; flex: 0 0 auto; overflow: hidden; width: 2.65rem; height: 1.25rem; border: 1px solid var(--dolan-color-border); border-radius: 999px; }
+.o_dolan_theme_swatch_colors i { flex: 1; }
+.o_dolan_theme_swatch_check { display: inline-flex; flex: 0 0 1.2rem; width: 1.2rem; height: 1.2rem; align-items: center; justify-content: center; margin-inline-start: auto; color: #fff; border-radius: 50%; background: var(--dolan-color-primary); font-size: .75rem; font-weight: 800; }
+.o_dolan_theme_picker_swatches { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; }
+.o_dolan_icon_style_choices { display: grid; gap: .35rem; max-height: 15rem; overflow: auto; padding: .2rem; border: 1px solid var(--dolan-color-border); border-radius: .6rem; background: var(--dolan-color-surface); }
+.o_dolan_icon_style_choice { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) 1.2rem; gap: .55rem; align-items: center; width: 100%; padding: .45rem .55rem; color: var(--dolan-color-text); text-align: left; border: 1px solid transparent; border-radius: .45rem; background: transparent; }
+.o_dolan_icon_style_choice:hover { background: var(--dolan-color-surface-raised); }
+.o_dolan_icon_style_choice.is-selected { background: var(--dolan-color-primary-soft); border-color: var(--dolan-color-focus); }
+.o_dolan_icon_style_preview { display: inline-flex; align-items: center; justify-content: space-between; gap: .35rem; }
+.o_dolan_icon_style_preview > img { width: 1.45rem; height: 1.45rem; object-fit: contain; }
+.o_dolan_icon_style_mask_preview { display: block; width: 1.45rem; height: 1.45rem; flex: 0 0 1.45rem; background-color: var(--dolan-icon-accent, #8254d8); -webkit-mask: var(--dolan-icon-mask-image) center / contain no-repeat; mask: var(--dolan-icon-mask-image) center / contain no-repeat; }
+.o_dolan_action_icon_asset { display: inline-block; flex: 0 0 auto; background-color: currentColor; -webkit-mask: var(--dolan-action-icon-image) center / contain no-repeat; mask: var(--dolan-action-icon-image) center / contain no-repeat; vertical-align: middle; }
+.o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group > .btn:not(.btn-primary) .o_dolan_action_icon_asset { background-color: var(--dolan-color-secondary); }
+.o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group > .btn.btn-primary .o_dolan_action_icon_asset,
+.o_dolan_home_menu_wrapper .o_dolan_desktop_sort .btn.btn-primary .o_dolan_action_icon_asset { background-color: #fff !important; }
+.o_dolan_home_menu_wrapper .o_dolan_desktop_sort .btn:not(.btn-primary) { color: var(--dolan-color-secondary) !important; }
+.o_dolan_home_menu_wrapper .o_dolan_fav_btn { color: var(--dolan-color-secondary) !important; }
+.o_dolan_home_menu_wrapper .o_dolan_fav_btn.o_dolan_fav_on { color: var(--dolan-color-primary) !important; }
+.o_dolan_home_menu_wrapper .o_dolan_fav_btn:not(.o_dolan_fav_on) .o_dolan_action_icon_asset { background-color: var(--dolan-color-secondary) !important; }
+.o_dolan_home_menu_wrapper .o_dolan_fav_btn.o_dolan_fav_on .o_dolan_action_icon_asset { background-color: var(--dolan-color-primary) !important; }
+.o_dolan_icon_style_choice .o_dolan_icon_style_preview > img.o_dolan_icon_variant_fluent_3d_classic { filter: drop-shadow(0 2px 2px rgba(38, 30, 60, .24)); }
+.o_dolan_icon_style_choice .o_dolan_icon_style_preview > img.o_dolan_icon_variant_fluent_flat_modern { filter: saturate(.82) contrast(1.08); }
+.o_dolan_icon_style_choice .o_dolan_icon_style_preview > img.o_dolan_tabler_icon_asset { filter: var(--dolan-tabler-icon-filter, none); }
+.o_dolan_icon_style_name { min-width: 0; font-weight: 600; }
+.o_dolan_settings_palette_samples, .o_dolan_settings_icon_samples { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .55rem; }
+.o_dolan_settings_palette_samples span, .o_dolan_settings_icon_samples span { display: inline-flex; align-items: center; gap: .35rem; padding: .25rem .45rem; color: var(--dolan-color-text-muted); border: 1px solid var(--dolan-color-border); border-radius: 999px; font-size: .76rem; }
+.o_dolan_settings_palette_samples i { width: 1.45rem; height: .75rem; display: inline-block; border-radius: 999px; background: linear-gradient(90deg, var(--sample-primary) 0 50%, var(--sample-secondary) 50%); }
+.o_dolan_settings_icon_samples img { width: 1.25rem; height: 1.25rem; object-fit: contain; }
+.o_dolan_settings_background_samples { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .55rem; }
+.o_dolan_settings_background_samples span { display: inline-flex; align-items: end; width: 4.2rem; height: 2.2rem; padding: .15rem .3rem; color: #fff; border: 1px solid var(--dolan-color-border); border-radius: .45rem; font-size: .64rem; font-weight: 700; text-shadow: 0 1px 2px #000; background-size: cover; }
+.o_dolan_settings_background_samples .is-dolan { background: radial-gradient(#7938d2 0 1px, transparent 1px), linear-gradient(135deg, #212433, #363146); background-size: 8px 8px, cover; }
+.o_dolan_settings_background_samples .is-aurora { background: radial-gradient(at 12% 15%, #a058e2, transparent 65%), linear-gradient(135deg, #171629, #25263c); }
+.o_dolan_settings_background_samples .is-ocean { background: radial-gradient(at 15% 15%, #1292cb, transparent 60%), linear-gradient(135deg, #0c2336, #142f4a); }
+.o_dolan_settings_background_samples .is-mesh { background: radial-gradient(#7938d2 0 1px, transparent 1px), #f3f5fa; background-size: 8px 8px; color: #34364a; text-shadow: none; }
+.o_dolan_settings_background_samples .is-midnight { background: radial-gradient(#fff4 0 1px, transparent 1px), linear-gradient(135deg, #151824, #202638); background-size: 8px 8px, cover; }
+body.o_dolan_dark_mode .o_dolan_theme_picker_menu,
+body.o_dolan_high_contrast .o_dolan_theme_picker_menu { color: var(--dolan-color-text); background: var(--dolan-color-surface-raised); }
+body.o_dolan_high_contrast .o_dolan_theme_picker_menu button { border-width: 2px; border-color: #fff; }
+
+/* Selectores de apariencia de Ajustes: cada opción es una muestra activa. */
+.o_dolan_settings_choice_grid { display: grid; gap: .55rem; margin-top: .25rem; }
+.o_dolan_settings_palette_choices { grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); }
+.o_dolan_settings_theme_choices { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
+.o_dolan_settings_choice {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: .6rem;
+    padding: .55rem .65rem;
+    color: var(--dolan-color-text);
+    text-align: left;
+    border: 1px solid var(--dolan-color-border);
+    border-radius: .65rem;
+    background: var(--dolan-color-surface);
+    transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+}
+.o_dolan_settings_choice:hover { border-color: var(--dolan-color-primary); background: var(--dolan-color-primary-soft); }
+.o_dolan_settings_choice.is-selected { border: 2px solid var(--dolan-color-primary) !important; background: var(--dolan-color-primary-soft) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--dolan-color-primary) 28%, transparent), inset 0 0 0 1px var(--dolan-color-primary) !important; }
+.o_dolan_settings_choice:focus-visible { outline: 2px solid var(--dolan-color-focus); outline-offset: 2px; }
+.o_dolan_settings_choice:disabled { cursor: default; opacity: .7; }
+.o_dolan_settings_palette_sample { display: inline-flex; flex: 0 0 2.25rem; overflow: hidden; height: 1.15rem; border: 1px solid var(--dolan-color-border); border-radius: 999px; }
+.o_dolan_settings_palette_sample i { flex: 1; background: var(--choice-primary); }
+.o_dolan_settings_palette_sample i + i { background: var(--choice-secondary); }
+.o_dolan_settings_choice_check { display: inline-flex; flex: 0 0 1.25rem; width: 1.25rem; height: 1.25rem; align-items: center; justify-content: center; margin-inline-start: auto; color: #fff; border-radius: 50%; background: var(--dolan-color-primary); font-size: .75rem; font-weight: 800; }
+.o_dolan_settings_theme_choice { display: grid; grid-template-columns: 3.8rem minmax(0, 1fr) auto; }
+.o_dolan_theme_sample { position: relative; display: flex; width: 3.7rem; height: 2.4rem; overflow: hidden; flex-direction: column; padding: .22rem; gap: .2rem; border: 1px solid var(--dolan-color-border); border-radius: .35rem; background: #f5f6fa; }
+.o_dolan_theme_sample_top { display: flex; gap: .15rem; height: .28rem; padding: .08rem; border-radius: .14rem; background: #fff; }
+.o_dolan_theme_sample_top i { width: .25rem; height: .12rem; border-radius: 1px; background: var(--choice-primary, #7938d2); }
+.o_dolan_theme_sample_body { display: flex; flex: 1; align-items: end; gap: .15rem; padding: .12rem; border-radius: .14rem; background: #fff; }
+.o_dolan_theme_sample_body i { width: 35%; height: 55%; border-radius: .1rem; background: color-mix(in srgb, var(--dolan-color-primary) 28%, white); }
+.o_dolan_theme_sample_body i + i { height: 75%; background: color-mix(in srgb, var(--dolan-color-secondary) 40%, white); }
+.o_dolan_theme_sample b { position: absolute; right: .12rem; bottom: .06rem; color: var(--dolan-color-primary); font-size: .85rem; }
+.o_dolan_theme_sample.is-dark, .o_dolan_theme_sample.is-contrast { background: #151824; }
+.o_dolan_theme_sample.is-dark .o_dolan_theme_sample_top, .o_dolan_theme_sample.is-dark .o_dolan_theme_sample_body,
+.o_dolan_theme_sample.is-contrast .o_dolan_theme_sample_top, .o_dolan_theme_sample.is-contrast .o_dolan_theme_sample_body { background: #292e3d; }
+.o_dolan_theme_sample.is-system { background: linear-gradient(90deg, #f5f6fa 50%, #151824 50%); }
+.o_dolan_settings_theme_label { min-width: 0; }
+
+/* Conecta el selector de paleta con las superficies nativas más visibles. */
+body:not(.o_dolan_high_contrast) .btn-primary,
+body:not(.o_dolan_high_contrast) .o_main_navbar .o_menu_toggle:hover,
+body:not(.o_dolan_high_contrast) .o_main_navbar .o_dolan_home_btn:hover {
+    background-color: var(--dolan-color-primary) !important;
+    border-color: var(--dolan-color-primary) !important;
+}
+body:not(.o_dolan_high_contrast) .btn-primary:hover,
+body:not(.o_dolan_high_contrast) .btn-primary:focus { background-color: var(--dolan-color-primary-hover) !important; border-color: var(--dolan-color-primary-hover) !important; }
+body:not(.o_dolan_high_contrast) :is(.o_notebook .nav-link.active, .o_dolan_home_menu_wrapper .o_focused, .o_home_menu .o_app.o_focused) { border-color: var(--dolan-color-primary) !important; }
+body:not(.o_dolan_high_contrast) :is(.o_dolan_kpi:focus-visible, .o_dolan_kpi_main:focus-visible, .o_dolan_fav_btn:focus-visible) { outline-color: var(--dolan-color-primary) !important; }
+body:not(.o_dolan_high_contrast) :is(.o_form_view .o_input:focus, .o_form_view select:focus, .o_form_view textarea:focus) { border-color: var(--dolan-color-primary) !important; box-shadow: 0 0 0 3px var(--dolan-color-primary-soft) !important; }
+body:not(.o_dolan_high_contrast) :is(.o_dolan_home_menu_wrapper .o_app.o_favorite, .o_dolan_home_menu_wrapper .o_app.is-favorite) { --dolan-favorite-color: var(--dolan-color-primary); }

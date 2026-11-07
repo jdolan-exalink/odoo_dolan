@@ -97,7 +97,7 @@ powershell -ExecutionPolicy Bypass -File .\crear_odoo20.ps1 `
 - `full`: Todo el catálogo DOLAN y las aplicaciones CE de negocio.
 - `custom`: selección del catálogo DOLAN. El nuevo asistente Go permite ingresar módulos separados por coma; los instaladores directos Bash y PowerShell conservan sus selectores existentes.
 
-El catálogo se detecta desde las carpetas `addons/DOLAN_*`; actualmente hay **14 módulos**, incluyendo `DOLAN_exchange`. Odoo instala automáticamente las dependencias necesarias. En particular, el manifiesto actual de `DOLAN_ai` depende de BI y cotizaciones, por lo que Odoo también los activará en perfiles que incluyan IA. Se pueden pasar módulos directamente con `--modules A,B,C` o `-Modules A,B,C`.
+El catálogo se detecta desde las carpetas `addons/DOLAN_*`; actualmente hay **16 módulos DOLAN**, además de `ePOS_print` y `pos_scale_management`. Odoo instala automáticamente las dependencias necesarias. En particular, el manifiesto actual de `DOLAN_ai` depende de BI y cotizaciones, por lo que Odoo también los activará en perfiles que incluyan IA. Se pueden pasar módulos directamente con `--modules A,B,C` o `-Modules A,B,C`.
 
 El asistente crea la carpeta desde el nombre corto de empresa, inicializa una base `odoo_<nombre>` y configura razón social, CUIT, domicilio, responsabilidad ARCA, PV de facturación y usuario administrador. El ambiente ARCA queda en homologación y no se emite CAE durante el alta.
 
@@ -132,3 +132,13 @@ El stack levanta `dolan_local_whisper` como servicio interno, sin publicar el pu
 2. En **Contabilidad → Configuración → Ajustes → Facturación Electrónica ARCA**, cargar el certificado `.crt` y clave privada `.key` (o usar el entorno **Homologación** para pruebas inmediatas).
 
 La actualización respalda DB, addons y filestore antes de cambiar módulos. Al terminar la instalación se muestra el usuario administrador y la dirección de acceso; la contraseña nunca se imprime. Para evitar el error TourInteractive al abrir recorridos o el modo desarrollador, sirve Odoo 20 sobre HTTPS con un certificado confiable: una instancia por IP y HTTP no es un contexto seguro.
+
+## Distribución mantenible
+
+- [Auditoría de arquitectura y riesgos](docs/DOLAN_DISTRIBUTION_AUDIT.md)
+- [Arquitectura objetivo](docs/DOLAN_DISTRIBUTION_ARCHITECTURE.md)
+- [Roadmap P0–P3](docs/DOLAN_DISTRIBUTION_ROADMAP.md)
+- [Notices de terceros](docs/THIRD_PARTY_NOTICES.md)
+- [Plan de cierre P0/P1 y aceptación del Theme](docs/DOLAN_PLAN_CIERRE_P0_P1_THEME.md)
+
+El soporte objetivo actual es Odoo CE 20.0. No se declara compatibilidad con Odoo 21 hasta verificarla contra una versión upstream disponible y ejecutar las pruebas de instalación, contratos y migración.

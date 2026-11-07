@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DOLAN UI 2.0 — Prototipo Fase 0</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --canvas:#151824; --surface:#202431; --raised:#292e3d; --text:#f5f6fa;
+      --muted:#a6adbd; --border:#353b4b; --accent:#a46aff; --teal:#5fd0c5;
+      --green:#51c48a; --amber:#ffc166; --red:#ff7d88; --shadow:0 16px 48px #0006;
+      --radius:18px;
+    }
+    [data-theme="light"] { color-scheme:light; --canvas:#f7f8fc; --surface:#fff; --raised:#fff; --text:#172033; --muted:#667085; --border:#e4e7ef; --accent:#7938d2; --teal:#017e84; --green:#138a55; --amber:#a15c00; --red:#c03543; --shadow:0 16px 48px #10182820; }
+    * { box-sizing:border-box }
+    body { margin:0; background:var(--canvas); color:var(--text); font:15px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif; transition:background .18s,color .18s }
+    button,input { font:inherit; color:inherit }
+    button { cursor:pointer }
+    button:focus-visible,input:focus-visible { outline:3px solid var(--accent); outline-offset:2px }
+    .shell { min-height:100vh; max-width:1420px; margin:auto; padding:18px 32px 48px }
+    .topbar { height:54px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); margin-bottom:26px }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:750; letter-spacing:.08em }
+    .brand-mark { width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#a46aff,#5fd0c5);color:white;font-weight:900 }
+    .top-actions { display:flex;align-items:center;gap:10px;color:var(--muted) }
+    .icon-button { width:38px;height:38px;border:1px solid transparent;background:transparent;border-radius:12px;display:grid;place-items:center }
+    .icon-button:hover { background:var(--raised);border-color:var(--border) }
+    .avatar { width:34px;height:34px;border-radius:11px;background:#85283f;color:white;display:grid;place-items:center;font-weight:700 }
+    .toolbar { display:flex;align-items:center;gap:14px;margin:0 auto 24px;max-width:1080px }
+    .tabs { display:flex;gap:3px;padding:4px;background:var(--surface);border:1px solid var(--border);border-radius:999px;white-space:nowrap }
+    .tab { border:0;background:transparent;color:var(--muted);border-radius:999px;padding:9px 15px;font-weight:650 }
+    .tab.active { color:var(--text);background:var(--raised);box-shadow:0 2px 8px #0002 }
+    .search { flex:1;min-width:180px;height:46px;border:1px solid var(--border);background:var(--surface);border-radius:999px;padding:0 18px;color:var(--text) }
+    .toolbar .theme { flex:none }
+    .section-head { display:flex;align-items:center;justify-content:space-between;gap:16px;margin:28px 0 16px }
+    h1 { font-size:24px;line-height:1.2;margin:0;font-weight:720 }
+    .sub { color:var(--muted);font-size:14px;margin-top:5px }
+    .controls { display:flex;gap:7px }
+    .control { width:38px;height:38px;border-radius:12px;background:var(--surface);border:1px solid var(--border);color:var(--muted) }
+    .control.active,.control:hover { color:var(--text);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--surface)) }
+    .apps-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:22px 16px }
+    .app { position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;padding:12px 8px 10px;border:1px solid transparent;border-radius:18px;min-height:136px;transition:background .18s,border-color .18s,transform .18s }
+    .app:hover { background:var(--surface);border-color:var(--border);transform:translateY(-2px) }
+    .app-icon { width:72px;height:72px;border-radius:18px;background:var(--raised);border:1px solid var(--border);display:grid;place-items:center;box-shadow:0 6px 18px #0002;font-size:24px;font-weight:800;position:relative;overflow:hidden }
+    .app-icon::before,.app-icon::after { content:"";position:absolute;border-radius:10px;opacity:.86 }
+    .app-icon::before { width:38px;height:38px;left:10px;bottom:9px;background:var(--c1,#714b67);transform:rotate(-8deg) }
+    .app-icon::after { width:24px;height:48px;right:10px;top:9px;background:var(--c2,#5fd0c5);transform:rotate(7deg) }
+    .app-icon b { z-index:1;color:white;text-shadow:0 1px 3px #0007;font-size:18px }
+    .label { max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;font-weight:600;text-align:center }
+    .star { position:absolute;right:9px;top:6px;border:0;background:transparent;color:var(--muted);font-size:19px;line-height:1;padding:3px }
+    .star.on { color:#ffc166 }
+    .folder-icon { display:grid;grid-template-columns:repeat(2,22px);grid-template-rows:repeat(2,22px);gap:4px;transform:rotate(-5deg) }
+    .folder-icon i { border-radius:6px;background:var(--c1,#a46aff) }
+    .folder-icon i:nth-child(2){background:var(--c2,#5fd0c5)} .folder-icon i:nth-child(3){background:#e986a2}.folder-icon i:nth-child(4){background:#59a9ef}
+    .count { position:absolute;right:8px;top:7px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:2px 6px;color:var(--muted);font-size:11px }
+    .hidden { display:none!important }
+    .welcome { display:flex;align-items:center;justify-content:space-between;gap:16px;padding:21px 24px;border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(120deg,color-mix(in srgb,var(--accent) 13%,var(--surface)),var(--surface));margin-bottom:18px }
+    .welcome h1 { font-size:23px }
+    .pill { border:1px solid var(--border);background:var(--surface);border-radius:999px;padding:8px 14px;color:var(--muted);font-size:13px }
+    .spaces { display:flex;gap:8px;overflow:auto;padding:2px 0 14px }
+    .space.selected { border-color:var(--accent);color:var(--text);background:color-mix(in srgb,var(--accent) 14%,var(--surface)) }
+    .widgets { display:grid;grid-template-columns:repeat(4,minmax(170px,1fr));gap:13px }
+    .widget { min-height:130px;padding:17px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);box-shadow:0 4px 16px #0001;position:relative }
+    .widget-top { display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;font-weight:600 }
+    .widget-mark { width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:color-mix(in srgb,var(--wc,var(--accent)) 18%,var(--surface));color:var(--wc,var(--accent));font-weight:800 }
+    .value { margin-top:13px;font-size:29px;font-weight:750;letter-spacing:-.03em }
+    .hint { color:var(--muted);font-size:12px;margin-top:3px }
+    .quick { display:grid;grid-template-columns:repeat(4,minmax(180px,1fr));gap:12px }
+    .quick-card { padding:13px;border:1px solid var(--border);border-radius:15px;background:var(--surface);display:flex;align-items:center;gap:12px;text-align:left }
+    .quick-card:hover { border-color:var(--accent);transform:translateY(-1px) }
+    .quick-symbol { width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--raised);color:var(--accent);font-weight:800 }
+    .quick-card strong { display:block;font-size:13px }.quick-card small{display:block;color:var(--muted);margin-top:3px;font-size:11px}
+    .recent { display:grid;grid-template-columns:repeat(3,minmax(190px,1fr));gap:12px }
+    .recent-card { display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:14px }
+    .recent-dot { width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px color-mix(in srgb,var(--green) 16%,transparent) }
+    .recent-card small { color:var(--muted);display:block;margin-top:3px }
+    .customize { color:var(--accent);border:0;background:transparent;font-weight:650 }
+    .modal-backdrop { position:fixed;inset:0;background:#070a13a6;display:grid;place-items:center;padding:20px;z-index:2 }
+    .modal { width:min(520px,100%);padding:22px;border:1px solid var(--border);border-radius:24px;background:var(--surface);box-shadow:var(--shadow) }
+    .modal-head { display:flex;align-items:center;justify-content:space-between;margin-bottom:18px }
+    .folder-apps { display:grid;grid-template-columns:repeat(4,1fr);gap:12px }
+    .folder-apps .app { min-height:auto;padding:10px 4px }.folder-apps .app-icon{width:58px;height:58px;border-radius:15px}
+    .modal-actions { display:flex;justify-content:flex-end;gap:8px;margin-top:18px }
+    .primary { border:0;border-radius:11px;padding:10px 15px;background:var(--accent);color:white;font-weight:700 }
+    .secondary { border:1px solid var(--border);border-radius:11px;padding:9px 14px;background:var(--surface);color:var(--muted) }
+    footer { text-align:center;color:var(--muted);font-size:12px;padding:35px 0 0 }
+    @media(max-width:850px){.shell{padding:12px 16px 35px}.toolbar{flex-wrap:wrap}.tabs{order:1}.search{order:2;flex-basis:100%}.theme{position:absolute;right:16px;top:18px}.widgets{grid-template-columns:repeat(2,minmax(145px,1fr))}.quick{grid-template-columns:repeat(2,minmax(155px,1fr))}.recent{grid-template-columns:1fr 1fr}.apps-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px 6px}.app-icon{width:64px;height:64px}.app{min-height:120px}}
+    @media(max-width:520px){.shell{padding:10px 12px 30px}.brand{font-size:13px}.top-actions{gap:3px}.top-actions .hide-mobile{display:none}.section-head{align-items:flex-start}.section-head h1{font-size:20px}.widgets{gap:8px}.widget{min-height:115px;padding:13px}.value{font-size:25px}.quick{grid-template-columns:1fr 1fr;gap:8px}.quick-card{padding:10px;gap:8px}.quick-symbol{width:35px;height:35px}.recent{grid-template-columns:1fr}.welcome{padding:16px}.welcome h1{font-size:19px}.control{width:34px;height:34px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:0.01ms!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">D</span><span>DOLAN</span></div>
+      <div class="top-actions"><button class="icon-button" aria-label="Notificaciones">◌</button><button class="icon-button hide-mobile" aria-label="Ayuda">?</button><button class="icon-button theme" id="theme" aria-label="Cambiar tema">☀</button><div class="avatar" aria-label="Perfil Juan">J</div></div>
+    </header>
+    <div class="toolbar">
+      <div class="tabs" role="tablist" aria-label="Escritorio"><button class="tab active" id="tabApps" role="tab" aria-selected="true">▦ Aplicaciones</button><button class="tab" id="tabSpace" role="tab" aria-selected="false">◴ Mi Espacio</button></div>
+      <input class="search" id="search" type="search" placeholder="Buscar aplicación, menú o acceso…" aria-label="Buscar aplicación, menú o acceso">
+    </div>
+
+    <main id="appsView">
+      <div class="section-head"><div><h1>Aplicaciones</h1><div class="sub">Tus herramientas, en un solo lugar</div></div><div class="controls" aria-label="Organizar aplicaciones"><button class="control active" title="Más usadas">◷</button><button class="control" title="Personalizado">▦</button><button class="control" title="Alfabético">A↧</button><button class="control" title="Nueva carpeta">＋</button></div></div>
+      <section class="apps-grid" id="appsGrid" aria-label="Aplicaciones y carpetas">
+        <button class="app" data-name="Facturación"><span class="star on" aria-label="Favorito">★</span><span class="app-icon" style="--c1:#1475d2;--c2:#41d0c1"><b>F</b></span><span class="label">Facturación</span></button>
+        <button class="app" data-name="Ventas"><span class="star on" aria-label="Favorito">★</span><span class="app-icon" style="--c1:#a64c96;--c2:#ffa928"><b>V</b></span><span class="label">Ventas</span></button>
+        <button class="app" id="folder"><span class="star" aria-label="Marcar carpeta como favorita">☆</span><span class="app-icon"><span class="folder-icon"><i></i><i></i><i></i><i></i></span><span class="count">4</span></span><span class="label">Utilidades</span></button>
+        <button class="app" data-name="CRM"><span class="star">☆</span><span class="app-icon" style="--c1:#19c7b3;--c2:#c34f9a"><b>C</b></span><span class="label">CRM</span></button>
+        <button class="app" data-name="Punto de venta"><span class="star">☆</span><span class="app-icon" style="--c1:#eb9c23;--c2:#cf5e8e"><b>P</b></span><span class="label">Punto de venta</span></button>
+        <button class="app" data-name="Tableros"><span class="star">☆</span><span class="app-icon" style="--c1:#8858d8;--c2:#25c7ad"><b>B</b></span><span class="label">Tableros</span></button>
+        <button class="app" data-name="IA"><span class="star">☆</span><span class="app-icon" style="--c1:#943c79;--c2:#f6a922"><b>IA</b></span><span class="label">IA</span></button>
+        <button class="app" data-name="Gastos"><span class="star">☆</span><span class="app-icon" style="--c1:#158ed7;--c2:#6ccf80"><b>G</b></span><span class="label">Gastos</span></button>
+        <button class="app" data-name="Artículos"><span class="star">☆</span><span class="app-icon" style="--c1:#a14c92;--c2:#24c4ac"><b>A</b></span><span class="label">Artículos</span></button>
+        <button class="app" data-name="Calendario"><span class="star">☆</span><span class="app-icon" style="--c1:#7951dc;--c2:#ed6c9a"><b>31</b></span><span class="label">Calendario</span></button>
+        <button class="app" data-name="Contactos"><span class="star">☆</span><span class="app-icon" style="--c1:#20b9ad;--c2:#ed729d"><b>Co</b></span><span class="label">Contactos</span></button>
+        <button class="app" data-name="Compras"><span class="star">☆</span><span class="app-icon" style="--c1:#00b8ad;--c2:#954a88"><b>CP</b></span><span class="label">Compras</span></button>
+      </section>
+    </main>
+
+    <main id="spaceView" class="hidden">
+      <section class="welcome"><div><h1>Buen día, Juan</h1><div class="sub">Tu espacio de trabajo · Viernes, 6 de noviembre</div></div><button class="customize">⚙ Personalizar</button></section>
+      <div class="spaces" role="tablist" aria-label="Espacios de trabajo"><button class="pill space selected">Todo</button><button class="pill space">Administración</button><button class="pill space">Ventas</button><button class="pill space">Compras</button><button class="pill space">Depósito</button><button class="pill space">＋ Nuevo espacio</button></div>
+      <div class="section-head"><div><h1>Para atender</h1><div class="sub">Indicadores según tus permisos y empresas activas</div></div><button class="customize">Editar indicadores</button></div>
+      <section class="widgets" aria-label="Indicadores">
+        <article class="widget"><div class="widget-top"><span>Facturas vencidas</span><span class="widget-mark" style="--wc:var(--red)">!</span></div><div class="value">08</div><div class="hint">Requieren seguimiento</div></article>
+        <article class="widget"><div class="widget-top"><span>Presupuestos abiertos</span><span class="widget-mark" style="--wc:var(--teal)">↗</span></div><div class="value">12</div><div class="hint">En revisión o enviados</div></article>
+        <article class="widget"><div class="widget-top"><span>Pedidos por entregar</span><span class="widget-mark" style="--wc:#59a9ef">□</span></div><div class="value">05</div><div class="hint">Listos para preparar</div></article>
+        <article class="widget"><div class="widget-top"><span>Actividades de hoy</span><span class="widget-mark" style="--wc:var(--amber)">◷</span></div><div class="value">03</div><div class="hint">Asignadas a vos</div></article>
+      </section>
+      <div class="section-head"><div><h1>Accesos rápidos</h1><div class="sub">Acciones que usás con frecuencia</div></div><button class="customize">＋ Agregar</button></div>
+      <section class="quick">
+        <button class="quick-card"><span class="quick-symbol">＋</span><span><strong>Nueva factura</strong><small>Cliente</small></span></button>
+        <button class="quick-card"><span class="quick-symbol">＋</span><span><strong>Nuevo presupuesto</strong><small>Ventas</small></span></button>
+        <button class="quick-card"><span class="quick-symbol">↗</span><span><strong>Registrar cobranza</strong><small>Contabilidad</small></span></button>
+        <button class="quick-card"><span class="quick-symbol">⌕</span><span><strong>Buscar contacto</strong><small>Contactos</small></span></button>
+      </section>
+      <div class="section-head"><div><h1>Continuar trabajando</h1><div class="sub">Tus últimos espacios y tareas, visibles solo para vos</div></div><button class="customize">Ver actividad</button></div>
+      <section class="recent"><article class="recent-card"><span class="recent-dot"></span><div><strong>Facturación</strong><small>Abierta hace 12 minutos</small></div></article><article class="recent-card"><span class="recent-dot" style="background:var(--amber)"></span><div><strong>Oportunidades CRM</strong><small>Última visita hoy</small></div></article><article class="recent-card"><span class="recent-dot" style="background:#59a9ef"></span><div><strong>Calendario</strong><small>Próxima actividad</small></div></article></section>
+    </main>
+    <footer>Prototipo estructural · datos ficticios · iconografía final pendiente de selección y licencia</footer>
+  </div>
+  <div id="folderModal" class="modal-backdrop hidden" role="presentation"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="folderTitle"><div class="modal-head"><div><h2 id="folderTitle">Utilidades</h2><div class="sub">4 aplicaciones</div></div><button class="icon-button" id="closeFolder" aria-label="Cerrar carpeta">×</button></div><div class="folder-apps"><div class="app"><span class="app-icon" style="--c1:#774bd5;--c2:#d579ad"><b>Aj</b></span><span class="label">Ajustes</span></div><div class="app"><span class="app-icon" style="--c1:#158ed7;--c2:#6ccf80"><b>G</b></span><span class="label">Gastos</span></div><div class="app"><span class="app-icon" style="--c1:#ed9226;--c2:#e05b80"><b>POS</b></span><span class="label">Punto de venta</span></div><div class="app"><span class="app-icon" style="--c1:#00b8ad;--c2:#954a88"><b>CP</b></span><span class="label">Compras</span></div></div><div class="modal-actions"><button class="secondary" id="editFolder">Editar carpeta</button><button class="primary" id="closeFolder2">Listo</button></div></section></div>
+  <script>
+    const body=document.body,apps=document.getElementById('appsView'),space=document.getElementById('spaceView');
+    const tabApps=document.getElementById('tabApps'),tabSpace=document.getElementById('tabSpace');
+    function show(which){const isSpace=which==='space';apps.classList.toggle('hidden',isSpace);space.classList.toggle('hidden',!isSpace);tabApps.classList.toggle('active',!isSpace);tabSpace.classList.toggle('active',isSpace);tabApps.setAttribute('aria-selected',String(!isSpace));tabSpace.setAttribute('aria-selected',String(isSpace));}
+    tabApps.addEventListener('click',()=>show('apps'));tabSpace.addEventListener('click',()=>show('space'));
+    document.getElementById('theme').addEventListener('click',()=>{body.dataset.theme=body.dataset.theme==='light'?'dark':'light';document.getElementById('theme').textContent=body.dataset.theme==='light'?'☾':'☀'});
+    document.getElementById('folder').addEventListener('click',()=>document.getElementById('folderModal').classList.remove('hidden'));
+    for(const id of ['closeFolder','closeFolder2'])document.getElementById(id).addEventListener('click',()=>document.getElementById('folderModal').classList.add('hidden'));
+    document.getElementById('search').addEventListener('input',e=>{const q=e.target.value.trim().toLocaleLowerCase();for(const card of document.querySelectorAll('#appsGrid .app'))card.classList.toggle('hidden',!card.dataset.name.toLocaleLowerCase().includes(q))});
+    document.querySelectorAll('#appsGrid .star').forEach(star=>star.addEventListener('click',e=>{e.stopPropagation();const on=star.classList.toggle('on');star.textContent=on?'★':'☆';star.setAttribute('aria-label',on?'Quitar de favoritos':'Marcar como favorita')}));
+    document.querySelectorAll('.space').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.space').forEach(x=>x.classList.remove('selected'));btn.classList.add('selected')}));
+  </script>
+</body>
+</html>

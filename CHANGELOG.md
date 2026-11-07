@@ -6,6 +6,11 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Unreleased]
 
+### Seguridad y distribución
+- `DOLAN_ocr`: reemplaza PyMuPDF por `pypdfium2==5.10.1` para renderizar PDFs y decodificar QR; serializa llamadas al motor PDFium y crea PDFs de prueba con ReportLab. Los Dockerfiles Linux, actualización y Windows fijan la misma versión y copian notices del wheel a `/opt/dolan/licenses/pypdfium2`.
+- CI y `scripts/validate_addons.py` ahora enumeran los 18 addons versionados del repositorio, incluidos descuentos, terminales, ePOS y balanzas.
+- Añadidos auditoría, arquitectura objetivo, roadmap P0–P3 y matriz inicial de notices en `docs/DOLAN_DISTRIBUTION_*.md` y `docs/THIRD_PARTY_NOTICES.md`.
+
 ### Agregado
 - `DOLAN_ai 20.0.1.34.0`: dictado Whisper con servicio local `faster-whisper` en Docker, endpoint interno compatible con multipart, modelo CPU `small`/`int8` y alternativa opcional OpenAI API. El audio queda dentro de la red local.
 
