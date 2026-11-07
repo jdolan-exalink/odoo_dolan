@@ -119,7 +119,7 @@ jobs:
         run: |
           docker run --rm --network host \
             -v "${{ github.workspace }}/addons:/opt/odoo/dolan-addons" \
-            dolan/odoo20-ci:20.0 bash -c '
+            --entrypoint bash dolan/odoo20-ci:20.0 -c '
               set -euo pipefail
               export PGPASSWORD=odoo
               until pg_isready -h 127.0.0.1 -p 5432 -U odoo >/dev/null 2>&1; do sleep 1; done
