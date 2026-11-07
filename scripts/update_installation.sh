@@ -156,7 +156,7 @@ cp -a "$REPO/services/local-whisper/." "$PROJECT/services/local-whisper/" 2>/dev
 echo "Conservando el Dockerfile existente; no se actualizará la imagen base implícitamente."
 docker compose build odoo
 echo "5/5 Actualizando todos los módulos instalados de la base..."
-docker compose run --rm --no-deps odoo --logfile= --stop-after-init --no-http -d "$DB_NAME" -u all
+docker compose run -T --rm --no-deps odoo --logfile= --stop-after-init --no-http -d "$DB_NAME" -u all
 docker compose up -d odoo
 RESTART_NEEDED=0
 
