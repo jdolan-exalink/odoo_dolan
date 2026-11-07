@@ -126,6 +126,7 @@ body.o_dolan_dark_mode :is(.o_form_view, .o_list_view, .o_kanban_view, .modal, .
 .o_dolan_icon_style_preview { display: inline-flex; align-items: center; justify-content: space-between; gap: .35rem; }
 .o_dolan_icon_style_preview > img { width: 1.45rem; height: 1.45rem; object-fit: contain; }
 .o_dolan_icon_style_mask_preview { display: block; width: 1.45rem; height: 1.45rem; flex: 0 0 1.45rem; background-color: var(--dolan-icon-accent, #8254d8); -webkit-mask: var(--dolan-icon-mask-image) center / contain no-repeat; mask: var(--dolan-icon-mask-image) center / contain no-repeat; }
+.o_dolan_icon_style_mask_preview_tabler { filter: drop-shadow(1px 1px 0 var(--dolan-icon-accent-secondary, var(--dolan-color-secondary))); }
 .o_dolan_action_icon_asset { display: inline-block; flex: 0 0 auto; background-color: currentColor; -webkit-mask: var(--dolan-action-icon-image) center / contain no-repeat; mask: var(--dolan-action-icon-image) center / contain no-repeat; vertical-align: middle; }
 .o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group > .btn:not(.btn-primary) .o_dolan_action_icon_asset { background-color: var(--dolan-color-secondary); }
 .o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group > .btn.btn-primary .o_dolan_action_icon_asset,

@@ -1,6 +1,6 @@
 {
     "name": "DOLAN - Estética Web y Mobile (OWL 3)",
-    "version": "20.0.2.48.0",
+    "version": "20.0.2.49.0",
     "category": "Themes/Backend",
     "summary": "PRD 04: UI/UX Moderna para Odoo 20 CE, Mobile Bottom Bar, Command Palette (Ctrl+K), PWA, Workspace por Rol y Dark Mode",
     "description": """

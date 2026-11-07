@@ -53,7 +53,7 @@ export function resolveIconAsset(semanticId, iconStyle = "fluent_3d_classic", as
     // Keep the WhatsApp brand recognizable. Barcode and scale use their
     // style-specific catalog assets below so Filled, Outline and Tabler do
     // not accidentally fall back to the same Fluent Flat artwork.
-    if (semanticId === "app.whatsapp") {
+    if (semanticId === "app.whatsapp" && family !== "tabler") {
         return ["fluent_filled_pro", "fluent_outline_color"].includes(iconStyle)
             ? "/DOLAN_theme/static/src/lib/fluent_regular/whatsapp_mask.svg"
             : "/DOLAN_theme/static/src/lib/fluent_flat/whatsapp_brand.svg";
@@ -76,7 +76,7 @@ export function resolveActionIconAsset(name, filled = false) {
 }
 
 export function iconStyleUsesMask(iconStyle = "fluent_3d_classic") {
-    return ["fluent_filled_pro", "fluent_filled_duotone", "fluent_outline_color", "fluent_outline_minimal"].includes(iconStyle);
+    return ["fluent_filled_pro", "fluent_filled_duotone", "fluent_outline_color", "fluent_outline_minimal", "tabler"].includes(iconStyle);
 }
 
 export function normalizeIconStyle(iconStyle) {

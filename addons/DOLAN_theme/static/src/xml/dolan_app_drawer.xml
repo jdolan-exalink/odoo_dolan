@@ -121,9 +121,9 @@
                                             <img src="/stock/static/description/icon.png" alt="Odoo Inventario"/>
                                         </t>
                                         <t t-elif="this.isMaskIconStyle(style[0])">
-                                            <span class="o_dolan_icon_style_mask_preview" t-att-style="this.getIconStylePreviewMask('app.invoicing', style[0])"/>
-                                            <span class="o_dolan_icon_style_mask_preview" t-att-style="this.getIconStylePreviewMask('app.sales', style[0])"/>
-                                            <span class="o_dolan_icon_style_mask_preview" t-att-style="this.getIconStylePreviewMask('app.whatsapp', style[0])"/>
+                                            <span class="o_dolan_icon_style_mask_preview" t-att-class="{'o_dolan_icon_style_mask_preview_tabler': style[0] === 'tabler'}" t-att-style="this.getIconStylePreviewMask('app.invoicing', style[0])"/>
+                                            <span class="o_dolan_icon_style_mask_preview" t-att-class="{'o_dolan_icon_style_mask_preview_tabler': style[0] === 'tabler'}" t-att-style="this.getIconStylePreviewMask('app.sales', style[0])"/>
+                                            <span class="o_dolan_icon_style_mask_preview" t-att-class="{'o_dolan_icon_style_mask_preview_tabler': style[0] === 'tabler'}" t-att-style="this.getIconStylePreviewMask('app.whatsapp', style[0])"/>
                                         </t>
                                         <t t-else="">
                                             <DolanIcon name="'app.invoicing'" iconStyle="style[0]" size="23"/>

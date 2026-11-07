@@ -813,7 +813,9 @@ export class DolanAppDrawerSystray extends Component {
         const url = resolveIconAsset(semanticId, style, window.dolanUiIconAssignments || {});
         const colors = { invoicing: "#1687ff", sales: "#13b8a6", whatsapp: "#25d366" };
         const key = String(semanticId || "").replace("app.", "");
-        return url ? `--dolan-icon-mask-image: url("${url}"); --dolan-icon-accent: ${colors[key] || "#8254d8"}` : "";
+        const accent = style === "tabler" ? "var(--dolan-color-primary)" : (colors[key] || "#8254d8");
+        const accentSecondary = style === "tabler" ? "; --dolan-icon-accent-secondary: var(--dolan-color-secondary)" : "";
+        return url ? `--dolan-icon-mask-image: url("${url}"); --dolan-icon-accent: ${accent}${accentSecondary}` : "";
     }
 
     getAppIconMaskStyle(app) {
@@ -825,13 +827,15 @@ export class DolanAppDrawerSystray extends Component {
             violet: "#8254d8", gray: "#667085",
         };
         const catalog = window.dolanUiIconCatalog?.[semantic];
-        const accent = colors[catalog?.color] || "#7c5ce7";
-        return url ? `--dolan-icon-mask-image: url("${url}"); --dolan-icon-accent: ${accent}` : "";
+        const isTabler = this.state.iconStyle === "tabler";
+        const accent = isTabler ? "var(--dolan-color-primary)" : (colors[catalog?.color] || "#7c5ce7");
+        const accentSecondary = isTabler ? "; --dolan-icon-accent-secondary: var(--dolan-color-secondary)" : "";
+        return url ? `--dolan-icon-mask-image: url("${url}"); --dolan-icon-accent: ${accent}${accentSecondary}` : "";
     }
 
     getAppIconClass() {
         const style = this.state.iconStyle || "fluent_3d_classic";
-        return `o_dolan_icon_variant_${style}${style === "tabler" ? " o_dolan_tabler_icon_asset" : ""}`;
+        return `o_dolan_icon_variant_${style}`;
     }
 
     onAppIconError(ev, app) {
