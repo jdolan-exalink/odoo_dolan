@@ -593,6 +593,10 @@ body.o_dolan_dark_mode .o_home_menu .o_app .o_app_icon {
     -webkit-mask: var(--dolan-icon-mask-image) center / contain no-repeat;
     mask: var(--dolan-icon-mask-image) center / contain no-repeat;
 }
+.o_dolan_home_menu_wrapper .o_dolan_icon_variant_tabler .o_dolan_variant_mask {
+    color: var(--dolan-icon-accent, var(--dolan-color-primary));
+    filter: drop-shadow(1px 1px 0 var(--dolan-icon-accent-secondary, var(--dolan-color-secondary)));
+}
 .o_dolan_home_menu_wrapper .o_dolan_icon_variant_fluent_filled_pro .o_dolan_variant_mask {
     position: relative;
     filter: drop-shadow(3px 3px 0 color-mix(in srgb, var(--dolan-icon-accent, #7c5ce7) 38%, #58c6e8));
