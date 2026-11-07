@@ -32,27 +32,30 @@ def _make_arca_qr_png():
     return image_buffer.getvalue()
 
 
+def _make_image_pdf(image_bytes, width=595, height=842):
+    """Create an image-only PDF fixture using Odoo's existing ReportLab dependency."""
+    from reportlab.lib.utils import ImageReader
+    from reportlab.pdfgen import canvas
+
+    pdf_buffer = io.BytesIO()
+    pdf_canvas = canvas.Canvas(pdf_buffer, pagesize=(width, height))
+    pdf_canvas.drawImage(ImageReader(io.BytesIO(image_bytes)), 0, 0, width, height)
+    pdf_canvas.save()
+    return pdf_buffer.getvalue()
+
+
 @tagged('post_install', '-at_install')
 class TestOcrPartnerExtraction(AccountTestInvoicingCommon):
     def test_scanned_pdf_is_rendered_as_vision_image_without_external_call(self):
-        import io
-        import pymupdf
         from PIL import Image, ImageDraw
         scan = Image.new('RGB', (1200, 1600), 'white')
         ImageDraw.Draw(scan).text((80, 80), 'FACTURA DE PRUEBA ESCANEADA', fill='black')
         scan_stream = io.BytesIO()
         scan.save(scan_stream, format='PNG')
-
-        document = pymupdf.open()
-        page = document.new_page(width=595, height=842)
-        page.insert_image(page.rect, stream=scan_stream.getvalue())
-        self.assertFalse(page.get_text().strip(), 'The fixture must have no searchable text layer.')
-        pdf_bytes = document.tobytes()
-        document.close()
         attachment = self.env['ir.attachment'].create({
             'name': 'fixture-scan.pdf',
             'type': 'binary',
-            'raw': pdf_bytes,
+            'raw': _make_image_pdf(scan_stream.getvalue()),
             'mimetype': 'application/pdf',
         })
 
@@ -164,18 +167,11 @@ class TestOcrPartnerExtraction(AccountTestInvoicingCommon):
         self.assertIn('4020588.00', result['validation_warnings'][0])
 
     def test_extracts_arca_qr_from_rasterized_pdf_page_locally(self):
-        import pymupdf
-
         qr_png = _make_arca_qr_png()
-        document = pymupdf.open()
-        page = document.new_page(width=400, height=400)
-        page.insert_image(page.rect, stream=qr_png)
-        pdf_bytes = document.tobytes()
-        document.close()
         attachment = self.env['ir.attachment'].create({
             'name': 'fixture-arca-qr.pdf',
             'type': 'binary',
-            'raw': pdf_bytes,
+            'raw': _make_image_pdf(qr_png, 400, 400),
             'mimetype': 'application/pdf',
         })
 

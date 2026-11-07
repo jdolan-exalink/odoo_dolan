@@ -1,6 +1,8 @@
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 
+from .icon_styles import ICON_STYLE_CHOICES
+
 
 class DolanScreenPreference(models.Model):
     _name = "dolan.screen.preference"
@@ -12,9 +14,16 @@ class DolanScreenPreference(models.Model):
         index=True, ondelete="cascade",
     )
     theme_mode = fields.Selection(
-        [("light", "Claro"), ("dark", "Oscuro")],
-        string="Tema", required=True, default="light",
+        [("global", "Usar configuración DOLAN UI"), ("light", "Claro"), ("dark", "Oscuro"), ("system", "Automático (sistema)"), ("contrast", "Alto contraste")],
+        string="Tema", required=True, default="global",
     )
+    icon_style = fields.Selection(
+        [("global", "Usar estilo global"), *ICON_STYLE_CHOICES],
+        string="Estilo de iconos", required=True, default="global",
+        help="La preferencia personal solo se aplica si el administrador habilitó la personalización individual.",
+    )
+    allow_user_icon_style = fields.Boolean(compute="_compute_allow_user_icon_style")
+    allow_user_appearance = fields.Boolean(compute="_compute_allow_user_appearance")
     compact_mode = fields.Boolean(string="Densidad compacta", default=False)
     company_id = fields.Many2one(
         "res.company", string="Empresa para el estilo", required=True,
@@ -35,6 +44,20 @@ class DolanScreenPreference(models.Model):
         "UNIQUE(user_id)", "Ya existe una configuración de pantalla para este usuario.",
     )
 
+    def _compute_allow_user_icon_style(self):
+        allowed = self.env["ir.config_parameter"].sudo().get_param(
+            "dolan_ui.allow_user_icon_style", "False"
+        ).lower() in ("1", "true", "yes")
+        for record in self:
+            record.allow_user_icon_style = allowed
+
+    def _compute_allow_user_appearance(self):
+        allowed = self.env["ir.config_parameter"].sudo().get_param(
+            "dolan_ui.allow_personal_appearance", "True"
+        ).lower() in ("1", "true", "yes")
+        for record in self:
+            record.allow_user_appearance = allowed
+
     @api.constrains("hidden_app_menu_ids")
     def _check_settings_app_visible(self):
         protected_menu = self.env.ref("base.menu_administration", raise_if_not_found=False)
@@ -46,6 +69,16 @@ class DolanScreenPreference(models.Model):
         for vals in vals_list:
             if not self.env.user.has_group("base.group_system"):
                 vals["user_id"] = self.env.uid
+                allowed = self.env["ir.config_parameter"].sudo().get_param(
+                    "dolan_ui.allow_user_icon_style", "False"
+                ).lower() in ("1", "true", "yes")
+                if vals.get("icon_style", "global") != "global" and not allowed:
+                    raise AccessError("El administrador no habilitó la personalización individual de iconos.")
+                appearance_allowed = self.env["ir.config_parameter"].sudo().get_param(
+                    "dolan_ui.allow_personal_appearance", "True"
+                ).lower() in ("1", "true", "yes")
+                if not appearance_allowed and ("theme_mode" in vals or "compact_mode" in vals):
+                    raise AccessError("El administrador no habilitó la personalización personal de la apariencia.")
         return super().create(vals_list)
 
     def write(self, vals):
@@ -54,6 +87,16 @@ class DolanScreenPreference(models.Model):
                 raise AccessError("Solo podés modificar tus propias preferencias de pantalla.")
             if vals.get("user_id", self.env.uid) != self.env.uid:
                 raise AccessError("No podés cambiar el propietario de estas preferencias.")
+            allowed = self.env["ir.config_parameter"].sudo().get_param(
+                "dolan_ui.allow_user_icon_style", "False"
+            ).lower() in ("1", "true", "yes")
+            if "icon_style" in vals and not allowed and vals["icon_style"] != "global":
+                raise AccessError("El administrador no habilitó la personalización individual de iconos.")
+            appearance_allowed = self.env["ir.config_parameter"].sudo().get_param(
+                "dolan_ui.allow_personal_appearance", "True"
+            ).lower() in ("1", "true", "yes")
+            if not appearance_allowed and ("theme_mode" in vals or "compact_mode" in vals):
+                raise AccessError("El administrador no habilitó la personalización personal de la apariencia.")
         return super().write(vals)
 
     @api.model

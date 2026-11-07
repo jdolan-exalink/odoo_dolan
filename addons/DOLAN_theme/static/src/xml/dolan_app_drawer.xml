@@ -9,7 +9,7 @@
                         data-hotkey="h"
                         accesskey="h"
                         title="Todas las Aplicaciones / Menú de Inicio (Alt+H / Alt+Q)"
-                        t-on-click.prevent="() => this.toggleDolanAppDrawer()">
+                        t-on-click.prevent="() => this.env.bus.trigger('DOLAN:TOGGLE_APP_DRAWER')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 14 14" class="o_menu_toggle_icon">
                         <g fill="currentColor" id="o_menu_toggle_row_0">
                             <rect width="3" height="3" x="0" y="0" rx="0.5"/>
@@ -39,7 +39,7 @@
                         class="btn o_nav_entry o_dolan_home_btn"
                         title="Volver a todas las aplicaciones (Alt+H)"
                         aria-label="Volver al Menú de Inicio"
-                        t-on-click.prevent="() => this.openDolanAppDrawer()">
+                        t-on-click.prevent="() => this.env.bus.trigger('DOLAN:OPEN_APP_DRAWER')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24"
                          fill="none" stroke="currentColor" stroke-width="2"
                          stroke-linecap="round" stroke-linejoin="round"
@@ -63,12 +63,81 @@
                         t-on-click="() => this.toggleDrawer()">
                     <i class="oi" data-icon="apps" style="font-size: 15px;"/>
                 </button>
-                <button type="button"
-                        class="btn btn-sm o_nav_entry"
-                        title="Alternar Modo Claro / Oscuro"
-                        t-on-click="() => this.toggleDarkMode()">
-                    <DolanIcon name="this.state.darkMode ? 'sun' : 'moon'"/>
-                </button>
+                <div class="o_dolan_theme_picker dropdown">
+                    <button type="button" class="btn btn-sm o_nav_entry o_dolan_theme_picker_toggle"
+                            title="Tema, colores e iconos" aria-label="Tema, colores e iconos"
+                            t-att-aria-expanded="this.state.themeMenuOpen ? 'true' : 'false'"
+                            t-on-click="() => this.toggleThemeMenu()">
+                        <DolanIcon name="'palette'"/>
+                        <span class="visually-hidden">Apariencia</span>
+                    </button>
+                    <section t-if="this.state.themeMenuOpen" class="o_dolan_theme_picker_menu shadow-lg" aria-label="Apariencia de esta sesión">
+                        <header class="d-flex align-items-center justify-content-between px-3 py-2">
+                            <strong>Apariencia</strong>
+                            <button type="button" class="btn btn-sm btn-link" t-on-click="() => this.resetSessionAppearance()">Restablecer</button>
+                        </header>
+                        <div class="o_dolan_theme_picker_section">
+                            <div class="o_dolan_theme_picker_label">Tema de esta sesión</div>
+                            <div class="o_dolan_theme_picker_grid">
+                                <button t-foreach="this.state.themeChoices" t-as="choice" t-key="choice.id" type="button"
+                                        class="btn btn-sm o_dolan_theme_mode_choice" t-att-class="this.state.themeMode === choice.id ? 'is-selected' : ''"
+                                        t-att-aria-pressed="this.state.themeMode === choice.id"
+                                        t-on-click="() => this.chooseSessionTheme(choice.id)">
+                                    <DolanIcon t-if="choice.id === 'light'" name="'sun'" size="16"/>
+                                    <DolanIcon t-elif="choice.id === 'dark'" name="'moon'" size="16"/>
+                                    <DolanIcon t-elif="choice.id === 'system'" name="'device-desktop'" size="16"/>
+                                    <DolanIcon t-else="" name="'contrast'" size="16"/>
+                                    <span t-out="choice.label"/>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="o_dolan_theme_picker_section">
+                            <div class="o_dolan_theme_picker_label">Combinación de colores</div>
+                            <div class="o_dolan_theme_picker_swatches">
+                                <button t-foreach="this.state.paletteChoices" t-as="palette" t-key="palette.id" type="button"
+                                        class="btn o_dolan_theme_swatch" t-att-class="this.state.palette === palette.id ? 'is-selected' : ''"
+                                        t-att-aria-label="palette.label" t-att-aria-pressed="this.state.palette === palette.id ? 'true' : 'false'"
+                                        t-att-title="palette.label" t-on-click="() => this.chooseSessionPalette(palette.id)">
+                                    <span class="o_dolan_theme_swatch_colors">
+                                        <i t-att-style="'background-color:' + palette.primary"/>
+                                        <i t-att-style="'background-color:' + palette.secondary"/>
+                                    </span>
+                                    <span t-out="palette.label"/>
+                                    <span t-if="this.state.palette === palette.id" class="o_dolan_theme_swatch_check" aria-hidden="true">✓</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="o_dolan_theme_picker_section">
+                            <label class="o_dolan_theme_picker_label" for="dolan-session-icon-style">Estilo de iconos de esta sesión</label>
+                            <div id="dolan-session-icon-style" class="o_dolan_icon_style_choices" role="listbox" aria-label="Estilo de iconos de esta sesión">
+                                <button t-foreach="this.state.iconStyleChoices" t-as="style" t-key="style[0]" type="button"
+                                        class="o_dolan_icon_style_choice" t-att-class="this.state.iconStyle === style[0] ? 'is-selected' : ''"
+                                        role="option" t-att-aria-selected="this.state.iconStyle === style[0] ? 'true' : 'false'"
+                                        t-on-click="() => this.chooseSessionIconStyle(style[0])">
+                                    <span class="o_dolan_icon_style_preview">
+                                        <t t-if="style[0] === 'odoo_original'">
+                                            <img src="/account/static/description/icon.png" alt="Odoo Facturación"/>
+                                            <img src="/sale/static/description/icon.png" alt="Odoo Ventas"/>
+                                            <img src="/stock/static/description/icon.png" alt="Odoo Inventario"/>
+                                        </t>
+                                        <t t-elif="this.isMaskIconStyle(style[0])">
+                                            <span class="o_dolan_icon_style_mask_preview" t-att-style="this.getIconStylePreviewMask('app.invoicing', style[0])"/>
+                                            <span class="o_dolan_icon_style_mask_preview" t-att-style="this.getIconStylePreviewMask('app.sales', style[0])"/>
+                                            <span class="o_dolan_icon_style_mask_preview" t-att-style="this.getIconStylePreviewMask('app.whatsapp', style[0])"/>
+                                        </t>
+                                        <t t-else="">
+                                            <DolanIcon name="'app.invoicing'" iconStyle="style[0]" size="23"/>
+                                            <DolanIcon name="'app.sales'" iconStyle="style[0]" size="23"/>
+                                            <DolanIcon name="'app.whatsapp'" iconStyle="style[0]" size="23"/>
+                                        </t>
+                                    </span>
+                                    <span class="o_dolan_icon_style_name" t-out="style[1]"/>
+                                    <DolanIcon t-if="this.state.iconStyle === style[0]" name="'check'" size="17"/>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
             </div>
 
             <!-- Home Menu idéntico al DOM de Odoo 20 Enterprise (Odoo 20) -->
@@ -132,7 +201,8 @@
                         </div>
                         <!-- Mi Espacio: KPIs y atención por rol -->
                         <div t-if="this.state.activeTab === 'mine'" class="container px-0 position-relative z-1 flex-grow-1 o_dolan_mine">
-                            <div class="d-flex flex-wrap justify-content-center gap-2 mb-3" role="group" aria-label="Filtrar por rol">
+                            <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 mb-3">
+                                <div class="d-flex flex-wrap justify-content-center gap-2" role="group" aria-label="Filtrar por rol">
                                 <button type="button" class="btn btn-sm rounded-pill"
                                         t-att-class="this.state.roleFilter === 'all' ? 'btn-secondary' : 'btn-outline-secondary'"
                                         t-att-aria-pressed="this.state.roleFilter === 'all'"
@@ -143,7 +213,43 @@
                                             t-att-aria-pressed="this.state.roleFilter === r.key"
                                             t-on-click="() => this.setRoleFilter(r.key)" t-out="r.label"/>
                                 </t>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill"
+                                        t-att-aria-expanded="this.state.workspaceConfigOpen ? 'true' : 'false'"
+                                        aria-label="Personalizar indicadores de Mi Espacio"
+                                        t-on-click="() => this.toggleWorkspaceConfig()">
+                                    <DolanIcon name="'settings'" size="16"/> Personalizar
+                                </button>
                             </div>
+                            <section t-if="this.state.workspaceConfigOpen" class="o_dolan_workspace_config card p-3 mb-3" aria-label="Personalizar Mi Espacio">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <strong class="flex-grow-1">Indicadores visibles</strong>
+                                    <button type="button" class="btn-close" aria-label="Cerrar configuración de Mi Espacio"
+                                            t-on-click="() => this.toggleWorkspaceConfig()"/>
+                                </div>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <label t-foreach="this.state.kpis" t-as="widget" t-key="widget.key"
+                                           class="o_dolan_workspace_widget_option form-check form-check-inline m-0">
+                                        <input class="form-check-input" type="checkbox"
+                                               t-att-checked="this.state.visibleWidgetKeys.includes(widget.key)"
+                                               t-on-change="() => this.toggleWorkspaceWidget(widget.key)"/>
+                                        <span class="form-check-label" t-out="widget.label"/>
+                                    </label>
+                                </div>
+                                <small class="text-muted mt-2">Los cambios se guardan en tu usuario y se sincronizan entre equipos.</small>
+                            </section>
+                            <section t-if="this.state.posShortcuts.length" class="o_dolan_pos_shortcuts mb-3" aria-label="Puntos de venta disponibles">
+                                <h3 class="h6 mb-2">Puntos de venta</h3>
+                                <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                    <button t-foreach="this.state.posShortcuts" t-as="pointOfSale" t-key="pointOfSale.id"
+                                            type="button" class="o_dolan_pos_shortcut btn btn-outline-secondary d-flex align-items-center gap-2"
+                                            t-on-click="() => this.openPosShortcut(pointOfSale)"
+                                            t-att-title="pointOfSale.company">
+                                        <DolanIcon name="'app.pos'" size="20"/>
+                                        <span t-out="pointOfSale.name"/>
+                                    </button>
+                                </div>
+                            </section>
                             <div t-if="this.state.kpisLoading" class="row g-3 mx-auto o_dolan_kpi_grid" aria-busy="true">
                                 <t t-foreach="[1,2,3,4,5,6]" t-as="n" t-key="n">
                                     <div class="col-12 col-md-6 col-lg-4"><div class="o_dolan_skeleton rounded-4"/></div>
@@ -220,7 +326,8 @@
                                             <span t-if="this.folderPreviewApps(tile.folder).length" class="o_dolan_folder_preview" aria-hidden="true">
                                                 <t t-foreach="this.folderPreviewApps(tile.folder)" t-as="previewApp" t-key="previewApp.id">
                                                     <span class="o_dolan_folder_preview_icon">
-                                                        <img t-if="this.getAppIconUrl(previewApp)" t-att-src="this.getAppIconUrl(previewApp)" t-att-alt="''" draggable="false"/>
+                                                        <span t-if="this.getAppIconUrl(previewApp) &amp;&amp; this.isMaskIconStyle()" class="o_dolan_variant_mask" t-att-class="this.getAppIconClass()" t-att-style="this.getAppIconMaskStyle(previewApp)"/>
+                                                        <img t-elif="this.getAppIconUrl(previewApp)" t-att-src="this.getAppIconUrl(previewApp)" t-att-class="this.getAppIconClass()" t-att-alt="''" t-on-error="(ev) => this.onAppIconError(ev, previewApp)" draggable="false"/>
                                                         <span t-else="" t-out="(previewApp.name || 'A').slice(0, 1).toUpperCase()"/>
                                                     </span>
                                                 </t>
@@ -255,9 +362,14 @@
                                            t-att-href="'/odoo/' + (tile.app.xmlid || ('action-' + tile.app.actionID))"
                                            t-on-click.prevent="() => this.onAppClick(tile.app)">
                                             <t t-if="this.getAppIconUrl(tile.app)">
-                                                <img class="o_app_icon rounded-3"
+                                                <div t-if="this.isMaskIconStyle()" class="o_app_icon rounded-3 o_dolan_variant_icon" t-att-class="this.getAppIconClass()">
+                                                    <span class="o_dolan_variant_mask" t-att-style="this.getAppIconMaskStyle(tile.app)"/>
+                                                </div>
+                                                <img t-else="" class="o_app_icon rounded-3"
                                                      t-att-alt="tile.app.name"
-                                                     t-att-src="this.getAppIconUrl(tile.app)" draggable="false"/>
+                                                     t-att-src="this.getAppIconUrl(tile.app)"
+                                                     t-att-class="this.getAppIconClass()"
+                                                     t-on-error="(ev) => this.onAppIconError(ev, tile.app)" draggable="false"/>
                                             </t>
                                             <t t-else="">
                                                 <div class="o_app_icon rounded-3">
@@ -309,7 +421,8 @@
                                                 <button type="button" class="o_dolan_folder_app_open"
                                                         draggable="false"
                                                         t-on-click="() => this.selectApp(app)">
-                                                    <img t-if="this.getAppIconUrl(app)" t-att-src="this.getAppIconUrl(app)" t-att-alt="''" draggable="false"/>
+                                                    <span t-if="this.getAppIconUrl(app) &amp;&amp; this.isMaskIconStyle()" class="o_dolan_variant_mask" t-att-class="this.getAppIconClass()" t-att-style="this.getAppIconMaskStyle(app)"/>
+                                                    <img t-elif="this.getAppIconUrl(app)" t-att-src="this.getAppIconUrl(app)" t-att-class="this.getAppIconClass()" t-att-alt="''" t-on-error="(ev) => this.onAppIconError(ev, app)" draggable="false"/>
                                                     <span t-else="" class="o_dolan_folder_fallback" t-out="(app.name || 'A').slice(0, 2).toUpperCase()"/>
                                                     <span t-out="app.name"/>
                                                 </button>
@@ -362,7 +475,8 @@
                                                 <input type="checkbox"
                                                        t-att-checked="this.state.folderDraft.selectedKeys.includes(this.appDesktopKey(app))"
                                                        t-on-change="() => this.toggleFolderDraftApp(app)"/>
-                                                <img t-if="this.getAppIconUrl(app)" t-att-src="this.getAppIconUrl(app)" t-att-alt="''"/>
+                                                <span t-if="this.getAppIconUrl(app) &amp;&amp; this.isMaskIconStyle()" class="o_dolan_variant_mask" t-att-class="this.getAppIconClass()" t-att-style="this.getAppIconMaskStyle(app)"/>
+                                                <img t-elif="this.getAppIconUrl(app)" t-att-src="this.getAppIconUrl(app)" t-att-class="this.getAppIconClass()" t-att-alt="''" t-on-error="(ev) => this.onAppIconError(ev, app)"/>
                                                 <span t-out="app.name"/>
                                             </label>
                                         </t>

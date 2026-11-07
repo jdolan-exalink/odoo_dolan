@@ -28,6 +28,11 @@ EXPECTED_MODULES = [
     "DOLAN_renting",
     "DOLAN_knowledge_bi",
     "DOLAN_whatsapp",
+    "DOLAN_discount_engine",
+    "DOLAN_exchange",
+    "DOLAN_payment_terminal",
+    "ePOS_print",
+    "pos_scale_management",
 ]
 
 
@@ -156,6 +161,23 @@ def main():
     only_existing = "--existing" in sys.argv
 
     all_errors = []
+
+    # Keep the PDF renderer and its version aligned across every supported image build.
+    renderer_build_files = [
+        root / "Dockerfile",
+        root / "installer" / "templates" / "Dockerfile.odoo",
+        root / "crear_odoo20.ps1",
+    ]
+    for build_file in renderer_build_files:
+        if not build_file.is_file():
+            all_errors.append(f"[distribution] Build file missing: {build_file.relative_to(root)}")
+            continue
+        build_text = build_file.read_text(encoding="utf-8")
+        if "pypdfium2==5.10.1" not in build_text:
+            all_errors.append(f"[distribution] pypdfium2 pin missing in {build_file.relative_to(root)}")
+        if re.search(r"pymupdf|PyMuPDF", build_text, re.IGNORECASE):
+            all_errors.append(f"[distribution] Strong-copyleft PDF renderer remains in {build_file.relative_to(root)}")
+
     checked = 0
     total_py = 0
     total_xml = 0

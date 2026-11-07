@@ -14,7 +14,10 @@
                         <group string="Tema y lectura">
                             <field name="user_id" readonly="1" groups="base.group_system"/>
                             <field name="theme_mode" widget="radio" options="{'horizontal': true}"/>
-                            <field name="compact_mode" widget="boolean_toggle"/>
+                            <field name="allow_user_icon_style" invisible="1"/>
+                            <field name="icon_style" readonly="not allow_user_icon_style"/>
+                            <field name="allow_user_appearance" invisible="1"/>
+                            <field name="compact_mode" widget="boolean_toggle" readonly="not allow_user_appearance"/>
                         </group>
                         <group string="Apariencia de la empresa" groups="base.group_system">
                             <field name="company_id"/>

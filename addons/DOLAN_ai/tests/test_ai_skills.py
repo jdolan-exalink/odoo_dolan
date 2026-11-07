@@ -83,6 +83,16 @@ class TestAiSkillTools(TransactionCase):
         self.assertIn('cliente', clarification['reply'])
 
     def test_ai_parses_informal_quote_with_typo_quantity_usd_and_vat(self):
+        # Keep the fixture independent from whichever production/demo contacts
+        # happen to exist in the test database.
+        self.env['res.partner'].create({
+            'name': 'Sodecar', 'is_company': True, 'company_id': self.env.company.id,
+        })
+        self.env['product.product'].create({
+            'name': 'Camara de seguridad modelo 320 QA', 'type': 'consu',
+            'sale_ok': True, 'list_price': 100.0,
+            'company_id': self.env.company.id,
+        })
         session = self.env['ai.session']
         text = 'crea un prespuesto para sodecar con 4 camaras DI-320IPVS pasame las opciones a 150 dolares + IVA 21%'
         parsed = session._parse_sales_draft_details(text, quote=True)
@@ -440,7 +450,9 @@ class TestAiSkillTools(TransactionCase):
         ), patch.object(
             type(self.env['ai.skill']), 'execute_skill_tool', return_value=read_result,
         ) as execute_skill_tool:
-            result = session.send_user_message('Mostrame un resumen de mis clientes.')
+            # Avoid the deterministic contact-report shortcut: this regression
+            # exercises the model tool-call fallback after a generic read request.
+            result = session.send_user_message('Dame un panorama general.')
 
         self.assertNotEqual(result['reply'], 'Operación completada.')
         self.assertIn('Cliente de lectura', result['reply'])

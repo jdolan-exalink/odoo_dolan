@@ -23,6 +23,9 @@ Actualizar paquetes del sistema desde los repositorios APT configurados:
 Actualizar módulos Odoo de una instalación existente (respalda DB, addons y filestore):
   curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --update
 
+Actualizar una instalación existente fuera de /opt/dolan/deployments:
+  curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --update --root /root --name odoo
+
 Reemplazar una instalación de prueba y volver a abrir el asistente Go:
   curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --reset-existing sodecar
   La eliminación se ejecuta solo después de revisar y confirmar el plan en la TUI.
@@ -40,19 +43,43 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
   usage
   exit 0
 fi
-MODE="${1:-menu}"
+MODE="menu"
 RESET_EXISTING_NAME=""
-if [[ "$MODE" == "--reset-existing" ]]; then
-  RESET_EXISTING_NAME="${2:-}"
-  [[ "$RESET_EXISTING_NAME" =~ ^[a-z0-9][a-z0-9_-]{0,47}$ ]] || {
-    printf 'Para --reset-existing indicá un nombre corto seguro, por ejemplo sodecar.\n' >&2
-    exit 2
-  }
+UPDATE_ROOT="$INSTALL_ROOT/deployments"
+UPDATE_NAME=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    install|--update|--update-packages|--prepare-only)
+      [[ "$MODE" == "menu" ]] || { printf 'Indicá una sola acción.\n' >&2; exit 2; }
+      MODE="$1"
+      shift
+      ;;
+    --reset-existing)
+      [[ "$MODE" == "menu" ]] || { printf 'No combines --reset-existing con otra acción.\n' >&2; exit 2; }
+      MODE="$1"
+      RESET_EXISTING_NAME="${2:-}"
+      [[ "$RESET_EXISTING_NAME" =~ ^[a-z0-9][a-z0-9_-]{0,47}$ ]] || {
+        printf 'Para --reset-existing indicá un nombre corto seguro, por ejemplo sodecar.\n' >&2
+        exit 2
+      }
+      shift 2
+      ;;
+    --root)
+      [[ -n "${2:-}" ]] || { printf 'Falta la ruta después de --root.\n' >&2; exit 2; }
+      UPDATE_ROOT="$2"
+      shift 2
+      ;;
+    --name)
+      [[ -n "${2:-}" ]] || { printf 'Falta el nombre después de --name.\n' >&2; exit 2; }
+      UPDATE_NAME="$2"
+      shift 2
+      ;;
+    *) printf 'Opción no reconocida: %s\n' "$1" >&2; usage >&2; exit 2 ;;
+  esac
+done
+if [[ -n "$UPDATE_NAME" || "$UPDATE_ROOT" != "$INSTALL_ROOT/deployments" ]]; then
+  [[ "$MODE" == "--update" ]] || { printf '--root y --name solo se usan con --update.\n' >&2; exit 2; }
 fi
-case "$MODE" in
-  menu|install|--update|--update-packages|--prepare-only|--reset-existing) ;;
-  *) printf 'Opción no reconocida: %s\n' "$MODE" >&2; usage >&2; exit 2 ;;
-esac
 
 fail() { printf 'Error: %s\n' "$*" >&2; exit 1; }
 info() { printf '\n==> %s\n' "$*"; }
@@ -181,7 +208,9 @@ git clone --depth 1 --branch "$BRANCH" "$REPOSITORY" "$TMP_ROOT/repo"
 
 if [[ "$MODE" == "--update" || "$MODE" == "update" ]]; then
   [[ -f "$TMP_ROOT/repo/scripts/update_installation.sh" ]] || fail "El repositorio no contiene el actualizador de instalaciones."
-  bash "$TMP_ROOT/repo/scripts/update_installation.sh" --root "$INSTALL_ROOT/deployments" --repo "$TMP_ROOT/repo"
+  UPDATE_ARGS=(--root "$UPDATE_ROOT" --repo "$TMP_ROOT/repo")
+  [[ -n "$UPDATE_NAME" ]] && UPDATE_ARGS+=(--name "$UPDATE_NAME")
+  bash "$TMP_ROOT/repo/scripts/update_installation.sh" "${UPDATE_ARGS[@]}"
   exit $?
 fi
 

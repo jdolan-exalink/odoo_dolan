@@ -13,15 +13,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # ---------------------------------------------------------------------------
 
 ODOO_VERSION="20.0"
-AR_REPOS=(
-  "https://github.com/ingadhoc/odoo-argentina-ce.git"
-  "https://github.com/ingadhoc/odoo-argentina.git"
-  "https://github.com/ingadhoc/argentina-sale.git"
-  "https://github.com/ingadhoc/account-financial-tools.git"
-  "https://github.com/ingadhoc/account-invoicing.git"
-  "https://github.com/ingadhoc/account-payment.git"
-  "https://github.com/ingadhoc/sale.git"
-)
+python3 "$SCRIPT_DIR/scripts/distribution_lock.py" >/dev/null
+AR_REPOS=()
+while IFS=$'\t' read -r repo_name repo_url repo_commit; do
+  AR_REPOS+=("${repo_name}|${repo_url}|${repo_commit}")
+done < <(python3 "$SCRIPT_DIR/scripts/distribution_lock.py" adhoc)
 
 usage() {
   cat <<'USAGE'
@@ -193,12 +189,12 @@ echo "--------------------------------------------------------"
 
 if [[ $CHECK_ONLY -eq 1 ]]; then
   rc=0
-  for repo in "${AR_REPOS[@]}"; do
-    branch="20.0"
-    if git ls-remote --heads "$repo" "$branch" | grep -q "$branch"; then
-      echo "OK: $repo ($branch accesible)"
+  for repo_entry in "${AR_REPOS[@]}"; do
+    IFS='|' read -r repo_name repo_url repo_commit <<< "$repo_entry"
+    if git ls-remote --heads "$repo_url" "refs/heads/20.0" | grep -q "refs/heads/20.0"; then
+      echo "OK: $repo_name (rama accesible; commit fijado $repo_commit)"
     else
-      echo "FALLO: $repo (branch $branch inaccesible)" >&2
+      echo "FALLO: $repo_name (rama 20.0 inaccesible; commit fijado $repo_commit)" >&2
       rc=1
     fi
   done
@@ -317,11 +313,26 @@ EOF
 chmod 600 .env
 cat > .dockerignore <<'EOF'
 .env
+.env.*
+!.env.example
 .git
 addons
 db-data
 odoo-data
 services
+certs
+backups
+private-backups
+TEST
+*.crt
+*.der
+*.key
+*.pem
+*.p12
+*.pfx
+*.dump
+*.sql
+*.bak
 EOF
 cat > .gitignore <<'EOF'
 .env
@@ -330,16 +341,31 @@ db-data
 odoo-data
 waha-data
 whisper-models
+certs
+backups
+private-backups
+TEST
+*.crt
+*.der
+*.key
+*.pem
+*.p12
+*.pfx
+*.dump
+*.sql
+*.bak
 EOF
 mkdir -p services/local-whisper
 cp -R "$SCRIPT_DIR/services/local-whisper/." services/local-whisper/
+cp "$SCRIPT_DIR/LICENSE" LICENSE
+cp "$SCRIPT_DIR/docs/THIRD_PARTY_NOTICES.md" THIRD_PARTY_NOTICES.md
 
 cp "$SCRIPT_DIR/installer/templates/Dockerfile.odoo" Dockerfile
 
 cat > docker-compose.yml <<EOF
 services:
   db:
-    image: postgres:17
+    image: postgres:17-alpine@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b
     container_name: ${CONTAINER_PREFIX}_db
     environment:
       POSTGRES_DB: postgres
@@ -356,7 +382,7 @@ services:
     restart: always
 
   waha:
-    image: devlikeapro/waha:latest
+    image: devlikeapro/waha:latest@sha256:2fc1787ddbd343ed2e7d59482846d1b22aa5ca134e29aa8d42d0e88c54e24779
     container_name: ${CONTAINER_PREFIX}_waha
     restart: unless-stopped
     environment:
@@ -435,12 +461,16 @@ workers = 0
 default_productivity_apps = True
 EOF
 
-echo "1/3 Descargando modulos Localizacion Argentina IngAdhoc (branch ${ODOO_VERSION})..."
+echo "1/3 Descargando modulos IngAdhoc fijados en distribution.lock.json..."
 cd addons
-for repo in "${AR_REPOS[@]}"; do
-  name="$(basename "$repo" .git)"
-  echo "  -> $name (branch ${ODOO_VERSION})"
-  git clone --depth 1 --branch "${ODOO_VERSION}" "$repo"
+for repo_entry in "${AR_REPOS[@]}"; do
+  IFS='|' read -r name repo_url repo_commit <<< "$repo_entry"
+  echo "  -> $name (${repo_commit})"
+  git init "$name"
+  git -C "$name" remote add origin "$repo_url"
+  git -C "$name" fetch --depth 1 origin "$repo_commit"
+  git -C "$name" checkout --detach FETCH_HEAD
+  [[ "$(git -C "$name" rev-parse HEAD)" == "$repo_commit" ]] || { echo "Commit IngAdhoc no coincide: $name" >&2; exit 1; }
   # Copy addon directories only. Do not move each clone's hidden .git folder
   # into the shared addons root or let duplicate module names nest in place.
   shopt -s nullglob

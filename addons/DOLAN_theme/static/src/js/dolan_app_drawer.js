@@ -3,31 +3,9 @@
 import { Component, proxy, signal, onMounted, onWillDestroy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService, useBus } from "@web/core/utils/hooks";
-import { patch } from "@web/core/utils/patch";
 import { rpc } from "@web/core/network/rpc";
 import { DolanIcon } from "./dolan_icon";
-import { NavBar } from "@web/webclient/navbar/navbar";
-
-/**
- * Patch de NavBar en OWL 3:
- * Conecta el botón toggle Enterprise (.o_menu_toggle) y el botón All Apps del sidebar
- * móvil directamente con el bus de Odoo, eliminando la dependencia de manipulaciones DOM frágiles.
- */
-patch(NavBar.prototype, {
-    toggleDolanAppDrawer() {
-        this.env.bus.trigger("DOLAN:TOGGLE_APP_DRAWER");
-    },
-    openDolanAppDrawer() {
-        // La casita siempre ABRE el Menú de Inicio; nunca lo cierra por toggle.
-        this.env.bus.trigger("DOLAN:OPEN_APP_DRAWER");
-    },
-    onAllAppsBtnClick() {
-        if (this.state && this.state.isAppMenuSidebarOpened !== undefined) {
-            this.state.isAppMenuSidebarOpened = false;
-        }
-        this.toggleDolanAppDrawer();
-    },
-});
+import { iconStyleUsesMask, normalizeIconStyle, resolveIconAsset, semanticAppId } from "./dolan_icon_registry";
 
 /**
  * SVG exacto de 14x14px (3 filas x 3 rectángulos) de Odoo 20 Enterprise (.o_menu_toggle)
@@ -78,6 +56,74 @@ export function shouldHandleAppDrawerKeydown(target, searchInput) {
         Boolean(target.closest('.o_dolan_ai_drawer'))
     );
     return !(isOtherEditor && !isAppSearch);
+}
+
+export function resolveDarkTheme(mode, systemPrefersDark) {
+    return mode === "dark" || mode === "contrast" || (mode === "system" && Boolean(systemPrefersDark));
+}
+
+export const DOLAN_UI_PALETTES = [
+    { id: "dolan", label: "DOLAN", primary: "#7938d2", secondary: "#017e84" },
+    { id: "ocean", label: "Océano", primary: "#0878b9", secondary: "#16b8c9" },
+    { id: "forest", label: "Bosque", primary: "#287271", secondary: "#70a288" },
+    { id: "sunset", label: "Atardecer", primary: "#d9603b", secondary: "#e6a23c" },
+    { id: "violet", label: "Violeta", primary: "#5f3b9c", secondary: "#d16bd3" },
+];
+
+export const DOLAN_THEME_MODES = [
+    { id: "light", label: "Claro", icon: "sun" },
+    { id: "dark", label: "Oscuro", icon: "moon" },
+    { id: "system", label: "Sistema", icon: "device-desktop" },
+    { id: "contrast", label: "Alto contraste", icon: "contrast" },
+];
+
+export const DOLAN_ICON_STYLES = [
+    ["odoo_original", "Iconos originales de Odoo"],
+    ["fluent_3d_classic", "Fluent 3D"],
+    ["fluent_flat_modern", "Fluent Flat"],
+    ["fluent_filled_pro", "Fluent Filled"],
+    ["fluent_outline_color", "Fluent Outline"],
+    ["tabler", "Tabler Minimal"],
+];
+
+export function applyDolanPalette(palette, companyColors = {}) {
+    const targets = [document.documentElement, document.body, document.querySelector(".o_web_client")].filter(Boolean);
+    const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active"];
+    const target = document.body;
+    if (target.classList.contains("o_dolan_high_contrast")) {
+        targets.forEach((node) => clearProperties.forEach((name) => node.style.removeProperty(name)));
+        target.dataset.dolanPalette = palette;
+        return;
+    }
+    const selected = DOLAN_UI_PALETTES.find((item) => item.id === palette) || DOLAN_UI_PALETTES[0];
+    const primary = palette === "company" ? (companyColors.primary || selected.primary) : selected.primary;
+    const secondary = palette === "company" ? (companyColors.secondary || selected.secondary) : selected.secondary;
+    const properties = {
+        "--dolan-primary": primary,
+        "--dolan-primary-hover": primary,
+        "--dolan-secondary": secondary,
+        "--dolan-color-primary": primary,
+        "--dolan-color-primary-hover": primary,
+        "--dolan-color-focus": primary,
+        "--dolan-color-secondary": secondary,
+        "--o-brand-primary": primary,
+        "--bs-primary": primary,
+        "--bs-primary-rgb": primary.match(/[\da-f]{2}/gi).map((part) => parseInt(part, 16)).join(", "),
+        "--NavBar-entry-borderColor-active": primary,
+        "--dolan-color-primary-soft": `color-mix(in srgb, ${primary} 18%, transparent)`,
+        "--dolan-color-secondary-soft": `color-mix(in srgb, ${secondary} 18%, transparent)`,
+    };
+    targets.forEach((node) => Object.entries(properties).forEach(([name, value]) => node.style.setProperty(name, value)));
+    document.body.dataset.dolanPalette = palette;
+}
+
+export function selectVisibleKpis(kpis, visibleKeys) {
+    const keys = new Set(Array.isArray(visibleKeys) ? visibleKeys : []);
+    return (kpis || []).filter((kpi) => keys.has(kpi.key));
+}
+
+export function isSafePosShortcutUrl(url) {
+    return typeof url === "string" && /^\/pos\/ui\?config_id=\d+$/.test(url);
 }
 
 export function sortDesktopApps(apps, mode, usageCounts = {}, items = [], locale = undefined) {
@@ -138,7 +184,14 @@ export class DolanAppDrawerSystray extends Component {
             setTimeout(() => document.querySelector(".o_dolan_quick_actions_widget")?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
         });
 
-        const savedDark = window.localStorage.getItem("dolan_dark_mode") === "1";
+        const legacySavedDark = window.localStorage.getItem("dolan_dark_mode") === "1";
+        const savedThemeMode = window.localStorage.getItem("dolan_theme_mode") || (legacySavedDark ? "dark" : "light");
+        this._systemThemeQuery = window.matchMedia?.("(prefers-color-scheme: dark)");
+        const savedDark = resolveDarkTheme(savedThemeMode, this._systemThemeQuery?.matches);
+        this._onSystemThemeChange = () => {
+            if (this.state?.themeMode === "system") this.applyThemeMode("system");
+        };
+        this._systemThemeQuery?.addEventListener?.("change", this._onSystemThemeChange);
         if (savedDark) {
             document.body.classList.add("o_dolan_dark_mode");
         }
@@ -161,6 +214,14 @@ export class DolanAppDrawerSystray extends Component {
             query: "",
             selectedIndex: -1,
             darkMode: savedDark,
+            themeMode: savedThemeMode,
+            themeMenuOpen: false,
+            palette: "dolan",
+            paletteChoices: [],
+            themeChoices: DOLAN_THEME_MODES,
+            iconStyleChoices: DOLAN_ICON_STYLES,
+            iconStyle: "fluent_3d_classic",
+            iconStylePreference: "global",
             hiddenAppXmlids: [],
             activeTab: "apps",
             sortMode: "most_used",
@@ -183,6 +244,9 @@ export class DolanAppDrawerSystray extends Component {
             usageCounts: {},
             recentKeys: [],
             kpis: [],
+            posShortcuts: [],
+            visibleWidgetKeys: [],
+            workspaceConfigOpen: false,
             kpisLoading: false,
             kpisError: false,
             roleFilter: window.localStorage.getItem("dolan_workspace_role") || "all",
@@ -212,7 +276,9 @@ export class DolanAppDrawerSystray extends Component {
             }
             if (ev.key === "Escape") {
                 ev.preventDefault();
-                if (this.state.folderDraft) {
+                if (this.state.themeMenuOpen) {
+                    this.state.themeMenuOpen = false;
+                } else if (this.state.folderDraft) {
                     this.state.folderDraft = null;
                 } else if (this.state.openFolderId) {
                     this.closeDesktopFolder();
@@ -243,6 +309,9 @@ export class DolanAppDrawerSystray extends Component {
         // Any click on .o_menu_toggle, .o_dolan_enterprise_toggle, or .o_navbar_apps_menu button
         // triggers toggleDrawer() even if hydration or route changes occur.
         this._onDocumentClick = (ev) => {
+            if (this.state.themeMenuOpen && !ev.target.closest(".o_dolan_theme_picker")) {
+                this.state.themeMenuOpen = false;
+            }
             const suppressed = this._suppressDesktopClick;
             if (suppressed && suppressed.until >= Date.now()) {
                 const appCell = ev.target.closest(".o_dolan_app_cell[data-menu-key]");
@@ -422,6 +491,7 @@ export class DolanAppDrawerSystray extends Component {
             document.removeEventListener("pointermove", this._onDesktopPointerMove, true);
             document.removeEventListener("pointerup", this._onDesktopPointerUp, true);
             document.removeEventListener("pointercancel", this._onDesktopPointerCancel, true);
+            this._systemThemeQuery?.removeEventListener?.("change", this._onSystemThemeChange);
             document.body.classList.remove("o_home_menu_background");
         });
     }
@@ -658,6 +728,11 @@ export class DolanAppDrawerSystray extends Component {
     restoreKpis() {
         this.state.kpiStates = {};
         this._saveJson("dolan_kpi_states", {});
+        this.state.visibleWidgetKeys = this.state.kpis.map((kpi) => kpi.key);
+        this.saveWorkspacePreferences({
+            kpi_states: {},
+            visible_widget_keys: this.state.visibleWidgetKeys,
+        });
     }
 
     _setKpiState(key, entry) {
@@ -671,6 +746,11 @@ export class DolanAppDrawerSystray extends Component {
     }
 
     getAppIconUrl(app) {
+        const semanticId = semanticAppId(app);
+        if (semanticId) {
+            const icon = resolveIconAsset(semanticId, this.state.iconStyle, window.dolanUiIconAssignments || {});
+            if (icon) return icon;
+        }
         if (typeof app.webIcon === "string" && app.webIcon.includes(",")) {
             const [mod, iconPath] = app.webIcon.split(",");
             return `/${mod.trim()}/${iconPath.trim().replace(/^\/+/, "")}`;
@@ -679,6 +759,58 @@ export class DolanAppDrawerSystray extends Component {
             return app.webIconData;
         }
         return null;
+    }
+
+    isMaskIconStyle(style = this.state.iconStyle) {
+        return iconStyleUsesMask(style);
+    }
+
+    getIconStylePreviewMask(semanticId, style) {
+        const url = resolveIconAsset(semanticId, style, window.dolanUiIconAssignments || {});
+        const colors = { invoicing: "#1687ff", sales: "#13b8a6", whatsapp: "#25d366" };
+        const key = String(semanticId || "").replace("app.", "");
+        return url ? `--dolan-icon-mask-image: url("${url}"); --dolan-icon-accent: ${colors[key] || "#8254d8"}` : "";
+    }
+
+    getAppIconMaskStyle(app) {
+        const url = this.getAppIconUrl(app);
+        const semantic = semanticAppId(app);
+        const colors = {
+            blue: "#1687ff", teal: "#13b8a6", purple: "#9b6be8", orange: "#f08a24",
+            green: "#24a56a", pink: "#e875a8", yellow: "#d6a500", red: "#e25858",
+            violet: "#8254d8", gray: "#667085",
+        };
+        const catalog = window.dolanUiIconCatalog?.[semantic];
+        const accent = colors[catalog?.color] || "#7c5ce7";
+        return url ? `--dolan-icon-mask-image: url("${url}"); --dolan-icon-accent: ${accent}` : "";
+    }
+
+    getAppIconClass() {
+        const style = this.state.iconStyle || "fluent_3d_classic";
+        return `o_dolan_icon_variant_${style}${style === "tabler" ? " o_dolan_tabler_icon_asset" : ""}`;
+    }
+
+    onAppIconError(ev, app) {
+        const image = ev.currentTarget;
+        const nativeUrl = this.getNativeAppIconUrl(app);
+        if (!image.dataset.dolanNativeFallback && nativeUrl && image.src !== new URL(nativeUrl, window.location.origin).href) {
+            image.dataset.dolanNativeFallback = "1";
+            image.dataset.dolanIconFallback = "1";
+            image.src = nativeUrl;
+            return;
+        }
+        const initials = String(app?.name || "?").trim().slice(0, 2).toLocaleUpperCase().replace(/[^A-Z0-9À-ÿ]/g, "") || "?";
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="#714b67"/><stop offset="1" stop-color="#017e84"/></linearGradient></defs><rect width="96" height="96" rx="18" fill="url(#g)"/><text x="48" y="58" text-anchor="middle" font-family="sans-serif" font-size="32" font-weight="700" fill="white">${initials}</text></svg>`;
+        image.onerror = null;
+        image.src = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+    }
+
+    getNativeAppIconUrl(app) {
+        if (typeof app?.webIcon === "string" && app.webIcon.includes(",")) {
+            const [mod, iconPath] = app.webIcon.split(",");
+            return `/${mod.trim()}/${iconPath.trim().replace(/^\/+/, "")}`;
+        }
+        return app?.webIconData || null;
     }
 
     static isHomePath(pathname = window.location.pathname) {
@@ -752,28 +884,102 @@ export class DolanAppDrawerSystray extends Component {
         }
     }
 
-    toggleDarkMode() {
-        this.state.darkMode = !this.state.darkMode;
+    toggleThemeMenu() {
+        this.state.themeMenuOpen = !this.state.themeMenuOpen;
+    }
+
+    chooseSessionTheme(mode) {
+        if (!DOLAN_THEME_MODES.some((item) => item.id === mode)) return;
+        this.state.themeMenuOpen = false;
+        window.sessionStorage.setItem("dolan_session_theme_mode", mode);
+        this.applyResolvedTheme(mode);
+        applyDolanPalette(this.state.palette, this._companyColors || {});
+    }
+
+    chooseSessionPalette(palette) {
+        if (!this.state.paletteChoices.some((item) => item.id === palette)) return;
+        this.state.palette = palette;
+        window.sessionStorage.setItem("dolan_session_palette", palette);
+        applyDolanPalette(palette, this._companyColors || {});
+    }
+
+    chooseSessionIconStyle(style) {
+        this.state.iconStyle = normalizeIconStyle(style);
+        window.sessionStorage.setItem("dolan_session_icon_style", this.state.iconStyle);
+        document.body.dataset.dolanIconStyle = this.state.iconStyle;
+    }
+
+    resetSessionAppearance() {
+        ["dolan_session_theme_mode", "dolan_session_palette", "dolan_session_icon_style"].forEach((key) => window.sessionStorage.removeItem(key));
+        this.state.themeMenuOpen = false;
+        this.loadScreenPreferences();
+    }
+
+    applyResolvedTheme(mode) {
+        this.state.themeMode = mode;
+        this.state.darkMode = resolveDarkTheme(mode, this._systemThemeQuery?.matches);
         document.body.classList.toggle("o_dolan_dark_mode", this.state.darkMode);
-        window.localStorage.setItem("dolan_dark_mode", this.state.darkMode ? "1" : "0");
+        document.body.classList.toggle("o_dolan_high_contrast", mode === "contrast");
+        document.documentElement.style.colorScheme = this.state.darkMode ? "dark" : "light";
+        applyDolanPalette(this.state.palette, this._companyColors || {});
         syncColorSchemeCookie(this.state.darkMode);
-        this.saveScreenPreferences({ theme_mode: this.state.darkMode ? "dark" : "light" });
+    }
+
+    toggleDarkMode() {
+        this.chooseSessionTheme(this.state.darkMode ? "light" : "dark");
+    }
+
+    applyThemeMode(mode, persist = false) {
+        if (!["light", "dark", "system", "contrast"].includes(mode)) return;
+        this.state.themeMode = mode;
+        this.state.darkMode = resolveDarkTheme(mode, this._systemThemeQuery?.matches);
+        document.body.classList.toggle("o_dolan_dark_mode", this.state.darkMode);
+        document.body.classList.toggle("o_dolan_high_contrast", mode === "contrast");
+        document.documentElement.style.colorScheme = this.state.darkMode ? "dark" : "light";
+        syncColorSchemeCookie(this.state.darkMode);
+        window.localStorage.setItem("dolan_theme_mode", mode);
+        window.localStorage.setItem("dolan_dark_mode", this.state.darkMode ? "1" : "0");
+        if (persist) this.saveScreenPreferences({ theme_mode: mode });
     }
 
     async loadScreenPreferences() {
         const loginThemeOverride = window.localStorage.getItem("dolan_login_theme_override");
+        const legacyThemeMode = loginThemeOverride || window.localStorage.getItem("dolan_theme_mode") || (window.localStorage.getItem("dolan_dark_mode") === "1" ? "dark" : "light");
         try {
             const response = await rpc("/dolan_theme/screen_preferences", {
-                values: {
-                    theme_mode: loginThemeOverride || (window.localStorage.getItem("dolan_dark_mode") === "1" ? "dark" : "light"),
+                values: loginThemeOverride ? { theme_mode: loginThemeOverride } : {},
+                legacy_values: {
+                    theme_mode: legacyThemeMode,
                     compact_mode: window.localStorage.getItem("dolan_density") === "compact",
                 },
             });
-            this.state.darkMode = response.theme_mode === "dark";
+            const sessionTheme = window.sessionStorage.getItem("dolan_session_theme_mode");
+            const sessionPalette = window.sessionStorage.getItem("dolan_session_palette");
+            const sessionIconStyle = window.sessionStorage.getItem("dolan_session_icon_style");
+            this.state.themeMode = sessionTheme || response.theme_mode || "system";
+            this.state.darkMode = resolveDarkTheme(this.state.themeMode, this._systemThemeQuery?.matches);
+            this.state.iconStyle = normalizeIconStyle(sessionIconStyle || response.icon_style);
+            this.state.iconStylePreference = response.icon_style_preference || "global";
+            this.state.palette = sessionPalette || response.palette || "dolan";
+            this.state.paletteChoices = [
+                ...DOLAN_UI_PALETTES,
+                { id: "company", label: "Empresa", primary: response.primary_color || "#714B67", secondary: response.secondary_color || "#017e84" },
+            ];
+            this._companyColors = { primary: response.primary_color, secondary: response.secondary_color };
+            window.dolanUiIconAssignments = response.icon_assignments || {};
+            window.dolanUiIconNames = response.icon_names || {};
+            window.dolanUiIconXmlids = response.icon_xmlids || {};
+            window.dolanUiIconCatalog = response.icon_catalog || {};
+            document.body.dataset.dolanIconStyle = this.state.iconStyle;
+            document.body.dataset.dolanHomeBgStyle = response.home_bg_style || "enterprise";
             this.state.compact = Boolean(response.compact_mode);
             this.state.hiddenAppXmlids = response.hidden_app_xmlids || [];
             document.body.classList.toggle("o_dolan_dark_mode", this.state.darkMode);
+            document.body.classList.toggle("o_dolan_high_contrast", this.state.themeMode === "contrast");
+            applyDolanPalette(this.state.palette, this._companyColors);
+            document.documentElement.style.colorScheme = this.state.darkMode ? "dark" : "light";
             document.body.classList.toggle("o_dolan_compact", this.state.compact);
+            window.localStorage.setItem("dolan_theme_mode", this.state.themeMode);
             window.localStorage.setItem("dolan_dark_mode", this.state.darkMode ? "1" : "0");
             if (loginThemeOverride && response.theme_mode === loginThemeOverride) {
                 window.localStorage.removeItem("dolan_login_theme_override");
@@ -1414,7 +1620,7 @@ export class DolanAppDrawerSystray extends Component {
 
     get visibleKpis() {
         const role = this.state.roleFilter;
-        const kpis = this.state.kpis || [];
+        const kpis = selectVisibleKpis(this.state.kpis, this.state.visibleWidgetKeys);
         const byRole = role === "all" ? kpis : kpis.filter((k) => k.role === role || k.role === "general");
         return byRole.filter((k) => !this._isHiddenKpi(k));
     }
@@ -1431,6 +1637,28 @@ export class DolanAppDrawerSystray extends Component {
     setRoleFilter(role) {
         this.state.roleFilter = role;
         window.localStorage.setItem("dolan_workspace_role", role);
+        this.saveWorkspacePreferences({ role_filter: role });
+    }
+
+    toggleWorkspaceConfig() {
+        this.state.workspaceConfigOpen = !this.state.workspaceConfigOpen;
+    }
+
+    toggleWorkspaceWidget(key) {
+        if (!this.state.kpis.some((kpi) => kpi.key === key)) return;
+        const visible = new Set(this.state.visibleWidgetKeys);
+        if (visible.has(key)) visible.delete(key);
+        else visible.add(key);
+        this.state.visibleWidgetKeys = [...visible];
+        this.saveWorkspacePreferences({ visible_widget_keys: this.state.visibleWidgetKeys });
+    }
+
+    async saveWorkspacePreferences(values) {
+        try {
+            await rpc("/dolan_theme/workspace_preferences/save", { values });
+        } catch {
+            this.notification.add("No se pudieron sincronizar los ajustes de Mi Espacio.", { type: "warning" });
+        }
     }
 
     async loadKpis() {
@@ -1438,12 +1666,26 @@ export class DolanAppDrawerSystray extends Component {
         try {
             const res = await rpc("/dolan_theme/workspace_kpis", {});
             this.state.kpis = res.kpis || [];
+            this.state.visibleWidgetKeys = Array.isArray(res.visible_widget_keys)
+                ? res.visible_widget_keys
+                : this.state.kpis.map((kpi) => kpi.key);
+            this.state.roleFilter = res.role_filter || "all";
+            this.state.kpiStates = res.kpi_states || {};
+            const posRes = await rpc("/dolan_theme/workspace_pos_shortcuts", {}).catch(() => ({ points_of_sale: [] }));
+            this.state.posShortcuts = posRes.points_of_sale || [];
+            window.localStorage.setItem("dolan_workspace_role", this.state.roleFilter);
+            this._saveJson("dolan_kpi_states", this.state.kpiStates);
             this.state.kpisError = false;
         } catch {
             this.state.kpisError = true;
         } finally {
             this.state.kpisLoading = false;
         }
+    }
+
+    openPosShortcut(pointOfSale) {
+        if (!isSafePosShortcutUrl(pointOfSale?.url)) return;
+        window.location.assign(pointOfSale.url);
     }
 
     openKpi(kpi) {

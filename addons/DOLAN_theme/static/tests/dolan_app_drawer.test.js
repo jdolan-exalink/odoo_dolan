@@ -1,6 +1,77 @@
 import { expect, test } from "@odoo/hoot";
 
-import { shouldHandleAppDrawerKeydown, sortDesktopApps } from "@DOLAN_theme/js/dolan_app_drawer";
+import { DOLAN_UI_PALETTES, DOLAN_THEME_MODES, isSafePosShortcutUrl, resolveDarkTheme, selectVisibleKpis, shouldHandleAppDrawerKeydown, sortDesktopApps } from "@DOLAN_theme/js/dolan_app_drawer";
+import { iconStyleUsesMask, normalizeIconStyle, resolveActionIconAsset, resolveIconAsset, semanticAppId } from "@DOLAN_theme/js/dolan_icon_registry";
+
+test("theme mode respects explicit light and dark choices", () => {
+    expect(resolveDarkTheme("light", true)).toBe(false);
+    expect(resolveDarkTheme("dark", false)).toBe(true);
+});
+
+test("system theme follows the operating system preference", () => {
+    expect(resolveDarkTheme("system", true)).toBe(true);
+    expect(resolveDarkTheme("system", false)).toBe(false);
+});
+
+test("high contrast is a separate dark accessibility theme", () => {
+    expect(resolveDarkTheme("contrast", false)).toBe(true);
+    expect(DOLAN_THEME_MODES.map((mode) => mode.id)).toEqual(["light", "dark", "system", "contrast"]);
+});
+
+test("theme picker provides the standard DOLAN and alternate color combinations", () => {
+    expect(DOLAN_UI_PALETTES.map((palette) => palette.id)).toEqual(["dolan", "ocean", "forest", "sunset", "violet"]);
+    expect(DOLAN_UI_PALETTES.every((palette) => palette.primary.startsWith("#") && palette.secondary.startsWith("#"))).toBe(true);
+});
+
+test("semantic app names map to stable DOLAN identifiers", () => {
+    window.dolanUiIconXmlids = {
+        "sale.sale_menu_root": "app.sales",
+        "account.menu_finance": "app.invoicing",
+        "DOLAN_accounting.menu_dolan_accounting_root": "app.accounting",
+        "point_of_sale.menu_point_root": "app.pos",
+    };
+    expect(semanticAppId({ xmlid: "sale.sale_menu_root", name: "Ventas" })).toBe("app.sales");
+    expect(semanticAppId({ xmlid: "account.menu_finance", name: "Facturación" })).toBe("app.invoicing");
+    expect(semanticAppId({ xmlid: "DOLAN_accounting.menu_dolan_accounting_root", name: "Contabilidad" })).toBe("app.accounting");
+    expect(semanticAppId({ xmlid: "point_of_sale.menu_point_root", name: "Punto de venta" })).toBe("app.pos");
+    window.dolanUiIconNames = { "facturacion": "app.invoicing", "facturación": "app.invoicing" };
+    expect(semanticAppId({ name: "Facturación" })).toBe("app.invoicing");
+    expect(semanticAppId({ name: "Facturación anterior" })).toBe(null);
+});
+
+test("icon variants resolve local resources and retain legacy style aliases", () => {
+    const assignment = { "app.sales": {
+        fluent_3d: "fluent_3d/sales.png",
+        fluent_flat: "fluent_flat/sales.svg",
+        fluent_filled: "fluent_filled/sales.svg",
+        fluent_regular: "fluent_regular/sales.svg",
+        tabler: "tabler/chart-pie.svg",
+    } };
+    expect(resolveIconAsset("app.sales", "fluent_3d_classic", assignment)).toBe("/DOLAN_theme/static/src/lib/fluent_3d/sales.png");
+    expect(resolveIconAsset("app.sales", "fluent_flat_modern", assignment)).toBe("/DOLAN_theme/static/src/lib/fluent_flat/sales.svg");
+    expect(resolveIconAsset("app.sales", "fluent_outline_color", assignment)).toBe("/DOLAN_theme/static/src/lib/fluent_regular/sales.svg");
+    expect(resolveIconAsset("app.sales", "tabler", assignment)).toBe("/DOLAN_theme/static/src/lib/tabler/chart-pie.svg");
+    expect(resolveIconAsset("app.sales", "odoo_original", assignment)).toBe(null);
+    expect(resolveIconAsset("app.whatsapp", "odoo_original", assignment)).toBe(null);
+    expect(resolveIconAsset("app.sales", "fluent_3d_classic", { "app.sales": { fluent_3d: "../../secret.png" } })).toBe(null);
+    expect(normalizeIconStyle("fluent")).toBe("fluent_3d_classic");
+    expect(normalizeIconStyle("unknown_style")).toBe("fluent_3d_classic");
+    expect(iconStyleUsesMask("fluent_filled_duotone")).toBe(true);
+    expect(resolveActionIconAsset("search")).toBe("/DOLAN_theme/static/src/lib/tabler/search.svg");
+    expect(resolveIconAsset("app.unknown", "fluent", assignment)).toBe(null);
+});
+
+test("Mi Espacio only shows widgets saved for this user", () => {
+    const widgets = [{ key: "quotes_open" }, { key: "invoices_draft" }];
+    expect(selectVisibleKpis(widgets, ["quotes_open"]).map((widget) => widget.key)).toEqual(["quotes_open"]);
+    expect(selectVisibleKpis(widgets, []).length).toBe(0);
+});
+
+test("POS shortcuts only navigate to the native Odoo POS route", () => {
+    expect(isSafePosShortcutUrl("/pos/ui?config_id=2")).toBe(true);
+    expect(isSafePosShortcutUrl("https://example.invalid/pos/ui?config_id=2")).toBe(false);
+    expect(isSafePosShortcutUrl("/web#action=1")).toBe(false);
+});
 
 const apps = [
     { id: 1, xmlid: "base.menu_sales", name: "Ventas" },

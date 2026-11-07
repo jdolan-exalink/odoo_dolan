@@ -48,7 +48,9 @@ class TestAccountingNavigation(TransactionCase):
 
     def test_native_actions_are_shared(self):
         pairs = [
-            ('customers_invoices', 'account.action_move_out_invoice', 'account.move'),
+            # This is a DOLAN action so multi-company selection is handled by
+            # the standard allowed_company_ids domain without a fixed company.
+            ('customers_invoices', 'DOLAN_accounting.action_dolan_customer_invoices', 'account.move'),
             ('vendors_invoices', 'account.action_move_in_invoice', 'account.move'),
             ('customers_payments', 'account.action_account_payments', 'account.payment'),
             ('vendors_payments', 'account.action_account_payments_payable', 'account.payment'),

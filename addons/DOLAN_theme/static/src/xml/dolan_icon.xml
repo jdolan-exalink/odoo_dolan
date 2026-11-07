@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="DOLAN_theme.Icon">
-        <svg class="o_dolan_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+        <span t-if="this.isActionIconAsset" class="o_dolan_action_icon_asset" t-att-style="this.actionIconStyle"
+              aria-hidden="true"/>
+        <img t-elif="this.assetUrl" class="o_dolan_icon_asset" t-att-class="this.assetClass"
+             t-att-src="this.assetUrl" t-att-width="this.size" t-att-height="this.size"
+             alt="" aria-hidden="true" draggable="false"/>
+        <svg t-else="" class="o_dolan_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
              t-att-width="this.size" t-att-height="this.size"
              t-att-fill="this.props.filled ? 'currentColor' : 'none'"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

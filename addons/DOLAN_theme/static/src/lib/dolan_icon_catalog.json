@@ -1,0 +1,1092 @@
+{
+  "schema_version": 4,
+  "apps": [
+    {
+      "id": "app.invoicing",
+      "label": "Facturación",
+      "category": "finance",
+      "semantic": "receipt",
+      "aliases": [
+        "facturacion",
+        "facturación arca",
+        "invoicing"
+      ],
+      "xmlids": [
+        "DOLAN_l10n_ar_afip.menu_afip_root",
+        "account.menu_finance_entries",
+        "account.menu_finance"
+      ],
+      "module_ids": [
+        "DOLAN_l10n_ar_afip"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/invoicing.png",
+        "fluent_flat": "fluent_flat/invoicing.svg",
+        "fluent_filled": "fluent_filled/invoicing.svg",
+        "fluent_regular": "fluent_regular/invoicing.svg",
+        "tabler": "tabler/invoice.svg"
+      }
+    },
+    {
+      "id": "app.sales",
+      "label": "Ventas",
+      "category": "commerce",
+      "semantic": "chart_increasing",
+      "aliases": [
+        "ventas",
+        "sales"
+      ],
+      "xmlids": [
+        "sale.sale_menu_root"
+      ],
+      "module_ids": [
+        "sale"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/sales.png",
+        "fluent_flat": "fluent_flat/sales.svg",
+        "fluent_filled": "fluent_filled/sales.svg",
+        "fluent_regular": "fluent_regular/sales.svg",
+        "tabler": "tabler/chart-line.svg"
+      }
+    },
+    {
+      "id": "app.utilities",
+      "label": "Utilidades",
+      "category": "tools",
+      "semantic": "toolbox",
+      "aliases": [
+        "utilidades",
+        "utilities"
+      ],
+      "xmlids": [],
+      "module_ids": [
+        "DOLAN_base"
+      ],
+      "color": "gray",
+      "assets": {
+        "fluent_3d": "fluent_3d/utilities.png",
+        "fluent_flat": "fluent_flat/utilities.svg",
+        "fluent_filled": "fluent_filled/utilities.svg",
+        "fluent_regular": "fluent_regular/utilities.svg",
+        "tabler": "tabler/adjustments.svg"
+      }
+    },
+    {
+      "id": "app.crm",
+      "label": "CRM",
+      "category": "commerce",
+      "semantic": "handshake",
+      "aliases": [
+        "crm"
+      ],
+      "xmlids": [
+        "crm.crm_menu_root"
+      ],
+      "module_ids": [
+        "crm"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/crm.png",
+        "fluent_flat": "fluent_flat/crm.svg",
+        "fluent_filled": "fluent_filled/crm.svg",
+        "fluent_regular": "fluent_regular/crm.svg",
+        "tabler": null
+      }
+    },
+    {
+      "id": "app.pos",
+      "label": "Punto de venta",
+      "category": "commerce",
+      "semantic": "store",
+      "aliases": [
+        "punto de venta",
+        "point of sale",
+        "pos"
+      ],
+      "xmlids": [
+        "point_of_sale.menu_point_root"
+      ],
+      "module_ids": [
+        "point_of_sale"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/pos.png",
+        "fluent_flat": "fluent_flat/pos.svg",
+        "fluent_filled": "fluent_filled/pos.svg",
+        "fluent_regular": "fluent_regular/pos.svg",
+        "tabler": "tabler/building-store.svg"
+      }
+    },
+    {
+      "id": "app.dashboards",
+      "label": "Tableros",
+      "category": "analytics",
+      "semantic": "bar_chart",
+      "aliases": [
+        "tableros",
+        "dashboards"
+      ],
+      "xmlids": [
+        "DOLAN_knowledge_bi.menu_dolan_dashboard_root"
+      ],
+      "module_ids": [
+        "DOLAN_knowledge_bi"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/dashboards.png",
+        "fluent_flat": "fluent_flat/dashboards.svg",
+        "fluent_filled": "fluent_filled/dashboards.svg",
+        "fluent_regular": "fluent_regular/dashboards.svg",
+        "tabler": "tabler/chart-bar.svg"
+      }
+    },
+    {
+      "id": "app.ai",
+      "label": "IA",
+      "category": "technology",
+      "semantic": "robot",
+      "aliases": [
+        "ia",
+        "inteligencia artificial",
+        "dolan ai"
+      ],
+      "xmlids": [
+        "DOLAN_ai.menu_dolan_ai_root"
+      ],
+      "module_ids": [
+        "DOLAN_ai"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/ai.png",
+        "fluent_flat": "fluent_flat/ai.svg",
+        "fluent_filled": "fluent_filled/ai.svg",
+        "fluent_regular": "fluent_regular/ai.svg",
+        "tabler": "tabler/robot.svg"
+      }
+    },
+    {
+      "id": "app.expenses",
+      "label": "Gastos",
+      "category": "finance",
+      "semantic": "purse",
+      "aliases": [
+        "gastos",
+        "expenses"
+      ],
+      "xmlids": [
+        "hr_expense.menu_hr_expense_root"
+      ],
+      "module_ids": [
+        "hr_expense"
+      ],
+      "color": "green",
+      "assets": {
+        "fluent_3d": "fluent_3d/expenses.png",
+        "fluent_flat": "fluent_flat/expenses.svg",
+        "fluent_filled": "fluent_filled/expenses.svg",
+        "fluent_regular": "fluent_regular/expenses.svg",
+        "tabler": "tabler/wallet.svg"
+      }
+    },
+    {
+      "id": "app.articles",
+      "label": "Artículos",
+      "category": "knowledge",
+      "semantic": "books",
+      "aliases": [
+        "articulos",
+        "artículos",
+        "knowledge",
+        "conocimiento"
+      ],
+      "xmlids": [
+        "knowledge.knowledge_menu_root"
+      ],
+      "module_ids": [
+        "knowledge"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/articles.png",
+        "fluent_flat": "fluent_flat/articles.svg",
+        "fluent_filled": "fluent_filled/articles.svg",
+        "fluent_regular": "fluent_regular/articles.svg",
+        "tabler": "tabler/book-2.svg"
+      }
+    },
+    {
+      "id": "app.attendance",
+      "label": "Asistencias",
+      "category": "people",
+      "semantic": "alarm_clock",
+      "aliases": [
+        "asistencias",
+        "attendance"
+      ],
+      "xmlids": [
+        "hr_attendance.menu_hr_attendance_root"
+      ],
+      "module_ids": [
+        "hr_attendance"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/attendance.png",
+        "fluent_flat": "fluent_flat/attendance.svg",
+        "fluent_filled": "fluent_filled/attendance.svg",
+        "fluent_regular": "fluent_regular/attendance.svg",
+        "tabler": null
+      }
+    },
+    {
+      "id": "app.calendar",
+      "label": "Calendario",
+      "category": "productivity",
+      "semantic": "tear_off_calendar",
+      "aliases": [
+        "calendario",
+        "calendar"
+      ],
+      "xmlids": [
+        "calendar.mail_menu_calendar"
+      ],
+      "module_ids": [
+        "calendar"
+      ],
+      "color": "yellow",
+      "assets": {
+        "fluent_3d": "fluent_3d/calendar.png",
+        "fluent_flat": "fluent_flat/calendar.svg",
+        "fluent_filled": "fluent_filled/calendar.svg",
+        "fluent_regular": "fluent_regular/calendar.svg",
+        "tabler": "tabler/calendar-event.svg"
+      }
+    },
+    {
+      "id": "app.livechat",
+      "label": "Chat en vivo",
+      "category": "communication",
+      "semantic": "headphone",
+      "aliases": [
+        "chat en vivo",
+        "live chat"
+      ],
+      "xmlids": [
+        "im_livechat.menu_livechat_root"
+      ],
+      "module_ids": [
+        "im_livechat"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/livechat.png",
+        "fluent_flat": "fluent_flat/livechat.svg",
+        "fluent_filled": "fluent_filled/livechat.svg",
+        "fluent_regular": "fluent_regular/livechat.svg",
+        "tabler": null
+      }
+    },
+    {
+      "id": "app.accounting",
+      "label": "Contabilidad",
+      "category": "finance",
+      "semantic": "abacus",
+      "aliases": [
+        "contabilidad",
+        "accounting"
+      ],
+      "xmlids": [
+        "DOLAN_accounting.menu_dolan_accounting_root"
+      ],
+      "module_ids": [
+        "account"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/accounting.png",
+        "fluent_flat": "fluent_flat/accounting.svg",
+        "fluent_filled": "fluent_filled/accounting.svg",
+        "fluent_regular": "fluent_regular/accounting.svg",
+        "tabler": "tabler/chart-pie.svg"
+      }
+    },
+    {
+      "id": "app.purchases",
+      "label": "Compras",
+      "category": "commerce",
+      "semantic": "shopping_bags",
+      "aliases": [
+        "compras",
+        "purchase"
+      ],
+      "xmlids": [
+        "purchase.menu_purchase_root"
+      ],
+      "module_ids": [
+        "purchase"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/purchases.png",
+        "fluent_flat": "fluent_flat/purchases.svg",
+        "fluent_filled": "fluent_filled/purchases.svg",
+        "fluent_regular": "fluent_regular/purchases.svg",
+        "tabler": "tabler/shopping-cart.svg"
+      }
+    },
+    {
+      "id": "app.contacts",
+      "label": "Contactos",
+      "category": "people",
+      "semantic": "contact_cards",
+      "aliases": [
+        "contactos",
+        "contacts",
+        "clientes"
+      ],
+      "xmlids": [
+        "contacts.menu_contacts"
+      ],
+      "module_ids": [
+        "contacts"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/contacts.png",
+        "fluent_flat": "fluent_flat/contacts.svg",
+        "fluent_filled": "fluent_filled/contacts.svg",
+        "fluent_regular": "fluent_regular/contacts.svg",
+        "tabler": "tabler/users.svg"
+      }
+    },
+    {
+      "id": "app.conversations",
+      "label": "Conversaciones",
+      "category": "communication",
+      "semantic": "speech_balloon",
+      "aliases": [
+        "conversaciones",
+        "discuss",
+        "chats"
+      ],
+      "xmlids": [
+        "mail.menu_root_discuss"
+      ],
+      "module_ids": [
+        "mail"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/conversations.png",
+        "fluent_flat": "fluent_flat/conversations.svg",
+        "fluent_filled": "fluent_filled/conversations.svg",
+        "fluent_regular": "fluent_regular/conversations.svg",
+        "tabler": "tabler/messages.svg"
+      }
+    },
+    {
+      "id": "app.events",
+      "label": "Eventos",
+      "category": "productivity",
+      "semantic": "admission_tickets",
+      "aliases": [
+        "eventos",
+        "events"
+      ],
+      "xmlids": [
+        "event.event_main_menu"
+      ],
+      "module_ids": [
+        "event"
+      ],
+      "color": "yellow",
+      "assets": {
+        "fluent_3d": "fluent_3d/events.png",
+        "fluent_flat": "fluent_flat/events.svg",
+        "fluent_filled": "fluent_filled/events.svg",
+        "fluent_regular": "fluent_regular/events.svg",
+        "tabler": "tabler/calendar.svg"
+      }
+    },
+    {
+      "id": "app.inventory",
+      "label": "Inventario",
+      "category": "operations",
+      "semantic": "package",
+      "aliases": [
+        "inventario",
+        "inventory",
+        "stock"
+      ],
+      "xmlids": [
+        "stock.menu_stock_root"
+      ],
+      "module_ids": [
+        "stock"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/inventory.png",
+        "fluent_flat": "fluent_flat/inventory.svg",
+        "fluent_filled": "fluent_filled/inventory.svg",
+        "fluent_regular": "fluent_regular/inventory.svg",
+        "tabler": "tabler/package.svg"
+      }
+    },
+    {
+      "id": "app.activities",
+      "label": "Actividades pendientes",
+      "category": "productivity",
+      "semantic": "clipboard_tasks",
+      "aliases": [
+        "actividades pendientes",
+        "to-do",
+        "todo"
+      ],
+      "xmlids": [
+        "project.menu_project_todo"
+      ],
+      "module_ids": [
+        "project_todo"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/activities.png",
+        "fluent_flat": "fluent_flat/activities.svg",
+        "fluent_filled": "fluent_filled/activities.svg",
+        "fluent_regular": "fluent_regular/activities.svg",
+        "tabler": "tabler/clipboard-check.svg"
+      }
+    },
+    {
+      "id": "app.lunch",
+      "label": "Almuerzo",
+      "category": "people",
+      "semantic": "fork_and_knife",
+      "aliases": [
+        "almuerzo",
+        "lunch"
+      ],
+      "xmlids": [
+        "lunch.menu_lunch"
+      ],
+      "module_ids": [
+        "lunch"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/lunch.png",
+        "fluent_flat": "fluent_flat/lunch.svg",
+        "fluent_filled": "fluent_filled/lunch.svg",
+        "fluent_regular": "fluent_regular/lunch.svg",
+        "tabler": null
+      }
+    },
+    {
+      "id": "app.maintenance",
+      "label": "Mantenimiento",
+      "category": "operations",
+      "semantic": "wrench",
+      "aliases": [
+        "mantenimiento",
+        "maintenance"
+      ],
+      "xmlids": [
+        "maintenance.menu_maintenance_title"
+      ],
+      "module_ids": [
+        "maintenance"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/maintenance.png",
+        "fluent_flat": "fluent_flat/maintenance.svg",
+        "fluent_filled": "fluent_filled/maintenance.svg",
+        "fluent_regular": "fluent_regular/maintenance.svg",
+        "tabler": "tabler/tool.svg"
+      }
+    },
+    {
+      "id": "app.manufacturing",
+      "label": "Manufactura",
+      "category": "operations",
+      "semantic": "factory",
+      "aliases": [
+        "manufactura",
+        "fabricacion",
+        "fabricación",
+        "manufacturing"
+      ],
+      "xmlids": [
+        "mrp.menu_mrp_root"
+      ],
+      "module_ids": [
+        "mrp"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/manufacturing.png",
+        "fluent_flat": "fluent_flat/manufacturing.svg",
+        "fluent_filled": "fluent_filled/manufacturing.svg",
+        "fluent_regular": "fluent_regular/manufacturing.svg",
+        "tabler": "tabler/building-factory.svg"
+      }
+    },
+    {
+      "id": "app.email_marketing",
+      "label": "Marketing por correo",
+      "category": "communication",
+      "semantic": "envelope",
+      "aliases": [
+        "marketing por correo",
+        "email marketing"
+      ],
+      "xmlids": [
+        "mass_mailing.mass_mailing_menu_root"
+      ],
+      "module_ids": [
+        "mass_mailing"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/email_marketing.png",
+        "fluent_flat": "fluent_flat/email_marketing.svg",
+        "fluent_filled": "fluent_filled/email_marketing.svg",
+        "fluent_regular": "fluent_regular/email_marketing.svg",
+        "tabler": null
+      }
+    },
+    {
+      "id": "app.sms_marketing",
+      "label": "Marketing por SMS",
+      "category": "communication",
+      "semantic": "mobile_phone",
+      "aliases": [
+        "marketing por sms",
+        "sms marketing"
+      ],
+      "xmlids": [
+        "mass_mailing_sms.mass_mailing_sms_menu"
+      ],
+      "module_ids": [
+        "mass_mailing_sms"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/sms_marketing.png",
+        "fluent_flat": "fluent_flat/sms_marketing.svg",
+        "fluent_filled": "fluent_filled/sms_marketing.svg",
+        "fluent_regular": "fluent_regular/sms_marketing.svg",
+        "tabler": null
+      }
+    },
+    {
+      "id": "app.kitchen",
+      "label": "Pantalla para cocina",
+      "category": "operations",
+      "semantic": "cooking",
+      "aliases": [
+        "pantalla para cocina",
+        "kitchen display"
+      ],
+      "xmlids": [
+        "pos_restaurant.menu_kitchen_display"
+      ],
+      "module_ids": [
+        "pos_restaurant"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/kitchen.png",
+        "fluent_flat": "fluent_flat/kitchen.svg",
+        "fluent_filled": "fluent_filled/kitchen.svg",
+        "fluent_regular": "fluent_regular/kitchen.svg",
+        "tabler": null
+      }
+    },
+    {
+      "id": "app.projects",
+      "label": "Proyectos",
+      "category": "productivity",
+      "semantic": "rocket",
+      "aliases": [
+        "proyectos",
+        "projects"
+      ],
+      "xmlids": [
+        "project.menu_main_pm"
+      ],
+      "module_ids": [
+        "project"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/projects.png",
+        "fluent_flat": "fluent_flat/projects.svg",
+        "fluent_filled": "fluent_filled/projects.svg",
+        "fluent_regular": "fluent_regular/projects.svg",
+        "tabler": "tabler/briefcase-2.svg"
+      }
+    },
+    {
+      "id": "app.repairs",
+      "label": "Reparaciones",
+      "category": "operations",
+      "semantic": "hammer_and_wrench",
+      "aliases": [
+        "reparaciones",
+        "repairs"
+      ],
+      "xmlids": [
+        "repair.menu_repair_order"
+      ],
+      "module_ids": [
+        "repair"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/repairs.png",
+        "fluent_flat": "fluent_flat/repairs.svg",
+        "fluent_filled": "fluent_filled/repairs.svg",
+        "fluent_regular": "fluent_regular/repairs.svg",
+        "tabler": null
+      }
+    },
+    {
+      "id": "app.subscriptions",
+      "label": "Suscripciones",
+      "category": "commerce",
+      "semantic": "repeat_button",
+      "aliases": [
+        "suscripciones",
+        "subscriptions"
+      ],
+      "xmlids": [
+        "sale_subscription.menu_sale_subscription_root"
+      ],
+      "module_ids": [
+        "sale_subscription"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/subscriptions.png",
+        "fluent_flat": "fluent_flat/subscriptions.svg",
+        "fluent_filled": "fluent_filled/subscriptions.svg",
+        "fluent_regular": "fluent_regular/subscriptions.svg",
+        "tabler": "tabler/arrows-sort.svg"
+      }
+    },
+    {
+      "id": "app.workshop",
+      "label": "Taller",
+      "category": "operations",
+      "semantic": "hammer",
+      "aliases": [
+        "taller",
+        "shop floor",
+        "taller de trabajo"
+      ],
+      "xmlids": [
+        "mrp_workorder.menu_mrp_workorder"
+      ],
+      "module_ids": [
+        "mrp_workorder"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/workshop.png",
+        "fluent_flat": "fluent_flat/workshop.svg",
+        "fluent_filled": "fluent_filled/workshop.svg",
+        "fluent_regular": "fluent_regular/workshop.svg",
+        "tabler": null
+      }
+    },
+    {
+      "id": "app.vacations",
+      "label": "Vacaciones",
+      "category": "people",
+      "semantic": "beach",
+      "aliases": [
+        "vacaciones",
+        "time off",
+        "ausencias"
+      ],
+      "xmlids": [
+        "hr_holidays.menu_hr_holidays_root"
+      ],
+      "module_ids": [
+        "hr_holidays"
+      ],
+      "color": "yellow",
+      "assets": {
+        "fluent_3d": "fluent_3d/vacations.png",
+        "fluent_flat": "fluent_flat/vacations.svg",
+        "fluent_filled": "fluent_filled/vacations.svg",
+        "fluent_regular": "fluent_regular/vacations.svg",
+        "tabler": null
+      }
+    },
+    {
+      "id": "app.rentals",
+      "label": "Alquiler",
+      "category": "commerce",
+      "semantic": "key",
+      "aliases": [
+        "alquiler",
+        "renting",
+        "rental"
+      ],
+      "xmlids": [
+        "DOLAN_renting.menu_dolan_renting_root"
+      ],
+      "module_ids": [
+        "DOLAN_renting"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/rentals.png",
+        "fluent_flat": "fluent_flat/rentals.svg",
+        "fluent_filled": "fluent_filled/rentals.svg",
+        "fluent_regular": "fluent_regular/rentals.svg",
+        "tabler": null
+      }
+    },
+    {
+      "id": "app.link_tracker",
+      "label": "Rastreador de enlaces",
+      "category": "communication",
+      "semantic": "link",
+      "aliases": [
+        "rastreador de enlaces",
+        "link tracker"
+      ],
+      "xmlids": [
+        "mass_mailing.mass_mailing_link_tracker"
+      ],
+      "module_ids": [
+        "link_tracker"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/link_tracker.png",
+        "fluent_flat": "fluent_flat/link_tracker.svg",
+        "fluent_filled": "fluent_filled/link_tracker.svg",
+        "fluent_regular": "fluent_regular/link_tracker.svg",
+        "tabler": null
+      }
+    },
+    {
+      "id": "app.whatsapp",
+      "label": "WhatsApp",
+      "category": "communication",
+      "semantic": "whatsapp_brand",
+      "aliases": [
+        "whatsapp",
+        "mensajeria whatsapp"
+      ],
+      "xmlids": [
+        "DOLAN_whatsapp.menu_dolan_whatsapp_root"
+      ],
+      "module_ids": [
+        "DOLAN_whatsapp"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/whatsapp.png",
+        "fluent_flat": "fluent_flat/whatsapp_brand.svg",
+        "fluent_filled": "fluent_filled/whatsapp_brand.svg",
+        "fluent_regular": "fluent_regular/whatsapp_brand.svg",
+        "tabler": "tabler/whatsapp_brand.svg"
+      }
+    },
+    {
+      "id": "app.printer",
+      "label": "ePOS Print",
+      "category": "operations",
+      "semantic": "printer",
+      "aliases": [
+        "epos print",
+        "impresoras",
+        "impresion pos"
+      ],
+      "xmlids": [
+        "ePOS_print.menu_epos_print_root"
+      ],
+      "module_ids": [
+        "ePOS_print"
+      ],
+      "color": "gray",
+      "assets": {
+        "fluent_3d": "fluent_3d/printer.png",
+        "fluent_flat": "fluent_flat/printer.svg",
+        "fluent_filled": "fluent_filled/printer.svg",
+        "fluent_regular": "fluent_regular/printer.svg",
+        "tabler": "tabler/printer.svg"
+      }
+    },
+    {
+      "id": "app.scale",
+      "label": "Balanzas",
+      "category": "operations",
+      "semantic": "balance_scale",
+      "aliases": [
+        "balanzas",
+        "balanza",
+        "scale"
+      ],
+      "xmlids": [
+        "pos_scale_management.menu_pos_scale_root"
+      ],
+      "module_ids": [
+        "pos_scale_management"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/scale.png",
+        "fluent_flat": "fluent_flat/scale_modern.svg",
+        "fluent_filled": "fluent_filled/scale_modern.svg",
+        "fluent_regular": "fluent_regular/scale_modern.svg",
+        "tabler": "tabler/scale_modern.svg"
+      }
+    },
+    {
+      "id": "app.payment_terminal",
+      "label": "Terminales de cobro",
+      "category": "finance",
+      "semantic": "credit_card",
+      "aliases": [
+        "terminales de cobro",
+        "terminales de pago",
+        "payment terminals"
+      ],
+      "xmlids": [
+        "DOLAN_payment_terminal.menu_payment_terminal_root"
+      ],
+      "module_ids": [
+        "DOLAN_payment_terminal"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/payment_terminal.png",
+        "fluent_flat": "fluent_flat/payment_terminal.svg",
+        "fluent_filled": "fluent_filled/payment_terminal.svg",
+        "fluent_regular": "fluent_regular/payment_terminal.svg",
+        "tabler": "tabler/cash-register.svg"
+      }
+    },
+    {
+      "id": "app.settings",
+      "label": "Ajustes",
+      "category": "tools",
+      "semantic": "gear",
+      "aliases": [
+        "ajustes",
+        "settings",
+        "configuracion",
+        "configuración"
+      ],
+      "xmlids": [
+        "base.menu_administration"
+      ],
+      "module_ids": [
+        "base"
+      ],
+      "color": "gray",
+      "assets": {
+        "fluent_3d": "fluent_3d/settings.png",
+        "fluent_flat": "fluent_flat/settings.svg",
+        "fluent_filled": "fluent_filled/settings.svg",
+        "fluent_regular": "fluent_regular/settings.svg",
+        "tabler": "tabler/settings.svg"
+      }
+    },
+    {
+      "id": "app.barcode",
+      "label": "Código de barras",
+      "category": "operations",
+      "semantic": "barcode_scanner",
+      "aliases": [
+        "codigo de barras",
+        "código de barras",
+        "barcode"
+      ],
+      "xmlids": [
+        "stock_barcode.menu_stock_barcode"
+      ],
+      "module_ids": [
+        "stock_barcode"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/barcode.png",
+        "fluent_flat": "fluent_flat/barcode_label.svg",
+        "fluent_filled": "fluent_filled/barcode_label.svg",
+        "fluent_regular": "fluent_regular/barcode_label.svg",
+        "tabler": "tabler/barcode_label.svg"
+      }
+    },
+    {
+      "id": "app.surveys",
+      "label": "Encuestas",
+      "category": "productivity",
+      "semantic": "ballot",
+      "aliases": [
+        "encuestas",
+        "surveys"
+      ],
+      "xmlids": [
+        "survey.menu_surveys"
+      ],
+      "module_ids": [
+        "survey"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/surveys.png",
+        "fluent_flat": "fluent_flat/surveys.svg",
+        "fluent_filled": "fluent_filled/surveys.svg",
+        "fluent_regular": "fluent_regular/surveys.svg",
+        "tabler": "tabler/clipboard-check.svg"
+      }
+    },
+    {
+      "id": "app.data_cleaning",
+      "label": "Limpieza de datos",
+      "category": "tools",
+      "semantic": "broom",
+      "aliases": [
+        "limpieza de datos",
+        "data cleaning"
+      ],
+      "xmlids": [
+        "data_cleaning.menu_data_cleaning"
+      ],
+      "module_ids": [
+        "data_cleaning"
+      ],
+      "color": "gray",
+      "assets": {
+        "fluent_3d": "fluent_3d/data_cleaning.png",
+        "fluent_flat": "fluent_flat/data_cleaning.svg",
+        "fluent_filled": "fluent_filled/data_cleaning.svg",
+        "fluent_regular": "fluent_regular/data_cleaning.svg",
+        "tabler": null
+      }
+    },
+    {
+      "id": "app.recruitment",
+      "label": "Reclutamiento",
+      "category": "people",
+      "semantic": "briefcase_search",
+      "aliases": [
+        "reclutamiento",
+        "recruitment"
+      ],
+      "xmlids": [
+        "hr_recruitment.menu_hr_recruitment_root"
+      ],
+      "module_ids": [
+        "hr_recruitment"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/recruitment.png",
+        "fluent_flat": "fluent_flat/recruitment.svg",
+        "fluent_filled": "fluent_filled/recruitment.svg",
+        "fluent_regular": "fluent_regular/recruitment.svg",
+        "tabler": "tabler/briefcase.svg"
+      }
+    },
+    {
+      "id": "app.fleet",
+      "label": "Flotilla",
+      "category": "operations",
+      "semantic": "automobile",
+      "aliases": [
+        "flotilla",
+        "fleet"
+      ],
+      "xmlids": [
+        "fleet.fleet_menu_root"
+      ],
+      "module_ids": [
+        "fleet"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/fleet.png",
+        "fluent_flat": "fluent_flat/fleet.svg",
+        "fluent_filled": "fluent_filled/fleet.svg",
+        "fluent_regular": "fluent_regular/fleet.svg",
+        "tabler": "tabler/devices.svg"
+      }
+    },
+    {
+      "id": "app.applications",
+      "label": "Aplicaciones",
+      "category": "tools",
+      "semantic": "puzzle_piece",
+      "aliases": [
+        "aplicaciones",
+        "apps"
+      ],
+      "xmlids": [
+        "base.menu_management"
+      ],
+      "module_ids": [
+        "base"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/applications.png",
+        "fluent_flat": "fluent_flat/applications.svg",
+        "fluent_filled": "fluent_filled/applications.svg",
+        "fluent_regular": "fluent_regular/applications.svg",
+        "tabler": "tabler/layout-grid.svg"
+      }
+    },
+    {
+      "id": "app.employees",
+      "label": "Empleados",
+      "category": "people",
+      "semantic": "office_worker",
+      "aliases": [
+        "empleados",
+        "employees"
+      ],
+      "xmlids": [
+        "hr.menu_hr_root"
+      ],
+      "module_ids": [
+        "hr"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/employees.png",
+        "fluent_flat": "fluent_flat/employees.svg",
+        "fluent_filled": "fluent_filled/employees.svg",
+        "fluent_regular": "fluent_regular/employees.svg",
+        "tabler": null
+      }
+    }
+  ],
+  "variant_styles": {
+    "fluent_3d_classic": "fluent_3d",
+    "fluent_flat_modern": "fluent_flat",
+    "fluent_filled_pro": "fluent_filled",
+    "fluent_outline_color": "fluent_regular",
+    "tabler": "tabler",
+    "odoo_original": null
+  },
+  "notes": [
+    "WhatsApp uses a local brand mark; scale and barcode use purpose-built local SVGs to preserve their meaning across icon styles.",
+    "Data Cleaning uses the 20px Fluent System Broom Sparkle resource; SVG viewBox is preserved when displayed at app scale."
+  ]
+}

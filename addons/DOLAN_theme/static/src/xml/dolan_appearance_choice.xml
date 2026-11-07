@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="DOLAN_theme.DolanAppearanceChoice">
+        <div t-if="this.isPalette" class="o_dolan_settings_choice_grid o_dolan_settings_palette_choices" role="radiogroup" aria-label="Paleta predeterminada">
+            <button t-foreach="this.choices" t-as="choice" t-key="choice[0]" type="button"
+                    class="o_dolan_settings_choice o_dolan_settings_palette_choice"
+                    t-att-class="this.value === choice[0] ? 'is-selected' : ''"
+                    t-att-style="this.colorStyle(choice[0])"
+                    t-att-aria-checked="this.value === choice[0] ? 'true' : 'false'"
+                    role="radio" t-att-disabled="this.props.readonly"
+                    t-on-click="() => this.select(choice[0])">
+                <span class="o_dolan_settings_palette_sample"><i/><i/></span>
+                <span t-out="choice[1]"/>
+                <span t-if="this.value === choice[0]" class="o_dolan_settings_choice_check" aria-hidden="true">✓</span>
+            </button>
+        </div>
+        <div t-else="" class="o_dolan_settings_choice_grid o_dolan_settings_theme_choices" role="radiogroup" aria-label="Tema predeterminado">
+            <button t-foreach="this.choices" t-as="choice" t-key="choice[0]" type="button"
+                    class="o_dolan_settings_choice o_dolan_settings_theme_choice"
+                    t-att-class="this.value === choice[0] ? 'is-selected' : ''"
+                    t-att-aria-checked="this.value === choice[0] ? 'true' : 'false'"
+                    role="radio" t-att-disabled="this.props.readonly"
+                    t-on-click="() => this.select(choice[0])">
+                <span class="o_dolan_theme_sample" t-att-class="'is-' + choice[0]">
+                    <span class="o_dolan_theme_sample_top"><i/><i/><i/></span>
+                    <span class="o_dolan_theme_sample_body"><i/><i/></span>
+                    <b t-out="this.themeGlyph(choice[0])"/>
+                </span>
+                <span class="o_dolan_settings_theme_label" t-out="choice[1]"/>
+                <span t-if="this.value === choice[0]" class="o_dolan_settings_choice_check" aria-hidden="true">✓</span>
+            </button>
+        </div>
+    </t>
+</templates>

@@ -181,7 +181,7 @@ EOF
 cat > docker-compose.yml <<EOF
 services:
   db:
-    image: postgres:17
+    image: postgres:17-alpine@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b
     container_name: ${PROJECT_NAME}_db
     environment:
       POSTGRES_DB: postgres

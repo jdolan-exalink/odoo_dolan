@@ -7,10 +7,27 @@ import logging
 from odoo import fields, http
 from odoo.http import request
 
+from ..models.dolan_workspace_preference import WORKSPACE_KPI_KEYS, WORKSPACE_ROLES
+
 _logger = logging.getLogger(__name__)
 
 
 class DolanWorkspaceController(http.Controller):
+
+    @http.route('/dolan_theme/workspace_pos_shortcuts', type='jsonrpc', auth='user', methods=['POST'])
+    def workspace_pos_shortcuts(self):
+        env = request.env
+        if 'pos.config' not in env:
+            return {'points_of_sale': []}
+        PosConfig = env['pos.config']
+        if not PosConfig.has_access('read'):
+            return {'points_of_sale': []}
+        points_of_sale = PosConfig.search([('company_id', 'in', env.companies.ids)], order='name,id')
+        return {'points_of_sale': [
+            {'id': config.id, 'name': config.display_name, 'company': config.company_id.display_name,
+             'icon': 'app.pos', 'url': f'/pos/ui?config_id={config.id}'}
+            for config in points_of_sale
+        ]}
 
     @staticmethod
     def _kpi_definitions(today):
@@ -118,4 +135,48 @@ class DolanWorkspaceController(http.Controller):
                 'model': model,
                 'domain': definition['domain'] if model != 'mail.activity' else [],
             })
-        return {'kpis': kpis}
+        preference = env['dolan.workspace.preference'].current_user_preferences()
+        visible_keys = preference.visible_widget_keys
+        if not isinstance(visible_keys, list):
+            visible_keys = [kpi['key'] for kpi in kpis]
+        return {
+            'kpis': kpis,
+            'role_filter': preference.role_filter,
+            'visible_widget_keys': visible_keys,
+            'kpi_states': preference.kpi_states or {},
+        }
+
+    @http.route('/dolan_theme/workspace_preferences/save', type='jsonrpc', auth='user', methods=['POST'])
+    def save_workspace_preferences(self, values=None):
+        values = values or {}
+        Preference = request.env['dolan.workspace.preference']
+        preference = Preference.current_user_preferences()
+        allowed = {}
+        role = values.get('role_filter')
+        if role in WORKSPACE_ROLES:
+            allowed['role_filter'] = role
+        if 'visible_widget_keys' in values:
+            visible = values.get('visible_widget_keys')
+            if isinstance(visible, list):
+                allowed['visible_widget_keys'] = list(dict.fromkeys(
+                    key for key in visible if isinstance(key, str) and key in WORKSPACE_KPI_KEYS
+                ))
+        if 'kpi_states' in values and isinstance(values['kpi_states'], dict):
+            clean_states = {}
+            for key, state in values['kpi_states'].items():
+                if key not in WORKSPACE_KPI_KEYS or not isinstance(state, dict):
+                    continue
+                clean = {}
+                dismissed_count = state.get('dismissedCount')
+                snooze_until = state.get('snoozeUntil')
+                if isinstance(dismissed_count, (int, float)) and dismissed_count >= 0:
+                    clean['dismissedCount'] = min(int(dismissed_count), 2_147_483_647)
+                if isinstance(snooze_until, (int, float)):
+                    clean['snoozeUntil'] = min(max(int(snooze_until), 0), 4_102_444_800_000)
+                if clean:
+                    clean_states[key] = clean
+            allowed['kpi_states'] = clean_states
+        if allowed:
+            preference.write(allowed)
+        return {'role_filter': preference.role_filter, 'visible_widget_keys': preference.visible_widget_keys or [],
+                'kpi_states': preference.kpi_states or {}}

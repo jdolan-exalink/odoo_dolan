@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -22,13 +24,80 @@ jobs:
       - name: Compilar todo el código Python (sintaxis)
         run: python -m compileall -q addons scripts
 
+      - name: Validar lock de distribución
+        run: python scripts/distribution_lock.py
+
+  security-and-sbom:
+    name: Secretos, SBOM y notices
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Buscar secretos en el historial Git
+        run: >-
+          docker run --rm
+          -v "${{ github.workspace }}:/repo"
+          ghcr.io/gitleaks/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f
+          git --redact --exit-code 1 --verbose /repo
+
+      - name: Buscar secretos en el árbol de archivos
+        run: >-
+          docker run --rm
+          -v "${{ github.workspace }}:/repo"
+          ghcr.io/gitleaks/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f
+          dir --redact --exit-code 1 --verbose /repo
+
+      - name: Construir imagen para el inventario de dependencias
+        run: docker build -t dolan/odoo20-sbom:${{ github.sha }} .
+
+      - name: Construir servicios locales y obtener imágenes de servicios
+        run: |
+          docker build -t dolan/local-whisper:ci services/local-whisper
+          docker build -t dolan/escpos-bridge:ci services/escpos-bridge
+          docker pull odoo:20.0@sha256:a97a7665e2b9fd890e12785491a2c91d779f800bcbc30873dada1c8748b28f1c
+          docker pull postgres:17-alpine@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b
+          docker pull devlikeapro/waha:latest@sha256:2fc1787ddbd343ed2e7d59482846d1b22aa5ca134e29aa8d42d0e88c54e24779
+
+      - name: Generar SBOM SPDX de todas las imágenes
+        run: |
+          set -euo pipefail
+          syft_image='anchore/syft:v1.55.0@sha256:4cc92b64ca74ffca4c94d4c8fcc01f217731375300be14d0b6eeb2e82eaa110a'
+          images=(
+            'odoo=dolan/odoo20-sbom:${{ github.sha }}'
+            'odoo-installer=odoo:20.0@sha256:a97a7665e2b9fd890e12785491a2c91d779f800bcbc30873dada1c8748b28f1c'
+            'whisper=dolan/local-whisper:ci'
+            'escpos=dolan/escpos-bridge:ci'
+            'postgres=postgres:17-alpine@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b'
+            'waha=devlikeapro/waha:latest@sha256:2fc1787ddbd343ed2e7d59482846d1b22aa5ca134e29aa8d42d0e88c54e24779'
+          )
+          for entry in "${images[@]}"; do
+            name="${entry%%=*}"
+            image="${entry#*=}"
+            docker run --rm \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              -v "${{ github.workspace }}:/out" \
+              "$syft_image" "$image" \
+              -o "spdx-json=/out/sbom-${name}.spdx.json"
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dolan-sbom-${{ github.sha }}
+          path: sbom-*.spdx.json
+          if-no-files-found: error
+          retention-days: 90
+
   odoo-tests:
     name: Tests en Odoo CE 20 (Docker)
     runs-on: ubuntu-latest
     timeout-minutes: 60
     services:
       postgres:
-        image: postgres:17-alpine
+        image: postgres:17-alpine@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b
         env:
           POSTGRES_USER: odoo
           POSTGRES_PASSWORD: odoo
@@ -76,14 +145,25 @@ jobs:
               log_handler = odoo.addons:INFO
               EOF
 
-              MODULES="base,web,l10n_ar,l10n_ar_withholding,l10n_ar_pos,l10n_ar_stock,project,project_todo,purchase,purchase_stock,fleet,DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_views,DOLAN_pos,DOLAN_stock_mrp,DOLAN_subscription,DOLAN_renting,DOLAN_knowledge_bi,DOLAN_exchange"
+              MODULES="base,web,l10n_ar,l10n_ar_withholding,l10n_ar_pos,l10n_ar_stock,project,project_todo,purchase,purchase_stock,fleet,point_of_sale,pos_restaurant,stock,account,DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_views,DOLAN_pos,DOLAN_stock_mrp,DOLAN_subscription,DOLAN_renting,DOLAN_knowledge_bi,DOLAN_exchange,DOLAN_discount_engine,DOLAN_payment_terminal,ePOS_print,pos_scale_management"
 
               # Instalación + tests en una sola pasada; odoo-bin sale con
-              # código != 0 si algún test falla.
+              # código != 0 si algún test falla. Limitar la batería a los
+              # módulos propios evita atribuir a DOLAN fallos de traducciones
+              # o pruebas internas de Odoo Community.
               python3 /opt/odoo/odoo-server/odoo-bin -c /tmp/odoo.conf \
                 -d ci_test \
                 --without-demo=True \
                 -i "${MODULES}" \
                 --test-enable \
+                --test-tags "/DOLAN_base,/DOLAN_theme,/DOLAN_l10n_ar_afip,/DOLAN_accounting,/DOLAN_ai,/DOLAN_ocr,/DOLAN_whatsapp,/DOLAN_views,/DOLAN_pos,/DOLAN_stock_mrp,/DOLAN_subscription,/DOLAN_renting,/DOLAN_knowledge_bi,/DOLAN_exchange,/DOLAN_discount_engine,/DOLAN_payment_terminal,/ePOS_print,/pos_scale_management" \
+                --stop-after-init
+
+              # Smoke de upgrade sobre la DB ya instalada: detecta errores de
+              # actualización de vistas, modelos y datos sin usar `-u all`.
+              python3 /opt/odoo/odoo-server/odoo-bin -c /tmp/odoo.conf \
+                -d ci_test \
+                --without-demo=True \
+                -u "${MODULES}" \
                 --stop-after-init
             '

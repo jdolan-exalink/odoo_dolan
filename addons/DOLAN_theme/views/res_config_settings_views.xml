@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_dolan_ui" model="ir.ui.view">
+        <field name="name">res.config.settings.form.dolan.ui</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mail.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="DOLAN UI" name="dolan_ui" data-string="DOLAN UI" logo="/DOLAN_theme/static/src/lib/fluent_flat/dolan_ui_palette.svg">
+                    <block title="Tema y colores" name="dolan_ui_theme">
+                        <setting string="Tema predeterminado" help="Define el modo inicial para quienes no tengan una preferencia personal. El selector de la barra superior permite cambiar la sesión actual.">
+                            <field name="dolan_ui_theme_mode" widget="dolan_appearance_choice"/>
+                        </setting>
+                        <setting string="Paleta predeterminada" help="Elegí una combinación de colores para la interfaz. También podés probar otras paletas temporalmente desde la barra superior.">
+                            <field name="dolan_ui_palette" widget="dolan_appearance_choice"/>
+                        </setting>
+                        <setting string="Personalización personal" help="Permite guardar tema y densidad desde Configuración de pantalla.">
+                            <field name="dolan_ui_allow_personal_appearance" widget="boolean_toggle"/>
+                        </setting>
+                        <setting string="Densidad predeterminada" help="Controla el espacio entre filas y controles en la interfaz.">
+                            <field name="dolan_ui_density"/>
+                        </setting>
+                    </block>
+                    <block title="Iconografía" name="dolan_ui_appearance">
+                        <setting string="Estilo global de iconos" help="Define las variantes Fluent o los iconos originales de Odoo para aplicaciones y carpetas.">
+                            <field name="dolan_ui_icon_style"/>
+                            <div class="o_dolan_settings_icon_samples" aria-label="Ejemplos de estilos de iconos">
+                                <span><img src="/web/static/img/icons/apps.svg" alt="Iconos originales de Odoo"/> Odoo</span>
+                                <span><img src="/DOLAN_theme/static/src/lib/fluent_3d/invoicing.png" alt="Muestra Fluent 3D"/> Fluent 3D</span>
+                                <span><img src="/DOLAN_theme/static/src/lib/fluent_flat/invoicing.svg" alt="Muestra Fluent Flat"/> Fluent Flat</span>
+                                <span><img src="/DOLAN_theme/static/src/lib/fluent_filled/invoicing.svg" alt="Muestra Fluent Filled"/> Fluent Filled</span>
+                                <span><img src="/DOLAN_theme/static/src/lib/fluent_regular/invoicing.svg" alt="Muestra Fluent Outline"/> Fluent Outline</span>
+                                <span><img src="/DOLAN_theme/static/src/lib/tabler/invoice.svg" alt="Muestra Tabler"/> Tabler</span>
+                            </div>
+                        </setting>
+                        <setting string="Preferencia personal de iconos" help="Permite que cada usuario elija su estilo desde Configuración de pantalla.">
+                            <field name="dolan_ui_allow_user_icon_style" widget="boolean_toggle"/>
+                        </setting>
+                    </block>
+                    <block title="Apariencia de la empresa" name="dolan_ui_company_appearance">
+                        <setting string="Colores de la empresa" help="Estos colores se usan cuando la paleta seleccionada es ‘Colores configurados por empresa’.">
+                            <div class="content-group">
+                                <field name="company_id" invisible="1"/>
+                                <field name="dolan_ui_primary_color" widget="color"/>
+                                <field name="dolan_ui_secondary_color" widget="color"/>
+                                <button name="action_dolan_extract_logo_colors" type="object" string="Tomar colores del logo" class="btn btn-secondary mt-2" help="Detecta dos colores con contraste desde el logo de la empresa seleccionada."/>
+                            </div>
+                        </setting>
+                        <setting string="Fondo del escritorio" help="Selecciona el fondo usado en el menú de inicio.">
+                            <field name="dolan_ui_home_bg_style"/>
+                            <div class="o_dolan_settings_background_samples" aria-label="Fondos disponibles">
+                                <span class="is-dolan">DOLAN</span><span class="is-aurora">Aurora</span><span class="is-ocean">Océano</span><span class="is-mesh">Malla</span><span class="is-midnight">Medianoche</span>
+                            </div>
+                        </setting>
+                        <setting string="Formularios a ancho completo" help="Usa el ancho disponible en formularios de Odoo.">
+                            <field name="dolan_ui_full_width_sheets" widget="boolean_toggle"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>
