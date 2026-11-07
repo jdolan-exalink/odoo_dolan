@@ -7,7 +7,10 @@ import logging
 from odoo import fields, http
 from odoo.http import request
 
-from ..models.dolan_workspace_preference import WORKSPACE_KPI_KEYS, WORKSPACE_ROLES
+from ..models.dolan_workspace_preference import (
+    WORKSPACE_ACTION_KEYS, WORKSPACE_KPI_KEYS, WORKSPACE_ROLES,
+    WORKSPACE_SECTION_KEYS, WORKSPACE_WIDGET_SIZES,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -23,11 +26,59 @@ class DolanWorkspaceController(http.Controller):
         if not PosConfig.has_access('read'):
             return {'points_of_sale': []}
         points_of_sale = PosConfig.search([('company_id', 'in', env.companies.ids)], order='name,id')
+        session_by_config = {}
+        if 'pos.session' in env and points_of_sale:
+            try:
+                if env['pos.session'].has_access('read'):
+                    sessions = env['pos.session'].search_read(
+                        [('config_id', 'in', points_of_sale.ids), ('state', 'in', ('opening_control', 'opened'))],
+                        ['config_id', 'state'], order='id desc', limit=max(len(points_of_sale) * 3, 20),
+                    )
+                    for session in sessions:
+                        config_id = session['config_id'][0]
+                        session_by_config.setdefault(config_id, session['state'])
+            except Exception:
+                _logger.debug('Workspace POS session state unavailable', exc_info=True)
         return {'points_of_sale': [
             {'id': config.id, 'name': config.display_name, 'company': config.company_id.display_name,
+             'session_state': session_by_config.get(config.id, 'closed'),
              'icon': 'app.pos', 'url': f'/pos/ui?config_id={config.id}'}
             for config in points_of_sale
         ]}
+
+    @http.route('/dolan_theme/workspace_quick_actions', type='jsonrpc', auth='user')
+    def workspace_quick_actions(self):
+        """Return shortcuts whose target model/action is available to this user."""
+        env = request.env
+        keys = ['open_search']
+        model_actions = {
+            'new_invoice': ('account.move', 'create'),
+            'new_sale': ('sale.order', 'create'),
+            'new_partner': ('res.partner', 'create'),
+            'new_payment': ('account.payment', 'create'),
+        }
+        for key, (model_name, operation) in model_actions.items():
+            try:
+                if model_name in env and env[model_name].has_access(operation):
+                    keys.append(key)
+            except Exception:
+                _logger.debug('Workspace shortcut %s unavailable', key, exc_info=True)
+        action_refs = {
+            'whatsapp': 'DOLAN_whatsapp.action_dolan_whatsapp_messages',
+            'libro_iva': 'DOLAN_l10n_ar_afip.action_l10n_ar_libro_iva_digital_wizard',
+        }
+        for key, xmlid in action_refs.items():
+            try:
+                if env.ref(xmlid, raise_if_not_found=False):
+                    keys.append(key)
+            except Exception:
+                _logger.debug('Workspace shortcut %s unavailable', key, exc_info=True)
+        try:
+            if 'ai.session' in env and env['ai.session'].has_access('read'):
+                keys.append('toggle_ai')
+        except Exception:
+            _logger.debug('Workspace AI shortcut unavailable', exc_info=True)
+        return {'keys': keys}
 
     @staticmethod
     def _kpi_definitions(today):
@@ -133,7 +184,7 @@ class DolanWorkspaceController(http.Controller):
                 'tone': definition['tone'] if count else 'info',
                 'count': count,
                 'model': model,
-                'domain': definition['domain'] if model != 'mail.activity' else [],
+                'domain': definition['domain'],
             })
         preference = env['dolan.workspace.preference'].current_user_preferences()
         visible_keys = preference.visible_widget_keys
@@ -144,11 +195,58 @@ class DolanWorkspaceController(http.Controller):
             'role_filter': preference.role_filter,
             'visible_widget_keys': visible_keys,
             'kpi_states': preference.kpi_states or {},
+            'indicator_mode': preference.indicator_mode,
+            'visible_section_keys': preference.visible_section_keys,
+            'visible_section_keys_configured': preference.visible_section_keys is not False,
+            'workspace_order': preference.workspace_order or [],
+            'workspace_sizes': preference.workspace_sizes or {},
+            'quick_action_keys': preference.quick_action_keys,
+            'quick_action_keys_configured': preference.quick_action_keys is not False,
         }
+
+    @http.route('/dolan_theme/workspace_activity', type='jsonrpc', auth='user')
+    def workspace_activity(self, limit=10):
+        """Recent business events from readable models; no sudo and a strict result cap."""
+        env = request.env
+        try:
+            limit = min(max(int(limit), 1), 10)
+        except (TypeError, ValueError):
+            limit = 10
+        adapters = [
+            ('account.move', 'Factura emitida', 'file-text',
+             [('move_type', '=', 'out_invoice'), ('state', '=', 'posted')]),
+            ('sale.order', 'Presupuesto creado', 'cart', [('state', 'in', ('draft', 'sent'))]),
+            ('res.partner', 'Contacto registrado', 'user-plus', [('active', '=', True)]),
+            ('maintenance.request', 'Solicitud de mantenimiento', 'wrench', []),
+        ]
+        events = []
+        for model_name, label, icon, domain in adapters:
+            if model_name not in env:
+                continue
+            Model = env[model_name]
+            try:
+                if not Model.has_access('read'):
+                    continue
+                records = Model.search_read(domain, ['display_name', 'create_date'],
+                                           order='create_date desc,id desc', limit=limit)
+            except Exception:
+                _logger.debug('Workspace activity adapter %s unavailable', model_name, exc_info=True)
+                continue
+            for record in records:
+                created_at = record.get('create_date')
+                if created_at and not isinstance(created_at, str):
+                    created_at = fields.Datetime.to_string(created_at)
+                events.append({
+                    'model': model_name, 'id': record['id'],
+                    'label': label, 'name': record.get('display_name') or label,
+                    'icon': icon, 'date': created_at or False,
+                })
+        events.sort(key=lambda event: event['date'] or '', reverse=True)
+        return {'events': events[:limit]}
 
     @http.route('/dolan_theme/workspace_preferences/save', type='jsonrpc', auth='user', methods=['POST'])
     def save_workspace_preferences(self, values=None):
-        values = values or {}
+        values = values if isinstance(values, dict) else {}
         Preference = request.env['dolan.workspace.preference']
         preference = Preference.current_user_preferences()
         allowed = {}
@@ -176,7 +274,40 @@ class DolanWorkspaceController(http.Controller):
                 if clean:
                     clean_states[key] = clean
             allowed['kpi_states'] = clean_states
+        if values.get('indicator_mode') in ('priorities', 'complete', 'custom'):
+            allowed['indicator_mode'] = values['indicator_mode']
+        if isinstance(values.get('visible_section_keys'), list):
+            allowed['visible_section_keys'] = list(dict.fromkeys(
+                key for key in values['visible_section_keys']
+                if isinstance(key, str) and key in WORKSPACE_SECTION_KEYS
+            ))
+        if isinstance(values.get('workspace_order'), list):
+            allowed['workspace_order'] = list(dict.fromkeys(
+                key for key in values['workspace_order']
+                if isinstance(key, str) and key in WORKSPACE_SECTION_KEYS
+            ))
+        if isinstance(values.get('workspace_sizes'), dict):
+            allowed['workspace_sizes'] = {
+                key: size for key, size in values['workspace_sizes'].items()
+                if isinstance(key, str) and key in WORKSPACE_SECTION_KEYS
+                and isinstance(size, str) and size in WORKSPACE_WIDGET_SIZES
+            }
+        if isinstance(values.get('quick_action_keys'), list):
+            allowed['quick_action_keys'] = list(dict.fromkeys(
+                key for key in values['quick_action_keys']
+                if isinstance(key, str) and key in WORKSPACE_ACTION_KEYS
+            ))
         if allowed:
             preference.write(allowed)
-        return {'role_filter': preference.role_filter, 'visible_widget_keys': preference.visible_widget_keys or [],
-                'kpi_states': preference.kpi_states or {}}
+        return {
+            'role_filter': preference.role_filter,
+            'visible_widget_keys': preference.visible_widget_keys or [],
+            'kpi_states': preference.kpi_states or {},
+            'indicator_mode': preference.indicator_mode,
+            'visible_section_keys': preference.visible_section_keys,
+            'visible_section_keys_configured': preference.visible_section_keys is not False,
+            'workspace_order': preference.workspace_order or [],
+            'workspace_sizes': preference.workspace_sizes or {},
+            'quick_action_keys': preference.quick_action_keys,
+            'quick_action_keys_configured': preference.quick_action_keys is not False,
+        }

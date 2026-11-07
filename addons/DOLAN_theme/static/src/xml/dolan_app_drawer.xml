@@ -199,8 +199,130 @@
                                         aria-label="Nueva carpeta" t-on-click="() => this.openFolderEditor()"><DolanIcon name="'folder-plus'" size="17"/></button>
                             </div>
                         </div>
-                        <!-- Mi Espacio: KPIs y atención por rol -->
-                        <div t-if="this.state.activeTab === 'mine'" class="container px-0 position-relative z-1 flex-grow-1 o_dolan_mine">
+                        <!-- Mi Espacio 3.0: evolución del workspace existente, con datos y preferencias Odoo -->
+                        <main t-if="this.state.activeTab === 'mine'" class="o_dolan_workspace_3">
+                            <header class="o_dolan_workspace_header">
+                                <div class="o_dolan_workspace_identity">
+                                    <span class="o_dolan_workspace_avatar"><DolanIcon name="'user'" size="28"/></span>
+                                    <div>
+                                        <h1>Mi Espacio</h1>
+                                        <p>Tu centro de trabajo <span aria-hidden="true">·</span> <t t-out="this.workspaceTitle"/></p>
+                                    </div>
+                                </div>
+                                <div class="o_dolan_workspace_header_actions">
+                                    <time class="o_dolan_workspace_clock" t-out="this.workspaceDateTime"/>
+                                    <button type="button" class="btn btn-outline-secondary rounded-pill"
+                                            t-att-aria-expanded="this.state.workspaceConfigOpen ? 'true' : 'false'"
+                                            t-on-click="() => this.toggleWorkspaceConfig()">
+                                        <DolanIcon name="'settings'" size="17"/> Personalizar
+                                    </button>
+                                </div>
+                            </header>
+
+                            <nav class="o_dolan_workspace_spaces" aria-label="Espacios de trabajo" role="tablist">
+                                <button t-foreach="this.workspaceSpaces" t-as="space" t-key="space.key" type="button"
+                                        class="o_dolan_workspace_space" role="tab"
+                                        t-att-aria-selected="this.state.roleFilter === space.key ? 'true' : 'false'"
+                                        t-att-class="this.state.roleFilter === space.key ? 'is-active' : ''"
+                                        t-on-click="() => this.setRoleFilter(space.key)">
+                                    <DolanIcon name="space.icon" size="17"/><t t-out="space.label"/>
+                                </button>
+                                <div class="o_dolan_workspace_mode" role="group" aria-label="Modo de indicadores">
+                                    <button type="button" t-att-aria-pressed="this.state.indicatorMode === 'priorities' ? 'true' : 'false'"
+                                            t-att-class="this.state.indicatorMode === 'priorities' ? 'is-active' : ''"
+                                            t-on-click="() => this.setIndicatorMode('priorities')">Prioridades</button>
+                                    <button type="button" t-att-aria-pressed="this.state.indicatorMode === 'complete' ? 'true' : 'false'"
+                                            t-att-class="this.state.indicatorMode === 'complete' ? 'is-active' : ''"
+                                            t-on-click="() => this.setIndicatorMode('complete')">Completo</button>
+                                    <button type="button" t-att-aria-pressed="this.state.indicatorMode === 'custom' ? 'true' : 'false'"
+                                            t-att-class="this.state.indicatorMode === 'custom' ? 'is-active' : ''"
+                                            t-on-click="() => this.setIndicatorMode('custom')">Personalizado</button>
+                                </div>
+                            </nav>
+
+                            <section t-if="this.state.workspaceConfigOpen" class="o_dolan_workspace_editor" aria-label="Personalización de Mi Espacio">
+                                <header><strong>Personalizar Mi Espacio</strong><button type="button" class="btn-close" aria-label="Cerrar" t-on-click="() => this.toggleWorkspaceConfig()"/></header>
+                                <div class="o_dolan_workspace_editor_grid">
+                                    <div>
+                                        <h2>Secciones y orden</h2>
+                                        <div t-foreach="this.state.workspaceSections" t-as="section" t-key="section.key" class="o_dolan_workspace_editor_row">
+                                            <label><input type="checkbox" t-att-checked="this.workspaceSectionVisible(section.key)" t-on-change="() => this.toggleWorkspaceSection(section.key)"/><span t-out="section.label"/></label>
+                                            <div class="o_dolan_workspace_reorder">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" t-att-disabled="this.workspaceSectionOrder(section.key) === 0" t-att-aria-label="'Mover ' + section.label + ' arriba'" t-on-click="() => this.moveWorkspaceSection(section.key, -1)"><DolanIcon name="'chevron-up'" size="15"/></button>
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" t-att-disabled="this.workspaceSectionOrder(section.key) === this.state.workspaceSections.length - 1" t-att-aria-label="'Mover ' + section.label + ' abajo'" t-on-click="() => this.moveWorkspaceSection(section.key, 1)"><DolanIcon name="'chevron-down'" size="15"/></button>
+                                                <select class="form-select form-select-sm" t-att-value="this.workspaceSectionSize(section.key)" t-on-change="(ev) => this.setWorkspaceSize(section.key, ev.target.value)" t-att-aria-label="'Tamaño de ' + section.label">
+                                                    <option value="small">Pequeño</option><option value="medium">Mediano</option><option value="large">Grande</option><option value="full">Ancho completo</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h2>Indicadores y accesos</h2>
+                                        <div class="o_dolan_workspace_editor_options">
+                                            <label t-foreach="this.state.kpis" t-as="widget" t-key="widget.key"><input type="checkbox" t-att-checked="this.state.visibleWidgetKeys.includes(widget.key)" t-on-change="() => this.toggleWorkspaceWidget(widget.key)"/><span t-out="widget.label"/></label>
+                                            <label t-foreach="this.availableWorkspaceActions" t-as="action" t-key="action.key"><input type="checkbox" t-att-checked="this.state.quickActionKeys.includes(action.key)" t-on-change="() => this.toggleQuickAction(action.key)"/><span t-out="action.label"/></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <div class="o_dolan_workspace_grid">
+                                <section t-if="this.workspaceSectionVisible('pos') &amp;&amp; this.state.posShortcuts.length" class="o_dolan_workspace_section o_dolan_workspace_pos" t-att-class="'o_dolan_workspace_size_' + this.workspaceSectionSize('pos')" t-att-style="'order:' + this.workspaceSectionOrder('pos')" aria-label="Punto de venta">
+                                    <div class="o_dolan_workspace_pos_main">
+                                        <DolanIcon name="'store'" size="52"/>
+                                        <div class="o_dolan_workspace_pos_copy"><h2 t-out="this.state.posShortcuts.length === 1 ? this.state.posShortcuts[0].name : 'Puntos de venta'"/><p t-out="this.state.posShortcuts.length === 1 ? this.state.posShortcuts[0].company : 'Elegí una caja disponible'"/></div>
+                                        <span t-if="this.state.posShortcuts[0].session_state === 'opened'" class="o_dolan_workspace_status is-open"><DolanIcon name="'check'" size="14"/> Caja abierta</span>
+                                        <span t-elif="this.state.posShortcuts[0].session_state === 'opening_control'" class="o_dolan_workspace_status is-open"><DolanIcon name="'check'" size="14"/> En apertura</span>
+                                        <span t-else="" class="o_dolan_workspace_status is-closed">Sin caja abierta</span>
+                                        <button t-if="this.state.posShortcuts.length === 1" type="button" class="o_dolan_workspace_pos_open" t-on-click="() => this.openPosShortcut(this.state.posShortcuts[0])" aria-label="Abrir punto de venta"><DolanIcon name="'chevron-right'" size="24"/></button>
+                                    </div>
+                                    <div t-if="this.state.posShortcuts.length &gt; 1" class="o_dolan_workspace_pos_list">
+                                        <button t-foreach="this.state.posShortcuts" t-as="pos" t-key="pos.id" type="button" class="o_dolan_workspace_pos_choice" t-on-click="() => this.openPosShortcut(pos)"><span t-out="pos.name"/><small t-out="pos.session_state === 'opened' ? 'Caja abierta' : 'Sin caja abierta'"/></button>
+                                    </div>
+                                </section>
+
+                                <section t-if="this.workspaceSectionVisible('quick_actions') &amp;&amp; this.visibleQuickActions.length" class="o_dolan_workspace_section o_dolan_workspace_quick_actions" t-att-class="'o_dolan_workspace_size_' + this.workspaceSectionSize('quick_actions')" t-att-style="'order:' + this.workspaceSectionOrder('quick_actions')" aria-label="Accesos rápidos">
+                                    <button t-foreach="this.visibleQuickActions" t-as="action" t-key="action.key" type="button" class="o_dolan_workspace_action" t-att-title="action.label" t-on-click="() => this.executeQuickAction(action.key)"><span t-att-class="'o_dolan_workspace_action_icon tone-' + action.tone"><DolanIcon name="action.icon" size="28"/></span><span t-out="action.label"/></button>
+                                </section>
+
+                                <section t-if="this.workspaceSectionVisible('attention')" class="o_dolan_workspace_section o_dolan_workspace_panel o_dolan_workspace_attention" t-att-class="'o_dolan_workspace_size_' + this.workspaceSectionSize('attention')" t-att-style="'order:' + this.workspaceSectionOrder('attention')" aria-label="Requiere atención">
+                                    <header><h2><DolanIcon name="'alert-triangle'" size="22"/> Requiere atención</h2><span class="o_dolan_workspace_badge"><t t-out="this.attentionCount"/> pendientes</span></header>
+                                    <div t-if="this.state.kpisLoading" class="o_dolan_workspace_skeleton" aria-busy="true"/>
+                                    <div t-elif="this.attentionKpis.length" class="o_dolan_workspace_attention_grid">
+                                        <article t-foreach="this.attentionKpis" t-as="kpi" t-key="kpi.key" t-att-class="'o_dolan_workspace_metric tone-' + kpi.tone">
+                                            <button type="button" class="o_dolan_workspace_metric_main" t-on-click="() => this.openKpi(kpi)"><DolanIcon name="kpi.icon" size="28"/><strong t-out="kpi.count"/><span t-out="kpi.label"/></button>
+                                            <footer><span t-att-class="'o_dolan_workspace_severity tone-' + kpi.tone" t-out="kpi.tone === 'critical' ? 'Crítico' : kpi.tone === 'warning' ? 'Atención' : kpi.tone === 'action' ? 'Acción' : 'Info'"/><button t-if="kpi.count" type="button" title="Posponer 24 horas" t-on-click="() => this.snoozeKpi(kpi)"><DolanIcon name="'clock'" size="15"/></button><button t-if="kpi.count" type="button" title="Marcar leído" t-on-click="() => this.dismissKpi(kpi)"><DolanIcon name="'check'" size="15"/></button></footer>
+                                        </article>
+                                    </div>
+                                    <p t-else="" class="o_dolan_workspace_empty">No hay alertas pendientes en este espacio.</p>
+                                </section>
+
+                                <section t-if="this.workspaceSectionVisible('summary')" class="o_dolan_workspace_section o_dolan_workspace_panel o_dolan_workspace_summary" t-att-class="'o_dolan_workspace_size_' + this.workspaceSectionSize('summary')" t-att-style="'order:' + this.workspaceSectionOrder('summary')" aria-label="Resumen general">
+                                    <header><h2><DolanIcon name="'chart-bar'" size="22"/> Resumen general</h2></header>
+                                    <div t-if="this.state.kpisLoading" class="o_dolan_workspace_skeleton" aria-busy="true"/>
+                                    <div t-elif="this.summaryKpis.length" class="o_dolan_workspace_summary_grid"><button t-foreach="this.summaryKpis" t-as="kpi" t-key="kpi.key" type="button" t-att-class="'o_dolan_workspace_summary_card tone-' + kpi.tone" t-on-click="() => this.openKpi(kpi)"><DolanIcon name="kpi.icon" size="26"/><strong t-out="kpi.count"/><span t-out="kpi.label"/></button></div>
+                                    <p t-else="" class="o_dolan_workspace_empty">No hay indicadores disponibles para este espacio.</p>
+                                </section>
+
+                                <section t-if="this.workspaceSectionVisible('other_metrics')" class="o_dolan_workspace_section o_dolan_workspace_panel o_dolan_workspace_other" t-att-class="'o_dolan_workspace_size_' + this.workspaceSectionSize('other_metrics')" t-att-style="'order:' + this.workspaceSectionOrder('other_metrics')" aria-label="Otros indicadores">
+                                    <header><h2><DolanIcon name="'layers'" size="22"/> Otros indicadores</h2></header>
+                                    <div t-if="this.state.kpisLoading" class="o_dolan_workspace_skeleton" aria-busy="true"/>
+                                    <div t-elif="this.otherMetricKpis.length" class="o_dolan_workspace_other_grid"><button t-foreach="this.otherMetricKpis" t-as="kpi" t-key="kpi.key" type="button" t-att-class="'o_dolan_workspace_other_card tone-' + kpi.tone" t-on-click="() => this.openKpi(kpi)"><DolanIcon name="kpi.icon" size="25"/><strong t-out="kpi.count"/><span t-out="kpi.label"/><DolanIcon name="'chevron-right'" size="18"/></button></div>
+                                    <p t-else="" class="o_dolan_workspace_empty">No hay otros indicadores para mostrar.</p>
+                                </section>
+
+                                <section t-if="this.workspaceSectionVisible('activity')" class="o_dolan_workspace_section o_dolan_workspace_panel o_dolan_workspace_activity" t-att-class="'o_dolan_workspace_size_' + this.workspaceSectionSize('activity')" t-att-style="'order:' + this.workspaceSectionOrder('activity')" aria-label="Actividad reciente">
+                                    <header><h2><DolanIcon name="'clock'" size="22"/> Actividad reciente</h2><button t-if="this.hasActivityKpi" type="button" class="btn btn-link" t-on-click="() => this.openActivityList()">Ver todo <DolanIcon name="'chevron-right'" size="16"/></button></header>
+                                    <div t-if="this.state.activityLoading" class="o_dolan_workspace_skeleton" aria-busy="true"/>
+                                    <p t-elif="this.state.activityError" class="o_dolan_workspace_empty">No se pudo cargar la actividad reciente.</p>
+                                    <div t-elif="this.state.recentActivity.length" class="o_dolan_workspace_activity_list"><button t-foreach="this.state.recentActivity" t-as="event" t-key="event.model + ':' + event.id" type="button" class="o_dolan_workspace_activity_item" t-on-click="() => this.openRecentActivity(event)"><DolanIcon name="event.icon" size="22"/><span><strong t-out="event.name"/><small t-out="event.label"/></span><time t-out="this.relativeActivityDate(event.date)"/></button></div>
+                                    <p t-else="" class="o_dolan_workspace_empty">Todavía no hay actividad reciente visible.</p>
+                                </section>
+                            </div>
+                        </main>
+
+                        <!-- Mi Espacio 2.x conservado temporalmente para facilitar comparación durante QA. -->
+                        <div t-if="false" class="container px-0 position-relative z-1 flex-grow-1 o_dolan_mine">
                             <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 mb-3">
                                 <div class="d-flex flex-wrap justify-content-center gap-2" role="group" aria-label="Filtrar por rol">
                                 <button type="button" class="btn btn-sm rounded-pill"
@@ -245,7 +367,7 @@
                                             type="button" class="o_dolan_pos_shortcut btn btn-outline-secondary d-flex align-items-center gap-2"
                                             t-on-click="() => this.openPosShortcut(pointOfSale)"
                                             t-att-title="pointOfSale.company">
-                                        <DolanIcon name="'app.pos'" size="20"/>
+                                        <DolanIcon name="'store'" size="20"/>
                                         <span t-out="pointOfSale.name"/>
                                     </button>
                                 </div>
@@ -493,7 +615,7 @@
                         </div>
 
                         <!-- Workspace de Acciones Rápidas y Operaciones -->
-                        <div t-if="this.state.activeTab === 'mine'" id="dolan-desktop-quick-actions" class="container px-0 position-relative z-1 flex-grow-1 o_dolan_quick_actions_widget">
+                        <div t-if="false" id="dolan-desktop-quick-actions" class="container px-0 position-relative z-1 flex-grow-1 o_dolan_quick_actions_widget">
                             <div class="row g-3 justify-content-center max-w-4xl mx-auto py-2">
                                 <div class="col-12 col-md-6 col-lg-4">
                                     <div class="card h-100 border-0 shadow-sm rounded-4 p-3 o_dolan_action_card cursor-pointer"

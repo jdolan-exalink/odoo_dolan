@@ -46,14 +46,28 @@ Distribución modular **Open Source (`LGPL-3`)** para **Odoo Community Edition 2
 
 ### En Linux / Ubuntu / Debian / WSL2
 ```bash
-# Instalación directa como root en Debian/Ubuntu (requiere TTY)
+# Instalación interactiva en Debian/Ubuntu (root, Docker y TTY; crea una instalación lista para configurar)
 curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash
 
-# Actualizar paquetes Debian/Ubuntu ya instalados (sin volver a desplegar Odoo)
+# Si estás conectado desde otra máquina, asigná un TTY para el asistente:
+ssh -t root@servidor 'curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash'
+
+# Actualizar solo los paquetes Debian/Ubuntu (no actualiza módulos Odoo)
 curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --update-packages
 
-# Elegir desde el menú o ir directo a actualizar los módulos de Odoo
-curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | sudo bash -s -- --update
+# Actualizar módulos Odoo de una instalación; el menú permite elegirla y confirmar
+# Antes de modificarla, guarda un respaldo de la base, addons, configuración y filestore.
+curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --update
+
+# Actualizar una instalación concreta por SSH. Cambiá `dolan` por el nombre corto
+# de la carpeta (o usá --root si está fuera de /opt/dolan/deployments).
+ssh -t root@servidor 'curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --update --root /root --name odoo'
+
+# Ejemplo para una instalación creada por el instalador actual:
+ssh -t root@servidor 'curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --update --name dolan'
+
+# Mostrar opciones y ejemplos
+curl -fsSL https://raw.githubusercontent.com/jdolan-exalink/odoo_dolan/main/bootstrap.sh | bash -s -- --help
 
 # Alternativa: con el repositorio ya clonado y Docker instalado
 chmod +x crear_odoo20.sh
@@ -100,6 +114,8 @@ powershell -ExecutionPolicy Bypass -File .\crear_odoo20.ps1 `
 El catálogo se detecta desde las carpetas `addons/DOLAN_*`; actualmente hay **16 módulos DOLAN**, además de `ePOS_print` y `pos_scale_management`. Odoo instala automáticamente las dependencias necesarias. En particular, el manifiesto actual de `DOLAN_ai` depende de BI y cotizaciones, por lo que Odoo también los activará en perfiles que incluyan IA. Se pueden pasar módulos directamente con `--modules A,B,C` o `-Modules A,B,C`.
 
 El asistente crea la carpeta desde el nombre corto de empresa, inicializa una base `odoo_<nombre>` y configura razón social, CUIT, domicilio, responsabilidad ARCA, PV de facturación y usuario administrador. El ambiente ARCA queda en homologación y no se emite CAE durante el alta.
+
+La instalación y la actualización requieren una terminal interactiva; en SSH usá `ssh -t`. La actualización estándar busca instalaciones bajo `/opt/dolan/deployments`, muestra un selector y pide confirmación. Para instalaciones en otra ubicación se pasan `--root <directorio-padre> --name <carpeta>`. Al terminar, el actualizador espera la respuesta HTTP de Odoo y muestra el directorio del respaldo. No cierres la sesión SSH durante el proceso.
 
 Al primer ingreso, cargar certificado y clave privada en **Facturación → Configuración → ARCA/AFIP → Certificados**, seleccionar empresa, CUIT representado y ambiente. Luego completar el servidor de correo en Ajustes y URL/clave de WAHA en WhatsApp. Esos secretos externos no se solicitan ni guardan en el instalador.
 

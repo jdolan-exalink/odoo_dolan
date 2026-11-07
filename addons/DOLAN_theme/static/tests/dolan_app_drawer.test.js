@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 
-import { DOLAN_UI_PALETTES, DOLAN_THEME_MODES, isSafePosShortcutUrl, resolveDarkTheme, selectVisibleKpis, shouldHandleAppDrawerKeydown, sortDesktopApps } from "@DOLAN_theme/js/dolan_app_drawer";
+import { DOLAN_UI_PALETTES, DOLAN_THEME_MODES, isSafePosShortcutUrl, normalizeWorkspaceOrder, resolveDarkTheme, selectVisibleKpis, selectWorkspaceMetrics, shouldHandleAppDrawerKeydown, sortDesktopApps } from "@DOLAN_theme/js/dolan_app_drawer";
 import { iconStyleUsesMask, normalizeIconStyle, resolveActionIconAsset, resolveIconAsset, semanticAppId } from "@DOLAN_theme/js/dolan_icon_registry";
 
 test("theme mode respects explicit light and dark choices", () => {
@@ -65,6 +65,28 @@ test("Mi Espacio only shows widgets saved for this user", () => {
     const widgets = [{ key: "quotes_open" }, { key: "invoices_draft" }];
     expect(selectVisibleKpis(widgets, ["quotes_open"]).map((widget) => widget.key)).toEqual(["quotes_open"]);
     expect(selectVisibleKpis(widgets, []).length).toBe(0);
+});
+
+test("Mi Espacio summary keeps zero counts while respecting role and personal visibility", () => {
+    const metrics = [
+        { key: "po_pending", role: "compras", count: 0 },
+        { key: "receipts_pending", role: "deposito", count: 3 },
+        { key: "my_activities", role: "general", count: 0 },
+        { key: "invoices_overdue", role: "administracion", count: 8 },
+    ];
+    expect(selectWorkspaceMetrics(metrics, metrics.map((metric) => metric.key), "all", [
+        "po_pending", "receipts_pending", "my_activities",
+    ]).map((metric) => metric.count)).toEqual([0, 3, 0]);
+    expect(selectWorkspaceMetrics(metrics, ["po_pending", "my_activities"], "compras", [
+        "po_pending", "my_activities",
+    ]).map((metric) => metric.key)).toEqual(["po_pending"]);
+});
+
+test("Mi Espacio normalizes custom section order and appends missing sections", () => {
+    const order = normalizeWorkspaceOrder(["activity", "attention", "invalid", "activity"]);
+    expect(order.slice(0, 2)).toEqual(["activity", "attention"]);
+    expect(order.length).toBe(6);
+    expect(new Set(order).size).toBe(6);
 });
 
 test("POS shortcuts only navigate to the native Odoo POS route", () => {

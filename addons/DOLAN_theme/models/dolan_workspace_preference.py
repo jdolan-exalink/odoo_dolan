@@ -8,6 +8,14 @@ WORKSPACE_KPI_KEYS = {
     "sales_to_invoice", "po_pending", "receipts_pending", "pickings_late", "mrp_open",
     "maintenance_open", "my_activities",
 }
+WORKSPACE_SECTION_KEYS = {
+    "pos", "quick_actions", "attention", "summary", "other_metrics", "activity",
+}
+WORKSPACE_ACTION_KEYS = {
+    "new_invoice", "new_sale", "new_partner", "new_payment",
+    "whatsapp", "libro_iva", "toggle_ai", "open_search",
+}
+WORKSPACE_WIDGET_SIZES = {"small", "medium", "large", "full"}
 
 
 class DolanWorkspacePreference(models.Model):
@@ -22,6 +30,14 @@ class DolanWorkspacePreference(models.Model):
     )
     visible_widget_keys = fields.Json(default=False, help="Vacío significa que se muestran todos los indicadores habilitados.")
     kpi_states = fields.Json(default=dict, help="Estados personales de posponer o marcar leído.")
+    indicator_mode = fields.Selection(
+        [("priorities", "Prioridades"), ("complete", "Completo"), ("custom", "Personalizado")],
+        required=True, default="priorities",
+    )
+    visible_section_keys = fields.Json(default=False)
+    workspace_order = fields.Json(default=False)
+    workspace_sizes = fields.Json(default=dict)
+    quick_action_keys = fields.Json(default=False)
 
     _user_unique = models.Constraint("UNIQUE(user_id)", "Ya existen preferencias de Mi Espacio para este usuario.")
 
@@ -45,7 +61,10 @@ class DolanWorkspacePreference(models.Model):
                 raise AccessError("No podés cambiar el propietario de estas preferencias.")
         return super().write(vals)
 
-    @api.constrains("role_filter", "visible_widget_keys", "kpi_states")
+    @api.constrains(
+        "role_filter", "visible_widget_keys", "kpi_states", "indicator_mode",
+        "visible_section_keys", "workspace_order", "workspace_sizes", "quick_action_keys",
+    )
     def _check_personal_workspace_data(self):
         for record in self:
             if record.role_filter not in WORKSPACE_ROLES:
@@ -65,3 +84,29 @@ class DolanWorkspacePreference(models.Model):
                 for name, value in state.items():
                     if not isinstance(value, (int, float)) or value < 0 or value > 4_102_444_800_000:
                         raise ValidationError("El estado de indicadores contiene un valor inválido.")
+            sections = record.visible_section_keys
+            if sections not in (False, None) and (
+                not isinstance(sections, list) or len(sections) > len(WORKSPACE_SECTION_KEYS)
+                or any(not isinstance(key, str) or key not in WORKSPACE_SECTION_KEYS for key in sections)
+            ):
+                raise ValidationError("La lista de secciones de Mi Espacio no es válida.")
+            order = record.workspace_order
+            if order not in (False, None) and (
+                not isinstance(order, list)
+                or any(not isinstance(key, str) or key not in WORKSPACE_SECTION_KEYS for key in order)
+                or len(order) != len(set(order))
+            ):
+                raise ValidationError("El orden de Mi Espacio no es válido.")
+            sizes = record.workspace_sizes or {}
+            if not isinstance(sizes, dict) or any(
+                key not in WORKSPACE_SECTION_KEYS or not isinstance(value, str)
+                or value not in WORKSPACE_WIDGET_SIZES
+                for key, value in sizes.items()
+            ):
+                raise ValidationError("Los tamaños de widgets de Mi Espacio no son válidos.")
+            actions = record.quick_action_keys
+            if actions not in (False, None) and (
+                not isinstance(actions, list) or len(actions) > len(WORKSPACE_ACTION_KEYS)
+                or any(not isinstance(key, str) or key not in WORKSPACE_ACTION_KEYS for key in actions)
+            ):
+                raise ValidationError("La lista de accesos rápidos no es válida.")

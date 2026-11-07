@@ -86,6 +86,32 @@ export const DOLAN_ICON_STYLES = [
     ["tabler", "Tabler Minimal"],
 ];
 
+export const DOLAN_WORKSPACE_SECTIONS = [
+    { key: "pos", label: "Punto de venta", title: "Punto de venta" },
+    { key: "quick_actions", label: "Accesos rápidos", title: "Accesos rápidos" },
+    { key: "attention", label: "Requiere atención", title: "Requiere atención" },
+    { key: "summary", label: "Resumen general", title: "Resumen general" },
+    { key: "other_metrics", label: "Otros indicadores", title: "Otros indicadores" },
+    { key: "activity", label: "Actividad reciente", title: "Actividad reciente" },
+];
+
+export const DOLAN_WORKSPACE_ACTIONS = [
+    { key: "new_invoice", label: "Nueva factura", icon: "file-text", tone: "primary" },
+    { key: "new_sale", label: "Nuevo presupuesto", icon: "cart", tone: "success" },
+    { key: "new_partner", label: "Nuevo contacto", icon: "user-plus", tone: "info" },
+    { key: "new_payment", label: "Registrar cobranza", icon: "money", tone: "warning" },
+    { key: "whatsapp", label: "WhatsApp", icon: "chat", tone: "success" },
+    { key: "libro_iva", label: "Libro IVA & SICORE", icon: "chart-bar", tone: "secondary" },
+    { key: "toggle_ai", label: "Asistente DOLAN AI", icon: "sparkles", tone: "primary" },
+    { key: "open_search", label: "Búsqueda global", icon: "search", tone: "dark" },
+];
+
+export function normalizeWorkspaceOrder(order) {
+    const known = DOLAN_WORKSPACE_SECTIONS.map((section) => section.key);
+    const normalized = Array.isArray(order) ? order.filter((key) => known.includes(key)) : [];
+    return [...new Set([...normalized, ...known])];
+}
+
 export function applyDolanPalette(palette, companyColors = {}) {
     const targets = [document.documentElement, document.body, document.querySelector(".o_web_client")].filter(Boolean);
     const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active"];
@@ -120,6 +146,13 @@ export function applyDolanPalette(palette, companyColors = {}) {
 export function selectVisibleKpis(kpis, visibleKeys) {
     const keys = new Set(Array.isArray(visibleKeys) ? visibleKeys : []);
     return (kpis || []).filter((kpi) => keys.has(kpi.key));
+}
+
+export function selectWorkspaceMetrics(kpis, visibleKeys, role, metricKeys) {
+    const metricSet = new Set(metricKeys || []);
+    return selectVisibleKpis(kpis, visibleKeys).filter((kpi) =>
+        metricSet.has(kpi.key) && (role === "all" || kpi.role === role || kpi.role === "general")
+    );
 }
 
 export function isSafePosShortcutUrl(url) {
@@ -245,6 +278,16 @@ export class DolanAppDrawerSystray extends Component {
             recentKeys: [],
             kpis: [],
             posShortcuts: [],
+            recentActivity: [],
+            activityLoading: false,
+            activityError: false,
+            availableQuickActionKeys: DOLAN_WORKSPACE_ACTIONS.map((action) => action.key),
+            quickActionKeys: DOLAN_WORKSPACE_ACTIONS.map((action) => action.key),
+            workspaceSections: DOLAN_WORKSPACE_SECTIONS,
+            visibleSectionKeys: DOLAN_WORKSPACE_SECTIONS.map((section) => section.key),
+            workspaceOrder: DOLAN_WORKSPACE_SECTIONS.map((section) => section.key),
+            workspaceSizes: {},
+            indicatorMode: "priorities",
             visibleWidgetKeys: [],
             workspaceConfigOpen: false,
             kpisLoading: false,
@@ -739,6 +782,7 @@ export class DolanAppDrawerSystray extends Component {
         const next = { ...this.state.kpiStates, [key]: entry };
         this.state.kpiStates = next;
         this._saveJson("dolan_kpi_states", next);
+        this.saveWorkspacePreferences({ kpi_states: next });
     }
 
     get hiddenKpiCount() {
@@ -1620,9 +1664,167 @@ export class DolanAppDrawerSystray extends Component {
 
     get visibleKpis() {
         const role = this.state.roleFilter;
-        const kpis = selectVisibleKpis(this.state.kpis, this.state.visibleWidgetKeys);
+        const kpis = this.state.indicatorMode === "complete"
+            ? [...this.state.kpis]
+            : selectVisibleKpis(this.state.kpis, this.state.visibleWidgetKeys);
         const byRole = role === "all" ? kpis : kpis.filter((k) => k.role === role || k.role === "general");
-        return byRole.filter((k) => !this._isHiddenKpi(k));
+        const notDismissed = byRole.filter((k) => !this._isHiddenKpi(k));
+        return this.state.indicatorMode === "priorities"
+            ? notDismissed.filter((k) => Number(k.count) > 0)
+            : notDismissed;
+    }
+
+    get attentionKpis() {
+        const keys = new Set(["invoices_overdue", "invoices_draft", "quotes_open"]);
+        return this.visibleKpis.filter((kpi) => keys.has(kpi.key));
+    }
+
+    get attentionCount() {
+        return this.attentionKpis.reduce((sum, kpi) => sum + Number(kpi.count || 0), 0);
+    }
+
+    get hasActivityKpi() {
+        return this.state.kpis.some((kpi) => kpi.model === "mail.activity");
+    }
+
+    get summaryKpis() {
+        return selectWorkspaceMetrics(
+            this.state.kpis.filter((kpi) => !this._isHiddenKpi(kpi)),
+            this.state.visibleWidgetKeys,
+            this.state.roleFilter,
+            ["po_pending", "receipts_pending", "mrp_open", "my_activities"]
+        );
+    }
+
+    get otherMetricKpis() {
+        return selectWorkspaceMetrics(
+            this.state.kpis.filter((kpi) => !this._isHiddenKpi(kpi)),
+            this.state.visibleWidgetKeys,
+            this.state.roleFilter,
+            ["bills_due_week", "quotes_expiring", "sales_to_invoice", "pickings_late", "maintenance_open"]
+        );
+    }
+
+    get visibleQuickActions() {
+        const selected = new Set(this.state.quickActionKeys);
+        return DOLAN_WORKSPACE_ACTIONS.filter((action) => selected.has(action.key)
+            && this.state.availableQuickActionKeys.includes(action.key));
+    }
+
+    get availableWorkspaceActions() {
+        return DOLAN_WORKSPACE_ACTIONS.filter((action) => this.state.availableQuickActionKeys.includes(action.key));
+    }
+
+    get workspaceTitle() {
+        return this.workspaceSpaces.find((space) => space.key === this.state.roleFilter)?.label || "Todo";
+    }
+
+    get workspaceDateTime() {
+        const locale = document.documentElement.lang || "es-AR";
+        return new Intl.DateTimeFormat(locale.replaceAll("_", "-"), {
+            weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
+        }).format(new Date());
+    }
+
+    relativeActivityDate(value) {
+        if (!value) return "";
+        const date = new Date(`${String(value).replace(" ", "T")}Z`);
+        if (Number.isNaN(date.getTime())) return "";
+        const minutes = Math.round((date.getTime() - Date.now()) / 60000);
+        const formatter = new Intl.RelativeTimeFormat(document.documentElement.lang?.replaceAll("_", "-") || "es-AR", { numeric: "auto" });
+        if (Math.abs(minutes) < 60) return formatter.format(minutes, "minute");
+        const hours = Math.round(minutes / 60);
+        if (Math.abs(hours) < 24) return formatter.format(hours, "hour");
+        return formatter.format(Math.round(hours / 24), "day");
+    }
+
+    get orderedWorkspaceSections() {
+        return normalizeWorkspaceOrder(this.state.workspaceOrder);
+    }
+
+    workspaceSectionOrder(key) {
+        return this.orderedWorkspaceSections.indexOf(key);
+    }
+
+    workspaceSectionVisible(key) {
+        return this.state.visibleSectionKeys.includes(key);
+    }
+
+    workspaceSectionSize(key) {
+        return this.state.workspaceSizes[key] || "medium";
+    }
+
+    setIndicatorMode(mode) {
+        if (!["priorities", "complete", "custom"].includes(mode)) return;
+        this.state.indicatorMode = mode;
+        this.saveWorkspacePreferences({ indicator_mode: mode });
+    }
+
+    toggleWorkspaceSection(key) {
+        if (!DOLAN_WORKSPACE_SECTIONS.some((section) => section.key === key)) return;
+        const sections = new Set(this.state.visibleSectionKeys);
+        if (sections.has(key)) sections.delete(key);
+        else sections.add(key);
+        this.state.visibleSectionKeys = [...sections];
+        this.saveWorkspacePreferences({ visible_section_keys: this.state.visibleSectionKeys });
+    }
+
+    toggleQuickAction(key) {
+        if (!this.state.availableQuickActionKeys.includes(key)) return;
+        const actions = new Set(this.state.quickActionKeys);
+        if (actions.has(key)) actions.delete(key);
+        else actions.add(key);
+        this.state.quickActionKeys = [...actions];
+        this.saveWorkspacePreferences({ quick_action_keys: this.state.quickActionKeys });
+    }
+
+    moveWorkspaceSection(key, offset) {
+        const order = this.orderedWorkspaceSections;
+        const index = order.indexOf(key);
+        const target = index + offset;
+        if (index < 0 || target < 0 || target >= order.length) return;
+        [order[index], order[target]] = [order[target], order[index]];
+        this.state.workspaceOrder = order;
+        this.saveWorkspacePreferences({ workspace_order: order });
+    }
+
+    setWorkspaceSize(key, size) {
+        if (!DOLAN_WORKSPACE_SECTIONS.some((section) => section.key === key)
+            || !["small", "medium", "large", "full"].includes(size)) return;
+        this.state.workspaceSizes = { ...this.state.workspaceSizes, [key]: size };
+        this.saveWorkspacePreferences({ workspace_sizes: this.state.workspaceSizes });
+    }
+
+    get workspaceSpaces() {
+        return [
+            { key: "all", label: "Todo", icon: "grid" },
+            ...this.kpiRoles.map((role) => ({ ...role, icon: ({
+                administracion: "settings", ventas: "chart-bar", compras: "cart",
+                deposito: "layers", produccion: "factory", mantenimiento: "wrench",
+            })[role.key] || "grid" })),
+        ];
+    }
+
+    async loadWorkspaceActivity() {
+        this.state.activityLoading = true;
+        try {
+            const response = await rpc("/dolan_theme/workspace_activity", { limit: 10 });
+            this.state.recentActivity = response.events || [];
+            this.state.activityError = false;
+        } catch {
+            this.state.activityError = true;
+        } finally {
+            this.state.activityLoading = false;
+        }
+    }
+
+    openRecentActivity(event) {
+        if (!event || !["account.move", "sale.order", "res.partner", "maintenance.request"].includes(event.model)) return;
+        this.closeDrawer({ restore: false });
+        this.actionService.doAction({
+            type: "ir.actions.act_window", name: event.label, res_model: event.model,
+            res_id: event.id, views: [[false, "form"]], target: "current",
+        });
     }
 
     get kpiRoles() {
@@ -1671,11 +1873,27 @@ export class DolanAppDrawerSystray extends Component {
                 : this.state.kpis.map((kpi) => kpi.key);
             this.state.roleFilter = res.role_filter || "all";
             this.state.kpiStates = res.kpi_states || {};
+            const localKpiStates = this._loadJson("dolan_kpi_states", {});
+            if (!Object.keys(this.state.kpiStates).length && Object.keys(localKpiStates).length) {
+                this.state.kpiStates = localKpiStates;
+                this.saveWorkspacePreferences({ kpi_states: localKpiStates });
+            }
+            this.state.indicatorMode = res.indicator_mode || "priorities";
+            this.state.visibleSectionKeys = Array.isArray(res.visible_section_keys)
+                ? res.visible_section_keys : DOLAN_WORKSPACE_SECTIONS.map((section) => section.key);
+            this.state.workspaceOrder = normalizeWorkspaceOrder(res.workspace_order);
+            this.state.workspaceSizes = res.workspace_sizes || {};
+            this.state.quickActionKeys = Array.isArray(res.quick_action_keys)
+                ? res.quick_action_keys : DOLAN_WORKSPACE_ACTIONS.map((action) => action.key);
             const posRes = await rpc("/dolan_theme/workspace_pos_shortcuts", {}).catch(() => ({ points_of_sale: [] }));
             this.state.posShortcuts = posRes.points_of_sale || [];
+            const actionRes = await rpc("/dolan_theme/workspace_quick_actions", {}).catch(() => ({ keys: [] }));
+            this.state.availableQuickActionKeys = actionRes.keys || [];
+            this.state.quickActionKeys = this.state.quickActionKeys.filter((key) => this.state.availableQuickActionKeys.includes(key));
             window.localStorage.setItem("dolan_workspace_role", this.state.roleFilter);
             this._saveJson("dolan_kpi_states", this.state.kpiStates);
             this.state.kpisError = false;
+            this.loadWorkspaceActivity();
         } catch {
             this.state.kpisError = true;
         } finally {
@@ -1690,15 +1908,22 @@ export class DolanAppDrawerSystray extends Component {
 
     openKpi(kpi) {
         this.closeDrawer({ restore: false });
-        if (kpi.model === "mail.activity") {
-            return;
-        }
         this.actionService.doAction({
             type: "ir.actions.act_window",
             name: kpi.label,
             res_model: kpi.model,
             views: [[false, "list"], [false, "form"]],
             domain: kpi.domain,
+        });
+    }
+
+    openActivityList() {
+        const activities = this.state.kpis.find((kpi) => kpi.model === "mail.activity");
+        if (!activities) return;
+        this.closeDrawer({ restore: false });
+        this.actionService.doAction({
+            type: "ir.actions.act_window", name: "Mis actividades pendientes", res_model: "mail.activity",
+            views: [[false, "list"], [false, "form"]], domain: activities.domain,
         });
     }
 

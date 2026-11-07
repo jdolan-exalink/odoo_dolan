@@ -58,6 +58,11 @@ export const DOLAN_ICON_PATHS = {
     factory: ["M3 21V9l6 4V9l6 4V5h6v16z"],
     wrench: ["M14.7 6.3a4 4 0 0 0 5 5l-9.4 9.4a2.1 2.1 0 0 1-3-3z"],
     tasks: ["M9 6h12", "M9 12h12", "M9 18h12", "M3 6l1 1 2-2", "M3 12l1 1 2-2", "M3 18l1 1 2-2"],
+    user: ["M20 21v-2a7 7 0 0 0-14 0v2", "M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"],
+    "chevron-right": ["M9 18l6-6-6-6"],
+    "chevron-up": ["M18 15l-6-6-6 6"],
+    "chevron-down": ["M6 9l6 6 6-6"],
+    layers: ["M12 3l9 5-9 5-9-5 9-5z", "M3 12l9 5 9-5", "M3 16l9 5 9-5"],
 };
 
 /** Nombres heredados de Font Awesome (p. ej. los que envía el servidor) -> icono propio. */
