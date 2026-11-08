@@ -140,6 +140,9 @@ class TestScaleManagement(TransactionCase):
             'name': 'Caja etiqueta QA', 'company_id': self.company.id,
             'picking_type_id': self.warehouse.out_type_id.id,
         })
+        pos_fields = config._load_pos_data_fields(config)
+        for name in ('use_pricelist', 'trusted_config_ids', 'floor_plan', 'scale_barcode_profiles'):
+            self.assertIn(name, pos_fields)
         payload = config.scale_barcode_profiles
         self.assertEqual(len(payload), 1)
         self.assertIs(payload[0]['products']['12345'], False)

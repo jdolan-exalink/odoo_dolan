@@ -4,6 +4,29 @@ from odoo import api, fields, models
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
+    # Odoo 20's pos.config inherits PosLoadMixin, whose default loader returns
+    # an empty list. Keep the fields consumed by the standard POS client here
+    # so custom POS fields cannot accidentally replace the core payload.
+    _POS_CLIENT_FIELDS = (
+        'id', 'name', 'company_id', 'currency_id', 'access_token',
+        'available_preset_ids', 'available_pricelist_ids', 'cash_control',
+        'cash_rounding', 'default_fiscal_position_id', 'default_preset_id',
+        'discount_product_id', 'fast_payment_method_ids', 'fiscal_position_ids',
+        'iface_available_categ_ids', 'iface_big_scrollbars',
+        'iface_group_by_categ', 'iface_print_auto', 'iface_printbill',
+        'iface_tax_included', 'iface_tipproduct',
+        'is_margins_costs_accessible_to_every_user', 'journal_id',
+        'limit_categories', 'limited_partner_ids', 'module_pos_hr',
+        'module_pos_restaurant', 'only_round_cash_method', 'other_devices',
+        'payment_method_ids', 'pos_snooze_ids', 'preparation_printer_ids',
+        'floor_plan', 'pricelist_id', 'receipt_printer_ids', 'restrict_price_control',
+        'rounding_method', 'self_ordering_mode', 'set_tip_after_payment',
+        'show_category_images', 'show_product_images', 'tip_percentage_1',
+        'tip_percentage_2', 'tip_percentage_3', 'tip_product_id',
+        'use_download_invoice', 'use_fast_payment', 'use_presets',
+        'use_pricelist', 'use_order_printer', 'trusted_config_ids',
+    )
+
     scale_barcode_profiles = fields.Json(compute='_compute_scale_barcode_profiles')
 
     @api.depends('company_id', 'picking_type_id')
@@ -45,7 +68,13 @@ class PosConfig(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        result = super()._load_pos_data_fields(config)
-        if 'scale_barcode_profiles' not in result:
-            result.append('scale_barcode_profiles')
+        result = list(super()._load_pos_data_fields(config) or [])
+        # Filter by the runtime registry to remain compatible with optional
+        # POS modules and minor changes to the Odoo 20 field set.
+        for name in self._POS_CLIENT_FIELDS:
+            if name in self._fields and name not in result:
+                result.append(name)
+        for name in ('scale_barcode_profiles',):
+            if name in self._fields and name not in result:
+                result.append(name)
         return result

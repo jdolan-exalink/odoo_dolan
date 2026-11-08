@@ -15,6 +15,13 @@ _PROFILE_ALIASES = {
     "liquid_glass_dark": "dolan_liquid", "liquid_glass_light": "dolan_liquid",
     "minimal": "dolan_minimal", "legacy": "odoo_classic",
 }
+_PROFILE_VISUAL_EFFECT = {
+    "odoo_classic": "none",
+    "dolan_fluent": "soft",
+    "dolan_liquid": "glass",
+    "dolan_material": "soft",
+    "dolan_minimal": "none",
+}
 
 
 def _normalize_profile(value):
@@ -73,7 +80,6 @@ class DolanScreenPreferencesController(http.Controller):
         global_density = params.get_param("dolan_ui.density", "normal")
         global_profile = _normalize_profile(params.get_param("dolan_ui.appearance_profile", "odoo_classic"))
         global_icon_scale = params.get_param("dolan_ui.icon_scale", "normal")
-        global_effect = params.get_param("dolan_ui.visual_effect", "soft")
         preference = Preference.search([("user_id", "=", request.env.uid)], limit=1)
         is_new = not preference
         values = values or {}
@@ -106,8 +112,6 @@ class DolanScreenPreferencesController(http.Controller):
                 allowed["appearance_profile"] = _normalize_profile(values["appearance_profile"])
             if allow_personal_appearance and values.get("icon_scale") in {"global", "compact", "normal", "large"}:
                 allowed["icon_scale"] = values["icon_scale"]
-            if allow_personal_appearance and values.get("visual_effect") in {"global", "none", "soft", "glass"}:
-                allowed["visual_effect"] = values["visual_effect"]
             if "hidden_app_xmlids" in values:
                 menu_ids = []
                 for xmlid in values["hidden_app_xmlids"] or []:
@@ -143,11 +147,7 @@ class DolanScreenPreferencesController(http.Controller):
             if allow_personal_appearance and preference.icon_scale != "global"
             else global_icon_scale
         )
-        selected_effect = (
-            preference.visual_effect
-            if allow_personal_appearance and preference.visual_effect != "global"
-            else global_effect
-        )
+        selected_effect = _PROFILE_VISUAL_EFFECT.get(selected_profile, "none")
         company = request.env.company
         return {
             "theme_mode": selected_theme,

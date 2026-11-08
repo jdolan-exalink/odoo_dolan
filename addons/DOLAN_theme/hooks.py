@@ -87,3 +87,15 @@ def post_init_hook(env):
         seq = EXALINK_MENU_SEQUENCES.get(menu.name)
         if seq and menu.sequence != seq:
             menu.sequence = seq
+
+    # A login must open the DOLAN launcher, not whichever app happened to be
+    # first in the root menu (Discuss is intentionally a normal app). Set the
+    # launcher as the home action for internal users; this is an Odoo-supported
+    # per-user preference and does not replace or patch the core web client.
+    launcher = env.ref("DOLAN_theme.action_dolan_home", raise_if_not_found=False)
+    if launcher:
+        users = env["res.users"].sudo().with_context(active_test=False).search([
+            ("share", "=", False),
+        ])
+        users.write({"action_id": launcher.id})
+        _logger.info("DOLAN_theme: Inicio DOLAN configurado para %d usuarios internos", len(users))

@@ -74,12 +74,21 @@ export const DOLAN_UI_PALETTES = [
 ];
 
 export const DOLAN_APPEARANCE_PROFILES = [
-    { id: "odoo_classic", label: "Odoo Enterprise Classic", description: "La experiencia familiar de Odoo, clara y equilibrada." },
-    { id: "dolan_fluent", label: "Dolan Fluent", description: "Capas sutiles y navegación de escritorio." },
-    { id: "dolan_liquid", label: "Dolan Liquid", description: "Superficies translúcidas en zonas de navegación." },
-    { id: "dolan_material", label: "Dolan Material", description: "Controles táctiles y superficies tonales." },
-    { id: "dolan_minimal", label: "Dolan Minimal", description: "Interfaz plana y compacta para administración." },
+    { id: "odoo_classic", label: "Clásico Odoo", description: "Bordes discretos y elevación baja." },
+    { id: "dolan_fluent", label: "Fluent", description: "Esquinas suaves y sombra sutil." },
+    { id: "dolan_liquid", label: "Liquid", description: "Esquinas amplias, transparencia y desenfoque." },
+    { id: "dolan_material", label: "Material", description: "Controles redondeados y superficies tonales." },
+    { id: "dolan_minimal", label: "Minimal", description: "Esquinas compactas y superficies planas, sin sombras." },
 ];
+
+const PROFILE_VISUAL_EFFECT = {
+    odoo_classic: "none",
+    dolan_fluent: "soft",
+    dolan_liquid: "glass",
+    dolan_material: "soft",
+    dolan_minimal: "none",
+};
+const visualEffectForProfile = (profile) => PROFILE_VISUAL_EFFECT[normalizeAppearanceProfile(profile)] || "none";
 
 const APPEARANCE_PROFILE_ALIASES = {
     enterprise_classic: "odoo_classic", graphite: "dolan_fluent", glass: "dolan_liquid",
@@ -246,6 +255,12 @@ export class DolanAppDrawerSystray extends Component {
             this.openDrawer();
             setTimeout(() => document.querySelector(".o_dolan_quick_actions_widget")?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
         });
+        useBus(this.env.bus, "DOLAN:OPEN_LAUNCHER", () => {
+            this.state.isOpen = true;
+            this.state.query = "";
+            this.state.selectedIndex = -1;
+            this._syncBodyClass();
+        });
 
         const legacySavedDark = window.localStorage.getItem("dolan_dark_mode") === "1";
         const savedThemeMode = window.localStorage.getItem("dolan_theme_mode") || (legacySavedDark ? "dark" : "light");
@@ -266,6 +281,7 @@ export class DolanAppDrawerSystray extends Component {
         const initialOpen =
             window.location.pathname === "/odoo" ||
             window.location.pathname === "/odoo/" ||
+            window.location.pathname === "/odoo/dolan-home" ||
             window.location.pathname === "/web";
         if (initialOpen) {
             document.body.classList.add("o_home_menu_background");
@@ -289,13 +305,8 @@ export class DolanAppDrawerSystray extends Component {
                 { id: "normal", label: "Iconos normales", shortLabel: "Mediano", iconSize: 20 },
                 { id: "large", label: "Iconos grandes", shortLabel: "Grande", iconSize: 27 },
             ],
-            visualEffectChoices: [
-                { id: "none", label: "Sin efectos", shortLabel: "Plano" },
-                { id: "soft", label: "Efectos suaves", shortLabel: "Suave" },
-                { id: "glass", label: "Liquid Glass", shortLabel: "Vidrio" },
-            ],
             iconScale: "normal",
-            visualEffect: "soft",
+            visualEffect: visualEffectForProfile("odoo_classic"),
             themeChoices: DOLAN_THEME_MODES,
             iconStyleChoices: DOLAN_ICON_STYLES,
             iconStyle: "fluent_3d_classic",
@@ -573,6 +584,29 @@ export class DolanAppDrawerSystray extends Component {
             document.addEventListener("pointercancel", this._onDesktopPointerCancel, true);
             this.loadScreenPreferences();
             this.loadDesktopPreferences();
+
+            // The action can mount before or after the systray listener. Detect
+            // it from the active action and its host node as a deterministic
+            // fallback, so /odoo/action-* never renders as an empty screen.
+            const openHomeAction = () => {
+                const activeAction = this.actionService.currentController?.action;
+                const isDolanHomeAction =
+                    window.location.pathname === "/odoo/dolan-home" ||
+                    activeAction?.tag === "dolan_home" ||
+                    Boolean(document.querySelector(".o_dolan_home_action"));
+                if (isDolanHomeAction) {
+                    this._isDolanHomeAction = true;
+                    window.sessionStorage.removeItem("dolan_return_url");
+                    this._pushedHome = false;
+                    this.state.isOpen = true;
+                    this.state.query = "";
+                    this.state.selectedIndex = -1;
+                    this._syncBodyClass();
+                }
+            };
+            openHomeAction();
+            window.setTimeout(openHomeAction, 100);
+
         });
 
         onWillDestroy(() => {
@@ -910,7 +944,7 @@ export class DolanAppDrawerSystray extends Component {
     }
 
     static isHomePath(pathname = window.location.pathname) {
-        return pathname === "/odoo" || pathname === "/odoo/" || pathname === "/web";
+        return pathname === "/odoo" || pathname === "/odoo/" || pathname === "/odoo/dolan-home" || pathname === "/web";
     }
 
     openDrawer() {
@@ -946,6 +980,13 @@ export class DolanAppDrawerSystray extends Component {
      * @param {boolean} [options.restore=true] volver a la pantalla previa (false al elegir una app)
      */
     closeDrawer({ restore = true } = {}) {
+        // The configured DOLAN home action is itself the launcher screen. Keep it
+        // open when the generic close/toggle control is used; choosing an app
+        // closes it explicitly with restore=false.
+        if (restore && this.state.isOpen && this._isDolanHomeAction) {
+            return;
+        }
+        if (!restore) this._isDolanHomeAction = false;
         const wasOpen = this.state.isOpen;
         this.state.isOpen = false;
         this.state.query = "";
@@ -1007,17 +1048,19 @@ export class DolanAppDrawerSystray extends Component {
         profile = normalizeAppearanceProfile(profile);
         if (!DOLAN_APPEARANCE_PROFILES.some((item) => item.id === profile)) return;
         this.state.appearanceProfile = profile;
+        this.state.visualEffect = visualEffectForProfile(profile);
         window.sessionStorage.setItem("dolan_session_appearance_profile", profile);
+        window.sessionStorage.removeItem("dolan_session_visual_effect");
         this.applyAppearanceProfile(profile);
     }
 
     profileShortLabel(profile) {
         return ({
-            odoo_classic: "Odoo Classic",
-            dolan_fluent: "Dolan Fluent",
-            dolan_liquid: "Dolan Liquid",
-            dolan_material: "Dolan Material",
-            dolan_minimal: "Dolan Minimal",
+            odoo_classic: "Clásico Odoo",
+            dolan_fluent: "Fluent",
+            dolan_liquid: "Liquid",
+            dolan_material: "Material",
+            dolan_minimal: "Minimal",
         })[profile] || profile;
     }
 
@@ -1036,21 +1079,14 @@ export class DolanAppDrawerSystray extends Component {
         document.body.dataset.dolanIconScale = scale;
     }
 
-    chooseSessionVisualEffect(effect) {
-        if (!["none", "soft", "glass"].includes(effect)) return;
-        this.state.visualEffect = effect;
-        window.sessionStorage.setItem("dolan_session_visual_effect", effect);
-        document.body.dataset.dolanVisualEffect = effect;
-    }
-
     applyAppearanceProfile(profile) {
         profile = normalizeAppearanceProfile(profile);
         document.body.dataset.dolanStyle = profile;
-        // Keep the legacy attribute as a compatibility hook for the existing stylesheet.
-        document.body.dataset.dolanProfile = ({
-            odoo_classic: "enterprise_classic", dolan_fluent: "graphite", dolan_liquid: "glass",
-            dolan_material: "graphite", dolan_minimal: "minimal",
-        })[profile];
+        // Keep both attributes canonical. Mapping multiple new profiles to the same
+        // legacy name made their CSS rules collide (Fluent/Material and Liquid/Glass).
+        document.body.dataset.dolanProfile = profile;
+        this.state.visualEffect = visualEffectForProfile(profile);
+        document.body.dataset.dolanVisualEffect = this.state.visualEffect;
         document.body.classList.toggle("o_dolan_profile_minimal", profile === "dolan_minimal");
     }
 
@@ -1117,7 +1153,7 @@ export class DolanAppDrawerSystray extends Component {
             this.state.appearanceProfile = normalizeAppearanceProfile(sessionProfile || response.appearance_profile || "enterprise_classic");
             this.state.appearanceProfileChoices = DOLAN_APPEARANCE_PROFILES;
             this.state.iconScale = window.sessionStorage.getItem("dolan_session_icon_scale") || response.icon_scale || "normal";
-            this.state.visualEffect = window.sessionStorage.getItem("dolan_session_visual_effect") || response.visual_effect || "soft";
+            this.state.visualEffect = visualEffectForProfile(this.state.appearanceProfile);
             this.state.paletteChoices = [
                 ...DOLAN_UI_PALETTES,
                 { id: "company", label: "Empresa", primary: response.primary_color || "#714B67", secondary: response.secondary_color || "#017e84" },
@@ -1130,7 +1166,6 @@ export class DolanAppDrawerSystray extends Component {
             window.dolanUiIconCatalog = response.icon_catalog || {};
             document.body.dataset.dolanIconStyle = this.state.iconStyle;
             document.body.dataset.dolanIconScale = this.state.iconScale;
-            document.body.dataset.dolanVisualEffect = this.state.visualEffect;
             this.applyAppearanceProfile(this.state.appearanceProfile);
             document.body.dataset.dolanHomeBgStyle = response.home_bg_style || "enterprise";
             this.state.compact = Boolean(response.compact_mode);

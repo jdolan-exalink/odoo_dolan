@@ -297,6 +297,22 @@ body.o_dolan_dark_mode .o_main_navbar .o_dolan_home_btn:focus {
     animation: dolanHomeMenuFadeIn 0.12s ease-out;
 }
 
+/* Inicio DOLAN es una acción cliente vacía detrás del launcher. Mantener la
+   navbar como capa superior evita que el action manager tape el escritorio. */
+body.o_dolan_home_action_active .o_main_navbar {
+    position: relative !important;
+    z-index: 2000 !important;
+    isolation: isolate;
+}
+
+body.o_dolan_home_action_active .o_dolan_home_menu_wrapper {
+    z-index: 2001 !important;
+}
+
+body.o_dolan_home_action_active .o_action_manager {
+    z-index: 0 !important;
+}
+
 @keyframes dolanHomeMenuFadeIn {
     from { opacity: 0; }
     to { opacity: 1; }

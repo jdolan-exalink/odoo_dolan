@@ -26,9 +26,6 @@
                         <setting string="Tamaño de iconos" help="Escala óptica independiente del estilo de iconografía.">
                             <field name="dolan_ui_icon_scale" widget="dolan_appearance_choice"/>
                         </setting>
-                        <setting string="Efectos visuales" help="Controla superficies planas, sombras suaves o Liquid Glass en superficies principales.">
-                            <field name="dolan_ui_visual_effect" widget="dolan_appearance_choice"/>
-                        </setting>
                     </block>
                     <block title="Iconografía" name="dolan_ui_appearance">
                         <setting string="Estilo global de iconos" help="Define las variantes Fluent o los iconos originales de Odoo para aplicaciones y carpetas.">
