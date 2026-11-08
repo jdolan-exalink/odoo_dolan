@@ -119,6 +119,8 @@ Se solicitan razón social, nombre corto, CUIT, domicilio, localidad, responsabi
 | `Completo` | `full`, `completo` | Los 18 módulos del catálogo DOLAN (`DOLAN_*`, `ePOS_print`, `pos_scale_management`) y aplicaciones CE de negocio. |
 | `Personalizado` | `custom` | Selección libre de los 18 módulos del catálogo con resolución automática de dependencias; Artículos (`DOLAN_knowledge_bi`) se incluye siempre. |
 
+En perfiles `Comercio` y `Completo` queda incluido el checkout de POS para descuentos, Mercado Pago QR/Point y Clover, además de impresión e integración de balanzas. Al elegir `DOLAN_pos` en `Personalizado`, el planificador agrega `DOLAN_payment_terminal` y el proveedor CE `pos_mercado_pago`. El instalador no configura credenciales de Mercado Pago ni empareja terminales: eso se completa desde Odoo. Los perfiles `Básico` y `Servicios` no instalan POS ni sus medios de cobro.
+
 ## Qué queda configurado
 
 - Contenedores de Odoo, PostgreSQL, WAHA y Whisper local (o servicios nativos en Proxmox LXC).

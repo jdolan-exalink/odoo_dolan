@@ -5,7 +5,7 @@ import uuid
 import pytz
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 
 class DolanEmployeeBenefit(models.Model):
@@ -34,7 +34,7 @@ class DolanEmployeeBenefit(models.Model):
     date_start = fields.Date(required=True, default=fields.Date.today)
     date_end = fields.Date()
     active = fields.Boolean(default=True)
-    require_approval = fields.Boolean(default=False, help='Pendiente de flujo de aprobación de beneficios. Mantener desactivado hasta implementarlo.')
+    require_approval = fields.Boolean(default=False, help='Exige la aprobación de un supervisor distinto del cajero antes de aplicar el beneficio.')
     allow_self_purchase = fields.Boolean(default=False)
 
     _dolan_discount_benefit_dni_company_uniq = models.Constraint(
@@ -45,8 +45,6 @@ class DolanEmployeeBenefit(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             vals['employee_dni'] = self._normalize_dni(vals.get('employee_dni'))
-            if vals.get('require_approval'):
-                raise ValidationError(_('La aprobación de beneficios de empleados aún no está disponible.'))
         records = super().create(vals_list)
         for record in records:
             record._log_change('employee_benefit_created', {}, record._audit_snapshot())
@@ -56,8 +54,6 @@ class DolanEmployeeBenefit(models.Model):
         vals = dict(vals)
         if 'employee_dni' in vals:
             vals['employee_dni'] = self._normalize_dni(vals['employee_dni'])
-        if vals.get('require_approval'):
-            raise ValidationError(_('La aprobación de beneficios de empleados aún no está disponible.'))
         before = {record.id: record._audit_snapshot() for record in self}
         result = super().write(vals)
         for record in self:
@@ -122,8 +118,6 @@ class DolanEmployeeBenefit(models.Model):
         ], limit=1)
         if not benefit:
             return {'status': 'ineligible', 'message': _('No encontramos un beneficio vigente para ese DNI en esta empresa.')}
-        if benefit.require_approval:
-            return {'status': 'approval_unavailable', 'message': _('Este beneficio requiere una aprobación que aún no está habilitada.')}
         if not benefit.allow_self_purchase and self.env.user.partner_id == benefit.partner_id:
             return {'status': 'self_purchase_denied', 'message': _('Este beneficio no permite compras aprobadas por el propio beneficiario.')}
         if benefit.pos_config_ids and session.config_id not in benefit.pos_config_ids:
@@ -186,8 +180,16 @@ class DolanDiscountEmployeeClaim(models.Model):
     amount = fields.Monetary(required=True, currency_field='currency_id')
     currency_id = fields.Many2one(related='company_id.currency_id')
     proposals = fields.Json(required=True, default=list)
-    state = fields.Selection([('reserved', 'Reservado'), ('consumed', 'Consumido'), ('released', 'Liberado')],
+    state = fields.Selection([
+        ('pending_approval', 'Pendiente de aprobación'), ('reserved', 'Aprobado / reservado'),
+        ('rejected', 'Rechazado'), ('consumed', 'Consumido'), ('released', 'Liberado'),
+    ],
                              required=True, default='reserved', index=True)
+    requested_by_id = fields.Many2one('res.users', required=True, default=lambda self: self.env.user, readonly=True)
+    approved_by_id = fields.Many2one('res.users', readonly=True, copy=False)
+    approved_at = fields.Datetime(readonly=True, copy=False)
+    rejected_by_id = fields.Many2one('res.users', readonly=True, copy=False)
+    rejection_reason = fields.Char(readonly=True, copy=False)
 
     _dolan_discount_employee_claim_order_uniq = models.Constraint(
         'UNIQUE(order_uuid)', 'La orden ya tiene una reserva de beneficio de empleado.',
@@ -250,7 +252,7 @@ class DolanDiscountEmployeeClaim(models.Model):
                 ('date_order', '>=', start), ('date_order', '<', end),
             ]).mapped('net_discount_amount'))
         existing_id = existing.id if existing else 0
-        pending_domain = [('benefit_id', '=', benefit.id), ('state', '=', 'reserved'), ('expires_at', '>', now)]
+        pending_domain = [('benefit_id', '=', benefit.id), ('state', 'in', ['reserved', 'pending_approval']), ('expires_at', '>', now)]
         if existing_id:
             pending_domain.append(('id', '!=', existing_id))
         pending = self.search(pending_domain)
@@ -272,11 +274,23 @@ class DolanDiscountEmployeeClaim(models.Model):
                 remaining -= line_amount
         if remaining > 0 and proposals:
             proposals[-1]['discount_amount'] += remaining
+        same_approved_claim = bool(
+            existing and existing.state == 'reserved' and existing.approved_by_id
+            and existing.benefit_id == benefit
+            and existing.amount == amount and existing.proposals == proposals
+        )
+        if existing and existing.state == 'rejected':
+            raise UserError(_('La solicitud fue rechazada. Iniciá una nueva orden para pedir otra autorización.'))
+        state = 'pending_approval' if benefit.require_approval and not same_approved_claim else 'reserved'
         values = {
             'token': existing.token if existing else str(uuid.uuid4()),
             'order_uuid': order_uuid, 'session_id': session.id, 'benefit_id': benefit.id,
             'beneficiary_id': benefit.partner_id.id, 'expires_at': now + timedelta(days=7),
-            'amount': amount, 'proposals': proposals, 'state': 'reserved',
+            'amount': amount, 'proposals': proposals, 'state': state,
+            'requested_by_id': existing.requested_by_id.id if existing else self.env.uid,
+            'approved_by_id': existing.approved_by_id.id if same_approved_claim else False,
+            'approved_at': existing.approved_at if same_approved_claim else False,
+            'rejected_by_id': False, 'rejection_reason': False,
         }
         if existing:
             existing.write(values)
@@ -285,15 +299,79 @@ class DolanDiscountEmployeeClaim(models.Model):
 
     def _pos_result(self):
         self.ensure_one()
+        if self.state == 'pending_approval':
+            return {
+                'status': 'pending_approval',
+                'message': _('Solicitud enviada a un supervisor. El beneficio se aplica cuando la autorice.'),
+            }
+        if self.state == 'rejected':
+            return {'status': 'rejected', 'message': self.rejection_reason or _('La solicitud fue rechazada.')}
         return {
             'status': 'ready', 'token': self.token, 'expires_at': fields.Datetime.to_string(self.expires_at),
             'benefit_name': self.benefit_id.name, 'proposals': self.proposals,
         }
 
+    def action_approve(self):
+        self.ensure_one()
+        if not self.env.user.has_group('DOLAN_discount_engine.group_discount_supervisor') and not self.env.user.has_group('DOLAN_discount_engine.group_discount_manager'):
+            raise UserError(_('Solo un supervisor puede aprobar beneficios de empleados.'))
+        self.env.cr.execute('SELECT id FROM dolan_discount_employee_claim WHERE id = %s FOR UPDATE', [self.id])
+        self.invalidate_recordset()
+        if self.state != 'pending_approval' or self.expires_at <= fields.Datetime.now():
+            raise UserError(_('La solicitud ya venció o dejó de estar pendiente.'))
+        if self.requested_by_id == self.env.user:
+            raise UserError(_('El cajero que solicitó el beneficio no puede aprobarlo.'))
+        super(DolanDiscountEmployeeClaim, self).write({
+            'state': 'reserved', 'approved_by_id': self.env.user.id,
+            'approved_at': fields.Datetime.now(), 'expires_at': fields.Datetime.add(fields.Datetime.now(), days=7),
+        })
+        self.env['dolan.discount.audit'].sudo().create({
+            'name': _('Beneficio de empleado aprobado'), 'event': 'employee_benefit_approved',
+            'company_id': self.company_id.id, 'actor_id': self.requested_by_id.id,
+            'approved_by_id': self.env.user.id,
+            'after_snapshot': {'claim_id': self.id, 'order_uuid': self.order_uuid,
+                               'benefit_id': self.benefit_id.id, 'amount': self.amount},
+        })
+        return True
+
+    def action_open_reject_wizard(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window', 'name': _('Rechazar beneficio'),
+            'res_model': 'dolan.discount.employee.claim.reject.wizard',
+            'view_mode': 'form', 'target': 'new', 'context': {'default_claim_id': self.id},
+        }
+
+    def action_reject(self, reason='Rechazado por supervisor'):
+        self.ensure_one()
+        if not self.env.user.has_group('DOLAN_discount_engine.group_discount_supervisor') and not self.env.user.has_group('DOLAN_discount_engine.group_discount_manager'):
+            raise UserError(_('Solo un supervisor puede rechazar beneficios de empleados.'))
+        self.env.cr.execute('SELECT id FROM dolan_discount_employee_claim WHERE id = %s FOR UPDATE', [self.id])
+        self.invalidate_recordset()
+        if self.state != 'pending_approval':
+            raise UserError(_('La solicitud ya dejó de estar pendiente.'))
+        if self.requested_by_id == self.env.user:
+            raise UserError(_('El cajero que solicitó el beneficio no puede rechazarlo.'))
+        super(DolanDiscountEmployeeClaim, self).write({
+            'state': 'rejected', 'rejected_by_id': self.env.user.id,
+            'rejection_reason': str(reason or '').strip()[:256] or _('Rechazado por supervisor'),
+        })
+        self.env['dolan.discount.audit'].sudo().create({
+            'name': _('Beneficio de empleado rechazado'), 'event': 'employee_benefit_rejected',
+            'company_id': self.company_id.id, 'actor_id': self.requested_by_id.id,
+            'approved_by_id': self.env.user.id,
+            'reason': self.rejection_reason,
+            'after_snapshot': {'claim_id': self.id, 'order_uuid': self.order_uuid,
+                               'benefit_id': self.benefit_id.id, 'amount': self.amount,
+                               'rejected_by_id': self.env.user.id,
+                               'rejection_reason': self.rejection_reason},
+        })
+        return True
+
     @api.model
     def _cleanup_expired(self):
         expired = self.sudo().search([
-            ('state', '=', 'reserved'), ('expires_at', '<=', fields.Datetime.now()),
+            ('state', 'in', ['reserved', 'pending_approval']), ('expires_at', '<=', fields.Datetime.now()),
         ])
         expired.write({'state': 'released'})
         retention = fields.Datetime.subtract(fields.Datetime.now(), days=30)
@@ -307,11 +385,13 @@ class DolanDiscountEmployeeClaim(models.Model):
             raise UserError(_('La sesión POS no está abierta para este usuario.'))
         claim = self.sudo().search([
             ('token', '=', str(token or '')), ('order_uuid', '=', str(order_uuid or '')),
-            ('session_id', '=', session.id), ('state', '=', 'reserved'),
+            ('session_id', '=', session.id), ('state', 'in', ['reserved', 'pending_approval']),
             ('expires_at', '>', fields.Datetime.now()),
         ], limit=1)
         if not claim:
             raise UserError(_('La autorización del beneficio venció. Volvé a identificar al empleado.'))
+        if claim.state == 'pending_approval':
+            return claim._pos_result()
         lines = self.env['dolan.discount.employee.benefit']._normalize_pos_lines(session, line_data)
         renewed = self.sudo()._reserve(claim.benefit_id, session, order_uuid, lines)
         if renewed.token != claim.token:
@@ -325,21 +405,33 @@ class DolanDiscountEmployeeClaim(models.Model):
             raise UserError(_('La sesión no corresponde al usuario.'))
         claim = self.sudo().search([
             ('token', '=', str(token or '')), ('order_uuid', '=', str(order_uuid or '')),
-            ('session_id', '=', session.id), ('state', '=', 'reserved'),
+            ('session_id', '=', session.id), ('state', 'in', ['reserved', 'pending_approval']),
         ], limit=1)
         if claim:
             claim.write({'state': 'released'})
         return True
 
     def write(self, vals):
-        if set(vals) - {
-            'state', 'amount', 'proposals', 'expires_at', 'token',
-            'benefit_id', 'beneficiary_id', 'session_id', 'order_uuid',
-        }:
-            raise ValidationError(_('La reserva de beneficio no acepta cambios no autorizados.'))
+        if not self.env.su:
+            raise AccessError(_('Las solicitudes de beneficio solo cambian desde las acciones autorizadas.'))
         return super().write(vals)
 
     def unlink(self):
         if not self.env.su:
             raise ValidationError(_('Las reservas de beneficio se conservan para auditoría.'))
         return super().unlink()
+
+
+class DolanDiscountEmployeeClaimRejectWizard(models.TransientModel):
+    _name = 'dolan.discount.employee.claim.reject.wizard'
+    _description = 'Rechazar beneficio de empleado'
+
+    claim_id = fields.Many2one('dolan.discount.employee.claim', required=True, readonly=True)
+    reason = fields.Char(required=True, default='Solicitud rechazada por supervisor')
+
+    def action_confirm(self):
+        self.ensure_one()
+        if not self.reason.strip():
+            raise ValidationError(_('Indicá el motivo del rechazo.'))
+        self.claim_id.action_reject(self.reason)
+        return {'type': 'ir.actions.act_window_close'}

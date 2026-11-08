@@ -38,6 +38,28 @@ func TestAddIndividualModuleAndTransitiveDependencies(t *testing.T) {
 	}
 }
 
+func TestDolanPOSResolvesPaymentTerminalAndMercadoPago(t *testing.T) {
+	mods, autoAdded, ceDeps, err := ResolveDependencies([]string{"DOLAN_pos"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !hasCatalogEntry(mods, "DOLAN_payment_terminal") || !hasCatalogEntry(autoAdded, "DOLAN_payment_terminal") {
+		t.Fatalf("DOLAN_pos must pull in its DOLAN terminal dependency; mods=%v auto=%v", mods, autoAdded)
+	}
+	if !hasCatalogEntry(ceDeps, "pos_mercado_pago") {
+		t.Fatalf("DOLAN_pos must install the Odoo Mercado Pago provider; CE deps=%v", ceDeps)
+	}
+}
+
+func hasCatalogEntry(entries []string, expected string) bool {
+	for _, entry := range entries {
+		if entry == expected {
+			return true
+		}
+	}
+	return false
+}
+
 func TestBlockUninstallModuleWithDataOrDependents(t *testing.T) {
 	current := []string{"DOLAN_base", "DOLAN_theme", "DOLAN_accounting", "DOLAN_l10n_ar_afip"}
 	_, err := PlanChange("105", core.ProfileBasic, core.ProfileBasic, current, nil, []string{"DOLAN_accounting"})

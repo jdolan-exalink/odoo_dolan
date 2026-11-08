@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Promociones y Control de Descuentos',
-    'version': '20.0.1.1.0',
+    'version': '20.0.1.2.0',
     'category': 'Sales/Point of Sale',
     'summary': 'Campañas auditables y cálculo determinista de promociones para POS',
     'description': """

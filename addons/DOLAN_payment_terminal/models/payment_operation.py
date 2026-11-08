@@ -30,12 +30,28 @@ class DolanPaymentOperation(models.Model):
     ], string='Estado', required=True, default='prepared', readonly=True, index=True)
     provider_reference = fields.Char(string='Referencia del proveedor', readonly=True, copy=False, index=True)
     external_id = fields.Char(string='Identificador externo', readonly=True, copy=False, index=True)
+    pos_order_uuid = fields.Char(string='UUID de pedido POS', readonly=True, copy=False, index=True)
+    pos_payment_uuid = fields.Char(string='UUID de pago POS', readonly=True, copy=False, index=True)
     initiated_by = fields.Many2one('res.users', string='Iniciado por', readonly=True)
     detail = fields.Text(string='Detalle', readonly=True)
 
     _reference_unique = models.Constraint('UNIQUE(reference)', 'La referencia debe ser única.')
     _external_id_unique = models.Constraint('UNIQUE(external_id)', 'El identificador externo debe ser único.')
     _amount_positive = models.Constraint('CHECK(amount > 0)', 'El importe debe ser mayor que cero.')
+
+    def action_open_supervisor_reconcile(self):
+        self.ensure_one()
+        if not self.env.user.has_group('point_of_sale.group_pos_manager'):
+            from odoo.exceptions import AccessError
+            raise AccessError(_('Solo un supervisor de POS puede conciliar una operación.'))
+        if self.state != 'reconcile':
+            from odoo.exceptions import ValidationError
+            raise ValidationError(_('Solo se pueden conciliar cobros inciertos.'))
+        return {
+            'type': 'ir.actions.act_window', 'name': _('Conciliar cobro incierto'),
+            'res_model': 'dolan.payment.reconcile.wizard', 'view_mode': 'form',
+            'target': 'new', 'context': {'default_operation_id': self.id},
+        }
 
     @api.constrains('amount', 'currency_id')
     def _check_amount(self):

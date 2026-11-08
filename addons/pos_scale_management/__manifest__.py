@@ -1,6 +1,6 @@
 {
     'name': 'Administración de Balanzas POS',
-    'version': '20.0.1.1.0',
+    'version': '20.0.1.2.0',
     'category': 'Sales/Point of Sale',
     'summary': 'Administrá balanzas comerciales, productos, precios y exportaciones auditables',
     'description': """

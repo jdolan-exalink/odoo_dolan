@@ -16,9 +16,9 @@ Addon para Odoo 20 Community. Usa los productos, impuestos, listas de precios, p
 
 ## Límites deliberados
 
-- Las reglas por medio de pago se evalúan al seleccionar un medio en caja, antes de iniciar el cobro; la autorización y el presupuesto quedan reservados en servidor y la orden sincronizada debe llevar el mismo medio. Solo se admite un medio por orden cuando la promoción depende de él. Odoo/adquirente sigue siendo quien confirma o rechaza el pago; no se interpreta el estado de la terminal desde un socket del navegador.
-- El beneficio por DNI no tiene todavía aprobación de supervisor; las configuraciones que la exijan se bloquean. El flujo de caja fue probado en backend, pero falta probarlo en una sesión POS interactiva real. Se pueden usar partners como beneficiarios; no requiere instalar Empleados/HR.
-- Las promociones y beneficios que requieren autorización de servidor no permiten iniciar ni confirmar el cobro sin conexión. El POS conserva importes, autorizaciones y medios ya seleccionados para que la misma orden se sincronice al volver la red; reserva y aprobación aprobada duran hasta siete días. Una orden sin descuentos del motor conserva el flujo offline estándar de Odoo.
+- Las reglas por medio de pago se evalúan al seleccionar un medio en caja, antes de iniciar el cobro; la autorización y el presupuesto quedan reservados en servidor y la orden sincronizada debe llevar el mismo medio. Solo se admite un medio por orden cuando la promoción depende de él. Esto verifica el medio registrado por Odoo; no equivale a una confirmación independiente de liquidación de Clover/Mercado Pago.
+- El beneficio por DNI admite aprobación o rechazo de un supervisor distinto del cajero, con vencimiento y auditoría. El cajero debe volver a identificar al beneficiario en la misma orden después de la aprobación para aplicar el descuento. Se pueden usar partners como beneficiarios; no requiere instalar Empleados/HR.
+- Una reserva de beneficio/campaña necesita conexión para crearse o renovarse. Al perder la conexión, el POS advierte y bloquea nuevas autorizaciones; la cola offline estándar de Odoo queda a cargo de la sincronización. Un corte durante la autorización del adquirente no puede conciliarse solo con `navigator.onLine`: antes de producción hay que integrar estado idempotente y reconciliación del proveedor.
 - No se genera un XLSX propio. Los reportes se apoyan en exportación nativa de lista y pivote de Odoo.
 - La auditoría registra denegaciones como solicitudes/errores visibles; un intento rechazado por una excepción que revierte toda la transacción no puede dejar un asiento en esa misma transacción.
 
@@ -35,6 +35,6 @@ Addon para Odoo 20 Community. Usa los productos, impuestos, listas de precios, p
 
 ## QA y release
 
-Las pruebas automatizadas usan datos de prueba y no crean comprobantes fiscales ni cobros reales. El flujo requiere prueba funcional en una caja POS conectada con una terminal de pagos antes de producción, especialmente interrupción durante la autorización/asentamiento del adquirente, pagos parciales y reintentos. El motor limita las promociones por medio de pago a un único medio por orden y el estado real del cobro sigue dependiendo de Odoo y su proveedor.
+Las pruebas automatizadas usan datos de prueba y no crean comprobantes fiscales ni cobros reales. Se instalaron los módulos en una DB temporal y se ejecutó la suite de descuentos/balanzas en QA local. Sigue pendiente prueba interactiva POS con una caja y un instrumento de prueba; el estado real del cobro y la reconciliación ante cortes dependen de la integración del adquirente.
 
 Guías: [operación de caja](../../docs/user/DESCUENTOS_OPERACION.md), [configuración](../../docs/admin/DESCUENTOS_CONFIGURACION.md), [seguridad y auditoría](../../docs/security/DESCUENTOS_AUDITORIA.md), [estado frente al PRD](../../docs/audits/PRODUCTOS_DESCUENTOS_STATUS.md) y [release/rollback](../../docs/implementation/DOLAN_DISCOUNT_ENGINE_RELEASE.md).

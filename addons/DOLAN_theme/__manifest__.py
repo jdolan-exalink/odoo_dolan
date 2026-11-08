@@ -1,6 +1,6 @@
 {
     "name": "DOLAN - Estética Web y Mobile (OWL 3)",
-    "version": "20.0.2.60.0",
+    "version": "20.0.2.62.0",
     "category": "Themes/Backend",
     "summary": "PRD 04: UI/UX Moderna para Odoo 20 CE, Mobile Bottom Bar, Command Palette (Ctrl+K), PWA, Workspace por Rol y Dark Mode",
     "description": """
@@ -58,6 +58,7 @@ DOLAN Theme para Odoo CE 20 (OWL 3 Nativo) — PRD 04
             "DOLAN_theme/static/src/js/dolan_bottom_bar.js",
             "DOLAN_theme/static/src/js/dolan_global_search_provider.js",
             "DOLAN_theme/static/src/js/dolan_pwa.js",
+            "DOLAN_theme/static/src/js/dolan_error_clipboard.js",
         ],
         "web.assets_unit_tests": [
             "DOLAN_theme/static/tests/dolan_app_drawer.test.js",

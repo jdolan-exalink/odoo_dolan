@@ -20,6 +20,10 @@ El perfil Kretz/iTegra se instala en estado **Borrador**. La generación queda b
 
 Para habilitar el adaptador hacen falta un archivo real aceptado por iTegra, el modelo de balanza y las versiones utilizadas, además de una importación real exitosa. También se necesitan etiquetas impresas con sus códigos para configurar y verificar el lector de peso/importe. Hasta entonces no se declara compatibilidad productiva.
 
+## Intercambio genérico DOLAN
+
+Se incluye `CSV genérico DOLAN v1` para exportar un archivo UTF-8 con BOM, separador `;` y columnas PLU, código de barras, descripción, precio y moneda. Sirve como formato de intercambio; no afirma compatibilidad con un fabricante o software de balanza en particular. El perfil solo puede marcarse validado después de adjuntar evidencia de una importación aceptada por el software destino.
+
 ## Pendiente del PRD
 
 - Implementar el serializador Kretz/iTegra y superar AC-06, AC-12 y AC-13 con evidencia real.

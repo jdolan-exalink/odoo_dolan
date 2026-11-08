@@ -321,6 +321,20 @@ patch(PosStore.prototype, {
 
     async setup() {
         await super.setup(...arguments);
+        window.addEventListener("offline", () => {
+            const order = this.getOrder();
+            const hasServerBenefits = order?.getOrderlines?.().some((line) =>
+                line.dolan_discount_applications?.length ||
+                Number(line.dolan_discount_base_percent || 0) ||
+                line.dolan_discount_employee_token
+            );
+            if (hasServerBenefits) {
+                this.notification.add(
+                    "Se cortó la conexión con la caja. El total autorizado queda visible, pero no se puede confirmar la venta hasta reconectar. No repitas un cobro que la terminal ya haya aceptado.",
+                    { type: "danger", sticky: true }
+                );
+            }
+        });
         const recalculate = (order) => {
             if (!order || order.state !== "draft" || order._dolanCampaignRecomputing) return;
             order._dolanCampaignRecomputing = true;
@@ -387,6 +401,23 @@ patch(PaymentScreen.prototype, {
         if (methodId && !await this.pos.authorizeDolanPromotions(order, methodId)) return;
         return super.addNewPaymentLine(...arguments);
     },
+
+    async onClickValidate(args = {}) {
+        const order = this.currentOrder;
+        const hasServerBenefits = order?.getOrderlines?.().some((line) =>
+            line.dolan_discount_applications?.length ||
+            Number(line.dolan_discount_base_percent || 0) ||
+            line.dolan_discount_employee_token
+        );
+        if (hasServerBenefits && !navigator.onLine) {
+            this.notification.add(
+                "No se puede confirmar una venta con descuentos autorizados mientras la caja está sin conexión. Esperá a recuperar la red y verificá el estado de cualquier cobro iniciado.",
+                { type: "danger", sticky: true }
+            );
+            return;
+        }
+        return super.onClickValidate(...arguments);
+    },
 });
 
 patch(ControlButtons.prototype, {
@@ -431,6 +462,17 @@ patch(ControlButtons.prototype, {
                 this.pos.session.id, order.uuid, lineData, dni.trim(),
             ]);
             if (result.status !== "ready") {
+                if (result.status === "pending_approval") {
+                    for (const line of order.getOrderlines()) {
+                        if (!line.dolan_discount_employee_token) continue;
+                        line.dolan_discount_employee_token = false;
+                        line.dolan_discount_employee_applications = [];
+                        line.dolan_discount_employee_percent = 0;
+                        line._dolanCampaignUpdate = true;
+                        line.setDiscount(Number(line.dolan_discount_base_percent || 0));
+                        line._dolanCampaignUpdate = false;
+                    }
+                }
                 this.notification.add(result.message || "No se pudo aplicar el beneficio de empleado.", { type: "warning", sticky: true });
                 return;
             }

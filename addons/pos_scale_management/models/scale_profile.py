@@ -21,7 +21,7 @@ class ScaleExportProfile(models.Model):
         default='draft', required=True,
     )
     evidence_attachment_id = fields.Many2one('ir.attachment', string='Archivo de referencia aceptado')
-    itegra_version = fields.Char(string='Versión de iTegra')
+    itegra_version = fields.Char(string='Versión del software destino')
     validation_note = fields.Text(string='Evidencia y resultado de prueba')
     validated_at = fields.Datetime(readonly=True, copy=False)
     validated_by = fields.Many2one('res.users', readonly=True, copy=False)
@@ -79,8 +79,10 @@ class ScaleExportProfile(models.Model):
         self.ensure_one()
         if not self.env.user.has_group('pos_scale_management.group_scale_admin'):
             raise UserError(_('Solo un administrador de balanzas puede validar un perfil.'))
-        if not self.evidence_attachment_id or not self.itegra_version or not self.format_version or not self.validation_note:
-            raise UserError(_('Para validar, adjuntá un archivo aceptado por iTegra, informá sus versiones y documentá el resultado real.'))
+        if not self.evidence_attachment_id or not self.format_version or not self.validation_note:
+            raise UserError(_('Para validar, adjuntá evidencia de importación, informá la versión del formato y documentá el resultado real.'))
+        if self.adapter_code == 'kretz_itegra' and not self.itegra_version:
+            raise UserError(_('Para validar Kretz/iTegra, informá la versión de iTegra utilizada.'))
         # No profile can claim compatibility until its serializer is implemented and tested.
         if self.adapter_code == 'kretz_itegra':
             raise UserError(_('El adaptador Kretz/iTegra está bloqueado: falta confirmar el formato y superar una importación real.'))
