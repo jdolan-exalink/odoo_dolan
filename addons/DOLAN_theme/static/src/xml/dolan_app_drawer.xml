@@ -77,18 +77,34 @@
                             <button type="button" class="btn btn-sm btn-link" t-on-click="() => this.resetSessionAppearance()">Restablecer</button>
                         </header>
                         <div class="o_dolan_theme_picker_section">
-                            <div class="o_dolan_theme_picker_label">Tema de esta sesión</div>
-                            <div class="o_dolan_theme_picker_grid o_dolan_theme_mode_icons" role="group" aria-label="Tema de esta sesión">
-                                <button t-foreach="this.state.themeChoices" t-as="choice" t-key="choice.id" type="button"
-                                        class="btn btn-sm o_dolan_theme_mode_choice" t-att-class="this.state.themeMode === choice.id ? 'is-selected' : ''"
-                                        t-att-aria-pressed="this.state.themeMode === choice.id"
-                                        t-att-title="choice.label" t-att-aria-label="choice.label"
-                                        t-on-click="() => this.chooseSessionTheme(choice.id)">
-                                    <DolanIcon t-if="choice.id === 'light'" name="'sun'" size="16"/>
-                                    <DolanIcon t-elif="choice.id === 'dark'" name="'moon'" size="16"/>
-                                    <DolanIcon t-elif="choice.id === 'system'" name="'device-desktop'" size="16"/>
-                                    <DolanIcon t-else="" name="'contrast'" size="16"/>
-                                </button>
+                            <div class="o_dolan_session_appearance_grid">
+                                <div class="o_dolan_session_control_group">
+                                    <div class="o_dolan_theme_picker_label">Tema de esta sesión</div>
+                                    <div class="o_dolan_theme_picker_grid o_dolan_theme_mode_icons" role="group" aria-label="Tema de esta sesión">
+                                        <button t-foreach="this.state.themeChoices" t-as="choice" t-key="choice.id" type="button"
+                                                class="btn btn-sm o_dolan_theme_mode_choice" t-att-class="this.state.themeMode === choice.id ? 'is-selected' : ''"
+                                                t-att-aria-pressed="this.state.themeMode === choice.id"
+                                                t-att-title="choice.label" t-att-aria-label="choice.label"
+                                                t-on-click="() => this.chooseSessionTheme(choice.id)">
+                                            <DolanIcon t-if="choice.id === 'light'" name="'sun'" size="16"/>
+                                            <DolanIcon t-elif="choice.id === 'dark'" name="'moon'" size="16"/>
+                                            <DolanIcon t-elif="choice.id === 'system'" name="'device-desktop'" size="16"/>
+                                            <DolanIcon t-else="" name="'contrast'" size="16"/>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="o_dolan_session_control_group o_dolan_dimension_group" role="group" aria-label="Tamaño de iconos">
+                                    <span class="o_dolan_dimension_group_title">Tamaño de iconos</span>
+                                    <button t-foreach="this.state.iconScaleChoices" t-as="scale" t-key="scale.id" type="button"
+                                            class="o_dolan_dimension_choice" t-att-class="this.state.iconScale === scale.id ? 'is-selected' : ''"
+                                            t-att-aria-pressed="this.state.iconScale === scale.id ? 'true' : 'false'"
+                                            t-att-title="scale.label" t-att-aria-label="scale.label"
+                                            t-on-click="() => this.chooseSessionIconScale(scale.id)">
+                                        <img t-if="this.state.iconStyle === 'odoo_original'" src="/sale/static/description/icon.png" alt="" t-att-width="scale.iconSize" t-att-height="scale.iconSize"/>
+                                        <DolanIcon t-else="" name="'app.sales'" iconStyle="this.state.iconStyle" size="scale.iconSize"/>
+                                        <span class="o_dolan_choice_caption" t-out="scale.shortLabel"/>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="o_dolan_theme_picker_section">
@@ -158,8 +174,8 @@
                                 <button t-foreach="this.state.appearanceProfileChoices" t-as="profile" t-key="profile.id" type="button"
                                         class="o_dolan_profile_tile" t-att-class="this.state.appearanceProfile === profile.id ? 'is-selected' : ''"
                                         t-att-aria-pressed="this.state.appearanceProfile === profile.id ? 'true' : 'false'"
-                                        t-att-title="profile.label" t-att-aria-label="profile.label"
-                                        t-on-click="() => this.chooseSessionProfile(profile.id)">
+                                        t-att-title="profile.description" t-att-aria-label="profile.label"
+                                        t-on-click.stop="() => this.chooseSessionProfile(profile.id)">
                                     <span class="o_dolan_profile_example" t-att-class="'is-profile-' + profile.id">
                                         <i/><i/><i/><b><DolanIcon name="'app.sales'" iconStyle="this.state.iconStyle" size="17"/></b>
                                     </span>
@@ -168,40 +184,13 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="o_dolan_theme_picker_section o_dolan_theme_picker_dimensions">
-                            <div class="o_dolan_theme_picker_label">Iconometría y efectos</div>
-                            <div class="o_dolan_dimensions_visual_grid">
-                                <div class="o_dolan_dimension_group" role="group" aria-label="Tamaño de iconos">
-                                    <span class="o_dolan_dimension_group_title">Tamaño</span>
-                                    <button t-foreach="this.state.iconScaleChoices" t-as="scale" t-key="scale.id" type="button"
-                                            class="o_dolan_dimension_choice" t-att-class="this.state.iconScale === scale.id ? 'is-selected' : ''"
-                                            t-att-aria-pressed="this.state.iconScale === scale.id ? 'true' : 'false'"
-                                            t-att-title="scale.label" t-att-aria-label="scale.label"
-                                            t-on-click="() => this.chooseSessionIconScale(scale.id)">
-                                        <img t-if="this.state.iconStyle === 'odoo_original'" src="/sale/static/description/icon.png" alt="" t-att-width="scale.iconSize" t-att-height="scale.iconSize"/>
-                                        <DolanIcon t-else="" name="'app.sales'" iconStyle="this.state.iconStyle" size="scale.iconSize"/>
-                                        <span class="o_dolan_choice_caption" t-out="scale.shortLabel"/>
-                                    </button>
-                                </div>
-                                <div class="o_dolan_dimension_group" role="group" aria-label="Efecto visual">
-                                    <span class="o_dolan_dimension_group_title">Efecto</span>
-                                    <button t-foreach="this.state.visualEffectChoices" t-as="effect" t-key="effect.id" type="button"
-                                            class="o_dolan_effect_choice" t-att-class="'is-effect-' + effect.id + (this.state.visualEffect === effect.id ? ' is-selected' : '')"
-                                            t-att-aria-pressed="this.state.visualEffect === effect.id ? 'true' : 'false'"
-                                            t-att-title="effect.label" t-att-aria-label="effect.label"
-                                            t-on-click="() => this.chooseSessionVisualEffect(effect.id)">
-                                        <span class="o_dolan_effect_sample"><i/><i/></span>
-                                        <span class="o_dolan_choice_caption" t-out="effect.shortLabel"/>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     </section>
                 </div>
             </div>
 
             <!-- Home Menu idéntico al DOM de Odoo 20 Enterprise (Odoo 20) -->
             <t t-if="this.state.isOpen">
+                <t t-custom-portal="'body'">
                 <div class="o_dolan_home_menu_wrapper" t-on-keydown="(ev) => this.onKeydown(ev)">
                     <div class="o_home_menu h-100 overflow-auto px-3 d-flex flex-column">
                         <!-- Navegación y búsqueda en una sola fila compacta -->
@@ -811,6 +800,7 @@
                         </footer>
                     </div>
                 </div>
+                </t>
             </t>
         </div>
     </t>

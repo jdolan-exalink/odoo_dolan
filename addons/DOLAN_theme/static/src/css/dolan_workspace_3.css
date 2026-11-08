@@ -167,3 +167,84 @@
     .o_dolan_workspace_reorder { flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) { .o_dolan_workspace_skeleton { animation: none; } }
+
+/* Keep Mi Espacio in sync with the active session theme for every visual profile.
+   The launcher has its own background treatment, so relying on profile-specific
+   card colors leaves white Odoo defaults behind in dark mode. */
+body.o_dolan_dark_mode .o_dolan_workspace_3 {
+    --ws-bg: var(--dolan-color-canvas, #151824);
+    --ws-card: var(--dolan-color-surface-raised, #292e3d);
+    --ws-border: var(--dolan-color-border, #353b4b);
+    --ws-text: var(--dolan-color-text, #f5f6fa);
+    --ws-muted: var(--dolan-color-text-muted, #a6adbd);
+    --ws-accent: var(--dolan-color-primary, #a46aff);
+}
+body:not(.o_dolan_dark_mode):not(.o_dolan_high_contrast) .o_dolan_workspace_3 {
+    --ws-bg: var(--dolan-color-canvas, #f7f8fc);
+    --ws-card: var(--dolan-color-surface-raised, #fff);
+    --ws-border: var(--dolan-color-border, #e4e7ef);
+    --ws-text: var(--dolan-color-text, #172033);
+    --ws-muted: var(--dolan-color-text-muted, #667085);
+    --ws-accent: var(--dolan-color-primary, #7938d2);
+}
+body.o_dolan_high_contrast .o_dolan_workspace_3 {
+    --ws-bg: #000;
+    --ws-card: #050505;
+    --ws-border: #fff;
+    --ws-text: #fff;
+    --ws-muted: #f0f0f0;
+    --ws-accent: #ff0;
+}
+body.o_dolan_dark_mode .o_dolan_workspace_3,
+body.o_dolan_high_contrast .o_dolan_workspace_3 {
+    color: var(--ws-text);
+}
+body.o_dolan_dark_mode .o_dolan_workspace_3 :is(h1, h2, h3, h4, p, label, small, time, strong, span),
+body.o_dolan_high_contrast .o_dolan_workspace_3 :is(h1, h2, h3, h4, p, label, small, time, strong, span) {
+    color: inherit;
+}
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_identity p,
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_clock,
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_pos_copy p,
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_pos_choice small,
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_summary_card span,
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_other_card span,
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_activity_item :is(small, time),
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_empty,
+body.o_dolan_high_contrast .o_dolan_workspace_3 :is(.o_dolan_workspace_identity p, .o_dolan_workspace_clock, .o_dolan_workspace_pos_copy p, .o_dolan_workspace_pos_choice small, .o_dolan_workspace_summary_card span, .o_dolan_workspace_other_card span, .o_dolan_workspace_activity_item small, .o_dolan_workspace_activity_item time, .o_dolan_workspace_empty) {
+    color: var(--ws-muted) !important;
+}
+body.o_dolan_dark_mode .o_dolan_workspace_3 :is(.o_dolan_workspace_pos, .o_dolan_workspace_panel, .o_dolan_workspace_action, .o_dolan_workspace_metric, .o_dolan_workspace_summary_card, .o_dolan_workspace_other_card, .o_dolan_workspace_editor),
+body.o_dolan_high_contrast .o_dolan_workspace_3 :is(.o_dolan_workspace_pos, .o_dolan_workspace_panel, .o_dolan_workspace_action, .o_dolan_workspace_metric, .o_dolan_workspace_summary_card, .o_dolan_workspace_other_card, .o_dolan_workspace_editor) {
+    color: var(--ws-text) !important;
+    background-color: var(--ws-card) !important;
+    border-color: var(--ws-border) !important;
+}
+body.o_dolan_dark_mode .o_dolan_workspace_3 :is(.o_dolan_workspace_space, .o_dolan_workspace_mode, .o_dolan_workspace_pos_choice, .o_dolan_workspace_reorder .form-select),
+body.o_dolan_high_contrast .o_dolan_workspace_3 :is(.o_dolan_workspace_space, .o_dolan_workspace_mode, .o_dolan_workspace_pos_choice, .o_dolan_workspace_reorder .form-select) {
+    color: var(--ws-text);
+    background-color: var(--ws-card);
+    border-color: var(--ws-border);
+}
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_mode button {
+    color: var(--ws-text);
+}
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_mode button.is-active,
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_space.is-active {
+    color: #fff;
+    background-color: var(--ws-accent);
+    border-color: var(--ws-accent);
+}
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_metric_main,
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_activity_item,
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_pos_open,
+body.o_dolan_high_contrast .o_dolan_workspace_3 :is(.o_dolan_workspace_metric_main, .o_dolan_workspace_activity_item, .o_dolan_workspace_pos_open) {
+    color: var(--ws-text);
+}
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_metric :is(.tone-critical, .tone-warning, .tone-action, .tone-info),
+body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_severity {
+    color: var(--ws-text);
+}
+body.o_dolan_high_contrast .o_dolan_workspace_3 :is(.o_dolan_workspace_metric, .o_dolan_workspace_summary_card, .o_dolan_workspace_other_card, .o_dolan_workspace_action, .o_dolan_workspace_pos) {
+    border-width: 2px;
+}

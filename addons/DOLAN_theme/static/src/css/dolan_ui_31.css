@@ -1,12 +1,6 @@
 /* DOLAN UI 3.1: appearance profile layer. Palette, mode, icons, scale, density
    and workspace layout stay independently selectable. */
-body[data-dolan-profile="enterprise_classic"] {
-    --dolan-profile-radius: 14px;
-    --dolan-profile-border: #dee2e6;
-    --dolan-profile-shadow: 0 2px 8px rgb(38 50 56 / 7%);
-}
-
-/* Five public design identities. The legacy profile attribute remains as a bridge. */
+/* Five public design identities. Both profile attributes use these canonical IDs. */
 body[data-dolan-style="odoo_classic"] { --dolan-profile-radius: 9px; --dolan-profile-border: #dee2e6; --dolan-profile-shadow: 0 1px 4px rgb(38 50 56 / 7%); }
 body[data-dolan-style="dolan_fluent"] { --dolan-profile-radius: 12px; --dolan-profile-border: #cbd2df; --dolan-profile-shadow: 0 4px 14px rgb(30 45 70 / 10%); }
 body[data-dolan-style="dolan_liquid"] { --dolan-profile-radius: 18px; --dolan-profile-border: color-mix(in srgb, var(--dolan-color-border) 82%, white 18%); --dolan-profile-shadow: 0 10px 28px rgb(10 18 38 / 16%); }
@@ -15,50 +9,35 @@ body[data-dolan-style="dolan_minimal"] { --dolan-profile-radius: 5px; --dolan-pr
 body[data-dolan-style="dolan_material"] :is(.o_control_panel, .o_search_panel, .o_dolan_home_menu_wrapper .o_dolan_search_input_wrap) { border-radius: 1.15rem; }
 body[data-dolan-style="dolan_material"] :is(.btn, .form-control, .o_input) { border-radius: .8rem; }
 body[data-dolan-style="dolan_minimal"] :is(.btn, .form-control, .o_input, .o_control_panel) { border-radius: .3rem; }
-body[data-dolan-profile="graphite"] {
-    --dolan-profile-radius: 11px;
-    --dolan-profile-border: #667084;
-    --dolan-profile-shadow: 0 2px 4px rgb(10 14 22 / 14%);
-}
-body[data-dolan-profile="glass"] {
-    --dolan-profile-radius: 23px;
-    --dolan-profile-border: color-mix(in srgb, var(--dolan-color-border, #8792ad) 78%, white 22%);
-    --dolan-profile-shadow: 0 18px 42px rgb(10 18 38 / 28%);
-}
-body[data-dolan-profile="minimal"] {
-    --dolan-profile-radius: 10px;
-    --dolan-profile-border: color-mix(in srgb, var(--dolan-color-border, #77808c) 84%, transparent);
-    --dolan-profile-shadow: none;
-}
-body[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_pos,
-body[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_panel,
-body[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_action,
-body[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_metric,
-body[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_summary_card,
-body[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_other_card {
+body[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_pos,
+body[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_panel,
+body[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_action,
+body[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_metric,
+body[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_summary_card,
+body[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_other_card {
     border-style: solid;
     box-shadow: 0 2px 4px rgb(10 14 22 / 13%);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
-body.o_dolan_dark_mode[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_pos,
-body.o_dolan_dark_mode[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_panel,
-body.o_dolan_dark_mode[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_action,
-body.o_dolan_dark_mode[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_metric,
-body.o_dolan_dark_mode[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_summary_card,
-body.o_dolan_dark_mode[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_other_card { background-color: #282e39 !important; }
-body:not(.o_dolan_dark_mode)[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_pos,
-body:not(.o_dolan_dark_mode)[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_panel,
-body:not(.o_dolan_dark_mode)[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_action,
-body:not(.o_dolan_dark_mode)[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_metric,
-body:not(.o_dolan_dark_mode)[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_summary_card,
-body:not(.o_dolan_dark_mode)[data-dolan-profile="graphite"] .o_dolan_workspace_3 .o_dolan_workspace_other_card { background-color: #fff !important; }
-body[data-dolan-profile="glass"] .o_dolan_workspace_3 .o_dolan_workspace_pos,
-body[data-dolan-profile="glass"] .o_dolan_workspace_3 .o_dolan_workspace_panel,
-body[data-dolan-profile="glass"] .o_dolan_workspace_3 .o_dolan_workspace_action,
-body[data-dolan-profile="glass"] .o_dolan_workspace_3 .o_dolan_workspace_metric,
-body[data-dolan-profile="glass"] .o_dolan_workspace_3 .o_dolan_workspace_summary_card,
-body[data-dolan-profile="glass"] .o_dolan_workspace_3 .o_dolan_workspace_other_card {
+body.o_dolan_dark_mode[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_pos,
+body.o_dolan_dark_mode[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_panel,
+body.o_dolan_dark_mode[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_action,
+body.o_dolan_dark_mode[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_metric,
+body.o_dolan_dark_mode[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_summary_card,
+body.o_dolan_dark_mode[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_other_card { background-color: #282e39 !important; }
+body:not(.o_dolan_dark_mode)[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_pos,
+body:not(.o_dolan_dark_mode)[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_panel,
+body:not(.o_dolan_dark_mode)[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_action,
+body:not(.o_dolan_dark_mode)[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_metric,
+body:not(.o_dolan_dark_mode)[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_summary_card,
+body:not(.o_dolan_dark_mode)[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 .o_dolan_workspace_other_card { background-color: #fff !important; }
+body[data-dolan-profile="dolan_liquid"] .o_dolan_workspace_3 .o_dolan_workspace_pos,
+body[data-dolan-profile="dolan_liquid"] .o_dolan_workspace_3 .o_dolan_workspace_panel,
+body[data-dolan-profile="dolan_liquid"] .o_dolan_workspace_3 .o_dolan_workspace_action,
+body[data-dolan-profile="dolan_liquid"] .o_dolan_workspace_3 .o_dolan_workspace_metric,
+body[data-dolan-profile="dolan_liquid"] .o_dolan_workspace_3 .o_dolan_workspace_summary_card,
+body[data-dolan-profile="dolan_liquid"] .o_dolan_workspace_3 .o_dolan_workspace_other_card {
     border-color: color-mix(in srgb, var(--ws-border, #8792ad) 68%, white 32%);
 }
 
@@ -68,7 +47,8 @@ body[data-dolan-icon-scale="large"] { --dolan-launcher-tile: 104px; --dolan-laun
 
 .o_dolan_home_menu_wrapper .o_dolan_app_cell .o_app,
 .o_dolan_home_menu_wrapper .o_dolan_folder_cell .o_dolan_folder_icon {
-    border-radius: var(--dolan-profile-radius, 16px);
+    /* Odoo's .rounded-4 sets this property !important on app links. */
+    border-radius: var(--dolan-profile-radius, 16px) !important;
     box-shadow: var(--dolan-profile-shadow, none);
 }
 .o_dolan_home_menu_wrapper .o_dolan_app_cell .o_app img,
@@ -142,28 +122,28 @@ body[data-dolan-visual-effect="glass"] .o_dolan_workspace_3 .o_dolan_workspace_o
         background-color: var(--ws-card, var(--dolan-color-surface-raised, #fff));
     }
 }
-body.o_dolan_dark_mode[data-dolan-profile="glass"] .o_dolan_workspace_3 {
+body.o_dolan_dark_mode[data-dolan-profile="dolan_liquid"] .o_dolan_workspace_3 {
     --ws-bg: #0d1424;
     --ws-card: rgb(35 44 67 / 80%);
     --ws-border: rgb(176 191 226 / 24%);
     --ws-text: #f4f6ff;
     --ws-muted: #b8c1d5;
 }
-body.o_dolan_dark_mode[data-dolan-profile="graphite"] .o_dolan_workspace_3 {
+body.o_dolan_dark_mode[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 {
     --ws-bg: #171a20;
     --ws-card: #252a33;
     --ws-border: #3a424e;
     --ws-text: #f1f3f6;
     --ws-muted: #aeb6c2;
 }
-body:not(.o_dolan_dark_mode)[data-dolan-profile="graphite"] .o_dolan_workspace_3 {
+body:not(.o_dolan_dark_mode)[data-dolan-profile="dolan_fluent"] .o_dolan_workspace_3 {
     --ws-bg: #eef0f3;
     --ws-card: #fff;
     --ws-border: #d9dde4;
     --ws-text: #282d35;
     --ws-muted: #69717d;
 }
-body:not(.o_dolan_dark_mode)[data-dolan-profile="glass"] .o_dolan_workspace_3 {
+body:not(.o_dolan_dark_mode)[data-dolan-profile="dolan_liquid"] .o_dolan_workspace_3 {
     --ws-bg: #e9eef7;
     --ws-card: rgb(255 255 255 / 78%);
     --ws-border: rgb(92 110 143 / 22%);
@@ -203,9 +183,12 @@ body.o_dolan_dark_mode {
 }
 .o_dolan_theme_picker_section { padding: .55rem .8rem; }
 .o_dolan_theme_picker_label { margin-bottom: .4rem; }
-.o_dolan_theme_mode_icons { grid-template-columns: repeat(4, 2.45rem); gap: .35rem; }
+.o_dolan_session_appearance_grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: .75rem; align-items: start; }
+.o_dolan_session_control_group { min-width: 0; }
+.o_dolan_session_appearance_grid .o_dolan_theme_mode_icons { grid-template-columns: repeat(2, minmax(2rem, 1fr)); gap: .3rem; }
+.o_dolan_session_appearance_grid .o_dolan_dimension_group { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .25rem; }
 .o_dolan_theme_picker_grid .o_dolan_theme_mode_choice {
-    width: 2.45rem;
+    width: 100%;
     height: 2.35rem;
     justify-content: center;
     padding: .25rem;
@@ -459,38 +442,38 @@ body[data-dolan-profile] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_k
     box-shadow: var(--dolan-profile-shadow, 0 2px 8px rgb(38 50 56 / 7%));
     transition: border-radius .18s ease, box-shadow .18s ease, background-color .18s ease, border-color .18s ease;
 }
-body[data-dolan-profile="enterprise_classic"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover) {
+body[data-dolan-profile="odoo_classic"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover) {
     border: 1px solid var(--dolan-color-border, #e4e7ef);
 }
-body[data-dolan-profile="graphite"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
+body[data-dolan-profile="dolan_fluent"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
     border: 1px solid var(--dolan-color-border, #667084);
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 }
-body.o_dolan_dark_mode[data-dolan-profile="graphite"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
+body.o_dolan_dark_mode[data-dolan-profile="dolan_fluent"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
     background-color: #252a33 !important;
 }
-body:not(.o_dolan_dark_mode)[data-dolan-profile="graphite"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
+body:not(.o_dolan_dark_mode)[data-dolan-profile="dolan_fluent"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
     background-color: #fff !important;
 }
-body[data-dolan-profile="glass"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
+body[data-dolan-profile="dolan_liquid"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
     border: 1px solid color-mix(in srgb, var(--dolan-color-border, #8792ad) 65%, white 35%);
     background-color: var(--dolan-color-surface-raised, #fff) !important;
     box-shadow: 0 14px 34px rgb(10 18 38 / 18%);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
-body.o_dolan_dark_mode[data-dolan-profile="glass"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
+body.o_dolan_dark_mode[data-dolan-profile="dolan_liquid"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
     background-color: var(--dolan-color-surface-raised, #252d42) !important;
     border-color: rgb(176 191 226 / 32%);
     box-shadow: 0 18px 42px rgb(0 0 0 / 28%), inset 0 1px 0 rgb(255 255 255 / 9%);
 }
-body[data-dolan-profile="glass"] :is(.o_main_navbar, .o_dolan_theme_picker_menu, .o_burger_menu) {
+body[data-dolan-profile="dolan_liquid"] :is(.o_main_navbar, .o_dolan_theme_picker_menu, .o_burger_menu) {
     background-color: color-mix(in srgb, var(--dolan-color-surface-raised, #fff) 92%, transparent);
     -webkit-backdrop-filter: blur(10px) saturate(130%);
     backdrop-filter: blur(10px) saturate(130%);
 }
-body[data-dolan-profile="minimal"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
+body[data-dolan-profile="dolan_minimal"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
     border: 1px solid var(--dolan-color-border, #e4e7ef);
     border-radius: 6px;
     box-shadow: none !important;
@@ -505,28 +488,28 @@ body[data-dolan-profile] .o_list_renderer .o_list_table {
     box-shadow: var(--dolan-profile-shadow, 0 2px 8px rgb(38 50 56 / 7%));
     transition: border-radius .18s ease, box-shadow .18s ease, background-color .18s ease;
 }
-body.o_dolan_dark_mode[data-dolan-profile="graphite"] .o_list_renderer .o_list_table { background: #252a33; border-color: #3a424e; }
-body:not(.o_dolan_dark_mode)[data-dolan-profile="graphite"] .o_list_renderer .o_list_table { background: #fff; border-color: #d9dde4; }
-body[data-dolan-profile="glass"] .o_list_renderer .o_list_table {
+body.o_dolan_dark_mode[data-dolan-profile="dolan_fluent"] .o_list_renderer .o_list_table { background: #252a33; border-color: #3a424e; }
+body:not(.o_dolan_dark_mode)[data-dolan-profile="dolan_fluent"] .o_list_renderer .o_list_table { background: #fff; border-color: #d9dde4; }
+body[data-dolan-profile="dolan_liquid"] .o_list_renderer .o_list_table {
     background: var(--dolan-color-surface-raised, #fff);
     border-color: color-mix(in srgb, var(--dolan-color-border, #8792ad) 65%, white 35%);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
-body.o_dolan_dark_mode[data-dolan-profile="glass"] .o_list_renderer .o_list_table {
+body.o_dolan_dark_mode[data-dolan-profile="dolan_liquid"] .o_list_renderer .o_list_table {
     background: var(--dolan-color-surface-raised, #252d42);
     border-color: rgb(176 191 226 / 32%);
 }
-body[data-dolan-profile="minimal"] .o_list_renderer .o_list_table { border-radius: 6px; box-shadow: none; }
+body[data-dolan-profile="dolan_minimal"] .o_list_renderer .o_list_table { border-radius: 6px; box-shadow: none; }
 @media (prefers-reduced-transparency: reduce) {
-    body[data-dolan-profile="glass"] .o_list_renderer .o_list_table {
+    body[data-dolan-profile="dolan_liquid"] .o_list_renderer .o_list_table {
         background: var(--dolan-color-surface-raised, #fff);
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
     }
 }
 @media (prefers-reduced-transparency: reduce) {
-    body[data-dolan-profile="glass"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
+    body[data-dolan-profile="dolan_liquid"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
         background-color: var(--dolan-color-surface-raised, #fff) !important;
         -webkit-backdrop-filter: none;
         backdrop-filter: none;

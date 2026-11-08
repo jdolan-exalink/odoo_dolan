@@ -28,11 +28,11 @@ PALETTE_CHOICES = [
 ]
 DENSITY_CHOICES = [("normal", "Normal"), ("compact", "Compacta")]
 APPEARANCE_PROFILE_CHOICES = [
-    ("odoo_classic", "Odoo Enterprise Classic"),
-    ("dolan_fluent", "Dolan Fluent"),
-    ("dolan_liquid", "Dolan Liquid"),
-    ("dolan_material", "Dolan Material"),
-    ("dolan_minimal", "Dolan Minimal"),
+    ("odoo_classic", "Clásico Odoo"),
+    ("dolan_fluent", "Fluent"),
+    ("dolan_liquid", "Liquid"),
+    ("dolan_material", "Material"),
+    ("dolan_minimal", "Minimal"),
     # Transitional values accepted so older databases never crash on onchange.
     ("legacy", "Compatibilidad heredada"),
     ("enterprise_classic", "Clásico (anterior)"),
@@ -41,7 +41,6 @@ APPEARANCE_PROFILE_CHOICES = [
     ("minimal", "Minimal (anterior)"),
 ]
 ICON_SCALE_CHOICES = [("compact", "Compacto"), ("normal", "Normal"), ("large", "Grande")]
-VISUAL_EFFECT_CHOICES = [("none", "Ninguno"), ("soft", "Suave"), ("glass", "Liquid Glass")]
 
 
 class ResConfigSettings(models.TransientModel):
@@ -62,9 +61,6 @@ class ResConfigSettings(models.TransientModel):
     )
     dolan_ui_icon_scale = fields.Selection(
         ICON_SCALE_CHOICES, string="Tamaño de iconos", config_parameter="dolan_ui.icon_scale", default="normal",
-    )
-    dolan_ui_visual_effect = fields.Selection(
-        VISUAL_EFFECT_CHOICES, string="Efectos visuales", config_parameter="dolan_ui.visual_effect", default="soft",
     )
     dolan_ui_custom_primary = fields.Char(string="Color primario personalizado", config_parameter="dolan_ui.custom_primary", default="#714B67")
     dolan_ui_custom_secondary = fields.Char(string="Color secundario personalizado", config_parameter="dolan_ui.custom_secondary", default="#017E84")
