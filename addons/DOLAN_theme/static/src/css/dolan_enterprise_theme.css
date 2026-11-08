@@ -306,7 +306,9 @@ body.o_dolan_home_action_active .o_main_navbar {
 }
 
 body.o_dolan_home_action_active .o_dolan_home_menu_wrapper {
-    z-index: 2001 !important;
+    /* Keep the launcher above the action manager, but below the navbar and
+       Odoo's global dropdown/popover layers. */
+    z-index: 1035 !important;
 }
 
 body.o_dolan_home_action_active .o_action_manager {

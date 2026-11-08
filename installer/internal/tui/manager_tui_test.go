@@ -28,7 +28,7 @@ func TestAllScreensRenderAndAdapt(t *testing.T) {
 		{ScreenChooseTarget, "¿Dónde querés instalar DOLAN?"},
 		{ScreenLXCConfig, "Paso 2 de 6"},
 		{ScreenSelectPackages, "Seleccioná un perfil inicial"},
-		{ScreenCompanyAndDemo, "DATOS DE DEMOSTRACIÓN"},
+		{ScreenCompanyAndDemo, "DATOS DEMO"},
 		{ScreenConfirmDeploy, "Confirmar instalación"},
 		{ScreenInstallProgress, "Progreso general"},
 		{ScreenManageInstall, "Borrar instalación"},

@@ -43,7 +43,7 @@ export function semanticAppId(app) {
     return nameMap[normalizeLabel(app?.name)] || null;
 }
 
-export function resolveIconAsset(semanticId, iconStyle = "fluent_3d_classic", assignments = {}) {
+export function resolveIconAsset(semanticId, iconStyle = "odoo_original", assignments = {}) {
     // `null` is intentional for Odoo Original: use native webIcon/webIconData.
     const family = Object.prototype.hasOwnProperty.call(STYLE_ASSET_KEYS, iconStyle)
         ? STYLE_ASSET_KEYS[iconStyle]
@@ -75,7 +75,7 @@ export function resolveActionIconAsset(name, filled = false) {
         : `/DOLAN_theme/static/src/lib/tabler/${asset}.svg`;
 }
 
-export function iconStyleUsesMask(iconStyle = "fluent_3d_classic") {
+export function iconStyleUsesMask(iconStyle = "odoo_original") {
     return ["fluent_filled_pro", "fluent_filled_duotone", "fluent_outline_color", "fluent_outline_minimal", "tabler"].includes(iconStyle);
 }
 
@@ -90,5 +90,5 @@ export function normalizeIconStyle(iconStyle) {
     if (aliases[iconStyle]) return aliases[iconStyle];
     return Object.prototype.hasOwnProperty.call(STYLE_ASSET_KEYS, iconStyle)
         ? iconStyle
-        : "fluent_3d_classic";
+        : "odoo_original";
 }

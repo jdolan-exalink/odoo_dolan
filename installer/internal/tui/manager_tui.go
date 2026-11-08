@@ -528,7 +528,7 @@ func (m ManagerModel) handleEnter() (tea.Model, tea.Cmd) {
 		m.Config.Profile = packageProfiles[m.Cursor%len(packageProfiles)]
 		m.navigate(ScreenCompanyAndDemo)
 	case ScreenCompanyAndDemo:
-		modes := []core.DemoMode{core.DemoNone, core.DemoOdoo, core.DemoDolan}
+		modes := []core.DemoMode{core.DemoNone, core.DemoDolan}
 		m.Config.DemoMode = modes[m.Cursor%len(modes)]
 		m.Config.DemoData = m.Config.DemoMode != core.DemoNone
 		m.navigate(ScreenConfirmDeploy)
@@ -783,14 +783,13 @@ func RenderScreen(m ManagerModel) string {
 			fmt.Sprintf("País          [ %-30s ]", m.Config.Country),
 			fmt.Sprintf("Idioma        [ %-30s ]", m.Config.Language),
 			"",
-			"DATOS DE DEMOSTRACIÓN",
+			"DATOS DEMO",
 			"¿Deseás instalar datos de ejemplo?",
 			"",
 		)
 		opts := []string{
 			"No, instalación limpia",
-			"Sí, datos demo estándar de Odoo",
-			"Sí, datos demo de DOLAN",
+			"Sí, cargar Datos Demo",
 		}
 		sel := m.Cursor % len(opts)
 		for i, o := range opts {
@@ -811,10 +810,8 @@ func RenderScreen(m ManagerModel) string {
 	case ScreenConfirmDeploy:
 		headerTitle = fmt.Sprintf("%s DOLAN / Confirmar instalación         Paso 5 de 6", diamond)
 		demoLabel := "No"
-		if m.Config.DemoMode == core.DemoOdoo {
-			demoLabel = "Sí (Estándar Odoo - DEMO)"
-		} else if m.Config.DemoMode == core.DemoDolan {
-			demoLabel = "Sí (DOLAN - DEMO)"
+		if m.Config.DemoMode == core.DemoDolan {
+			demoLabel = "Sí (Datos Demo)"
 		}
 		body = append(body,
 			fmt.Sprintf("Cliente         %s", nonEmpty(m.Config.Company, "Frigorífico")),
@@ -868,7 +865,7 @@ func RenderScreen(m ManagerModel) string {
 				envLabel = fmt.Sprintf("Docker (%s)", inst.ID)
 			}
 			if inst.DemoData {
-				demoLabel = fmt.Sprintf("Sí (%s)", inst.DemoMode)
+				demoLabel = "Sí (Datos Demo)"
 			}
 		}
 		headerTitle = fmt.Sprintf("%s DOLAN / %-28s %s ACTIVO", diamond, instName, bulletOn)

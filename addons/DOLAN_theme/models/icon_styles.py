@@ -25,4 +25,4 @@ def normalize_icon_style(value):
     }
     if value in aliases:
         return aliases[value]
-    return value if value in ICON_STYLE_IDS else "fluent_3d_classic"
+    return value if value in ICON_STYLE_IDS else "odoo_original"

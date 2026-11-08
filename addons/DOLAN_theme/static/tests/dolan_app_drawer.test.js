@@ -48,6 +48,7 @@ test("icon variants resolve local resources and retain legacy style aliases", ()
         tabler: "tabler/chart-pie.svg",
     } };
     expect(resolveIconAsset("app.sales", "fluent_3d_classic", assignment)).toBe("/DOLAN_theme/static/src/lib/fluent_3d/sales.png");
+    expect(resolveIconAsset("app.sales")).toBe(null);
     expect(resolveIconAsset("app.sales", "fluent_flat_modern", assignment)).toBe("/DOLAN_theme/static/src/lib/fluent_flat/sales.svg");
     expect(resolveIconAsset("app.sales", "fluent_outline_color", assignment)).toBe("/DOLAN_theme/static/src/lib/fluent_regular/sales.svg");
     expect(resolveIconAsset("app.sales", "tabler", assignment)).toBe("/DOLAN_theme/static/src/lib/tabler/chart-pie.svg");
@@ -55,7 +56,7 @@ test("icon variants resolve local resources and retain legacy style aliases", ()
     expect(resolveIconAsset("app.whatsapp", "odoo_original", assignment)).toBe(null);
     expect(resolveIconAsset("app.sales", "fluent_3d_classic", { "app.sales": { fluent_3d: "../../secret.png" } })).toBe(null);
     expect(normalizeIconStyle("fluent")).toBe("fluent_3d_classic");
-    expect(normalizeIconStyle("unknown_style")).toBe("fluent_3d_classic");
+    expect(normalizeIconStyle("unknown_style")).toBe("odoo_original");
     expect(iconStyleUsesMask("fluent_filled_duotone")).toBe(true);
     expect(resolveActionIconAsset("search")).toBe("/DOLAN_theme/static/src/lib/tabler/search.svg");
     expect(resolveIconAsset("app.unknown", "fluent", assignment)).toBe(null);

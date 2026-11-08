@@ -48,7 +48,7 @@ func RunWizard(cfg core.Config, modules []string) (core.Config, error) {
 		{"address", "Domicilio fiscal", "Domicilio de la empresa inicial.", false},
 		{"city", "Localidad", "Ciudad o localidad fiscal.", false},
 		{"responsibility", "Responsabilidad ARCA", "Seleccioná la condición fiscal de la empresa.", false},
-		{"demo_data", "Datos de demostración", "Escribí no (limpia, por defecto), odoo (demo estándar) o dolan (demo DOLAN por perfil).", false},
+		{"demo_data", "Datos Demo", "Escribí no para una base limpia o sí para cargar los ejemplos incluidos con el perfil seleccionado.", false},
 		{"billing_pos", "Punto de venta de facturación", "Número de PV habilitado en ARCA.", false},
 		{"pos_pos", "Punto de venta de POS", "PV para POS (puede coincidir si así lo configurás en ARCA).", false},
 		{"admin_email", "Correo del administrador", "Este será el usuario de acceso inicial a Odoo.", false},
@@ -405,10 +405,10 @@ func (m wizardModel) getField(key string) string {
 		return m.cfg.Responsibility
 	case "demo_data":
 		if m.cfg.DemoMode == core.DemoDolan {
-			return "dolan"
+			return "si"
 		}
 		if m.cfg.DemoMode == core.DemoOdoo || m.cfg.DemoData {
-			return "odoo"
+			return "si"
 		}
 		return "no"
 	case "billing_pos":
@@ -459,17 +459,14 @@ func (m *wizardModel) saveCurrent() error {
 		m.cfg.Responsibility = responsibilityOptions[m.responsibilityIndex]
 	case "demo_data":
 		switch strings.ToLower(v) {
-		case "dolan", "demo_dolan", "2":
+		case "dolan", "demo_dolan", "odoo", "demo_odoo", "s", "si", "sí", "y", "yes", "true", "1", "demo":
 			m.cfg.DemoData = true
 			m.cfg.DemoMode = core.DemoDolan
-		case "s", "si", "sí", "y", "yes", "true", "1", "odoo", "demo_odoo":
-			m.cfg.DemoData = true
-			m.cfg.DemoMode = core.DemoOdoo
 		case "n", "no", "false", "0", "none", "limpia":
 			m.cfg.DemoData = false
 			m.cfg.DemoMode = core.DemoNone
 		default:
-			return errors.New("elegí 'no' (instalación limpia), 'odoo' (demo estándar) o 'dolan' (demo DOLAN)")
+			return errors.New("elegí 'no' para una instalación limpia o 'sí' para cargar Datos Demo")
 		}
 	case "billing_pos":
 		n, err := parsePositive(v)

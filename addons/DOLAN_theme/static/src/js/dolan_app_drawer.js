@@ -309,7 +309,7 @@ export class DolanAppDrawerSystray extends Component {
             visualEffect: visualEffectForProfile("odoo_classic"),
             themeChoices: DOLAN_THEME_MODES,
             iconStyleChoices: DOLAN_ICON_STYLES,
-            iconStyle: "fluent_3d_classic",
+            iconStyle: "odoo_original",
             iconStylePreference: "global",
             hiddenAppXmlids: [],
             activeTab: "apps",
@@ -916,7 +916,7 @@ export class DolanAppDrawerSystray extends Component {
     }
 
     getAppIconClass() {
-        const style = this.state.iconStyle || "fluent_3d_classic";
+        const style = this.state.iconStyle || "odoo_original";
         return `o_dolan_icon_variant_${style}`;
     }
 

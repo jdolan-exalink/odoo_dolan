@@ -73,7 +73,7 @@ class ResConfigSettings(models.TransientModel):
     )
     dolan_ui_icon_style = fields.Selection(
         ICON_STYLE_CHOICES,
-        string="Estilo global de iconos", config_parameter="dolan_ui.icon_style", default="fluent_3d_classic",
+        string="Estilo global de iconos", config_parameter="dolan_ui.icon_style", default="odoo_original",
     )
     dolan_ui_allow_user_icon_style = fields.Boolean(
         string="Permitir preferencia individual", config_parameter="dolan_ui.allow_user_icon_style",

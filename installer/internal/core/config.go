@@ -184,6 +184,9 @@ func NewConfig() Config {
 }
 
 func (c *Config) Normalize() {
+	if c.DemoMode == DemoMode("demo") {
+		c.DemoMode = DemoDolan
+	}
 	if c.CompanyShort == "" {
 		c.CompanyShort = Slugify(c.Company)
 	}
@@ -277,7 +280,7 @@ func (c Config) Validate(requireCompany bool) error {
 		}
 	}
 	if c.DemoMode != DemoNone && c.DemoMode != DemoOdoo && c.DemoMode != DemoDolan {
-		return fmt.Errorf("modo demo inválido %q: usá none, odoo o dolan", c.DemoMode)
+		return fmt.Errorf("modo demo inválido %q: usá none o demo", c.DemoMode)
 	}
 	if !requireCompany {
 		return nil
