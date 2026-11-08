@@ -97,9 +97,6 @@ body.o_dolan_dark_mode :is(.o_form_view, .o_list_view, .o_kanban_view, .modal, .
     position: relative;
     z-index: 1045;
 }
-/* Inicio DOLAN keeps its app grid in a higher layer than the navbar. When a
-   navbar menu is open, raise the entire navbar stacking context just above the
-   launcher so the menu can extend below the header without being covered. */
 .o_dolan_theme_picker_menu {
     position: absolute;
     z-index: 1100;
