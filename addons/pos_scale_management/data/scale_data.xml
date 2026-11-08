@@ -9,4 +9,15 @@
         <field name="requires_plu">1</field>
         <field name="notes">Bloqueado hasta recibir un archivo aceptado por iTegra y probar la importación real. No se asume extensión ni estructura.</field>
     </record>
+    <record id="profile_generic_csv_v1" model="scale.export.profile">
+        <field name="name">CSV genérico DOLAN v1</field>
+        <field name="code">DOLAN_GENERIC_CSV_V1</field>
+        <field name="brand">other</field>
+        <field name="adapter_code">generic_csv_v1</field>
+        <field name="format_version">DOLAN-GENERIC-CSV-v1</field>
+        <field name="validation_state">draft</field>
+        <field name="price_decimals">2</field>
+        <field name="requires_plu">1</field>
+        <field name="notes">Intercambio genérico DOLAN: CSV UTF-8 con BOM, delimitador punto y coma, columnas PLU, Código de barras, Descripción, Precio y Moneda. Confirmá que el software destino lo admita antes de validar.</field>
+    </record>
 </odoo>

@@ -20,6 +20,8 @@ class DolanDiscountAudit(models.Model):
         ('approval_expired', 'Autorización vencida'),
         ('approval_used', 'Autorización utilizada'),
         ('employee_benefit_used', 'Beneficio de empleado usado'), ('manual_discount_denied', 'Descuento manual denegado'),
+        ('employee_benefit_approved', 'Beneficio de empleado aprobado'),
+        ('employee_benefit_rejected', 'Beneficio de empleado rechazado'),
         ('employee_benefit_created', 'Beneficio de empleado creado'), ('employee_benefit_changed', 'Beneficio de empleado modificado'),
         ('manual_discount_applied', 'Descuento manual aplicado'), ('anomaly_detected', 'Anomalía detectada'),
         ('discount_budget_exhausted', 'Presupuesto promocional agotado'),

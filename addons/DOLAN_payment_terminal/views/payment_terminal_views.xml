@@ -51,7 +51,12 @@
     </record>
     <record id="view_payment_operation_form" model="ir.ui.view">
         <field name="name">dolan.payment.operation.form</field><field name="model">dolan.payment.operation</field>
-        <field name="arch" type="xml"><form create="false" edit="false" delete="false"><sheet><group><field name="reference"/><field name="company_id"/><field name="terminal_id"/><field name="state"/><field name="currency_id"/><field name="amount"/><field name="move_id"/><field name="payment_id"/><field name="provider_reference"/><field name="detail"/></group></sheet></form></field>
+        <field name="arch" type="xml"><form create="false" edit="false" delete="false"><header><button name="action_open_supervisor_reconcile" type="object" string="Conciliar como supervisor" class="btn-primary" groups="point_of_sale.group_pos_manager" invisible="state != 'reconcile'"/></header><sheet><group><field name="reference"/><field name="company_id"/><field name="terminal_id"/><field name="operation_kind"/><field name="state"/><field name="currency_id"/><field name="amount"/><field name="move_id"/><field name="payment_id"/><field name="provider_reference"/><field name="pos_order_uuid"/><field name="pos_payment_uuid"/><field name="detail"/></group></sheet></form></field>
+    </record>
+    <record id="view_payment_reconcile_wizard" model="ir.ui.view">
+        <field name="name">dolan.payment.reconcile.wizard.form</field>
+        <field name="model">dolan.payment.reconcile.wizard</field>
+        <field name="arch" type="xml"><form string="Conciliar cobro incierto"><group><field name="operation_id"/><field name="terminal_id"/><field name="amount"/><field name="decision" widget="radio"/><field name="provider_reference" invisible="decision != 'approved'" required="decision == 'approved'"/><field name="note" placeholder="Qué comprobaste en el cierre o historial de Clover" required="1"/></group><footer><button name="action_apply" type="object" string="Guardar conciliación" class="btn-primary"/><button string="Cancelar" special="cancel" class="btn-secondary"/></footer></form></field>
     </record>
     <record id="action_payment_operations" model="ir.actions.act_window"><field name="name">Operaciones</field><field name="res_model">dolan.payment.operation</field><field name="view_mode">list,form</field></record>
     <menuitem id="menu_terminal_root" name="Terminales de cobro" action="action_terminals" web_icon="DOLAN_payment_terminal,static/description/icon.svg" sequence="65" groups="base.group_user"/>

@@ -118,16 +118,16 @@ var Catalog = []ModuleSpec{
 	{
 		ID:          "DOLAN_pos",
 		Title:       "Punto de Venta, Kitchen Display & Cuenta Corriente",
-		Version:     "20.0.1.2.0",
+		Version:     "20.0.1.3.0",
 		Category:    "Comercio",
 		Application: true,
-		Depends:     []string{"point_of_sale", "pos_restaurant", "account", "stock"},
+		Depends:     []string{"point_of_sale", "pos_restaurant", "pos_mercado_pago", "DOLAN_payment_terminal", "account", "stock"},
 		HasData:     true,
 	},
 	{
 		ID:          "DOLAN_discount_engine",
 		Title:       "Promociones y Control de Descuentos POS",
-		Version:     "20.0.1.1.0",
+		Version:     "20.0.1.2.0",
 		Category:    "Comercio",
 		Application: true,
 		Depends:     []string{"point_of_sale", "stock"},
@@ -136,7 +136,7 @@ var Catalog = []ModuleSpec{
 	{
 		ID:          "DOLAN_payment_terminal",
 		Title:       "Terminales de Cobro",
-		Version:     "20.0.1.0.0",
+		Version:     "20.0.1.1.0",
 		Category:    "Comercio",
 		Application: true,
 		Depends:     []string{"base", "web", "account"},
@@ -154,7 +154,7 @@ var Catalog = []ModuleSpec{
 	{
 		ID:          "pos_scale_management",
 		Title:       "Administración de Balanzas POS",
-		Version:     "20.0.1.0.0",
+		Version:     "20.0.1.2.0",
 		Category:    "Comercio",
 		Application: true,
 		Depends:     []string{"base", "product", "stock", "point_of_sale", "pos_stock", "barcodes"},

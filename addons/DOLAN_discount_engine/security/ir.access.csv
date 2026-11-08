@@ -21,8 +21,12 @@ access_discount_approval_supervisor,Autorizaciones: supervisor,dolan.discount.ap
 access_discount_approval_manager,Autorizaciones: administrador,dolan.discount.approval,DOLAN_discount_engine.group_discount_manager,ru,"[('company_id', 'in', company_ids)]"
 access_discount_benefit_manager,Beneficios: administrador,dolan.discount.employee.benefit,DOLAN_discount_engine.group_discount_manager,crud,"[('company_id', 'in', company_ids)]"
 access_discount_benefit_supervisor,Beneficios: supervisor,dolan.discount.employee.benefit,DOLAN_discount_engine.group_discount_supervisor,r,"[('company_id', 'in', company_ids)]"
-access_discount_employee_claim_manager,Reservas de empleado: administrador,dolan.discount.employee.claim,DOLAN_discount_engine.group_discount_manager,r,"[('company_id', 'in', company_ids)]"
+access_discount_employee_claim_manager_read,Reservas de empleado: administrador,dolan.discount.employee.claim,DOLAN_discount_engine.group_discount_manager,r,"[('company_id', 'in', company_ids)]"
 access_discount_employee_claim_pos,Reservas de empleado: sesión propia,dolan.discount.employee.claim,point_of_sale.group_pos_user,r,"[('session_id.user_id', '=', user.id), ('company_id', 'in', company_ids)]"
+access_discount_employee_claim_supervisor,Reservas de empleado: supervisor,dolan.discount.employee.claim,DOLAN_discount_engine.group_discount_supervisor,ru,"[('company_id', 'in', company_ids)]"
+access_discount_employee_claim_manager,Reservas de empleado: administrador,dolan.discount.employee.claim,DOLAN_discount_engine.group_discount_manager,r,"[('company_id', 'in', company_ids)]"
+access_discount_employee_claim_reject_supervisor,Rechazo de beneficio: supervisor,dolan.discount.employee.claim.reject.wizard,DOLAN_discount_engine.group_discount_supervisor,crud,
+access_discount_employee_claim_reject_manager,Rechazo de beneficio: administrador,dolan.discount.employee.claim.reject.wizard,DOLAN_discount_engine.group_discount_manager,crud,
 access_discount_reverse_wizard_supervisor,Reversión: supervisor,dolan.discount.reverse.wizard,DOLAN_discount_engine.group_discount_supervisor,crud,
 access_discount_reverse_wizard_manager,Reversión: administrador,dolan.discount.reverse.wizard,DOLAN_discount_engine.group_discount_manager,crud,
 access_discount_reject_wizard_supervisor,Rechazo: supervisor,dolan.discount.approval.reject.wizard,DOLAN_discount_engine.group_discount_supervisor,crud,

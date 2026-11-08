@@ -2,7 +2,7 @@
 
 {
     'name': 'DOLAN PoS Kitchen Display, Order Tracking & Settle Due',
-    'version': '20.0.1.2.0',
+    'version': '20.0.1.3.0',
     'category': 'Sales/Point of Sale',
     'summary': 'Clean-room CE Kitchen Preparation Display, Customer Order Tracking, Settle Due, Real-time Stock & Mercado Pago QR/Point for PoS',
     'description': """
@@ -17,12 +17,19 @@ Clean-room LGPL-3 implementation providing:
     """,
     'author': 'DOLAN Open Source',
     'license': 'LGPL-3',
-    'depends': ['point_of_sale', 'pos_restaurant', 'account', 'stock'],
+    'depends': ['point_of_sale', 'pos_restaurant', 'pos_mercado_pago', 'DOLAN_payment_terminal', 'account', 'stock'],
     'data': [
         'security/ir.access.csv',
         'views/pos_kitchen_views.xml',
         'views/pos_mercadopago_views.xml',
     ],
+    'assets': {
+        'point_of_sale._assets_pos': [
+            'DOLAN_pos/static/src/app/closing_report.js',
+            'DOLAN_pos/static/src/app/payment_mercadopago_qr.js',
+            'DOLAN_pos/static/src/app/payment_clover.js',
+        ],
+    },
     'installable': True,
     'application': True,
     'auto_install': False,

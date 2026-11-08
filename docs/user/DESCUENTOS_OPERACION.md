@@ -29,12 +29,12 @@ Usá el flujo nativo de devolución POS y seleccioná la línea original. El add
 3. Revisá el descuento y el total antes de cobrar. El servidor vuelve a validar el beneficio y su cupo al iniciar el cobro.
 4. Para quitarlo antes de cobrar, volvé a **Beneficio empleado** y confirmá con el campo vacío. Se libera la reserva.
 
-Un DNI no elegible, un producto excluido, una caja no habilitada, una compra propia bloqueada o un cupo agotado impiden aplicar el beneficio. Se necesita conexión al servidor. La aprobación de supervisor para beneficios aún no está habilitada.
+Un DNI no elegible, un producto excluido, una caja no habilitada, una compra propia bloqueada o un cupo agotado impiden aplicar el beneficio. Se necesita conexión al servidor. Si el beneficio requiere aprobación, la solicitud queda en **Punto de Venta → Promociones DOLAN → Beneficios pendientes de aprobación**. Un supervisor distinto del cajero puede aprobarla o rechazarla con motivo; luego el cajero vuelve a ingresar el DNI en la misma orden. La solicitud y su decisión quedan auditadas.
 
 ## Sin conexión
 
-Las promociones no se conceden offline. Si el navegador informa que no hay conexión, el addon quita los descuentos antes del cobro y deja el precio normal. Confirmá el total que se muestra. Si el corte de red no es detectado por el navegador, no continúes una operación con beneficios que dependan de cupos o confirmaciones remotas.
+No se crean ni renuevan autorizaciones de descuento sin conexión al servidor. Si hay un corte, el POS avisa y bloquea la autorización nueva; una orden sin descuentos DOLAN conserva el mecanismo offline estándar de Odoo. Si el adquirente pudo aceptar un cobro durante un corte, comprobá su estado antes de reintentar: la conciliación automática de un resultado incierto requiere integración del proveedor.
 
 ## Funciones aún no habilitadas
 
-No se habilitan descuentos por instrumento de pago hasta que el servidor tenga una confirmación verificable del adquirente.
+Las promociones por medio de pago están disponibles cuando se selecciona un único medio; el servidor reserva el descuento y al sincronizar comprueba que la orden use ese mismo medio. Esto no valida por sí solo la liquidación del adquirente. Falta cerrar la integración idempotente de estado, timeout, cancelación y reversa para Clover/Mercado Pago.

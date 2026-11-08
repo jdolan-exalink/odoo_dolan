@@ -7,6 +7,20 @@ from odoo.http import request
 
 class DolanKitchenDisplayController(http.Controller):
 
+    _station_labels = {
+        'all': 'Todas las estaciones',
+        'kitchen': 'Cocina',
+        'bar': 'Barra',
+        'coffee': 'Cafetería',
+        'dessert': 'Postres',
+    }
+    _state_labels = {
+        'pending': 'Pendiente',
+        'preparing': 'En preparación',
+        'ready': 'Listo',
+        'delivered': 'Entregado',
+    }
+
     @http.route('/dolan_pos/kitchen_display', type='http', auth='user', website=False)
     def kitchen_display_screen(self, station='all', **kwargs):
         """Interactive touch-friendly Kitchen Display Screen (KDS) with auto-refresh."""
@@ -42,12 +56,12 @@ class DolanKitchenDisplayController(http.Controller):
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
                             <span style="font-size:1.25rem;font-weight:800;">#{html.escape(t.name or '')}</span>
                             <span style="background:{badge_color};color:#fff;padding:4px 10px;border-radius:6px;font-weight:700;">
-                                {html.escape(t.state.upper())}
+                                {html.escape(self._state_labels.get(t.state, t.state))}
                             </span>
                         </div>
                         <div style="font-size:0.9rem;color:#495057;margin-bottom:8px;">
                             <strong>Mesa:</strong> {html.escape(t.table_name or 'Mostrador')} |
-                            <strong>Estación:</strong> {html.escape(t.station)} |
+                            <strong>Estación:</strong> {html.escape(self._station_labels.get(t.station, t.station))} |
                             <strong>⏱ {t.elapsed_minutes} min</strong> {delay_badge}
                         </div>
                         <ul style="list-style:none;padding:0;margin:0 0 12px 0;">
@@ -76,12 +90,12 @@ class DolanKitchenDisplayController(http.Controller):
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="refresh" content="10"/>
-    <title>DOLAN Kitchen Display (KDS)</title>
+    <title>Pantalla de cocina · DOLAN</title>
 </head>
 <body style="margin:0;font-family:system-ui,-apple-system,sans-serif;background:#1e2229;color:#212529;">
     <header style="background:#111418;color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;">
         <div>
-            <h2 style="margin:0;">🍳 DOLAN Kitchen Preparation Display (KDS)</h2>
+            <h2 style="margin:0;">🍳 Pantalla de preparación · DOLAN</h2>
             <small style="color:#adb5bd;">Auto-refresco cada 10s · Pantalla Táctil de Cocina, Barra y Cafetería</small>
         </div>
         <div style="display:flex;gap:8px;">
@@ -135,7 +149,7 @@ class DolanKitchenDisplayController(http.Controller):
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="refresh" content="8"/>
-    <title>Estado de su Pedido - DOLAN Order Tracking</title>
+    <title>Estado de su pedido · DOLAN</title>
 </head>
 <body style="margin:0;font-family:system-ui,-apple-system,sans-serif;background:#121519;color:#fff;height:100vh;display:flex;flex-direction:column;">
     <div style="display:flex;flex:1;">

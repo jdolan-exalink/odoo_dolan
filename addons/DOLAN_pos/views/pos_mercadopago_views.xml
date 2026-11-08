@@ -11,7 +11,22 @@
                     <field name="mp_bearer_token" password="True" invisible="mp_integration_mode == 'none'"/>
                     <field name="mp_user_id" invisible="mp_integration_mode != 'qr_dynamic'"/>
                     <field name="mp_external_pos_id" invisible="mp_integration_mode != 'qr_dynamic'"/>
-                    <field name="mp_point_device_id" invisible="mp_integration_mode != 'point'"/>
+                    <field name="mp_id_point_smart" invisible="mp_integration_mode != 'point'"/>
+                    <field name="mp_id_point_smart_complet" invisible="mp_integration_mode != 'point'" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="pos_payment_method_view_form_inherit_dolan_clover" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.dolan.clover</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Terminal Clover DOLAN" invisible="payment_provider != 'dolan_clover'">
+                    <field name="dolan_terminal_id" required="payment_provider == 'dolan_clover'"/>
+                    <div class="text-muted">El pago se inicia desde el navegador del POS y se concilia con el identificador externo de Clover. Si se pierde la conexión durante el cobro, la operación queda bloqueada hasta resolverla.</div>
                 </group>
             </xpath>
         </field>

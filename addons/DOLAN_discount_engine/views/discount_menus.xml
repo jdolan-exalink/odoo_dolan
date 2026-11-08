@@ -12,6 +12,9 @@
     <menuitem id="menu_dolan_discount_approvals" name="Autorizaciones"
               parent="menu_dolan_discount_root" action="action_dolan_discount_approval" sequence="30"
               groups="DOLAN_discount_engine.group_discount_manager,DOLAN_discount_engine.group_discount_supervisor,DOLAN_discount_engine.group_discount_cashier"/>
+    <menuitem id="menu_dolan_discount_employee_claim_approvals" name="Beneficios pendientes de aprobación"
+              parent="menu_dolan_discount_root" action="action_dolan_discount_employee_claims" sequence="31"
+              groups="DOLAN_discount_engine.group_discount_manager,DOLAN_discount_engine.group_discount_supervisor"/>
     <menuitem id="menu_dolan_discount_applications" name="Descuentos aplicados / Reportes"
               parent="menu_dolan_discount_root" action="action_dolan_discount_application" sequence="40"
               groups="DOLAN_discount_engine.group_discount_manager,DOLAN_discount_engine.group_discount_supervisor,DOLAN_discount_engine.group_discount_auditor"/>

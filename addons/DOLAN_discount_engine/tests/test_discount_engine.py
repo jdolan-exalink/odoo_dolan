@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo import Command, fields
 from odoo.exceptions import UserError, ValidationError
@@ -24,20 +24,18 @@ class TestDolanDiscountEngine(TransactionCase):
             cls.payment_method = cls.env['pos.payment.method'].create({
                 'name': 'Tarjeta QA', 'type': 'bank', 'company_id': cls.company.id,
             })
-        # Use the day after the explicit action_pause() operations in tests so
-        # the simulated clock observes the campaign as paused. 13:00 UTC is
-        # 10:00 in Buenos Aires.
-        # Evaluate after the test's pause actions (which close published
-        # versions at the current database timestamp).
-        cls.at = datetime(2026, 11, 8, 13, 0, 0)
+        # Evaluate just after any action_pause() call in the same test. This
+        # keeps the fixture deterministic without comparing a fixed test clock
+        # with the database server's actual clock.
+        cls.at = fields.Datetime.now() + timedelta(minutes=1)
 
     def _campaign(self, name='Campaña QA', priority=10, weekday=False, time_start=0.0, time_end=24.0):
         campaign = self.env['dolan.discount.campaign'].create({
             'name': name,
             'company_id': self.company.id,
             'timezone': 'America/Argentina/Buenos_Aires',
-            'date_start': datetime(2026, 11, 4),
-            'date_end': datetime(2026, 11, 10, 23, 59, 59),
+            'date_start': datetime(2000, 1, 1),
+            'date_end': datetime(2099, 12, 31, 23, 59, 59),
             'weekday_ids': [Command.set([self.env.ref('DOLAN_discount_engine.weekday_thursday').id])] if weekday else [],
             'time_start': time_start,
             'time_end': time_end,
@@ -83,10 +81,9 @@ class TestDolanDiscountEngine(TransactionCase):
         config = self.env['pos.config'].create({
             'name': 'Caja carga POS QA', 'company_id': self.company.id,
         })
-        self.assertFalse(
-            self.env['pos.config']._load_pos_data_fields(config),
-            'An empty field list is intentional: Odoo loads all native POS config fields.',
-        )
+        loaded_fields = self.env['pos.config']._load_pos_data_fields(config)
+        self.assertIn('payment_method_ids', loaded_fields)
+        self.assertIn('dolan_discount_campaigns', loaded_fields)
         payload = self.env['pos.config']._load_pos_data_read(config, config)
         self.assertIn('use_pricelist', payload[0])
         self.assertIn('dolan_discount_campaigns', payload[0])
@@ -169,7 +166,7 @@ class TestDolanDiscountEngine(TransactionCase):
         self._add_rule(campaign2, 'Compatible 2', value=30.0, stackable=True, priority=10)
         self._publish(campaign2)
         result = self._evaluate()
-        self.assertEqual(len(result), 2)
+        self.assertEqual(len(result), 2, msg=str(result))
         self.assertAlmostEqual(sum(row['discount_amount'] for row in result), 600.0)
 
     def test_fixed_amount_rounding_and_line_cap(self):
@@ -186,7 +183,7 @@ class TestDolanDiscountEngine(TransactionCase):
         self._publish(capped_campaign)
         result = self._evaluate(qty=1.375, base=500.0)
         self.assertEqual(len(result), 1)
-        self.assertAlmostEqual(result[0]['discount_amount'], 300.0)
+        self.assertAlmostEqual(result[0]['discount_amount'], 300.0, msg=str(result))
 
     def test_special_price_and_second_unit_benefits(self):
         special_campaign = self._campaign(name='Precio especial')
@@ -282,6 +279,79 @@ class TestDolanDiscountEngine(TransactionCase):
             'qty': 1.0, 'unit_price': 100.0,
         }], '20111222')
         self.assertEqual(result['status'], 'self_purchase_denied')
+
+    def test_employee_benefit_requires_independent_supervisor_approval(self):
+        employee = self.env['res.partner'].create({'name': 'Empleado aprobación QA'})
+        config = self.env['pos.config'].create({
+            'name': 'Caja aprobación QA', 'company_id': self.company.id,
+        })
+        session = self.env['pos.session'].create({
+            'config_id': config.id, 'user_id': self.env.uid,
+        })
+        session.write({'state': 'opened', 'start_at': fields.Datetime.now()})
+        benefit = self.env['dolan.discount.employee.benefit'].create({
+            'name': 'Beneficio con aprobación QA', 'company_id': self.company.id,
+            'partner_id': employee.id, 'employee_dni': '20.123.457',
+            'benefit_type': 'percent', 'benefit_value': 10.0,
+            'product_ids': [Command.set(self.product.ids)], 'require_approval': True,
+            'pos_config_ids': [Command.set(config.ids)],
+        })
+        line = {'uuid': 'approval-line-1', 'product_id': self.product.id,
+                'qty': 1.0, 'unit_price': 100.0}
+        result = self.env['dolan.discount.employee.benefit'].action_apply_dni_pos(
+            session.id, 'approval-order-1', [line], '20123457',
+        )
+        self.assertEqual(result['status'], 'pending_approval')
+        claim = self.env['dolan.discount.employee.claim'].sudo().search([
+            ('order_uuid', '=', 'approval-order-1'),
+        ], limit=1)
+        self.assertEqual(claim.state, 'pending_approval')
+        with self.assertRaises(UserError):
+            claim.with_user(self.env.user).action_approve()
+
+        supervisor = self.env['res.users'].with_context(no_reset_password=True).create({
+            'name': 'Supervisor QA', 'login': 'discount-supervisor-qa@example.test',
+            'company_id': self.company.id,
+            'company_ids': [Command.set([self.company.id])],
+            'group_ids': [Command.set([
+                self.env.ref('base.group_user').id,
+                self.env.ref('DOLAN_discount_engine.group_discount_supervisor').id,
+            ])],
+        })
+        claim.with_user(supervisor).action_approve()
+        self.assertEqual(claim.state, 'reserved')
+        self.assertEqual(claim.approved_by_id, supervisor)
+
+        validated = self.env['dolan.discount.employee.claim'].action_validate_pos_claim(
+            session.id, 'approval-order-1', claim.token, [line],
+        )
+        self.assertEqual(validated['status'], 'ready')
+        self.assertEqual(claim.approved_by_id, supervisor)
+
+        other_employee = self.env['res.partner'].create({'name': 'Segundo empleado QA'})
+        self.env['dolan.discount.employee.benefit'].create({
+            'name': 'Beneficio de otro empleado QA', 'company_id': self.company.id,
+            'partner_id': other_employee.id, 'employee_dni': '20.765.432',
+            'benefit_type': 'percent', 'benefit_value': 10.0,
+            'product_ids': [Command.set(self.product.ids)], 'require_approval': True,
+            'pos_config_ids': [Command.set(config.ids)],
+        })
+        changed_beneficiary = self.env['dolan.discount.employee.benefit'].action_apply_dni_pos(
+            session.id, 'approval-order-1', [line], '20765432',
+        )
+        self.assertEqual(changed_beneficiary['status'], 'pending_approval')
+        self.assertFalse(claim.approved_by_id)
+
+        rejected = self.env['dolan.discount.employee.benefit'].action_apply_dni_pos(
+            session.id, 'approval-order-2', [line], '20123457',
+        )
+        self.assertEqual(rejected['status'], 'pending_approval')
+        rejected_claim = self.env['dolan.discount.employee.claim'].sudo().search([
+            ('order_uuid', '=', 'approval-order-2'),
+        ], limit=1)
+        rejected_claim.with_user(supervisor).action_reject('DNI no validado')
+        self.assertEqual(rejected_claim.state, 'rejected')
+        self.assertEqual(rejected_claim.rejection_reason, 'DNI no validado')
 
     def test_local_weekday_and_hour_boundaries(self):
         campaign = self._campaign(weekday=True, time_start=9.0, time_end=11.0)

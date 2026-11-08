@@ -1,3 +1,4 @@
+import csv
 import io
 import json
 import zipfile
@@ -38,6 +39,19 @@ class TestScaleManagement(TransactionCase):
             'warehouse_id': cls.warehouse.id, 'brand': 'kretz', 'model_name': 'Fixture sintético',
             'profile_id': cls.profile.id,
         })
+
+    def test_generic_csv_is_stable_and_escaped(self):
+        profile = self.env.ref('pos_scale_management.profile_generic_csv_v1')
+        exporter = ScaleExporter.get('generic_csv_v1')
+        filename, payload = exporter.serialize([{
+            'plu': '0012', 'barcode': '7791234567890',
+            'product': 'Queso; cremoso', 'price': 1234.5, 'currency': 'ARS',
+        }], profile)
+        self.assertEqual(filename, 'DOLAN_BALANZA_GENERIC_CSV_V1.csv')
+        self.assertTrue(payload.startswith(b'\xef\xbb\xbf'))
+        rows = list(csv.reader(io.StringIO(payload.decode('utf-8-sig')), delimiter=';'))
+        self.assertEqual(rows[0], ['PLU', 'Código de barras', 'Descripción', 'Precio', 'Moneda'])
+        self.assertEqual(rows[1], ['0012', '7791234567890', 'Queso; cremoso', '1234.50', 'ARS'])
 
     def _make_product(self, name, category):
         template = self.env['product.template'].create({
@@ -141,8 +155,10 @@ class TestScaleManagement(TransactionCase):
             'picking_type_id': self.warehouse.out_type_id.id,
         })
         pos_fields = config._load_pos_data_fields(config)
-        for name in ('use_pricelist', 'trusted_config_ids', 'floor_plan', 'scale_barcode_profiles'):
+        for name in ('use_pricelist', 'trusted_config_ids', 'scale_barcode_profiles'):
             self.assertIn(name, pos_fields)
+        if 'floor_plan' in config._fields:
+            self.assertIn('floor_plan', pos_fields)
         payload = config.scale_barcode_profiles
         self.assertEqual(len(payload), 1)
         self.assertIs(payload[0]['products']['12345'], False)
