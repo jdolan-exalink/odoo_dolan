@@ -41,8 +41,8 @@ Uso: crear_odoo20.sh [opciones]
       --no-deploy         No desplegar (solo generar el proyecto)
       --init-db NOMBRE    Crear/inicializar la DB NOMBRE tras el deploy con
                           el perfil seleccionado, idioma es_AR/es_419 y ocultar OEEL-1
-      --demo-data         Instalar los datos de demostración de Odoo en los módulos
-                          seleccionados (por defecto se omiten)
+      --demo-data         Cargar Datos Demo DOLAN y ejemplos estándar de Odoo
+                          para el perfil instalado (por defecto se omiten)
       --apps "A,B,C"      Lista personalizada de apps CE base a instalar en --init-db
       --check             Solo validar conectividad a los repos de IngAdhoc y salir
       --non-interactive   No preguntar nada; usa argumentos o valores por defecto
@@ -101,8 +101,8 @@ while [[ $# -gt 0 ]]; do
     --deploy) DEPLOY="S"; shift ;;
     --no-deploy) DEPLOY="n"; shift ;;
     --init-db) INIT_DB="$2"; shift 2 ;;
-    --demo-data) DEMO_DATA=1; DEMO_MODE="odoo"; shift ;;
-    --demo-mode) DEMO_MODE="$2"; [[ "$DEMO_MODE" != "none" ]] && DEMO_DATA=1; shift 2 ;;
+    --demo-data) DEMO_DATA=1; DEMO_MODE="dolan"; shift ;;
+    --demo-mode) DEMO_MODE="$2"; [[ "$DEMO_MODE" == "demo" ]] && DEMO_MODE="dolan"; [[ "$DEMO_MODE" != "none" ]] && DEMO_DATA=1; shift 2 ;;
     --apps) SYSTEM_APPS="$2"; SYSTEM_APPS_CUSTOM=1; shift 2 ;;
     --check) CHECK_ONLY=1; shift ;;
     --non-interactive) INTERACTIVE=0; shift ;;
@@ -607,14 +607,14 @@ PYCONFIG
 
   echo "DB '${INIT_DB}' lista y preconfigurada para Argentina."
   if [[ "$DEMO_MODE" == "dolan" ]]; then
-    echo "Cargando semilla de demostración DOLAN (${PROFILE}) con aislamiento externo..."
+    echo "Cargando Datos Demo para el perfil ${PROFILE}, con servicios externos aislados..."
     docker compose run --rm --no-deps --user root \
       -e DOLAN_ALLOW_DEMO_DB=1 \
       -v "$SCRIPT_DIR/scripts/seed_demo_integral.py:/tmp/seed_demo_integral.py:ro" \
       odoo sh -c "odoo shell --config=/etc/odoo/odoo.conf --logfile= --no-http -d '$INIT_DB' < /tmp/seed_demo_integral.py"
-    echo "Datos de demostración de Odoo y escenarios DOLAN instalados (modo DEMO aislado)."
+    echo "Datos Demo cargados (ejemplos Odoo y escenarios del perfil, modo aislado)."
   elif [[ "$DEMO_DATA" -eq 1 ]]; then
-    echo "Datos de demostración de Odoo instalados para los módulos seleccionados."
+    echo "Datos de demostración estándar de Odoo cargados por compatibilidad."
   fi
   if [[ -n "$COMPANY_NAME" ]]; then
     echo "Acceso inicial: $INITIAL_ADMIN_EMAIL (contrasena definida durante la instalacion)."

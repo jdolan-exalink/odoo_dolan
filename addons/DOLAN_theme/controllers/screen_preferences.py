@@ -72,7 +72,7 @@ class DolanScreenPreferencesController(http.Controller):
     def screen_preferences(self, values=None, legacy_values=None):
         Preference = request.env["dolan.screen.preference"]
         params = request.env["ir.config_parameter"].sudo()
-        global_icon_style = normalize_icon_style(params.get_param("dolan_ui.icon_style", "fluent_3d_classic"))
+        global_icon_style = normalize_icon_style(params.get_param("dolan_ui.icon_style", "odoo_original"))
         allow_user_icon_style = params.get_param("dolan_ui.allow_user_icon_style", "False").lower() in ("1", "true", "yes")
         allow_personal_appearance = params.get_param("dolan_ui.allow_personal_appearance", "True").lower() in ("1", "true", "yes")
         global_theme_mode = params.get_param("dolan_ui.theme_mode", "system")

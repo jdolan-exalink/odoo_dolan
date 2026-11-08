@@ -30,7 +30,7 @@ param(
     [switch]$NoDeploy,
     [string]$InitDb = "",
     [switch]$DemoData,
-    [ValidateSet("none", "odoo", "dolan")]
+    [ValidateSet("none", "demo", "odoo", "dolan")]
     [string]$DemoMode = "none",
     [string]$Apps = "contacts,calendar,mail,crm,sale_management,purchase,stock,l10n_ar,l10n_ar_withholding,l10n_ar_pos,l10n_ar_stock,l10n_latam_check,l10n_latam_invoice_document",
     [switch]$Check
@@ -39,6 +39,10 @@ param(
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $OdooVersion = "20.0"
+if ($DemoMode -eq "demo" -or ($DemoData -and $DemoMode -eq "none")) {
+    $DemoMode = "dolan"
+    $DemoData = $true
+}
 $AppsProvided = $PSBoundParameters.ContainsKey("Apps")
 $FullApps = "contacts,calendar,mail,crm,sale_management,purchase,stock,mrp,point_of_sale,pos_restaurant,project,project_todo,hr,hr_expense,hr_skills,fleet,maintenance,l10n_ar,l10n_ar_withholding,l10n_ar_pos,l10n_ar_stock,l10n_latam_check,l10n_latam_invoice_document"
 

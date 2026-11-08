@@ -103,7 +103,7 @@ export class DolanIcon extends Component {
         }
         const key = ALIASES[name] || name;
         if (key === "folder") {
-            const style = document.body.dataset.dolanIconStyle || "fluent_3d_classic";
+            const style = document.body.dataset.dolanIconStyle || "odoo_original";
             if (["fluent_3d_classic", "fluent_3d_soft", "fluent"].includes(style)) {
                 return "/DOLAN_theme/static/src/lib/fluent/folder.png";
             }
@@ -132,7 +132,7 @@ export class DolanIcon extends Component {
     }
 
     get assetClass() {
-        const style = this.props.iconStyle || document.body.dataset.dolanIconStyle || "fluent_3d_classic";
+        const style = this.props.iconStyle || document.body.dataset.dolanIconStyle || "odoo_original";
         return `${this.isTablerAsset ? "o_dolan_tabler_icon_asset " : ""}o_dolan_icon_variant_${style}`;
     }
 

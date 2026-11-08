@@ -190,8 +190,8 @@ func runInstall(ctx context.Context, args []string) error {
 	adminName := fs.String("admin-name", "", "Nombre visible del administrador")
 	port := fs.Int("port", 0, "Puerto HTTP publicado")
 	callbackPort := fs.Int("callback-port", 0, "Puerto de callback OAuth loopback")
-	demoData := fs.Bool("demo-data", false, "Instalar datos de demostración de Odoo en los módulos")
-	demoMode := fs.String("demo-mode", "", "none, odoo o dolan")
+	demoData := fs.Bool("demo-data", false, "Instalar Datos Demo con ejemplos del perfil y datos estándar incluidos por Odoo")
+	demoMode := fs.String("demo-mode", "", "none (limpio) o demo (datos de ejemplo); odoo/dolan se conservan por compatibilidad")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
@@ -278,12 +278,16 @@ func runInstall(ctx context.Context, args []string) error {
 	}
 	if visited(fs, "demo-data") {
 		cfg.DemoData = *demoData
-		if *demoData && cfg.DemoMode == core.DemoNone {
-			cfg.DemoMode = core.DemoOdoo
+		if *demoData {
+			cfg.DemoMode = core.DemoDolan
 		}
 	}
 	if visited(fs, "demo-mode") {
-		cfg.DemoMode = core.DemoMode(*demoMode)
+		mode := strings.ToLower(strings.TrimSpace(*demoMode))
+		if mode == "demo" {
+			mode = string(core.DemoDolan)
+		}
+		cfg.DemoMode = core.DemoMode(mode)
 		cfg.DemoData = cfg.DemoMode != core.DemoNone
 	}
 	cfg.AdminPassword = os.Getenv("DOLAN_ADMIN_LOGIN_PASSWORD")

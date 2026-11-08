@@ -9,7 +9,7 @@ Esta guía cubre el punto de entrada [`bootstrap.sh`](bootstrap.sh) (Linux/Proxm
   - Adopción explícita de instalaciones previas (`dolan adopt --path ... --name ... --yes`).
   - Provisión nativa en **Proxmox LXC (Debian 13 sin privilegios, PostgreSQL 17 y Odoo 20 nativos sin Docker dentro de LXC)** además de Docker Compose, Linux nativo y Windows.
   - Perfiles funcionales: `Básico` (`core`), `Servicios`, `Comercio`, `Completo` (`full`) y `Personalizado` (`custom`), con cambio incremental de perfil y agregado de módulos sin reinstalar (`dolan packages plan/apply`).
-  - **Datos de demostración opcionales** al crear una nueva base (`--demo-mode none|odoo|dolan`), con aislamiento de servicios externos (ARCA forzado en homologación y servidores de correo saliente desactivados en modo demo).
+  - **Datos Demo opcionales** al crear una nueva base (`--demo-mode none|demo`): combinan ejemplos nativos de Odoo con escenarios ficticios del perfil DOLAN y aislamiento de servicios externos. `odoo`/`dolan` siguen aceptados como alias históricos.
   - **Backups lógicos portables (`.dolanbak`)** con verificación SHA-256 por artefacto, cifrado opcional AES-256-GCM y sanitización de secretos (`dolan backup create|verify|list`).
   - **Restauración y migración entre proveedores** (`Docker ↔ Proxmox LXC`, `Linux nativo → LXC`, `LXC → LXC`) con preflight de 14 validaciones (`dolan restore plan|run`).
   - Consultá la referencia completa de comandos y arquitectura en [`installer/README.md`](installer/README.md).
@@ -105,7 +105,7 @@ powershell -ExecutionPolicy Bypass -File .\bootstrap.ps1
 powershell -ExecutionPolicy Bypass -File .\crear_odoo20.ps1
 ```
 
-El asistente permite elegir el perfil, el modo de datos de demostración (`Sin datos demo` por defecto, `Demo Odoo` o `Demo DOLAN`), ingresar los datos iniciales de la empresa y decidir si despliega en ese momento. La carpeta se crea como `deployments/<nombre-corto>` y la base como `odoo_<nombre-corto>`.
+El asistente permite elegir el perfil, si cargar `Datos Demo` (no por defecto; al aceptar combina ejemplos nativos de Odoo con escenarios ficticios del perfil) o dejar la base limpia, ingresar los datos iniciales de la empresa y decidir si despliega en ese momento. Nunca copia registros de otra base. La carpeta se crea como `deployments/<nombre-corto>` y la base como `odoo_<nombre-corto>`.
 
 Se solicitan razón social, nombre corto, CUIT, domicilio, localidad, responsabilidad frente a ARCA, PV de facturación, PV de PoS y datos del administrador. La contraseña del usuario administrador se pide sin mostrarla y se confirma. La contraseña maestra del gestor de bases de Odoo es distinta.
 

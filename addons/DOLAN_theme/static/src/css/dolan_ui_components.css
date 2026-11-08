@@ -93,8 +93,7 @@ body.o_dolan_dark_mode :is(.o_form_view, .o_list_view, .o_kanban_view, .modal, .
 /* Selector compacto de tema, colores e iconos para la sesión actual. */
 .o_dolan_theme_picker { position: relative; }
 .o_main_navbar:has(.o_dolan_theme_picker_menu) {
-    /* The launcher overlay is at 1035. Lift only the open picker above it,
-       while keeping Bootstrap dialogs (1055) in front of the navbar. */
+    /* Keep the session picker above the launcher while it is open. */
     position: relative;
     z-index: 1045;
 }

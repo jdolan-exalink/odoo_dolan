@@ -6,7 +6,7 @@ Administrador integral del ciclo de vida de **DOLAN ERP** sobre **Odoo Community
 
 | Componente | Paquete Go / Ruta | Responsabilidad |
 |---|---|---|
-| `manager-core` | [`installer/internal/core`](file:///d:/DEVs/Odoo20-REA/installer/internal/core/config.go), [`installer/internal/state`](file:///d:/DEVs/Odoo20-REA/installer/internal/state/manifest.go), [`installer/internal/engine`](file:///d:/DEVs/Odoo20-REA/installer/internal/engine/compose.go) | Configuración, perfiles declarativos (`basico`/`core`, `servicios`, `comercio`, `completo`/`full`, `custom`), modos demo (`none`, `odoo`, `dolan`), manifiesto versionado y adopción segura con consentimiento explícito. |
+| `manager-core` | [`installer/internal/core`](file:///d:/DEVs/Odoo20-REA/installer/internal/core/config.go), [`installer/internal/state`](file:///d:/DEVs/Odoo20-REA/installer/internal/state/manifest.go), [`installer/internal/engine`](file:///d:/DEVs/Odoo20-REA/installer/internal/engine/compose.go) | Configuración, perfiles declarativos (`basico`/`core`, `servicios`, `comercio`, `completo`/`full`, `custom`), selección `none` o `demo` (mapea a ejemplos Odoo + escenarios ficticios DOLAN; alias históricos `odoo`/`dolan` se conservan), manifiesto versionado y adopción segura con consentimiento explícito. |
 | `manager-tui` | [`installer/internal/tui`](file:///d:/DEVs/Odoo20-REA/installer/internal/tui/manager_tui.go) | TUI interactiva con Bubble Tea v2 y Lip Gloss v2, paleta oscura oficial (`#10131B`, `#1B2130`, `#8B5CF6`, `#38BDF8`, `#22C55E`, `#F59E0B`, `#EF4444`), modo claro (`DOLAN_THEME=light`), `NO_COLOR`, fallback ASCII y las 16 pantallas contractuales (7.1 a 7.16). |
 | `manager-cli` | [`installer/internal/cli`](file:///d:/DEVs/Odoo20-REA/installer/internal/cli/cli.go), [`installer/cmd/dolan`](file:///d:/DEVs/Odoo20-REA/installer/cmd/dolan/main.go), [`installer/cmd/dolan-installer`](file:///d:/DEVs/Odoo20-REA/installer/cmd/dolan-installer/main.go) | Comandos no interactivos con salida humana y `--json`, códigos de salida deterministas (`0` éxito, `1` error de ejecución, `2` error de validación/preflight). |
 | `provider-proxmox` | [`installer/internal/platform/proxmox.go`](file:///d:/DEVs/Odoo20-REA/installer/internal/platform/proxmox.go) | Detección pasiva de Proxmox VE, inventario de LXC locales (`pct list`), distinción de contenedores DOLAN vs Odoo ajenos, validación de storages (`pvesm status`), bridges y generación de provisión Debian 13 nativa (PostgreSQL 17 + Odoo 20 nativos sin Docker anidado). |
@@ -53,7 +53,7 @@ dolan list --json
 # Adoptar una instalación existente sin reinstalarla (requiere --yes explícito)
 dolan adopt --path /opt/dolan/deployments/empresa --name empresa --yes --json
 
-# Planificar o ejecutar una nueva instalación (modos demo: none | odoo | dolan)
+# Planificar o ejecutar una nueva instalación (modos: none | demo)
 dolan install --dry-run \
   --deployment docker \
   --profile comercio \
@@ -139,8 +139,8 @@ Un archivo `.dolanbak` es un contenedor portable con encabezado mágico `DOLANBA
 | 4 | Detección de instalaciones existentes sin alterarlas | Aprobado | `go test -v ./internal/platform ./internal/cli -run TestCLI_StatusAndListJSON` |
 | 5 | Adopción de instalación existente con consentimiento explícito | Aprobado | `dolan adopt --yes` + `engine/compose.go` |
 | 6 | Creación de base limpia sin datos demo (opción por defecto) | Aprobado | `go test -v ./internal/core` + `python -m unittest scripts.test_seed_demo_integral` |
-| 7 | Creación de base con Demo Odoo | Aprobado | `--demo-mode odoo` en `crear_odoo20.sh` / `crear_odoo20.ps1` / `core.Config` |
-| 8 | Creación de base con Demo DOLAN por perfil y aislamiento ARCA/SMTP | Aprobado | `python -m unittest -v scripts.test_seed_demo_integral` |
+| 7 | Creación de base limpia | Aprobado | opción `none` / `--without-demo` |
+| 8 | Creación de base con Datos Demo por perfil y aislamiento de servicios externos | Aprobado | `python -m unittest -v scripts.test_seed_demo_integral` |
 | 9 | Restauración de backup sin volver a ejecutar seeds demo ni duplicar registros | Aprobado | `test_basico_profile_seeds_idempotently_and_isolates_external_services` + `backup_test.go` |
 | 10 | Backup completo verificando PostgreSQL y filestore | Aprobado | `go test -v ./internal/backup -run TestCreateVerifyAndRestoreBackup` |
 | 11 | Verificación de integridad de backup (`.dolanbak` SHA-256) | Aprobado | `go test -v ./internal/backup -run TestCorruptBackupRejected` |
