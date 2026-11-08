@@ -136,7 +136,7 @@ var Catalog = []ModuleSpec{
 	{
 		ID:          "DOLAN_payment_terminal",
 		Title:       "Terminales de Cobro",
-		Version:     "20.0.1.2.0",
+		Version:     "20.0.1.3.0",
 		Category:    "Comercio",
 		Application: true,
 		Depends:     []string{"base", "web", "account"},
