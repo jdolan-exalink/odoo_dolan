@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Terminales de cobro',
-    'version': '20.0.1.2.0',
+    'version': '20.0.1.3.0',
     'category': 'Accounting/Payment Providers',
     'summary': 'Configuración de terminales Clover y Mercado Pago',
     'license': 'LGPL-3',

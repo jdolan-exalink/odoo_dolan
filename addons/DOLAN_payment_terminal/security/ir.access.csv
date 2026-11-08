@@ -2,4 +2,4 @@ id,name,model_id,group_id/id,operation,domain
 access_dolan_payment_terminal_user,dolan.payment.terminal.user,dolan.payment.terminal,base.group_user,r,"[('company_id', 'in', company_ids)]"
 access_dolan_payment_terminal_admin,dolan.payment.terminal.admin,dolan.payment.terminal,base.group_system,crud,"[('company_id', 'in', company_ids)]"
 access_dolan_payment_operation_user,dolan.payment.operation.user,dolan.payment.operation,base.group_user,r,"[('company_id', 'in', company_ids)]"
-access_dolan_payment_reconcile_wizard_pos_manager,dolan.payment.reconcile.wizard.pos.manager,DOLAN_payment_terminal.model_dolan_payment_reconcile_wizard,point_of_sale.group_pos_manager,crud,
+access_dolan_payment_reconcile_wizard_pos_manager,dolan.payment.reconcile.wizard.pos.manager,dolan.payment.reconcile.wizard,point_of_sale.group_pos_manager,crud,
