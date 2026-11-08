@@ -60,6 +60,13 @@ EXALINK_MENU_SEQUENCES = {
 
 def post_init_hook(env):
     """Ordena los menús raíz igual que la demo web de Odoo 20."""
+    params = env["ir.config_parameter"].sudo()
+    if not params.get_param("dolan_ui.appearance_profile"):
+        params.set_param("dolan_ui.appearance_profile", "odoo_classic")
+    if not params.get_param("dolan_ui.icon_scale"):
+        params.set_param("dolan_ui.icon_scale", "normal")
+    if not params.get_param("dolan_ui.visual_effect"):
+        params.set_param("dolan_ui.visual_effect", "soft")
     _logger.info("DOLAN_theme: Aplicando secuencias de menús raíz estilo Odoo 20 Web...")
     # XML IDs keep both applications stable across languages and renamed labels.
     fixed_sequences = {

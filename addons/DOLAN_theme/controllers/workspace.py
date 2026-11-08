@@ -15,6 +15,21 @@ from ..models.dolan_workspace_preference import (
 _logger = logging.getLogger(__name__)
 
 
+def _company_scoped_domain(env, model, domain, include_shared=False):
+    """Add an explicit server-side company boundary when the model supports it."""
+    scoped = list(domain)
+    if "company_id" not in model._fields:
+        return None
+    company_ids = env.companies.ids
+    if not company_ids:
+        return None
+    if include_shared:
+        scoped.extend(["|", ("company_id", "=", False), ("company_id", "in", company_ids)])
+    else:
+        scoped.append(("company_id", "in", company_ids))
+    return scoped
+
+
 class DolanWorkspaceController(http.Controller):
 
     @http.route('/dolan_theme/workspace_pos_shortcuts', type='jsonrpc', auth='user', methods=['POST'])
@@ -172,7 +187,17 @@ class DolanWorkspaceController(http.Controller):
             try:
                 if not Model.has_access('read'):
                     continue
-                count = Model.search_count(definition['domain'])
+                if model == 'mail.activity':
+                    count = self._count_active_company_activities(Model, definition['domain'], env.companies.ids)
+                    if count is None:
+                        continue
+                else:
+                    domain = _company_scoped_domain(env, Model, definition['domain'])
+                    if domain is None:
+                        # Unknown/shared models are omitted rather than risking a
+                        # cross-company total that looks authoritative.
+                        continue
+                    count = Model.search_count(domain)
             except Exception:  # un KPI roto no debe tirar el home
                 _logger.warning('Workspace KPI %s failed', definition['key'], exc_info=True)
                 continue
@@ -204,6 +229,29 @@ class DolanWorkspaceController(http.Controller):
             'quick_action_keys_configured': preference.quick_action_keys is not False,
         }
 
+    @staticmethod
+    def _count_active_company_activities(Activity, domain, company_ids):
+        """Count activities only when their linked business record belongs to an active company."""
+        if not company_ids:
+            return 0
+        rows = Activity.search_read(domain, ['res_model', 'res_id'], limit=10000)
+        linked_ids = {}
+        for row in rows:
+            model_name = row.get('res_model')
+            record_id = row.get('res_id')
+            if model_name and record_id:
+                linked_ids.setdefault(model_name, set()).add(record_id)
+        env = Activity.env
+        allowed_pairs = set()
+        for model_name, record_ids in linked_ids.items():
+            if model_name not in env or 'company_id' not in env[model_name]._fields:
+                continue
+            records = env[model_name].search([
+                ('id', 'in', list(record_ids)), ('company_id', 'in', company_ids),
+            ])
+            allowed_pairs.update((model_name, record_id) for record_id in records.ids)
+        return sum(1 for row in rows if (row.get('res_model'), row.get('res_id')) in allowed_pairs)
+
     @http.route('/dolan_theme/workspace_activity', type='jsonrpc', auth='user')
     def workspace_activity(self, limit=10):
         """Recent business events from readable models; no sudo and a strict result cap."""
@@ -227,7 +275,10 @@ class DolanWorkspaceController(http.Controller):
             try:
                 if not Model.has_access('read'):
                     continue
-                records = Model.search_read(domain, ['display_name', 'create_date'],
+                scoped_domain = _company_scoped_domain(env, Model, domain, include_shared=model_name == 'res.partner')
+                if scoped_domain is None:
+                    continue
+                records = Model.search_read(scoped_domain, ['display_name', 'create_date'],
                                            order='create_date desc,id desc', limit=limit)
             except Exception:
                 _logger.debug('Workspace activity adapter %s unavailable', model_name, exc_info=True)

@@ -13,9 +13,12 @@
                     <group>
                         <group string="Tema y lectura">
                             <field name="user_id" readonly="1" groups="base.group_system"/>
-                            <field name="theme_mode" widget="radio" options="{'horizontal': true}"/>
+                            <field name="theme_mode" widget="dolan_appearance_choice"/>
+                            <field name="appearance_profile" widget="dolan_appearance_choice"/>
+                            <field name="icon_scale" widget="dolan_appearance_choice"/>
+                            <field name="visual_effect" widget="dolan_appearance_choice"/>
                             <field name="allow_user_icon_style" invisible="1"/>
-                            <field name="icon_style" readonly="not allow_user_icon_style"/>
+                            <field name="icon_style" widget="dolan_appearance_choice" readonly="not allow_user_icon_style"/>
                             <field name="allow_user_appearance" invisible="1"/>
                             <field name="compact_mode" widget="boolean_toggle" readonly="not allow_user_appearance"/>
                         </group>

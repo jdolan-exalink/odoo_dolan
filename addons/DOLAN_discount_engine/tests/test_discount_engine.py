@@ -79,6 +79,18 @@ class TestDolanDiscountEngine(TransactionCase):
             payment_allocations=allocations or [], at=at or self.at,
         )
 
+    def test_pos_config_data_keeps_native_fields_and_campaigns(self):
+        config = self.env['pos.config'].create({
+            'name': 'Caja carga POS QA', 'company_id': self.company.id,
+        })
+        self.assertFalse(
+            self.env['pos.config']._load_pos_data_fields(config),
+            'An empty field list is intentional: Odoo loads all native POS config fields.',
+        )
+        payload = self.env['pos.config']._load_pos_data_read(config, config)
+        self.assertIn('use_pricelist', payload[0])
+        self.assertIn('dolan_discount_campaigns', payload[0])
+
     def _publish_engine_snapshot(self, campaign):
         snapshot = campaign._snapshot_for_publish()
         return self.env['dolan.discount.campaign.version'].create({

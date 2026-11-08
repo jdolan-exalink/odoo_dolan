@@ -17,6 +17,21 @@ class DolanScreenPreference(models.Model):
         [("global", "Usar configuración DOLAN UI"), ("light", "Claro"), ("dark", "Oscuro"), ("system", "Automático (sistema)"), ("contrast", "Alto contraste")],
         string="Tema", required=True, default="global",
     )
+    appearance_profile = fields.Selection(
+        [("global", "Usar perfil global"),
+         ("odoo_classic", "Odoo Enterprise Classic"),
+         ("dolan_fluent", "Dolan Fluent"),
+         ("dolan_liquid", "Dolan Liquid"),
+         ("dolan_material", "Dolan Material"),
+         ("dolan_minimal", "Dolan Minimal"),
+         # Stored for compatibility during the incremental preference migration.
+         ("legacy", "Conservar apariencia anterior"),
+         ("enterprise_classic", "Clásico (anterior)"), ("graphite", "Graphite (anterior)"),
+         ("glass", "Glass (anterior)"), ("minimal", "Minimal (anterior)"),
+         ("liquid_glass_dark", "Liquid Glass oscuro (anterior)"),
+         ("liquid_glass_light", "Liquid Glass claro (anterior)")],
+        string="Perfil visual", required=True, default="global",
+    )
     icon_style = fields.Selection(
         [("global", "Usar estilo global"), *ICON_STYLE_CHOICES],
         string="Estilo de iconos", required=True, default="global",
@@ -25,6 +40,14 @@ class DolanScreenPreference(models.Model):
     allow_user_icon_style = fields.Boolean(compute="_compute_allow_user_icon_style")
     allow_user_appearance = fields.Boolean(compute="_compute_allow_user_appearance")
     compact_mode = fields.Boolean(string="Densidad compacta", default=False)
+    icon_scale = fields.Selection(
+        [("global", "Usar tamaño global"), ("compact", "Compacto"), ("normal", "Normal"), ("large", "Grande")],
+        string="Tamaño de iconos", required=True, default="global",
+    )
+    visual_effect = fields.Selection(
+        [("global", "Usar efectos globales"), ("none", "Sin efectos"), ("soft", "Suave"), ("glass", "Liquid Glass")],
+        string="Efectos visuales", required=True, default="global",
+    )
     company_id = fields.Many2one(
         "res.company", string="Empresa para el estilo", required=True,
         default=lambda self: self.env.company,
@@ -77,7 +100,7 @@ class DolanScreenPreference(models.Model):
                 appearance_allowed = self.env["ir.config_parameter"].sudo().get_param(
                     "dolan_ui.allow_personal_appearance", "True"
                 ).lower() in ("1", "true", "yes")
-                if not appearance_allowed and ("theme_mode" in vals or "compact_mode" in vals):
+                if not appearance_allowed and any(key in vals for key in ("theme_mode", "compact_mode", "appearance_profile", "icon_scale", "visual_effect")):
                     raise AccessError("El administrador no habilitó la personalización personal de la apariencia.")
         return super().create(vals_list)
 
@@ -95,7 +118,7 @@ class DolanScreenPreference(models.Model):
             appearance_allowed = self.env["ir.config_parameter"].sudo().get_param(
                 "dolan_ui.allow_personal_appearance", "True"
             ).lower() in ("1", "true", "yes")
-            if not appearance_allowed and ("theme_mode" in vals or "compact_mode" in vals):
+            if not appearance_allowed and any(key in vals for key in ("theme_mode", "compact_mode", "appearance_profile", "icon_scale", "visual_effect")):
                 raise AccessError("El administrador no habilitó la personalización personal de la apariencia.")
         return super().write(vals)
 

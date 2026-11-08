@@ -6,18 +6,17 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="after">
-                <div class="d-inline-block ms-2" invisible="not vat">
-                    <button name="action_l10n_ar_update_from_padron"
-                            type="object"
-                            string="Buscar en padrón ARCA"
-                            icon="fa-search"
-                            invisible="not vat"
-                            help="Consulta ARCA solo cuando se pulsa este botón. Usa el certificado compartido configurado para Padrón, si existe; no consume créditos IAP."
-                            class="btn btn-sm btn-primary"/>
-                </div>
-                <field name="l10n_ar_padron_status" invisible="not l10n_ar_padron_status"/>
-                <field name="l10n_ar_padron_last_update" invisible="not l10n_ar_padron_last_update"/>
-                <field name="l10n_ar_padron_error" invisible="not l10n_ar_padron_error" readonly="1"/>
+                <button name="action_l10n_ar_update_from_padron"
+                        type="object"
+                        string="Consultar ARCA"
+                        icon="fa-search"
+                        help="Consulta el Padrón ARCA/AFIP por CUIT para autocompletar los datos fiscales con el certificado autorizado."
+                        class="btn btn-sm btn-outline-primary ms-1 py-0 px-2"/>
+            </xpath>
+            <xpath expr="//div[@id='vat_div']" position="after">
+                <field name="l10n_ar_padron_status" invisible="not l10n_ar_padron_status" readonly="1" class="text-muted small"/>
+                <field name="l10n_ar_padron_last_update" invisible="not l10n_ar_padron_last_update" readonly="1" class="text-muted small"/>
+                <field name="l10n_ar_padron_error" invisible="not l10n_ar_padron_error" readonly="1" class="text-danger small"/>
             </xpath>
         </field>
     </record>

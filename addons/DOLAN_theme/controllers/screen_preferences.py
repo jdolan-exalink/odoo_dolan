@@ -10,6 +10,17 @@ from ..models.icon_styles import ICON_STYLE_IDS, normalize_icon_style
 _ICON_CATALOG_PATH = Path(__file__).resolve().parents[1] / "static" / "src" / "lib" / "dolan_icon_catalog.json"
 _ICON_CATALOG = json.loads(_ICON_CATALOG_PATH.read_text(encoding="utf-8"))
 
+_PROFILE_ALIASES = {
+    "enterprise_classic": "odoo_classic", "graphite": "dolan_fluent", "glass": "dolan_liquid",
+    "liquid_glass_dark": "dolan_liquid", "liquid_glass_light": "dolan_liquid",
+    "minimal": "dolan_minimal", "legacy": "odoo_classic",
+}
+
+
+def _normalize_profile(value):
+    value = _PROFILE_ALIASES.get(value, value)
+    return value if value in {"odoo_classic", "dolan_fluent", "dolan_liquid", "dolan_material", "dolan_minimal"} else "odoo_classic"
+
 
 def _normalized_name(value):
     import unicodedata
@@ -60,6 +71,9 @@ class DolanScreenPreferencesController(http.Controller):
         global_theme_mode = params.get_param("dolan_ui.theme_mode", "system")
         global_palette = params.get_param("dolan_ui.palette", "dolan")
         global_density = params.get_param("dolan_ui.density", "normal")
+        global_profile = _normalize_profile(params.get_param("dolan_ui.appearance_profile", "odoo_classic"))
+        global_icon_scale = params.get_param("dolan_ui.icon_scale", "normal")
+        global_effect = params.get_param("dolan_ui.visual_effect", "soft")
         preference = Preference.search([("user_id", "=", request.env.uid)], limit=1)
         is_new = not preference
         values = values or {}
@@ -83,6 +97,17 @@ class DolanScreenPreferencesController(http.Controller):
                 allowed["icon_style"] = values["icon_style"]
             if allow_personal_appearance and "compact_mode" in values:
                 allowed["compact_mode"] = bool(values["compact_mode"])
+            if allow_personal_appearance and values.get("appearance_profile") == "global":
+                allowed["appearance_profile"] = "global"
+            elif allow_personal_appearance and values.get("appearance_profile") in {
+                "odoo_classic", "dolan_fluent", "dolan_liquid", "dolan_material", "dolan_minimal",
+                "enterprise_classic", "graphite", "glass", "liquid_glass_dark", "liquid_glass_light", "minimal", "legacy",
+            }:
+                allowed["appearance_profile"] = _normalize_profile(values["appearance_profile"])
+            if allow_personal_appearance and values.get("icon_scale") in {"global", "compact", "normal", "large"}:
+                allowed["icon_scale"] = values["icon_scale"]
+            if allow_personal_appearance and values.get("visual_effect") in {"global", "none", "soft", "glass"}:
+                allowed["visual_effect"] = values["visual_effect"]
             if "hidden_app_xmlids" in values:
                 menu_ids = []
                 for xmlid in values["hidden_app_xmlids"] or []:
@@ -107,14 +132,42 @@ class DolanScreenPreferencesController(http.Controller):
         )
         selected_style = preference.icon_style if allow_user_icon_style and preference.icon_style != "global" else global_icon_style
         selected_theme = preference.theme_mode if allow_personal_appearance and preference.theme_mode != "global" else global_theme_mode
+        selected_profile = (
+            preference.appearance_profile
+            if allow_personal_appearance and preference.appearance_profile not in (False, "global")
+            else global_profile
+        )
+        selected_profile = _normalize_profile(selected_profile)
+        selected_icon_scale = (
+            preference.icon_scale
+            if allow_personal_appearance and preference.icon_scale != "global"
+            else global_icon_scale
+        )
+        selected_effect = (
+            preference.visual_effect
+            if allow_personal_appearance and preference.visual_effect != "global"
+            else global_effect
+        )
         company = request.env.company
         return {
             "theme_mode": selected_theme,
+            "appearance_profile": selected_profile,
+            "personal_appearance_profile": preference.appearance_profile,
+            "icon_scale": selected_icon_scale,
+            "visual_effect": selected_effect,
             "personal_theme_mode": preference.theme_mode,
             "allow_personal_appearance": allow_personal_appearance,
             "palette": global_palette,
             "primary_color": company.dolan_primary_color or "#714B67",
             "secondary_color": company.dolan_secondary_color or "#017e84",
+            "custom_colors": {
+                "primary": params.get_param("dolan_ui.custom_primary", "#714B67"),
+                "secondary": params.get_param("dolan_ui.custom_secondary", "#017E84"),
+                "background": params.get_param("dolan_ui.custom_background", "#F7F8FA"),
+                "surface": params.get_param("dolan_ui.custom_surface", "#FFFFFF"),
+                "text": params.get_param("dolan_ui.custom_text", "#263238"),
+                "border": params.get_param("dolan_ui.custom_border", "#DEE2E6"),
+            },
             "home_bg_style": company.dolan_home_bg_style or "enterprise",
             "full_width_sheets": company.dolan_full_width_sheets,
             "icon_style": normalize_icon_style(selected_style),

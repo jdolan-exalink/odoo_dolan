@@ -68,7 +68,26 @@ export const DOLAN_UI_PALETTES = [
     { id: "forest", label: "Bosque", primary: "#287271", secondary: "#70a288" },
     { id: "sunset", label: "Atardecer", primary: "#d9603b", secondary: "#e6a23c" },
     { id: "violet", label: "Violeta", primary: "#5f3b9c", secondary: "#d16bd3" },
+    { id: "graphite", label: "Graphite", primary: "#506477", secondary: "#42a5b5" },
+    { id: "emerald", label: "Esmeralda", primary: "#087f68", secondary: "#48b27e" },
+    { id: "custom", label: "Personalizada", primary: "#714B67", secondary: "#017e84" },
 ];
+
+export const DOLAN_APPEARANCE_PROFILES = [
+    { id: "odoo_classic", label: "Odoo Enterprise Classic", description: "La experiencia familiar de Odoo, clara y equilibrada." },
+    { id: "dolan_fluent", label: "Dolan Fluent", description: "Capas sutiles y navegación de escritorio." },
+    { id: "dolan_liquid", label: "Dolan Liquid", description: "Superficies translúcidas en zonas de navegación." },
+    { id: "dolan_material", label: "Dolan Material", description: "Controles táctiles y superficies tonales." },
+    { id: "dolan_minimal", label: "Dolan Minimal", description: "Interfaz plana y compacta para administración." },
+];
+
+const APPEARANCE_PROFILE_ALIASES = {
+    enterprise_classic: "odoo_classic", graphite: "dolan_fluent", glass: "dolan_liquid",
+    liquid_glass_dark: "dolan_liquid", liquid_glass_light: "dolan_liquid", minimal: "dolan_minimal",
+    legacy: "odoo_classic",
+};
+const normalizeAppearanceProfile = (profile) => APPEARANCE_PROFILE_ALIASES[profile] ||
+    (DOLAN_APPEARANCE_PROFILES.some((item) => item.id === profile) ? profile : "odoo_classic");
 
 export const DOLAN_THEME_MODES = [
     { id: "light", label: "Claro", icon: "sun" },
@@ -112,7 +131,7 @@ export function normalizeWorkspaceOrder(order) {
     return [...new Set([...normalized, ...known])];
 }
 
-export function applyDolanPalette(palette, companyColors = {}) {
+export function applyDolanPalette(palette, companyColors = {}, customColors = {}) {
     const targets = [document.documentElement, document.body, document.querySelector(".o_web_client")].filter(Boolean);
     const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active"];
     const target = document.body;
@@ -122,8 +141,10 @@ export function applyDolanPalette(palette, companyColors = {}) {
         return;
     }
     const selected = DOLAN_UI_PALETTES.find((item) => item.id === palette) || DOLAN_UI_PALETTES[0];
-    const primary = palette === "company" ? (companyColors.primary || selected.primary) : selected.primary;
-    const secondary = palette === "company" ? (companyColors.secondary || selected.secondary) : selected.secondary;
+    const useCompany = palette === "company";
+    const useCustom = palette === "custom";
+    const primary = useCompany ? (companyColors.primary || selected.primary) : useCustom ? (customColors.primary || selected.primary) : selected.primary;
+    const secondary = useCompany ? (companyColors.secondary || selected.secondary) : useCustom ? (customColors.secondary || selected.secondary) : selected.secondary;
     const properties = {
         "--dolan-primary": primary,
         "--dolan-primary-hover": primary,
@@ -140,6 +161,15 @@ export function applyDolanPalette(palette, companyColors = {}) {
         "--dolan-color-secondary-soft": `color-mix(in srgb, ${secondary} 18%, transparent)`,
     };
     targets.forEach((node) => Object.entries(properties).forEach(([name, value]) => node.style.setProperty(name, value)));
+    if (useCustom) {
+        const customProperties = {
+            "--dolan-color-surface": customColors.background || "#F7F8FA",
+            "--dolan-color-surface-raised": customColors.surface || "#FFFFFF",
+            "--dolan-color-text": customColors.text || "#263238",
+            "--dolan-color-border": customColors.border || "#DEE2E6",
+        };
+        targets.forEach((node) => Object.entries(customProperties).forEach(([name, value]) => node.style.setProperty(name, value)));
+    }
     document.body.dataset.dolanPalette = palette;
 }
 
@@ -249,8 +279,23 @@ export class DolanAppDrawerSystray extends Component {
             darkMode: savedDark,
             themeMode: savedThemeMode,
             themeMenuOpen: false,
+            iconStyleMenuOpen: false,
             palette: "dolan",
             paletteChoices: [],
+            appearanceProfile: "odoo_classic",
+            appearanceProfileChoices: DOLAN_APPEARANCE_PROFILES,
+            iconScaleChoices: [
+                { id: "compact", label: "Iconos compactos", shortLabel: "Pequeño", iconSize: 14 },
+                { id: "normal", label: "Iconos normales", shortLabel: "Mediano", iconSize: 20 },
+                { id: "large", label: "Iconos grandes", shortLabel: "Grande", iconSize: 27 },
+            ],
+            visualEffectChoices: [
+                { id: "none", label: "Sin efectos", shortLabel: "Plano" },
+                { id: "soft", label: "Efectos suaves", shortLabel: "Suave" },
+                { id: "glass", label: "Liquid Glass", shortLabel: "Vidrio" },
+            ],
+            iconScale: "normal",
+            visualEffect: "soft",
             themeChoices: DOLAN_THEME_MODES,
             iconStyleChoices: DOLAN_ICON_STYLES,
             iconStyle: "fluent_3d_classic",
@@ -354,6 +399,9 @@ export class DolanAppDrawerSystray extends Component {
         this._onDocumentClick = (ev) => {
             if (this.state.themeMenuOpen && !ev.target.closest(".o_dolan_theme_picker")) {
                 this.state.themeMenuOpen = false;
+            }
+            if (this.state.iconStyleMenuOpen && !ev.target.closest(".o_dolan_icon_style_control")) {
+                this.state.iconStyleMenuOpen = false;
             }
             const suppressed = this._suppressDesktopClick;
             if (suppressed && suppressed.until >= Date.now()) {
@@ -813,7 +861,9 @@ export class DolanAppDrawerSystray extends Component {
         const url = resolveIconAsset(semanticId, style, window.dolanUiIconAssignments || {});
         const colors = { invoicing: "#1687ff", sales: "#13b8a6", whatsapp: "#25d366" };
         const key = String(semanticId || "").replace("app.", "");
-        return url ? `--dolan-icon-mask-image: url("${url}"); --dolan-icon-accent: ${colors[key] || "#8254d8"}` : "";
+        const accent = style === "tabler" ? "var(--dolan-color-primary)" : (colors[key] || "#8254d8");
+        const accentSecondary = style === "tabler" ? "; --dolan-icon-accent-secondary: var(--dolan-color-secondary)" : "";
+        return url ? `--dolan-icon-mask-image: url("${url}"); --dolan-icon-accent: ${accent}${accentSecondary}` : "";
     }
 
     getAppIconMaskStyle(app) {
@@ -825,13 +875,15 @@ export class DolanAppDrawerSystray extends Component {
             violet: "#8254d8", gray: "#667085",
         };
         const catalog = window.dolanUiIconCatalog?.[semantic];
-        const accent = colors[catalog?.color] || "#7c5ce7";
-        return url ? `--dolan-icon-mask-image: url("${url}"); --dolan-icon-accent: ${accent}` : "";
+        const isTabler = this.state.iconStyle === "tabler";
+        const accent = isTabler ? "var(--dolan-color-primary)" : (colors[catalog?.color] || "#7c5ce7");
+        const accentSecondary = isTabler ? "; --dolan-icon-accent-secondary: var(--dolan-color-secondary)" : "";
+        return url ? `--dolan-icon-mask-image: url("${url}"); --dolan-icon-accent: ${accent}${accentSecondary}` : "";
     }
 
     getAppIconClass() {
         const style = this.state.iconStyle || "fluent_3d_classic";
-        return `o_dolan_icon_variant_${style}${style === "tabler" ? " o_dolan_tabler_icon_asset" : ""}`;
+        return `o_dolan_icon_variant_${style}`;
     }
 
     onAppIconError(ev, app) {
@@ -937,24 +989,80 @@ export class DolanAppDrawerSystray extends Component {
         this.state.themeMenuOpen = false;
         window.sessionStorage.setItem("dolan_session_theme_mode", mode);
         this.applyResolvedTheme(mode);
-        applyDolanPalette(this.state.palette, this._companyColors || {});
+        applyDolanPalette(this.state.palette, this._companyColors || {}, this._customColors || {});
     }
 
     chooseSessionPalette(palette) {
         if (!this.state.paletteChoices.some((item) => item.id === palette)) return;
         this.state.palette = palette;
         window.sessionStorage.setItem("dolan_session_palette", palette);
-        applyDolanPalette(palette, this._companyColors || {});
+        applyDolanPalette(palette, this._companyColors || {}, this._customColors || {});
+    }
+
+    activePaletteLabel() {
+        return this.state.paletteChoices.find((item) => item.id === this.state.palette)?.label || "DOLAN";
+    }
+
+    chooseSessionProfile(profile) {
+        profile = normalizeAppearanceProfile(profile);
+        if (!DOLAN_APPEARANCE_PROFILES.some((item) => item.id === profile)) return;
+        this.state.appearanceProfile = profile;
+        window.sessionStorage.setItem("dolan_session_appearance_profile", profile);
+        this.applyAppearanceProfile(profile);
+    }
+
+    profileShortLabel(profile) {
+        return ({
+            odoo_classic: "Odoo Classic",
+            dolan_fluent: "Dolan Fluent",
+            dolan_liquid: "Dolan Liquid",
+            dolan_material: "Dolan Material",
+            dolan_minimal: "Dolan Minimal",
+        })[profile] || profile;
+    }
+
+    iconStyleLabel(style = this.state.iconStyle) {
+        return this.state.iconStyleChoices.find((choice) => choice[0] === style)?.[1] || style;
+    }
+
+    toggleIconStyleMenu() {
+        this.state.iconStyleMenuOpen = !this.state.iconStyleMenuOpen;
+    }
+
+    chooseSessionIconScale(scale) {
+        if (!["compact", "normal", "large"].includes(scale)) return;
+        this.state.iconScale = scale;
+        window.sessionStorage.setItem("dolan_session_icon_scale", scale);
+        document.body.dataset.dolanIconScale = scale;
+    }
+
+    chooseSessionVisualEffect(effect) {
+        if (!["none", "soft", "glass"].includes(effect)) return;
+        this.state.visualEffect = effect;
+        window.sessionStorage.setItem("dolan_session_visual_effect", effect);
+        document.body.dataset.dolanVisualEffect = effect;
+    }
+
+    applyAppearanceProfile(profile) {
+        profile = normalizeAppearanceProfile(profile);
+        document.body.dataset.dolanStyle = profile;
+        // Keep the legacy attribute as a compatibility hook for the existing stylesheet.
+        document.body.dataset.dolanProfile = ({
+            odoo_classic: "enterprise_classic", dolan_fluent: "graphite", dolan_liquid: "glass",
+            dolan_material: "graphite", dolan_minimal: "minimal",
+        })[profile];
+        document.body.classList.toggle("o_dolan_profile_minimal", profile === "dolan_minimal");
     }
 
     chooseSessionIconStyle(style) {
         this.state.iconStyle = normalizeIconStyle(style);
+        this.state.iconStyleMenuOpen = false;
         window.sessionStorage.setItem("dolan_session_icon_style", this.state.iconStyle);
         document.body.dataset.dolanIconStyle = this.state.iconStyle;
     }
 
     resetSessionAppearance() {
-        ["dolan_session_theme_mode", "dolan_session_palette", "dolan_session_icon_style"].forEach((key) => window.sessionStorage.removeItem(key));
+        ["dolan_session_theme_mode", "dolan_session_palette", "dolan_session_icon_style", "dolan_session_appearance_profile", "dolan_session_icon_scale", "dolan_session_visual_effect"].forEach((key) => window.sessionStorage.removeItem(key));
         this.state.themeMenuOpen = false;
         this.loadScreenPreferences();
     }
@@ -965,7 +1073,7 @@ export class DolanAppDrawerSystray extends Component {
         document.body.classList.toggle("o_dolan_dark_mode", this.state.darkMode);
         document.body.classList.toggle("o_dolan_high_contrast", mode === "contrast");
         document.documentElement.style.colorScheme = this.state.darkMode ? "dark" : "light";
-        applyDolanPalette(this.state.palette, this._companyColors || {});
+        applyDolanPalette(this.state.palette, this._companyColors || {}, this._customColors || {});
         syncColorSchemeCookie(this.state.darkMode);
     }
 
@@ -1000,27 +1108,36 @@ export class DolanAppDrawerSystray extends Component {
             const sessionTheme = window.sessionStorage.getItem("dolan_session_theme_mode");
             const sessionPalette = window.sessionStorage.getItem("dolan_session_palette");
             const sessionIconStyle = window.sessionStorage.getItem("dolan_session_icon_style");
+            const sessionProfile = window.sessionStorage.getItem("dolan_session_appearance_profile");
             this.state.themeMode = sessionTheme || response.theme_mode || "system";
             this.state.darkMode = resolveDarkTheme(this.state.themeMode, this._systemThemeQuery?.matches);
             this.state.iconStyle = normalizeIconStyle(sessionIconStyle || response.icon_style);
             this.state.iconStylePreference = response.icon_style_preference || "global";
             this.state.palette = sessionPalette || response.palette || "dolan";
+            this.state.appearanceProfile = normalizeAppearanceProfile(sessionProfile || response.appearance_profile || "enterprise_classic");
+            this.state.appearanceProfileChoices = DOLAN_APPEARANCE_PROFILES;
+            this.state.iconScale = window.sessionStorage.getItem("dolan_session_icon_scale") || response.icon_scale || "normal";
+            this.state.visualEffect = window.sessionStorage.getItem("dolan_session_visual_effect") || response.visual_effect || "soft";
             this.state.paletteChoices = [
                 ...DOLAN_UI_PALETTES,
                 { id: "company", label: "Empresa", primary: response.primary_color || "#714B67", secondary: response.secondary_color || "#017e84" },
             ];
             this._companyColors = { primary: response.primary_color, secondary: response.secondary_color };
+            this._customColors = response.custom_colors || {};
             window.dolanUiIconAssignments = response.icon_assignments || {};
             window.dolanUiIconNames = response.icon_names || {};
             window.dolanUiIconXmlids = response.icon_xmlids || {};
             window.dolanUiIconCatalog = response.icon_catalog || {};
             document.body.dataset.dolanIconStyle = this.state.iconStyle;
+            document.body.dataset.dolanIconScale = this.state.iconScale;
+            document.body.dataset.dolanVisualEffect = this.state.visualEffect;
+            this.applyAppearanceProfile(this.state.appearanceProfile);
             document.body.dataset.dolanHomeBgStyle = response.home_bg_style || "enterprise";
             this.state.compact = Boolean(response.compact_mode);
             this.state.hiddenAppXmlids = response.hidden_app_xmlids || [];
             document.body.classList.toggle("o_dolan_dark_mode", this.state.darkMode);
             document.body.classList.toggle("o_dolan_high_contrast", this.state.themeMode === "contrast");
-            applyDolanPalette(this.state.palette, this._companyColors);
+            applyDolanPalette(this.state.palette, this._companyColors, this._customColors);
             document.documentElement.style.colorScheme = this.state.darkMode ? "dark" : "light";
             document.body.classList.toggle("o_dolan_compact", this.state.compact);
             window.localStorage.setItem("dolan_theme_mode", this.state.themeMode);

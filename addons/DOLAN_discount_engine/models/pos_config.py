@@ -40,10 +40,3 @@ class PosConfig(models.Model):
                 and (not campaign.warehouse_ids or warehouse in campaign.warehouse_ids)
                 and campaign.published_snapshot.get('rules')
             ]
-
-    @api.model
-    def _load_pos_data_fields(self, config):
-        result = super()._load_pos_data_fields(config)
-        if 'dolan_discount_campaigns' not in result:
-            result.append('dolan_discount_campaigns')
-        return result

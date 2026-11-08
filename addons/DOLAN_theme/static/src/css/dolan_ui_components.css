@@ -126,6 +126,7 @@ body.o_dolan_dark_mode :is(.o_form_view, .o_list_view, .o_kanban_view, .modal, .
 .o_dolan_icon_style_preview { display: inline-flex; align-items: center; justify-content: space-between; gap: .35rem; }
 .o_dolan_icon_style_preview > img { width: 1.45rem; height: 1.45rem; object-fit: contain; }
 .o_dolan_icon_style_mask_preview { display: block; width: 1.45rem; height: 1.45rem; flex: 0 0 1.45rem; background-color: var(--dolan-icon-accent, #8254d8); -webkit-mask: var(--dolan-icon-mask-image) center / contain no-repeat; mask: var(--dolan-icon-mask-image) center / contain no-repeat; }
+.o_dolan_icon_style_mask_preview_tabler { filter: drop-shadow(1px 1px 0 var(--dolan-icon-accent-secondary, var(--dolan-color-secondary))); }
 .o_dolan_action_icon_asset { display: inline-block; flex: 0 0 auto; background-color: currentColor; -webkit-mask: var(--dolan-action-icon-image) center / contain no-repeat; mask: var(--dolan-action-icon-image) center / contain no-repeat; vertical-align: middle; }
 .o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group > .btn:not(.btn-primary) .o_dolan_action_icon_asset { background-color: var(--dolan-color-secondary); }
 .o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group > .btn.btn-primary .o_dolan_action_icon_asset,
@@ -158,6 +159,7 @@ body.o_dolan_high_contrast .o_dolan_theme_picker_menu button { border-width: 2px
 .o_dolan_settings_choice_grid { display: grid; gap: .55rem; margin-top: .25rem; }
 .o_dolan_settings_palette_choices { grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); }
 .o_dolan_settings_theme_choices { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
+.o_dolan_profile_choices { grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); }
 .o_dolan_settings_choice {
     position: relative;
     display: flex;
@@ -193,6 +195,25 @@ body.o_dolan_high_contrast .o_dolan_theme_picker_menu button { border-width: 2px
 .o_dolan_theme_sample.is-contrast .o_dolan_theme_sample_top, .o_dolan_theme_sample.is-contrast .o_dolan_theme_sample_body { background: #292e3d; }
 .o_dolan_theme_sample.is-system { background: linear-gradient(90deg, #f5f6fa 50%, #151824 50%); }
 .o_dolan_settings_theme_label { min-width: 0; }
+.o_dolan_settings_choice_description { grid-column: 1 / -1; color: var(--dolan-color-text-muted); font-size: .78rem; line-height: 1.35; }
+.o_dolan_settings_tile_choices { grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); }
+.o_dolan_settings_tile_choice { min-height: 3.25rem; justify-content: flex-start; }
+.o_dolan_settings_choice_glyph { display: inline-grid; width: 1.7rem; height: 1.7rem; flex: 0 0 1.7rem; place-items: center; border-radius: .45rem; color: var(--dolan-color-primary); background: var(--dolan-color-primary-soft); font-size: 1.25rem; font-weight: 700; }
+.o_dolan_settings_icon_choices { grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); }
+.o_dolan_settings_icon_choice { display: grid; grid-template-columns: 1fr auto; row-gap: .45rem; }
+.o_dolan_settings_icon_choice .o_dolan_settings_icon_sample { grid-column: 1 / -1; }
+.o_dolan_settings_icon_sample { display: flex; min-height: 2.2rem; align-items: center; gap: .6rem; }
+.o_dolan_settings_icon_sample img { width: 1.8rem; height: 1.8rem; object-fit: contain; }
+body.o_dolan_dark_mode .o_dolan_settings_choice { color: var(--dolan-color-text); background: var(--dolan-color-surface-raised); border-color: var(--dolan-color-border); }
+body.o_dolan_dark_mode .o_dolan_settings_choice_description { color: #c2cada; }
+body.o_dolan_dark_mode .o_dolan_settings_choice.is-selected { color: #fff; background: color-mix(in srgb, var(--dolan-color-primary) 28%, #202431) !important; border-color: var(--dolan-color-focus) !important; }
+body:not(.o_dolan_dark_mode) .o_dolan_settings_choice.is-selected { color: #172033; background: color-mix(in srgb, var(--dolan-color-primary) 12%, #fff) !important; border-color: var(--dolan-color-primary) !important; }
+body.o_dolan_high_contrast .o_dolan_settings_choice { color: #fff !important; background: #000 !important; border: 2px solid #fff !important; }
+body.o_dolan_high_contrast .o_dolan_settings_choice.is-selected { color: #000 !important; background: #ffff00 !important; border-color: #ffff00 !important; }
+@media (max-width: 767.98px) {
+    .o_dolan_profile_choices, .o_dolan_settings_tile_choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .o_dolan_settings_icon_choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 
 /* Conecta el selector de paleta con las superficies nativas más visibles. */
 body:not(.o_dolan_high_contrast) .btn-primary,

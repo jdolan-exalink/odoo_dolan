@@ -89,6 +89,19 @@ class ResConfigSettings(models.TransientModel):
         key_id = ids['l10n_ar_padron_key_id']
         representative_company_id = ids['l10n_ar_padron_representative_company_id']
         if not certificate_id and not key_id and not representative_company_id:
+            representative = self.env['res.company'].sudo().search([
+                ('l10n_ar_afip_ws_crt_id', '!=', False),
+                ('l10n_ar_afip_ws_key_id', '!=', False),
+                ('vat', '!=', False),
+            ], order='id asc', limit=1)
+            if representative:
+                represented_cuit = ''.join(char for char in representative.vat if char.isdigit())
+                return {
+                    'certificate': representative.l10n_ar_afip_ws_crt_id.sudo(),
+                    'key': representative.l10n_ar_afip_ws_key_id.sudo(),
+                    'representative_company': representative,
+                    'represented_cuit': represented_cuit,
+                }
             return False
         if not certificate_id or not key_id:
             raise UserError(_('Configure tanto el certificado como la clave privada compartidos para el Padrón ARCA.'))

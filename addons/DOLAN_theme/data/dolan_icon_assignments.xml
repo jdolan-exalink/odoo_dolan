@@ -266,7 +266,7 @@
         <field name="fluent_filled_asset">whatsapp_brand</field>
         <field name="fluent_regular_asset">whatsapp_brand</field>
         <field name="fluent_asset">whatsapp</field>
-        <field name="tabler_asset">messages</field>
+        <field name="tabler_asset">whatsapp_brand</field>
     </record>
     <record id="icon_app_printer" model="dolan.icon.assignment">
         <field name="semantic_id">app.printer</field>

@@ -40,3 +40,5 @@ backups/*.sql
 /docs/inventario_exalink_rea.json
 /docs/implementation/
 /docs/rea-audit/
+/installer/dist/
+*.dolanbak

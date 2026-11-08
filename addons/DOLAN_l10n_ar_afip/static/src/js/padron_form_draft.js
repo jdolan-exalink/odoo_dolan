@@ -16,20 +16,28 @@ patch(FormController.prototype, {
         const record = this.model?.root;
         if (
             clickParams.name !== "action_l10n_ar_update_from_padron" ||
-            this.props.resModel !== "res.partner" ||
-            !record?.isNew
+            this.props.resModel !== "res.partner"
         ) {
             return super.beforeExecuteActionButton(...arguments);
+        }
+
+        const vat = (record?.data?.vat || "").trim();
+        if (!vat) {
+            this.dolanPadronNotification.add(
+                _t("Por favor ingrese una CUIT antes de consultar el Padrón ARCA."),
+                { title: _t("Padrón ARCA"), type: "warning" }
+            );
+            return false;
         }
 
         try {
             const result = await this.orm.call(
                 "res.partner",
                 "action_l10n_ar_lookup_padron_draft",
-                [record.data.vat || false],
+                [vat],
                 { context: record.context }
             );
-            if (result.values) {
+            if (result && result.values) {
                 const values = { ...result.values };
                 if (typeof values.l10n_ar_padron_last_update === "string") {
                     values.l10n_ar_padron_last_update = deserializeDateTime(
@@ -37,12 +45,13 @@ patch(FormController.prototype, {
                     );
                 }
                 await record.update(values);
+                const partnerName = values.name || vat;
                 this.dolanPadronNotification.add(
-                    _t("Se completaron los datos disponibles desde el Padrón ARCA."),
-                    { title: _t("Padrón ARCA actualizado"), type: "success" }
+                    _t("Datos obtenidos correctamente de ARCA para: %s", partnerName),
+                    { title: _t("Padrón ARCA Actualizado"), type: "success" }
                 );
             } else {
-                const message = result.error || _t("ARCA no devolvió datos para este CUIT.");
+                const message = result?.error || _t("ARCA no devolvió datos para este CUIT.");
                 await record.update({ l10n_ar_padron_error: message });
                 this.dolanPadronNotification.add(message, {
                     title: _t("No se pudo consultar el Padrón ARCA"),
@@ -51,7 +60,7 @@ patch(FormController.prototype, {
                 });
             }
         } catch (error) {
-            const message = _t(
+            const message = error?.data?.message || error?.message || _t(
                 "No se pudo completar la consulta del Padrón. Revisá la conexión e intentá nuevamente."
             );
             await record.update({ l10n_ar_padron_error: message });
@@ -63,8 +72,8 @@ patch(FormController.prototype, {
             });
         }
 
-        // Returning false prevents FormController's default save-before-button
-        // behavior. The lookup updates only this in-memory form draft.
+        // Retornar false previene el guardado forzado o recarga antes de que el
+        // usuario revise los datos completados en el formulario.
         return false;
     },
 });
