@@ -32,22 +32,22 @@ class PosPaymentMethod(models.Model):
     mp_external_pos_id = fields.Char(string='ID externo de caja (POS)', copy=False)
     mp_point_device_id = fields.Char(string='ID de terminal Point', copy=False)
     dolan_terminal_id = fields.Many2one(
-        'dolan.payment.terminal', string='Terminal de cobro DOLAN', check_company=True,
+        'dolan.payment.terminal', string='Terminal de cobro', check_company=True,
         domain="[('active', '=', True), ('company_id', '=', company_id)]",
     )
 
     def _get_terminal_provider_selection(self):
-        return super()._get_terminal_provider_selection() + [('dolan_clover', 'Clover (DOLAN)')]
+        return super()._get_terminal_provider_selection() + [('dolan_clover', 'Integración Clover')]
 
     def _get_external_qr_provider_selection(self):
-        return super()._get_external_qr_provider_selection() + [('dolan_mp_qr', 'Mercado Pago QR DOLAN')]
+        return super()._get_external_qr_provider_selection() + [('dolan_mp_qr', 'Mercado Pago QR')]
 
     @api.model
     def get_payment_providers(self):
         providers = super().get_payment_providers()
         providers += [
-            {'type': 'external_qr', 'provider': 'dolan_mp_qr', 'module': 'DOLAN_pos', 'name': 'Mercado Pago QR DOLAN'},
-            {'type': 'terminal', 'provider': 'dolan_clover', 'module': 'DOLAN_pos', 'name': 'Clover DOLAN'},
+            {'type': 'external_qr', 'provider': 'dolan_mp_qr', 'module': 'DOLAN_pos', 'name': 'Mercado Pago QR'},
+            {'type': 'terminal', 'provider': 'dolan_clover', 'module': 'DOLAN_pos', 'name': 'Integración Clover'},
         ]
         return providers
 

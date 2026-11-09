@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//app[@name='account']" position="inside">
-                <block title="ARCA / AFIP Facturación Electrónica Argentina (DOLAN)" name="dolan_l10n_ar_afip_setting_container">
+                <block title="ARCA / AFIP Facturación Electrónica Argentina" name="dolan_l10n_ar_afip_setting_container">
                     <setting string="Ambiente y Certificados X.509 ARCA/AFIP"
                              help="Configure el ambiente Homologación/Producción y el certificado digital para WSAA.">
                         <div class="content-group mt16">

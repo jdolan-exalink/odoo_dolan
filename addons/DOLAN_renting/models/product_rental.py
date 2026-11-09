@@ -12,7 +12,7 @@ class ProductTemplateRental(models.Model):
     is_rental = fields.Boolean(
         string='Puede ser Alquilado',
         default=False,
-        help='Permite seleccionar este producto en órdenes de alquiler (DOLAN Renting).',
+        help='Permite seleccionar este producto en órdenes de alquiler.',
     )
     rental_price_hour = fields.Float(
         string='Tarifa por Hora',

@@ -478,10 +478,10 @@ class AccountMoveDolanOcr(models.Model):
         selection=[
             ('none', 'Sin Digitalizar'),
             ('qr_extracted', 'Extraído con QR AFIP + IA'),
-            ('ai_extracted', 'Extraído con DOLAN IA'),
+            ('ai_extracted', 'Extraído con IA'),
             ('error', 'Error de Extracción'),
         ],
-        string='Estado OCR DOLAN',
+        string='Estado OCR',
         default='none',
         copy=False,
     )
@@ -495,7 +495,7 @@ class AccountMoveDolanOcr(models.Model):
         copy=False,
     )
     dolan_ocr_raw_json = fields.Text(
-        string='JSON Estructurado DOLAN OCR',
+        string='JSON Estructurado OCR',
         copy=False,
     )
     dolan_ocr_warnings = fields.Text(
@@ -667,7 +667,7 @@ class AccountMoveDolanOcr(models.Model):
             move.write(vals)
             move.message_post(
                 body=_(
-                    "<strong>Comprobante digitalizado con DOLAN IA (Sin IAP)</strong><ul>"
+                    "<strong>Comprobante digitalizado con IA (Sin IAP)</strong><ul>"
                     "<li>Proveedor: %s (CUIT: %s)</li>"
                     "<li>Comprobante: %s | Fecha: %s</li>"
                     "<li>Importe Total: %s %s | CAE: %s</li>"
@@ -723,10 +723,10 @@ class HrExpenseDolanOcr(models.Model):
         selection=[
             ('none', 'Sin Digitalizar'),
             ('qr_extracted', 'Extraído con QR AFIP + IA'),
-            ('ai_extracted', 'Extraído con DOLAN IA'),
+            ('ai_extracted', 'Extraído con IA'),
             ('error', 'Error de Extracción'),
         ],
-        string='Estado OCR DOLAN',
+        string='Estado OCR',
         default='none',
         copy=False,
     )
@@ -735,7 +735,7 @@ class HrExpenseDolanOcr(models.Model):
         copy=False,
     )
     dolan_ocr_raw_json = fields.Text(
-        string='JSON Estructurado DOLAN OCR',
+        string='JSON Estructurado OCR',
         copy=False,
     )
     dolan_ocr_warnings = fields.Text(
@@ -780,7 +780,7 @@ class HrExpenseDolanOcr(models.Model):
             expense.write(vals)
             expense.message_post(
                 body=_(
-                    "<strong>Gasto digitalizado con DOLAN IA (Sin IAP)</strong>: "
+                    "<strong>Gasto digitalizado con IA (Sin IAP)</strong>: "
                     "%s — Comprobante %s — Total: %s %s (CAE: %s)"
                 ) % (
                     extracted.get('vendor_name') or '-',

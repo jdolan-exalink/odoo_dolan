@@ -75,7 +75,7 @@ class DolanAiOAuthController(http.Controller):
             return request.make_response(
                 "<html><body style='font-family:sans-serif;padding:2rem;'>"
                 "<h2>La autorización venció o no corresponde a este intento.</h2>"
-                "<p>Volvé a DOLAN y comenzá la vinculación de nuevo.</p></body></html>",
+                "<p>Volvé a Odoo y comenzá la vinculación de nuevo.</p></body></html>",
                 headers=[('Content-Type', 'text/html; charset=utf-8')],
             )
 
@@ -108,7 +108,7 @@ class DolanAiOAuthController(http.Controller):
             return request.make_response(
                 "<html><body style='font-family:sans-serif;padding:2rem;text-align:center;'>"
                 "<h2 style='color:#28a745;'>&#10004; Cuenta de ChatGPT vinculada con éxito (OAuth 2.0 PKCE)</h2>"
-                "<p>La cuenta quedó vinculada en DOLAN AI. Podés cerrar esta pestaña y volver a Odoo para probar la conexión.</p>"
+                "<p>La cuenta quedó vinculada en AI. Podés cerrar esta pestaña y volver a Odoo para probar la conexión.</p>"
                 "</body></html>",
                 headers=[
                     ('Content-Type', 'text/html; charset=utf-8'),

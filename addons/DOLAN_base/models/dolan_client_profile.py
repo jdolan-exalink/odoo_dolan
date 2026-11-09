@@ -3,7 +3,7 @@ from odoo import api, fields, models
 
 class DolanClientProfile(models.Model):
     _name = "dolan.client.profile"
-    _description = "Perfil de Módulos DOLAN por Tipo de Cliente"
+    _description = "Perfil de Módulos por Tipo de Cliente"
     _order = "sequence, id"
 
     name = fields.Char(string="Nombre del Perfil", required=True)
@@ -22,7 +22,7 @@ class DolanClientProfile(models.Model):
     sequence = fields.Integer(default=10)
     description = fields.Text(string="Descripción Funcional")
     module_names = fields.Char(
-        string="Módulos DOLAN Incluidos (CSV)",
+        string="Módulos Incluidos (CSV)",
         required=True,
         help="Nombres técnicos de los módulos separados por coma.",
     )

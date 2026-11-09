@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 class DolanDiscountCampaignVersion(models.Model):
     _name = 'dolan.discount.campaign.version'
-    _description = 'Versión publicada e inmutable de campaña DOLAN'
+    _description = 'Versión publicada e inmutable de campaña'
     _order = 'campaign_id, version desc'
     _check_company_auto = True
 

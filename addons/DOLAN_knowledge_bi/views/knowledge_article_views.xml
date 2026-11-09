@@ -157,7 +157,7 @@
                             </field>
                         </page>
                         <page string="Contexto RAG (IA) y Permisos" name="rag_and_members">
-                            <group string="Resumen Semántico para DOLAN IA (RAG)">
+                            <group string="Resumen Semántico para IA (RAG)">
                                 <field name="ai_summary" nolabel="1" colspan="2"
                                        placeholder="Resumen compacto utilizado por los agentes de IA para responder consultas sobre este artículo..."/>
                             </group>
@@ -187,7 +187,7 @@
             </p>
             <p>
                 Organizá manuales, instructivos ARCA/AFIP y políticas internas en un árbol jerárquico
-                conectado como fuente de conocimiento para DOLAN IA.
+                conectado como fuente de conocimiento para IA.
             </p>
         </field>
     </record>

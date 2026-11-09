@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page string="Estética DOLAN (Odoo 20)" name="dolan_theme_page">
+                <page string="Apariencia" name="dolan_theme_page">
                     <group>
                         <group string="Colores y Diseño">
                             <field name="dolan_primary_color" widget="color"/>

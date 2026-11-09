@@ -29,7 +29,7 @@
         <field name="name">dolan.ai.provider.form</field>
         <field name="model">dolan.ai.provider</field>
         <field name="arch" type="xml">
-            <form string="Proveedor de IA DOLAN">
+            <form string="Proveedor de IA">
                 <header>
                     <button name="action_start_chatgpt_oauth"
                             string="1. Vincular Cuenta ChatGPT"
@@ -88,11 +88,11 @@
                     <notebook>
                         <page string="Sign in with ChatGPT" invisible="provider_mode != 'chatgpt_oauth'">
                             <div class="alert alert-info mb-3" role="status">
-                                <strong>Sign in with ChatGPT para uso del plan desde una instalación local de DOLAN AI:</strong>
+                                <strong>Sign in with ChatGPT para uso del plan desde una instalación local de AI:</strong>
                                 <ol class="mb-0 mt-1">
-                                    <li>Hacé clic en <strong>"1. Vincular Cuenta ChatGPT"</strong> e iniciá sesión. En el primer uso, autorizá a <strong>DOLAN AI</strong> y el permiso para usar tu plan.</li>
-                                    <li>El callback vuelve a <code>http://127.0.0.1:1455/auth/callback</code>. Docker debe publicar <code>127.0.0.1:1455</code> hacia el puerto HTTP <code>8069</code> del contenedor. Los proyectos nuevos generados por el instalador DOLAN incluyen ese mapeo; si el contenedor ya existía, actualizá su publicación de puertos y recrealo antes de autorizar.</li>
-                                    <li>DOLAN valida el estado, la identidad y los permisos antes de guardar los tokens. Si el código venció o el intento falló, iniciá una autorización nueva.</li>
+                                    <li>Hacé clic en <strong>"1. Vincular Cuenta ChatGPT"</strong> e iniciá sesión. En el primer uso, autorizá a <strong>AI</strong> y el permiso para usar tu plan.</li>
+                                    <li>El callback vuelve a <code>http://127.0.0.1:1455/auth/callback</code>. Docker debe publicar <code>127.0.0.1:1455</code> hacia el puerto HTTP <code>8069</code> del contenedor. Los proyectos nuevos generados por el instalador incluyen ese mapeo; si el contenedor ya existía, actualizá su publicación de puertos y recrealo antes de autorizar.</li>
+                                    <li>El sistema valida el estado, la identidad y los permisos antes de guardar los tokens. Si el código venció o el intento falló, iniciá una autorización nueva.</li>
                                     <li>Usá <strong>"Probar conexión con ChatGPT"</strong> para consultar los modelos de esa cuenta y realizar una respuesta real.</li>
                                 </ol>
                                 <p class="mb-0 mt-2"><strong>Instancias alojadas o SaaS:</strong> el uso del plan ChatGPT requiere un entorno local/autohospedado bajo control del usuario. Para un Odoo administrado remotamente, configurá el endpoint OpenAI compatible con su API key; ese consumo se factura por separado.</p>

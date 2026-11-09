@@ -29,7 +29,7 @@ TABLER_ASSETS = "adjustments alert-triangle arrows-sort barcode barcode_label be
 
 class DolanIconAssignment(models.Model):
     _name = "dolan.icon.assignment"
-    _description = "Asignación semántica de iconos DOLAN UI"
+    _description = "Asignación semántica de iconos"
     _order = "semantic_id"
 
     semantic_id = fields.Selection(APP_SEMANTICS, string="Aplicación", required=True, index=True)

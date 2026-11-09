@@ -6,7 +6,7 @@ from .icon_styles import ICON_STYLE_CHOICES
 
 class DolanScreenPreference(models.Model):
     _name = "dolan.screen.preference"
-    _description = "Preferencias personales de pantalla DOLAN"
+    _description = "Preferencias personales de pantalla"
     _rec_name = "user_id"
 
     user_id = fields.Many2one(
@@ -14,7 +14,7 @@ class DolanScreenPreference(models.Model):
         index=True, ondelete="cascade",
     )
     theme_mode = fields.Selection(
-        [("global", "Usar configuración DOLAN UI"), ("light", "Claro"), ("dark", "Oscuro"), ("system", "Automático (sistema)"), ("contrast", "Alto contraste")],
+        [("global", "Usar configuración general"), ("light", "Claro"), ("dark", "Oscuro"), ("system", "Automático (sistema)"), ("contrast", "Alto contraste")],
         string="Tema", required=True, default="global",
     )
     appearance_profile = fields.Selection(

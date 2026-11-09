@@ -4,7 +4,7 @@ from odoo.tools import float_round
 
 class DolanDiscountEngine(models.AbstractModel):
     _name = 'dolan.discount.engine'
-    _description = 'Evaluador determinista de descuentos DOLAN'
+    _description = 'Evaluador determinista de descuentos'
 
     @api.model
     def _evaluate_lines(self, company, pos_config, lines, payment_allocations=None, at=None):

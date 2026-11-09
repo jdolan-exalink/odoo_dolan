@@ -101,7 +101,7 @@ class ResPartnerFollowup(models.Model):
             )
             partner.message_post(
                 body=_(
-                    "<strong>Seguimiento de Cobranzas DOLAN:</strong><br/>"
+                    "<strong>Seguimiento de Cobranzas:</strong><br/>"
                     "Deuda Vencida: $ %(amt).2f | Mora máxima: %(days)d días<br/>"
                     "<p>%(msg)s</p>",
                     amt=partner.dolan_overdue_amount,

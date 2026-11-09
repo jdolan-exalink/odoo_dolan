@@ -4,7 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class DolanDiscountRule(models.Model):
     _name = 'dolan.discount.rule'
-    _description = 'Regla de campaña de descuentos DOLAN'
+    _description = 'Regla de campaña de descuentos'
     _order = 'priority desc, id'
     _check_company_auto = True
 

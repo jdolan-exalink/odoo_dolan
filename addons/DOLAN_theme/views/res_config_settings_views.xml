@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="mail.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
-                <app string="DOLAN UI" name="dolan_ui" data-string="DOLAN UI" logo="/DOLAN_theme/static/src/lib/fluent_flat/dolan_ui_palette.svg">
+                <app string="Apariencia" name="dolan_ui" data-string="Apariencia" logo="/DOLAN_theme/static/src/lib/fluent_flat/dolan_ui_palette.svg">
                     <block title="Tema y colores" name="dolan_ui_theme">
                         <setting string="Perfil visual predeterminado" help="Selecciona una base visual; paleta, iconos, tamaño y densidad se configuran por separado.">
                             <field name="dolan_ui_appearance_profile" widget="dolan_appearance_choice"/>
@@ -57,7 +57,7 @@
                         <setting string="Fondo del escritorio" help="Selecciona el fondo usado en el menú de inicio.">
                             <field name="dolan_ui_home_bg_style"/>
                             <div class="o_dolan_settings_background_samples" aria-label="Fondos disponibles">
-                                <span class="is-dolan">DOLAN</span><span class="is-aurora">Aurora</span><span class="is-ocean">Océano</span><span class="is-mesh">Malla</span><span class="is-midnight">Medianoche</span>
+                                <span class="is-dolan">Violeta</span><span class="is-aurora">Aurora</span><span class="is-ocean">Océano</span><span class="is-mesh">Malla</span><span class="is-midnight">Medianoche</span>
                             </div>
                         </setting>
                         <setting string="Formularios a ancho completo" help="Usa el ancho disponible en formularios de Odoo.">

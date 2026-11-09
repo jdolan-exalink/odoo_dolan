@@ -253,7 +253,7 @@ export class DolanCloverPayment extends PaymentInterface {
             this._message(_t('No se pudo establecer la conexión con Clover; no se envió el cobro.'), _t('Error de conexión'));
         } else {
             await this._report('uncertain');
-            this._message(_t('La conexión se cortó durante el cobro. DOLAN conserva el bloqueo y consultará la misma operación; no vuelvas a cobrar.'), _t('Conciliación requerida'));
+            this._message(_t('La conexión se cortó durante el cobro. El sistema conserva el bloqueo y consultará la misma operación; no vuelvas a cobrar.'), _t('Conciliación requerida'));
             this._poll();
         }
     }

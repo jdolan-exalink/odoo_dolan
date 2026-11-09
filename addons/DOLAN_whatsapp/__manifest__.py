@@ -1,5 +1,5 @@
 {
-    'name': 'DOLAN WhatsApp (WAHA)',
+    'name': 'Envíos y WhatsApp',
     'version': '20.0.1.0.0',
     'category': 'Productivity/Discuss',
     'summary': 'Mensajería WhatsApp autohospedada con WAHA, webhooks seguros y registro en contactos',

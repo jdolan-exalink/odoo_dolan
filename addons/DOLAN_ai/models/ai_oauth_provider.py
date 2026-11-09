@@ -210,7 +210,7 @@ class DolanAiProvider(models.Model):
     )
     whisper_backend = fields.Selection(
         selection=[
-            ('local', 'Whisper local (contenedor DOLAN)'),
+            ('local', 'Whisper local (contenedor)'),
             ('openai_api', 'OpenAI Audio API'),
         ],
         string='Motor de transcripción',
@@ -220,7 +220,7 @@ class DolanAiProvider(models.Model):
     whisper_local_url = fields.Char(
         string='URL del servicio local',
         default='http://whisper:8000/v1/audio/transcriptions',
-        help='URL interna de Docker del servicio DOLAN Local Whisper.',
+        help='URL interna de Docker del servicio Local Whisper.',
     )
     request_timeout = fields.Integer(
         string='Timeout HTTP (segundos)',

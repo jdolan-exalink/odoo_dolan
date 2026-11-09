@@ -22,7 +22,7 @@ class AccountJournal(models.Model):
 
     def _get_l10n_ar_afip_pos_types_selection(self):
         return super()._get_l10n_ar_afip_pos_types_selection() + [
-            ('DOLAN_WSFE', 'Webservice WSFEv1 (DOLAN)'),
+            ('DOLAN_WSFE', 'Webservice WSFEv1'),
         ]
 
     @api.depends('l10n_ar_afip_pos_system', 'type')
