@@ -103,6 +103,266 @@ def seed_demo_integral(env, allow_custom_db=False, profile=None):
         }))
         results['base_product'] = base_product.name
 
+    # POS catalog fixtures. Keep the products native so they exercise the
+    # installed POS and scale modules instead of creating presentation-only data.
+    if has_model('product.template') and has_model('pos.config'):
+        template_model = env['product.template']
+        template_fields = template_model._fields
+        kg_uom = env.ref('uom.product_uom_kgm', raise_if_not_found=False)
+
+        def ensure_pos_product(xmlid, name, barcode, price, weighted=False):
+            product = find(xmlid)
+            if product:
+                return product
+            vals = {'name': name, 'type': 'consu', 'list_price': price, 'sale_ok': True}
+            if 'available_in_pos' in template_fields:
+                vals['available_in_pos'] = True
+            if 'to_weight' in template_fields:
+                vals['to_weight'] = weighted
+            if weighted and kg_uom:
+                if 'uom_id' in template_fields:
+                    vals['uom_id'] = kg_uom.id
+                if 'uom_po_id' in template_fields:
+                    vals['uom_po_id'] = kg_uom.id
+            product = env['product.product'].create(vals)
+            if 'barcode' in product._fields:
+                product.barcode = barcode
+            return bind(xmlid, product)
+
+        pos_unit = ensure_pos_product(
+            'pos_unit_product', 'Yerba Mate DEMO — paquete 1 kg',
+            '7790000000101', 4200.0,
+        )
+        pos_weight = ensure_pos_product(
+            'pos_weight_product', 'Manzana Roja DEMO — venta por kilogramo',
+            '7790000000200', 1850.0, weighted=True,
+        )
+        results['pos_catalog'] = f'{pos_unit.display_name}; {pos_weight.display_name} (por kg)'
+
+    # ---------------------------------------------------------
+    # Accounting demo: posted AR/AP documents and payment states.
+    # All amounts, partners and references are fictional. Posting is local;
+    # the selected sale journal must not call ARCA and no CAE is generated.
+    # ---------------------------------------------------------
+    accounting_models = ('account.move', 'account.journal', 'account.account', 'account.tax')
+    if all(has_model(model) for model in accounting_models):
+        customer = partner
+        supplier = find('demo_supplier_ar')
+        if not supplier:
+            supplier_vals = {
+                'name': 'Proveedor Federal de Insumos SA (DEMO FICTICIO)',
+                'is_company': True,
+                'street': 'Calle de Prueba 567',
+                'city': 'Córdoba',
+                'email': 'proveedor.ficticio@demo.dolan.invalid',
+            }
+            ar_country = env.ref('base.ar', raise_if_not_found=False)
+            if ar_country:
+                supplier_vals['country_id'] = ar_country.id
+            if 'supplier_rank' in env['res.partner']._fields:
+                supplier_vals['supplier_rank'] = 1
+            supplier = bind('demo_supplier_ar', env['res.partner'].create(supplier_vals))
+
+        journals = env['account.journal']
+        sale_journal = journals.search([('company_id', '=', company.id), ('type', '=', 'sale')], limit=1)
+        purchase_journal = journals.search([('company_id', '=', company.id), ('type', '=', 'purchase')], limit=1)
+        bank_journal = journals.search([('company_id', '=', company.id), ('type', '=', 'bank')], limit=1)
+        accounts = env['account.account']
+        income_account = accounts.search([
+            ('company_ids', 'in', company.ids), ('account_type', '=', 'income'),
+        ], limit=1)
+        expense_account = accounts.search([
+            ('company_ids', 'in', company.ids), ('account_type', '=', 'expense'),
+        ], limit=1)
+        sale_tax = env['account.tax'].search([
+            ('company_id', '=', company.id), ('type_tax_use', '=', 'sale'),
+            ('amount_type', '=', 'percent'), ('amount', '=', 21),
+        ], limit=1)
+        purchase_tax = env['account.tax'].search([
+            ('company_id', '=', company.id), ('type_tax_use', '=', 'purchase'),
+            ('amount_type', '=', 'percent'), ('amount', '=', 21),
+        ], limit=1)
+        today = fields.Date.context_today(company)
+        move_fields = env['account.move']._fields
+        if sale_journal and purchase_journal and income_account and expense_account and sale_tax and purchase_tax:
+            if 'l10n_ar_afip_ws' in sale_journal._fields and sale_journal.l10n_ar_afip_ws:
+                safe_sale_journal = journals.search([
+                    ('company_id', '=', company.id), ('type', '=', 'sale'),
+                    ('l10n_ar_afip_ws', '=', False),
+                ], limit=1)
+                sale_journal = safe_sale_journal
+
+            # Document-type catalog visibility may be limited in the installer
+            # shell context; read the public localization catalog with sudo.
+            doc_type_model = env['l10n_latam.document.type'].sudo() if has_model('l10n_latam.document.type') else False
+            issuer_responsibility = getattr(company, 'l10n_ar_afip_responsibility_type_id', False)
+            sale_doc_code = '11' if issuer_responsibility and issuer_responsibility.code == '6' else '6'
+            sale_doc = doc_type_model.search([
+                ('country_id.code', '=', 'AR'), ('code', '=', sale_doc_code),
+            ], limit=1) if doc_type_model is not False else False
+            purchase_doc = doc_type_model.search([
+                ('country_id.code', '=', 'AR'), ('code', 'in', ['1', '6', '11']),
+            ], limit=1) if doc_type_model is not False else False
+            credit_doc_code = '13' if sale_doc_code == '11' else '8'
+            credit_doc = doc_type_model.search([
+                ('country_id.code', '=', 'AR'), ('code', '=', credit_doc_code),
+            ], limit=1) if doc_type_model is not False else False
+
+            def ensure_demo_move(xmlid, move_type, journal, account, tax, amount, label,
+                                 invoice_date, due_date, target_partner, doc_type=False):
+                move = find(xmlid)
+                if move:
+                    return move
+                line_vals = {
+                    'name': f'{label} — comprobante de demostración sin validez fiscal',
+                    'quantity': 1.0,
+                    'price_unit': amount,
+                    'account_id': account.id,
+                    'tax_ids': [(6, 0, tax.ids)],
+                }
+                vals = {
+                    'move_type': move_type,
+                    'partner_id': target_partner.id,
+                    'journal_id': journal.id,
+                    'invoice_date': invoice_date,
+                    'invoice_date_due': due_date,
+                    'ref': f'DOLAN-DEMO-{xmlid.upper()}',
+                    'invoice_line_ids': [(0, 0, line_vals)],
+                }
+                if doc_type and 'l10n_latam_document_type_id' in move_fields:
+                    vals['l10n_latam_document_type_id'] = doc_type.id
+                if move_type in ('in_invoice', 'in_refund') and 'l10n_latam_document_number' in move_fields:
+                    demo_numbers = {
+                        'ap_paid_bill': '0001-90000001',
+                        'ap_overdue_bill': '0001-90000002',
+                    }
+                    vals['l10n_latam_document_number'] = demo_numbers.get(xmlid, '0001-90000099')
+                move = env['account.move'].create(vals)
+                # Some localization onchanges can clear the document type
+                # while creating a demo move (especially vendor documents).
+                # Restore it explicitly before posting so journals requiring
+                # Latin American document types never receive an invalid move.
+                if doc_type and 'l10n_latam_document_type_id' in move_fields:
+                    if move.l10n_latam_document_type_id != doc_type:
+                        move.write({'l10n_latam_document_type_id': doc_type.id})
+                if move.journal_id.l10n_latam_use_documents and not move.l10n_latam_document_type_id:
+                    raise RuntimeError(
+                        f'El comprobante demo {xmlid} requiere tipo documental; '
+                        f'no se encontró uno para {move.move_type}.'
+                    )
+                move = bind(xmlid, move)
+                move.action_post()
+                if getattr(move, 'l10n_ar_afip_auth_code', False):
+                    raise RuntimeError('Los comprobantes DEMO no deben tener CAE ni autorización ARCA.')
+                return move
+
+            if sale_journal:
+                demo_docs = [
+                    ('ar_paid_invoice', 120000.0, 'Factura de venta DEMO pagada', today - timedelta(days=10), today - timedelta(days=2)),
+                    ('ar_partial_invoice', 60500.0, 'Factura de venta DEMO con pago parcial', today - timedelta(days=8), today + timedelta(days=5)),
+                    ('ar_pending_invoice', 85000.0, 'Factura de venta DEMO pendiente', today - timedelta(days=3), today + timedelta(days=15)),
+                    ('ar_overdue_invoice', 43000.0, 'Factura de venta DEMO vencida', today - timedelta(days=45), today - timedelta(days=15)),
+                ]
+                for xmlid, amount, label, issue_date, due_date in demo_docs:
+                    ensure_demo_move(xmlid, 'out_invoice', sale_journal, income_account,
+                                     sale_tax, amount, label, issue_date, due_date, customer, sale_doc)
+                ensure_demo_move('ar_credit_note', 'out_refund', sale_journal, income_account,
+                                 sale_tax, 10000.0, 'Nota de crédito de venta DEMO', today - timedelta(days=1), today,
+                                 customer, credit_doc)
+
+                if bank_journal and has_model('account.payment.register'):
+                    manual_method = bank_journal.inbound_payment_method_line_ids.filtered(
+                        lambda method: method.code == 'manual'
+                    )[:1]
+                    if manual_method:
+                        for xmlid, payment_amount in (('ar_paid_invoice', 145200.0), ('ar_partial_invoice', 30000.0)):
+                            invoice = find(xmlid)
+                            payment_xmlid = xmlid + '_payment'
+                            if invoice and not find(payment_xmlid):
+                                wizard = env['account.payment.register'].with_context(
+                                    active_model='account.move', active_ids=invoice.ids,
+                                ).create({
+                                    'journal_id': bank_journal.id,
+                                    'amount': min(payment_amount, invoice.amount_residual),
+                                    'payment_method_line_id': manual_method.id,
+                                    'payment_date': today,
+                                })
+                                payment = wizard._create_payments().ensure_one()
+                                bind(payment_xmlid, payment)
+                                if payment.move_id:
+                                    bind(payment_xmlid + '_entry', payment.move_id)
+
+            if purchase_journal:
+                ensure_demo_move('ap_paid_bill', 'in_invoice', purchase_journal, expense_account,
+                                 purchase_tax, 60000.0, 'Factura de compra DEMO pagada', today - timedelta(days=12),
+                                 today - timedelta(days=3), supplier, purchase_doc)
+                ensure_demo_move('ap_pending_bill', 'in_invoice', purchase_journal, expense_account,
+                                 purchase_tax, 45000.0, 'Factura de compra DEMO pendiente', today - timedelta(days=2),
+                                 today + timedelta(days=20), supplier, purchase_doc)
+                ensure_demo_move('ap_overdue_bill', 'in_invoice', purchase_journal, expense_account,
+                                 purchase_tax, 32000.0, 'Factura de compra DEMO vencida', today - timedelta(days=35),
+                                 today - timedelta(days=5), supplier, purchase_doc)
+                if bank_journal and has_model('account.payment.register'):
+                    manual_method = bank_journal.outbound_payment_method_line_ids.filtered(
+                        lambda method: method.code == 'manual'
+                    )[:1]
+                    bill = find('ap_paid_bill')
+                    if manual_method and bill and not find('ap_paid_bill_payment'):
+                        wizard = env['account.payment.register'].with_context(
+                            active_model='account.move', active_ids=bill.ids,
+                        ).create({
+                            'journal_id': bank_journal.id,
+                            'amount': bill.amount_residual,
+                            'payment_method_line_id': manual_method.id,
+                            'payment_date': today,
+                        })
+                        payment = wizard._create_payments().ensure_one()
+                        bind('ap_paid_bill_payment', payment)
+                        if payment.move_id:
+                            bind('ap_paid_bill_payment_entry', payment.move_id)
+            results['accounting_demo'] = 'Facturas de venta pagadas, parciales, pendientes y vencidas; compras y notas de crédito ficticias para reportes IVA.'
+
+            # Add real native check records only when the Argentine check module
+            # is installed and the journals already expose the matching methods.
+            payment_model = env['account.payment'] if has_model('account.payment') else False
+            if payment_model and 'l10n_latam_new_check_ids' in payment_model._fields and bank_journal:
+                own_method = bank_journal._get_available_payment_method_lines('outbound').filtered(
+                    lambda method: method.code == 'own_checks'
+                )[:1]
+                if own_method and not find('demo_own_check_payment'):
+                    payment = payment_model.create({
+                        'payment_type': 'outbound', 'partner_type': 'supplier', 'partner_id': supplier.id,
+                        'journal_id': bank_journal.id, 'payment_method_line_id': own_method.id,
+                        'date': today, 'memo': 'DOLAN DEMO — cheque propio ficticio',
+                        'l10n_latam_new_check_ids': [(0, 0, {
+                            'name': '00990001', 'payment_date': today, 'amount': 90000.0,
+                        })],
+                    })
+                    payment.action_post()
+                    bind('demo_own_check_payment', payment)
+                    bind('demo_own_check', payment.l10n_latam_new_check_ids.ensure_one())
+                cash_journal = journals.search([
+                    ('company_id', '=', company.id), ('type', '=', 'cash'),
+                ], limit=1)
+                third_method = cash_journal._get_available_payment_method_lines('inbound').filtered(
+                    lambda method: method.code == 'new_third_party_checks'
+                )[:1] if cash_journal else False
+                if third_method and not find('demo_third_party_check_payment'):
+                    payment = payment_model.create({
+                        'payment_type': 'inbound', 'partner_type': 'customer', 'partner_id': customer.id,
+                        'journal_id': cash_journal.id, 'payment_method_line_id': third_method.id,
+                        'date': today, 'memo': 'DOLAN DEMO — cheque de terceros ficticio',
+                        'l10n_latam_new_check_ids': [(0, 0, {
+                            'name': '00990002', 'payment_date': today + timedelta(days=30), 'amount': 75000.0,
+                        })],
+                    })
+                    payment.action_post()
+                    bind('demo_third_party_check_payment', payment)
+                    bind('demo_third_party_check', payment.l10n_latam_new_check_ids.ensure_one())
+                results['demo_checks'] = 'Cheques propios y de terceros de ejemplo' if own_method or third_method else 'Módulo de cheques instalado sin métodos de pago configurados; se omitieron los cheques.'
+        else:
+            results['accounting_demo'] = 'Omitido: la empresa no tiene diarios, cuentas contables e IVA 21% para preparar ejemplos seguros.'
+
     # ---------------------------------------------------------
     # 1. DOLAN_subscription: Plan & Active Contract
     # ---------------------------------------------------------

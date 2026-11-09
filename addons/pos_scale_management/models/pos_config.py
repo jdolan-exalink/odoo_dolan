@@ -11,6 +11,10 @@ class PosConfig(models.Model):
         'id', 'name', 'company_id', 'currency_id', 'access_token',
         'available_preset_ids', 'available_pricelist_ids', 'cash_control',
         'cash_rounding', 'default_fiscal_position_id', 'default_preset_id',
+        # pos_sale reads these relations directly while rendering order lines.
+        # Some Odoo builds don't merge optional-module fields into the base
+        # POS payload, so include them when that addon is installed.
+        'default_product_id', 'down_payment_product_id',
         'discount_product_id', 'fast_payment_method_ids', 'fiscal_position_ids',
         'iface_available_categ_ids', 'iface_big_scrollbars',
         'iface_group_by_categ', 'iface_print_auto', 'iface_printbill',

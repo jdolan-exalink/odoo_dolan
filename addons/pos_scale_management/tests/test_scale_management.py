@@ -157,6 +157,12 @@ class TestScaleManagement(TransactionCase):
         pos_fields = config._load_pos_data_fields(config)
         for name in ('use_pricelist', 'trusted_config_ids', 'scale_barcode_profiles'):
             self.assertIn(name, pos_fields)
+        # pos_sale's frontend dereferences config.default_product_id.id when
+        # formatting every order line. Ensure the custom field loader preserves
+        # its optional config payload whenever that addon is installed.
+        for name in ('default_product_id', 'down_payment_product_id'):
+            if name in config._fields:
+                self.assertIn(name, pos_fields)
         if 'floor_plan' in config._fields:
             self.assertIn('floor_plan', pos_fields)
         payload = config.scale_barcode_profiles
