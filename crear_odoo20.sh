@@ -600,10 +600,13 @@ config = {"company_name": os.environ["COMPANY_NAME"], "cuit": os.environ["COMPAN
 with open(sys.argv[1], 'w', encoding='utf-8') as f: json.dump(config, f)
 PYCONFIG
     chmod 600 "$BOOTSTRAP_JSON"
+    # Root only to read the 0600 config file. Odoo itself drops to the odoo
+    # user with HOME=/var/lib/odoo so attachments (company logo, admin avatar)
+    # land in the persistent filestore instead of the throwaway /root.
     if ! docker compose run --rm --no-deps --user root \
       -v "$SCRIPT_DIR/scripts/installer_bootstrap.py:/tmp/dolan-installer.py:ro" \
-      -v "$BOOTSTRAP_JSON:/tmp/dolan-installer.json:ro" \
-      odoo sh -c "odoo shell --config=/etc/odoo/odoo.conf --logfile= --no-http -d '$INIT_DB' < /tmp/dolan-installer.py"; then
+      -v "$BOOTSTRAP_JSON:/run/dolan-installer.src.json:ro" \
+      odoo sh -c "install -o odoo -g odoo -m 600 /run/dolan-installer.src.json /tmp/dolan-installer.json && exec setpriv --reuid=odoo --regid=odoo --init-groups env HOME=/var/lib/odoo odoo shell --config=/etc/odoo/odoo.conf --logfile= --no-http -d '$INIT_DB' < /tmp/dolan-installer.py"; then
       echo "Error configurando la empresa y el usuario inicial." >&2; exit 1
     fi
     rm -f "$BOOTSTRAP_JSON"
@@ -626,7 +629,7 @@ PYCONFIG
     docker compose run --rm --no-deps --user root \
       -e DOLAN_ALLOW_DEMO_DB=1 \
       -v "$SCRIPT_DIR/scripts/seed_demo_integral.py:/tmp/seed_demo_integral.py:ro" \
-      odoo sh -c "odoo shell --config=/etc/odoo/odoo.conf --logfile= --no-http -d '$INIT_DB' < /tmp/seed_demo_integral.py"
+      odoo sh -c "exec setpriv --reuid=odoo --regid=odoo --init-groups env HOME=/var/lib/odoo odoo shell --config=/etc/odoo/odoo.conf --logfile= --no-http -d '$INIT_DB' < /tmp/seed_demo_integral.py"
     echo "Datos Demo cargados (ejemplos Odoo y escenarios del perfil, modo aislado)."
   elif [[ "$DEMO_DATA" -eq 1 ]]; then
     echo "Datos de demostración estándar de Odoo cargados por compatibilidad."
