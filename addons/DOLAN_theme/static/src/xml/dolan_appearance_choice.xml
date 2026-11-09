@@ -30,10 +30,12 @@
                     t-att-aria-checked="this.value === choice[0] ? 'true' : 'false'"
                     role="radio" t-att-disabled="this.props.readonly"
                     t-on-click="() => this.select(choice[0])">
-                <span class="o_dolan_theme_sample" t-att-class="'is-profile-' + choice[0]">
-                    <span class="o_dolan_theme_sample_top"><i/><i/><i/></span>
-                    <span class="o_dolan_theme_sample_body"><i/><i/></span>
-                    <b t-out="this.themeGlyph(choice[0])"/>
+<span class="o_dolan_profile_preview" t-att-class="'is-profile-' + choice[0]" aria-hidden="true">
+                    <span class="pv-nav"><i/><i/><i/></span>
+                    <span class="pv-body">
+                        <span class="pv-apps"><i class="is-a"/><i class="is-b"/><i class="is-c"/></span>
+                        <span class="pv-card"><span class="pv-btn"/><span class="pv-line"/><span class="pv-line is-short"/></span>
+                    </span>
                 </span>
                 <span class="o_dolan_settings_theme_label" t-out="choice[1]"/>
                 <small class="o_dolan_settings_choice_description" t-out="this.profileDescription(choice[0])"/>

@@ -19,11 +19,11 @@ class DolanScreenPreference(models.Model):
     )
     appearance_profile = fields.Selection(
         [("global", "Usar perfil global"),
-         ("odoo_classic", "Clásico"),
-         ("dolan_fluent", "Suave"),
-         ("dolan_liquid", "Cristal"),
-         ("dolan_material", "Táctil"),
-         ("dolan_minimal", "Compacto"),
+         ("odoo_classic", "Enterprise Classic"),
+         ("dolan_fluent", "Fluent"),
+         ("dolan_liquid", "Liquid"),
+         ("dolan_material", "Material"),
+         ("dolan_minimal", "Minimal"),
          # Stored for compatibility during the incremental preference migration.
          ("legacy", "Conservar apariencia anterior"),
          ("enterprise_classic", "Clásico (anterior)"), ("graphite", "Graphite (anterior)"),

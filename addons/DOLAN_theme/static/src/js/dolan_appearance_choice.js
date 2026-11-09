@@ -57,11 +57,11 @@ export class DolanAppearanceChoice extends Component {
     profileDescription(value) {
         const aliases = { enterprise_classic: "odoo_classic", graphite: "dolan_fluent", glass: "dolan_liquid", minimal: "dolan_minimal" };
         const profile = ({
-            odoo_classic: "Lo conocido de Odoo: plano, borde fino y esquinas chicas.",
-            dolan_fluent: "Tarjetas elevadas con sombra media y esquinas medias.",
-            dolan_liquid: "Paneles translúcidos sobre un fondo en degradado.",
-            dolan_material: "Botones grandes tipo píldora y superficies con color.",
-            dolan_minimal: "Plano y denso, sin sombras, para administración.",
+            odoo_classic: "Odoo Enterprise. Predeterminado.",
+            dolan_fluent: "Windows 11 Fluent 2. ERP de escritorio.",
+            dolan_liquid: "macOS Liquid Glass. Interfaz premium.",
+            dolan_material: "Material 3 Expressive. Móvil, tablet y touch.",
+            dolan_minimal: "Omarchy y terminales. Alta densidad.",
         })[aliases[value] || value];
         return profile || "Perfil visual";
     }

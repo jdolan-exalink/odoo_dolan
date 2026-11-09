@@ -177,9 +177,13 @@
                                         t-att-aria-pressed="this.state.appearanceProfile === profile.id ? 'true' : 'false'"
                                         t-att-title="profile.description" t-att-aria-label="profile.label"
                                         t-on-click.stop="() => this.chooseSessionProfile(profile.id)">
-                                    <span class="o_dolan_profile_example" t-att-class="'is-profile-' + profile.id">
-                                        <i/><i/><i/><b><DolanIcon name="'app.sales'" iconStyle="this.state.iconStyle" size="17"/></b>
-                                    </span>
+<span class="o_dolan_profile_preview" t-att-class="'is-profile-' + profile.id" aria-hidden="true">
+                    <span class="pv-nav"><i/><i/><i/></span>
+                    <span class="pv-body">
+                        <span class="pv-apps"><i class="is-a"/><i class="is-b"/><i class="is-c"/></span>
+                        <span class="pv-card"><span class="pv-btn"/><span class="pv-line"/><span class="pv-line is-short"/></span>
+                    </span>
+                </span>
                                     <span class="o_dolan_profile_tile_label" t-out="profile.label"/>
                                     <DolanIcon t-if="this.state.appearanceProfile === profile.id" name="'check'" size="13"/>
                                 </button>

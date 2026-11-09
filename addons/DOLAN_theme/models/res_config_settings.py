@@ -32,11 +32,11 @@ NAVBAR_STYLE_CHOICES = [
 ]
 DENSITY_CHOICES = [("normal", "Normal"), ("compact", "Compacta")]
 APPEARANCE_PROFILE_CHOICES = [
-    ("odoo_classic", "Clásico"),
-    ("dolan_fluent", "Suave"),
-    ("dolan_liquid", "Cristal"),
-    ("dolan_material", "Táctil"),
-    ("dolan_minimal", "Compacto"),
+    ("odoo_classic", "Enterprise Classic"),
+    ("dolan_fluent", "Fluent"),
+    ("dolan_liquid", "Liquid"),
+    ("dolan_material", "Material"),
+    ("dolan_minimal", "Minimal"),
     # Transitional values accepted so older databases never crash on onchange.
     ("legacy", "Compatibilidad heredada"),
     ("enterprise_classic", "Clásico (anterior)"),

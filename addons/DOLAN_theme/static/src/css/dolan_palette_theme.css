@@ -155,43 +155,6 @@ body.o_dolan_dark_mode .o_home_menu .o_app .o_app_icon.o_dolan_variant_icon.o_do
     background-color: var(--dolan-color-surface-raised) !important;
 }
 
-/* ---------- 6. Perfiles con diferencias visibles ---------- */
-body[data-dolan-style="odoo_classic"] { --dolan-profile-radius: 4px; --dolan-profile-shadow: 0 1px 2px rgb(16 24 40 / 6%); }
-body[data-dolan-style="dolan_fluent"] { --dolan-profile-radius: 10px; --dolan-profile-shadow: 0 6px 18px rgb(20 30 60 / 11%); }
-body[data-dolan-style="dolan_liquid"] { --dolan-profile-radius: 18px; --dolan-profile-shadow: 0 12px 30px rgb(10 18 40 / 18%); }
-body[data-dolan-style="dolan_material"] { --dolan-profile-radius: 22px; --dolan-profile-shadow: 0 2px 6px rgb(20 30 60 / 8%); }
-body[data-dolan-style="dolan_minimal"] { --dolan-profile-radius: 3px; --dolan-profile-shadow: none; }
-
-/* Clásico y Compacto: botones de esquina chica, como Odoo de fábrica. */
-body:is([data-dolan-profile="odoo_classic"], [data-dolan-profile="dolan_minimal"]) :is(.o_control_panel, .o_form_view, .modal-footer, .o_dolan_home_menu_wrapper) .btn {
-    border-radius: 4px;
-}
-/* Suave: botones de esquinas medias. */
-body[data-dolan-profile="dolan_fluent"] :is(.o_control_panel, .o_form_view, .modal-footer) .btn {
-    border-radius: 8px;
-}
-/* Táctil: botones tipo píldora y más altos, superficies teñidas con la paleta. */
-body[data-dolan-profile="dolan_material"] :is(.o_control_panel, .o_form_statusbar, .modal-footer) .btn {
-    min-height: 2.5rem;
-    padding-inline: 1.1rem;
-    border-radius: 999px;
-}
-body[data-dolan-profile="dolan_material"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban)) {
-    border-color: transparent !important;
-    background-color: color-mix(in srgb, var(--dolan-color-primary) 5%, var(--dolan-color-surface, #fff)) !important;
-}
-body[data-dolan-profile="dolan_material"] :is(.o_input, .form-control, .form-select) {
-    min-height: 2.4rem;
-}
-/* Compacto: filas y controles más bajos, sin sombras. */
-body[data-dolan-profile="dolan_minimal"] .o_list_renderer .o_list_table :is(td, th) {
-    padding-top: .3rem;
-    padding-bottom: .3rem;
-}
-body[data-dolan-profile="dolan_minimal"] :is(.o_form_view .o_form_sheet, .o_list_renderer .o_list_table) {
-    box-shadow: none !important;
-}
-
 /* ---------- 7. Ajustes: vistas previas que anticipan el resultado ---------- */
 .o_dolan_settings_palette_choices { grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); }
 .o_dolan_settings_palette_choice.o_dolan_palette_preview_choice {
@@ -218,32 +181,6 @@ body[data-dolan-profile="dolan_minimal"] :is(.o_form_view .o_form_sheet, .o_list
 .o_dolan_palette_preview_half .is-line { width: 70%; height: .15rem; border-radius: 1rem; background: var(--pv-text); opacity: .45; }
 .o_dolan_palette_preview_name { display: flex; justify-content: space-between; gap: .3rem; font-weight: 600; }
 .o_dolan_palette_preview_hint { color: var(--dolan-color-text-muted); font-size: .76rem; font-weight: 400; }
-
-/* Miniaturas de perfil: muestran la forma real (esquinas, sombra, vidrio). */
-.o_dolan_theme_sample:is(.is-profile-odoo_classic, .is-profile-dolan_fluent, .is-profile-dolan_liquid, .is-profile-dolan_material, .is-profile-dolan_minimal) {
-    background: var(--dolan-color-canvas, #f4f5fc);
-}
-.o_dolan_theme_sample:is(.is-profile-odoo_classic, .is-profile-dolan_fluent, .is-profile-dolan_liquid, .is-profile-dolan_material, .is-profile-dolan_minimal) .o_dolan_theme_sample_top {
-    background: var(--dolan-navbar-bg, var(--dolan-color-primary));
-}
-.o_dolan_theme_sample:is(.is-profile-odoo_classic, .is-profile-dolan_fluent, .is-profile-dolan_liquid, .is-profile-dolan_material, .is-profile-dolan_minimal) .o_dolan_theme_sample_body {
-    background: var(--dolan-color-surface-raised, #fff);
-    border: 1px solid var(--dolan-color-border, #e4e7ef);
-}
-.o_dolan_theme_sample.is-profile-odoo_classic .o_dolan_theme_sample_body { border-radius: .12rem; box-shadow: none; }
-.o_dolan_theme_sample.is-profile-dolan_fluent .o_dolan_theme_sample_body { border-radius: .3rem; box-shadow: 0 3px 7px rgb(20 30 60 / 20%); border-color: transparent; }
-.o_dolan_theme_sample.is-profile-dolan_liquid {
-    background:
-        radial-gradient(at 15% 10%, color-mix(in srgb, var(--dolan-color-primary) 45%, transparent), transparent 60%),
-        radial-gradient(at 90% 90%, color-mix(in srgb, var(--dolan-color-secondary) 40%, transparent), transparent 60%),
-        var(--dolan-color-canvas, #f4f5fc);
-}
-.o_dolan_theme_sample.is-profile-dolan_liquid .o_dolan_theme_sample_top { background: color-mix(in srgb, var(--dolan-navbar-bg, var(--dolan-color-primary)) 70%, transparent); }
-.o_dolan_theme_sample.is-profile-dolan_liquid .o_dolan_theme_sample_body { border-radius: .5rem; background: rgb(255 255 255 / 55%); border-color: rgb(255 255 255 / 85%); box-shadow: 0 4px 10px rgb(10 18 40 / 22%); }
-.o_dolan_theme_sample.is-profile-dolan_material .o_dolan_theme_sample_body { border-radius: .65rem; border-color: transparent; background: color-mix(in srgb, var(--dolan-color-primary) 12%, var(--dolan-color-surface-raised, #fff)); }
-.o_dolan_theme_sample.is-profile-dolan_minimal .o_dolan_theme_sample_body { border-radius: 0; box-shadow: none; }
-.o_dolan_theme_sample.is-profile-dolan_minimal .o_dolan_theme_sample_top { background: var(--dolan-color-border, #e4e7ef); }
-body.o_dolan_dark_mode .o_dolan_theme_sample.is-profile-dolan_liquid .o_dolan_theme_sample_body { background: rgb(255 255 255 / 10%); border-color: rgb(255 255 255 / 18%); }
 
 /* Ajustes: muestras de estilo de iconos con mosaico. */
 .o_dolan_settings_icon_sample .o_dolan_icon_style_mask_preview { width: 1.6rem; height: 1.6rem; flex: 0 0 1.6rem; }
