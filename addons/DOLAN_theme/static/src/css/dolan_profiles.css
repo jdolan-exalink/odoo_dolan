@@ -106,35 +106,35 @@ body[data-dolan-profile="dolan_liquid"][data-dolan-style="dolan_liquid"]:not(.o_
 }
 
 /* ======================= 4. Tarjetas y hojas ======================= */
-body[data-dolan-profile="odoo_classic"][data-dolan-style="odoo_classic"]:not(.o_dolan_high_contrast) :is(.o_form_view .o_form_sheet, .o_kanban_record, .o_list_renderer .o_list_table, .modal-content) {
+body[data-dolan-profile="odoo_classic"][data-dolan-style="odoo_classic"]:not(.o_dolan_high_contrast) :is(.o_form_view .o_form_sheet, .o_kanban_record, .modal-content) {
     border-radius: 4px;
     border: 1px solid var(--dolan-color-border, rgb(0 0 0 / 10%));
 }
-body[data-dolan-profile="dolan_fluent"][data-dolan-style="dolan_fluent"]:not(.o_dolan_high_contrast) :is(.o_form_view .o_form_sheet, .o_kanban_record, .o_list_renderer .o_list_table, .modal-content) {
+body[data-dolan-profile="dolan_fluent"][data-dolan-style="dolan_fluent"]:not(.o_dolan_high_contrast) :is(.o_form_view .o_form_sheet, .o_kanban_record, .modal-content) {
     border-radius: 8px;
     border: 1px solid rgb(0 0 0 / 6%);
     box-shadow: 0 2px 4px rgb(0 0 0 / 4%), 0 0 2px rgb(0 0 0 / 6%);
 }
-body[data-dolan-profile="dolan_liquid"][data-dolan-style="dolan_liquid"]:not(.o_dolan_high_contrast) :is(.o_form_view .o_form_sheet, .o_kanban_record, .o_list_renderer .o_list_table, .modal-content) {
-    border-radius: 20px;
+body[data-dolan-profile="dolan_liquid"][data-dolan-style="dolan_liquid"]:not(.o_dolan_high_contrast) :is(.o_form_view .o_form_sheet, .o_kanban_record, .modal-content) {
+    border-radius: 8px;
     border: 1px solid rgb(255 255 255 / 60%);
     background: rgb(255 255 255 / 62%);
     -webkit-backdrop-filter: blur(20px) saturate(1.5);
     backdrop-filter: blur(20px) saturate(1.5);
     box-shadow: 0 10px 30px -14px rgb(15 20 40 / 30%), inset 0 1px 0 rgb(255 255 255 / 70%);
 }
-body.o_dolan_dark_mode[data-dolan-profile="dolan_liquid"][data-dolan-style="dolan_liquid"]:not(.o_dolan_high_contrast) :is(.o_form_view .o_form_sheet, .o_kanban_record, .o_list_renderer .o_list_table, .modal-content) {
+body.o_dolan_dark_mode[data-dolan-profile="dolan_liquid"][data-dolan-style="dolan_liquid"]:not(.o_dolan_high_contrast) :is(.o_form_view .o_form_sheet, .o_kanban_record, .modal-content) {
     border-color: rgb(255 255 255 / 12%);
     background: rgb(30 32 44 / 55%);
     box-shadow: 0 10px 30px -14px rgb(0 0 0 / 60%), inset 0 1px 0 rgb(255 255 255 / 8%);
 }
-body[data-dolan-profile="dolan_material"][data-dolan-style="dolan_material"]:not(.o_dolan_high_contrast) :is(.o_form_view .o_form_sheet, .o_kanban_record, .o_list_renderer .o_list_table, .modal-content) {
-    border-radius: 24px;
+body[data-dolan-profile="dolan_material"][data-dolan-style="dolan_material"]:not(.o_dolan_high_contrast) :is(.o_form_view .o_form_sheet, .o_kanban_record, .modal-content) {
+    border-radius: 8px;
     border: 0;
     background: color-mix(in srgb, var(--dolan-color-primary, #4f46e5) 4%, var(--dolan-color-surface, #fff));
     box-shadow: none;
 }
-body[data-dolan-profile="dolan_minimal"][data-dolan-style="dolan_minimal"]:not(.o_dolan_high_contrast) :is(.o_form_view .o_form_sheet, .o_kanban_record, .o_list_renderer .o_list_table, .modal-content) {
+body[data-dolan-profile="dolan_minimal"][data-dolan-style="dolan_minimal"]:not(.o_dolan_high_contrast) :is(.o_form_view .o_form_sheet, .o_kanban_record, .modal-content) {
     border-radius: 0;
     box-shadow: none;
 }
@@ -190,24 +190,23 @@ body[data-dolan-profile="dolan_minimal"][data-dolan-style="dolan_minimal"]:not(.
 }
 
 /* ======================= 6. Campos ======================= */
-body[data-dolan-profile="dolan_fluent"][data-dolan-style="dolan_fluent"]:not(.o_dolan_high_contrast) .o_action_manager .o_input:focus,
-body[data-dolan-profile="dolan_fluent"][data-dolan-style="dolan_fluent"]:not(.o_dolan_high_contrast) .o_action_manager .o_input:focus-within {
-    border-bottom: 2px solid var(--dolan-color-primary, #4f46e5);
+body[data-dolan-profile="dolan_fluent"][data-dolan-style="dolan_fluent"]:not(.o_dolan_high_contrast) .o_form_view .o_inner_group .o_field_widget .o_input:focus {
+    box-shadow: inset 0 -2px 0 var(--dolan-color-primary, #4f46e5);
 }
-body[data-dolan-profile="dolan_liquid"][data-dolan-style="dolan_liquid"]:not(.o_dolan_high_contrast) .o_form_view .o_form_editable .o_input {
-    border-radius: 10px;
+body[data-dolan-profile="dolan_liquid"][data-dolan-style="dolan_liquid"]:not(.o_dolan_high_contrast) .o_form_view .o_form_editable .o_inner_group .o_field_widget > .o_input {
+    border-radius: 4px;
     background: rgb(255 255 255 / 45%);
     padding-inline: .5rem;
 }
-body[data-dolan-profile="dolan_material"][data-dolan-style="dolan_material"]:not(.o_dolan_high_contrast) .o_form_view .o_form_editable .o_input {
+body[data-dolan-profile="dolan_material"][data-dolan-style="dolan_material"]:not(.o_dolan_high_contrast) .o_form_view .o_form_editable .o_inner_group .o_field_widget > .o_input {
     min-height: 2.6rem;
     border: 0;
     border-bottom: 1px solid color-mix(in srgb, var(--dolan-color-primary, #4f46e5) 50%, transparent);
-    border-radius: 8px 8px 0 0;
+    border-radius: 4px 4px 0 0;
     background: color-mix(in srgb, var(--dolan-color-primary, #4f46e5) 6%, transparent);
     padding-inline: .6rem;
 }
-body[data-dolan-profile="dolan_minimal"][data-dolan-style="dolan_minimal"]:not(.o_dolan_high_contrast) .o_form_view .o_form_editable .o_input {
+body[data-dolan-profile="dolan_minimal"][data-dolan-style="dolan_minimal"]:not(.o_dolan_high_contrast) .o_form_view .o_form_editable .o_inner_group .o_field_widget > .o_input {
     border: 1px solid var(--dolan-color-border, rgb(0 0 0 / 18%));
     border-radius: 0;
     padding-inline: .3rem;
@@ -243,13 +242,9 @@ body[data-dolan-profile="dolan_fluent"][data-dolan-style="dolan_fluent"]:not(.o_
 body[data-dolan-profile="dolan_fluent"][data-dolan-style="dolan_fluent"]:not(.o_dolan_high_contrast) :is(.o_home_menu .o_app .o_app_icon img, .o_home_menu .o_app img.o_app_icon) {
     border-radius: 26%;
 }
-/* Material: círculo y más grande. */
+/* Material: círculo. */
 body[data-dolan-profile="dolan_material"][data-dolan-style="dolan_material"]:not(.o_dolan_high_contrast) :is(.o_dolan_variant_mask:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand), .o_dolan_variant_icon:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand) > .o_dolan_variant_mask, .o_home_menu .o_app .o_app_icon img, .o_home_menu .o_app img.o_app_icon) {
     border-radius: 50%;
-}
-body[data-dolan-profile="dolan_material"][data-dolan-style="dolan_material"]:not(.o_dolan_high_contrast) :is(.o_home_menu, .o_dolan_home_menu_wrapper) .o_app .o_app_icon {
-    width: 78px;
-    height: 78px;
 }
 /* Liquid: mosaico de vidrio con el glifo en el color del área. */
 body[data-dolan-profile="dolan_liquid"][data-dolan-style="dolan_liquid"]:not(.o_dolan_high_contrast) :is(.o_dolan_variant_mask:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand), .o_dolan_variant_icon:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand) > .o_dolan_variant_mask) {
@@ -273,7 +268,7 @@ body.o_dolan_dark_mode[data-dolan-profile="dolan_liquid"][data-dolan-style="dola
 body[data-dolan-profile="dolan_liquid"][data-dolan-style="dolan_liquid"]:not(.o_dolan_high_contrast) :is(.o_home_menu .o_app .o_app_icon img, .o_home_menu .o_app img.o_app_icon) {
     border-radius: 28%;
 }
-/* Minimal: sin mosaico, solo el glifo en el color del área, en lista. */
+/* Minimal: sin mosaico, solo el glifo en el color del área. */
 body[data-dolan-profile="dolan_minimal"][data-dolan-style="dolan_minimal"]:not(.o_dolan_high_contrast) :is(.o_dolan_variant_mask:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand), .o_dolan_variant_icon:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand) > .o_dolan_variant_mask) {
     border-radius: 0;
     background: transparent !important;
@@ -289,17 +284,6 @@ body.o_dolan_dark_mode[data-dolan-profile="dolan_minimal"][data-dolan-style="dol
 }
 body[data-dolan-profile="dolan_minimal"][data-dolan-style="dolan_minimal"]:not(.o_dolan_high_contrast) :is(.o_home_menu .o_app .o_app_icon img, .o_home_menu .o_app img.o_app_icon) {
     border-radius: 0;
-}
-body[data-dolan-profile="dolan_minimal"][data-dolan-style="dolan_minimal"]:not(.o_dolan_high_contrast) :is(.o_home_menu, .o_dolan_home_menu_wrapper) .o_app {
-    flex-direction: row !important;
-    justify-content: flex-start !important;
-    gap: .6rem;
-    text-align: left;
-}
-body[data-dolan-profile="dolan_minimal"][data-dolan-style="dolan_minimal"]:not(.o_dolan_high_contrast) :is(.o_home_menu, .o_dolan_home_menu_wrapper) .o_app .o_app_icon {
-    width: 34px;
-    height: 34px;
-    flex: 0 0 34px;
 }
 
 /* ======================= 9. Miniaturas de perfil ======================= */
