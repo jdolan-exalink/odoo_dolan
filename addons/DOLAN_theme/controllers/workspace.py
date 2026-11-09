@@ -220,7 +220,7 @@ class DolanWorkspaceController(http.Controller):
             'role_filter': preference.role_filter,
             'visible_widget_keys': visible_keys,
             'kpi_states': preference.kpi_states or {},
-            'indicator_mode': preference.indicator_mode,
+            'indicator_mode': 'complete',
             'visible_section_keys': preference.visible_section_keys,
             'visible_section_keys_configured': preference.visible_section_keys is not False,
             'workspace_order': preference.workspace_order or [],
@@ -325,8 +325,9 @@ class DolanWorkspaceController(http.Controller):
                 if clean:
                     clean_states[key] = clean
             allowed['kpi_states'] = clean_states
-        if values.get('indicator_mode') in ('priorities', 'complete', 'custom'):
-            allowed['indicator_mode'] = values['indicator_mode']
+        # Legacy per-user selector is intentionally retired. Keep persisted
+        # rows valid while normalizing old installations to the complete view.
+        allowed['indicator_mode'] = 'complete'
         if isinstance(values.get('visible_section_keys'), list):
             allowed['visible_section_keys'] = list(dict.fromkeys(
                 key for key in values['visible_section_keys']
@@ -354,7 +355,7 @@ class DolanWorkspaceController(http.Controller):
             'role_filter': preference.role_filter,
             'visible_widget_keys': preference.visible_widget_keys or [],
             'kpi_states': preference.kpi_states or {},
-            'indicator_mode': preference.indicator_mode,
+            'indicator_mode': 'complete',
             'visible_section_keys': preference.visible_section_keys,
             'visible_section_keys_configured': preference.visible_section_keys is not False,
             'workspace_order': preference.workspace_order or [],

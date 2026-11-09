@@ -7,6 +7,94 @@ import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { useBus, useService } from "@web/core/utils/hooks";
 
+const JSON_FIELD_LABELS = {
+    company: "Empresa", period: "Período", count: "Cantidad", total: "Total",
+    currency: "Moneda", status: "Estado", summary: "Resumen", records: "Registros",
+    name: "Nombre", display_name: "Nombre", amount_total: "Importe", invoice_date: "Fecha",
+    lines: "Líneas",
+    account_id: "Cuenta", "debit:sum": "Débitos", "credit:sum": "Créditos", "balance:sum": "Saldo",
+};
+
+function extractJsonPayload(source) {
+    const fenced = source.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i)?.[1];
+    const text = fenced || source;
+    const start = Math.min(...[text.indexOf("{"), text.indexOf("[")].filter((index) => index >= 0));
+    if (!Number.isFinite(start)) return null;
+    const stack = [];
+    let inString = false;
+    let escaped = false;
+    for (let index = start; index < text.length; index++) {
+        const char = text[index];
+        if (inString) {
+            if (escaped) escaped = false;
+            else if (char === "\\") escaped = true;
+            else if (char === '"') inString = false;
+            continue;
+        }
+        if (char === '"') inString = true;
+        else if (char === "{" || char === "[") stack.push(char);
+        else if (char === "}" || char === "]") {
+            const opening = stack.pop();
+            if ((opening === "{" && char !== "}") || (opening === "[" && char !== "]")) return null;
+            if (!stack.length) return text.slice(start, index + 1);
+        }
+    }
+    return null;
+}
+
+function readableJsonValue(value) {
+    if (value === null || value === undefined || value === false || value === "") return "Sin informar";
+    if (Array.isArray(value)) return value.map(readableJsonValue).join(", ");
+    if (typeof value === "object") {
+        return Object.entries(value).map(([key, item]) => {
+            const label = JSON_FIELD_LABELS[key] || key.replaceAll("_", " ");
+            return `${label}: ${readableJsonValue(item)}`;
+        }).join("; ");
+    }
+    return String(value);
+}
+
+export function normalizeStructuredReply(content) {
+    const source = String(content || "").trim();
+    const candidate = extractJsonPayload(source);
+    if (!candidate) return content || "";
+    let data;
+    try {
+        data = JSON.parse(candidate);
+    } catch {
+        return content || "";
+    }
+    if (typeof data === "string") return data;
+    if (data && !Array.isArray(data)) {
+        const prose = data.reply || data.summary || data.message || data.response;
+        if (typeof prose === "string" && prose.trim()) return prose;
+    }
+    const rows = Array.isArray(data) ? data : [data];
+    if (rows.every((row) => row && typeof row === "object" && !Array.isArray(row))) {
+        const keys = [...new Set(rows.flatMap((row) => Object.keys(row)))];
+        const identityKey = keys.find((key) => ["display_name", "name", "number", "ref", "account_id"].includes(key));
+        if (identityKey) {
+            return rows.map((row, index) => {
+                const identity = identityKey === "account_id" ? `Cuenta ${row[identityKey]}` : row[identityKey] || `Registro ${index + 1}`;
+                const details = Object.entries(row)
+                    .filter(([key, value]) => key !== identityKey && key !== "id" && value !== null && value !== false)
+                    .map(([key, value]) => `${JSON_FIELD_LABELS[key] || key.replaceAll("_", " ")}: ${readableJsonValue(value)}`);
+                return `- **${readableJsonValue(identity)}**${details.length ? ` — ${details.join("; ")}` : ""}`;
+            }).join("\n");
+        }
+    }
+    if (data && !Array.isArray(data)) {
+        return Object.entries(data).map(([key, value]) => {
+            const label = JSON_FIELD_LABELS[key] || key.replaceAll("_", " ");
+            if (Array.isArray(value) && value.every((row) => row && typeof row === "object")) {
+                return `**${label}**\n${normalizeStructuredReply(JSON.stringify(value))}`;
+            }
+            return `**${label}:** ${readableJsonValue(value)}`;
+        }).join("\n\n");
+    }
+    return `**Resultado**\n${readableJsonValue(data)}`;
+}
+
 export class DolanAiSystray extends Component {
     static template = "DOLAN_ai.DolanAiSystray";
 
@@ -79,7 +167,11 @@ export class DolanAiSystray extends Component {
         return firstUserMessage?.content || "Conversación actual";
     }
 
-    messageBlocks(content) {
+    messageBlocks(content, role = "assistant") {
+        // Only assistant replies are reshaped; JSON typed by the user stays verbatim.
+        if (role !== "user") {
+            content = normalizeStructuredReply(content);
+        }
         const blocks = [];
         let paragraph = [];
         let listItems = [];

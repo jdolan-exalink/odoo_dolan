@@ -923,8 +923,9 @@ class TestAuthorizationSafety(AccountTestInvoicingCommon):
                 self.assertNotEqual(node.get('widget'), 'field_partner_autocomplete')
         padron_buttons = arch.xpath("//button[@name='action_l10n_ar_update_from_padron']")
         self.assertEqual(len(padron_buttons), 1)
-        self.assertNotIn('not id', padron_buttons[0].get('invisible', ''))
-        self.assertIn('not vat', padron_buttons[0].get('invisible', ''))
+        # The button is deliberately visible independently from partner name;
+        # users enter the CUIT first, then explicitly request the lookup.
+        self.assertFalse(padron_buttons[0].get('invisible'))
 
     def test_shared_padron_configuration_rejects_partial_credentials(self):
         params = self.env['ir.config_parameter'].sudo()

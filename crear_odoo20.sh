@@ -76,7 +76,7 @@ DEMO_MODE="none"
 
 # Apps CE de negocio base equivalentes a la demo Odoo 20
 SYSTEM_APPS="contacts,calendar,mail,crm,sale_management,purchase,stock,l10n_ar,l10n_ar_withholding,l10n_ar_pos,l10n_ar_stock,l10n_latam_check,l10n_latam_invoice_document"
-FULL_SYSTEM_APPS="contacts,calendar,mail,crm,sale_management,purchase,stock,mrp,point_of_sale,pos_restaurant,project,project_todo,hr,hr_expense,hr_skills,fleet,maintenance,l10n_ar,l10n_ar_withholding,l10n_ar_pos,l10n_ar_stock,l10n_latam_check,l10n_latam_invoice_document"
+FULL_SYSTEM_APPS="contacts,calendar,mail,crm,sale_management,purchase,stock,mrp,point_of_sale,pos_restaurant,pos_mercado_pago,project,project_todo,hr,hr_expense,hr_skills,fleet,maintenance,l10n_ar,l10n_ar_withholding,l10n_ar_pos,l10n_ar_stock,l10n_latam_check,l10n_latam_invoice_document"
 SYSTEM_APPS_CUSTOM=0
 
 while [[ $# -gt 0 ]]; do
@@ -184,7 +184,7 @@ if [[ ",$DOLAN_ADDONS," != *",DOLAN_knowledge_bi,"* ]]; then
 fi
 
 if [[ $SYSTEM_APPS_CUSTOM -eq 0 ]]; then
-  if [[ "$PROFILE" == "comercio" ]]; then SYSTEM_APPS+=",point_of_sale,pos_restaurant"; fi
+  if [[ "$PROFILE" == "comercio" ]]; then SYSTEM_APPS+=",point_of_sale,pos_restaurant,pos_mercado_pago"; fi
   if [[ "$PROFILE" == "servicios" ]]; then SYSTEM_APPS+=",project,project_todo"; fi
   if [[ "$PROFILE" == "full" ]]; then SYSTEM_APPS="$FULL_SYSTEM_APPS"; fi
 fi

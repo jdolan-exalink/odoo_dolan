@@ -16,7 +16,7 @@ THEME_MODE_CHOICES = [
     ("contrast", "Alto contraste"),
 ]
 PALETTE_CHOICES = [
-    ("dolan", "DOLAN — violeta y turquesa"),
+    ("dolan", "ERP — violeta y turquesa"),
     ("ocean", "Océano — azul y celeste"),
     ("forest", "Bosque — verde y menta"),
     ("sunset", "Atardecer — coral y ámbar"),

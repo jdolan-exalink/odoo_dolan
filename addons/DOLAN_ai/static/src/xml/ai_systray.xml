@@ -208,7 +208,7 @@
                                         </div>
                                         <div class="o_dolan_ai_message_content">
                                             <div class="o_dolan_ai_msg_text">
-                                                <t t-foreach="this.messageBlocks(msg.content)" t-as="block" t-key="block_index">
+                                                <t t-foreach="this.messageBlocks(msg.content, msg.role)" t-as="block" t-key="block_index">
                                                     <pre t-if="block.type === 'code'" class="o_dolan_ai_code_block"><code t-out="block.content"/></pre>
                                                     <h4 t-elif="block.type === 'heading'" class="o_dolan_ai_text_heading">
                                                         <t t-foreach="this.inlineMessageParts(block.content)" t-as="part" t-key="part_index">

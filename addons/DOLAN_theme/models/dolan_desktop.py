@@ -28,7 +28,67 @@ class DolanDesktopPreference(models.Model):
     @api.model
     def current_user(self):
         preference = self.search([('user_id', '=', self.env.uid)], limit=1)
-        return preference or self.create({'user_id': self.env.uid})
+        if not preference:
+            preference = self.create({'user_id': self.env.uid})
+        # Bootstrap a useful desktop for every fresh user/installation. Never
+        # replace a saved layout: layout_version advances on every explicit save.
+        if not preference.layout_version:
+            Folder = self.env['dolan.desktop.folder']
+            Item = self.env['dolan.desktop.item']
+            if not Folder.search_count([('user_id', '=', self.env.uid)]) and not Item.search_count([('user_id', '=', self.env.uid)]):
+                preference._seed_default_layout()
+        return preference
+
+    def _seed_default_layout(self):
+        self.ensure_one()
+        roots = set(self.env['ir.ui.menu'].get_user_roots().ids)
+        if not roots:
+            return
+        defaults = {
+            'Configuraciones': [
+                'ePOS_print.menu_epos_print_root',
+                'DOLAN_discount_engine.menu_dolan_discount_root',
+                'base.menu_administration',
+                'base.menu_management',
+                'pos_scale_management.menu_scale_root',
+                'DOLAN_stock_mrp.menu_dolan_stock_barcode_root',
+                'DOLAN_payment_terminal.menu_terminal_root',
+                'DOLAN_ai.menu_dolan_ai_root',
+                'hr.menu_hr_root',
+                'DOLAN_whatsapp.menu_dolan_whatsapp_root',
+            ],
+            'Varios': [
+                'mass_mailing.mass_mailing_menu_root',
+                'survey.menu_surveys',
+                'DOLAN_knowledge_bi.menu_dolan_knowledge_root',
+                'project_todo.menu_todo_todos',
+                'DOLAN_pos.menu_dolan_pos_kitchen_root',
+                'mail.menu_root_discuss',
+            ],
+        }
+        Menu = self.env['ir.ui.menu']
+        Data = self.env['ir.model.data'].sudo()
+        folder_ids = {}
+        resolved_items = []
+        for folder_sequence, (folder_name, xmlids) in enumerate(defaults.items(), start=1):
+            for sequence, xmlid in enumerate(xmlids, start=1):
+                module, name = xmlid.split('.', 1)
+                data = Data.search([
+                    ('module', '=', module), ('name', '=', name), ('model', '=', 'ir.ui.menu'),
+                ], limit=1)
+                menu = Menu.browse(data.res_id).exists() if data else Menu.browse()
+                if menu and menu.id in roots and not menu.parent_id:
+                    resolved_items.append((folder_name, menu, sequence))
+            if any(name == folder_name for name, _menu, _sequence in resolved_items):
+                folder_ids[folder_name] = self.env['dolan.desktop.folder'].create({
+                    'name': folder_name, 'sequence': folder_sequence * 10,
+                })
+        for folder_name, menu, sequence in resolved_items:
+            self.env['dolan.desktop.item'].create({
+                'menu_id': menu.id,
+                'folder_id': folder_ids[folder_name].id,
+                'sequence': sequence * 10,
+            })
 
     def _write_desktop_internal(self, vals):
         """Restricted to internal controller calls; underscored methods are not RPC-callable."""

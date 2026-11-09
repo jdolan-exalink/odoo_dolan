@@ -2,6 +2,8 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
+from ..controllers.screen_preferences import _catalog_payload
+
 
 @tagged("post_install", "-at_install")
 class TestScreenPreferences(TransactionCase):
@@ -60,6 +62,18 @@ class TestScreenPreferences(TransactionCase):
         self.assertTrue(record.regular_preview)
         self.assertGreaterEqual(self.env["dolan.icon.assignment"].search_count([]), 44)
 
+    def test_launcher_uses_home_path_and_promotions_has_icon_families(self):
+        launcher = self.env.ref("DOLAN_theme.action_dolan_home")
+        self.assertEqual(launcher.path, "home")
+
+        assignments, names, xmlids = _catalog_payload(self.env["dolan.icon.assignment"].browse())
+        self.assertEqual(xmlids["dolan_discount_engine.menu_dolan_discount_root"], "app.promotions")
+        self.assertEqual(names["promociones"], "app.promotions")
+        self.assertEqual(
+            set(assignments["app.promotions"]),
+            {"fluent_3d", "fluent_flat", "fluent_filled", "fluent_regular", "tabler"},
+        )
+
     def test_workspace_preferences_are_personal_and_validate_widget_keys(self):
         Preference = self.env["dolan.workspace.preference"].with_user(self.user)
         preference = Preference.create({
@@ -85,3 +99,34 @@ class TestScreenPreferences(TransactionCase):
             preference.write({"quick_action_keys": ["delete_database"]})
         with self.assertRaises(ValidationError):
             preference.write({"workspace_sizes": {"activity": "gigantic"}})
+
+    def test_workspace_indicator_mode_defaults_to_complete(self):
+        preference = self.env["dolan.workspace.preference"].with_user(self.user).create({})
+        self.assertEqual(preference.indicator_mode, "complete")
+
+    def test_new_desktop_preferences_seed_default_folders_without_overwriting_layout(self):
+        Desktop = self.env["dolan.desktop.preference"].with_user(self.user)
+        preference = Desktop.current_user()
+        folders = self.env["dolan.desktop.folder"].with_user(self.user).search([
+            ("user_id", "=", self.user.id),
+        ])
+        self.assertEqual(set(folders.mapped("name")), {"Configuraciones", "Varios"})
+        items = self.env["dolan.desktop.item"].with_user(self.user).search([
+            ("user_id", "=", self.user.id),
+        ])
+        placed = {item.menu_id.get_external_id()[item.menu_id.id]: item.folder_id.name for item in items}
+        self.assertEqual(placed.get("base.menu_management"), "Configuraciones")
+        self.assertEqual(placed.get("mail.menu_root_discuss"), "Varios")
+
+        # Once a user saves a layout, subsequent reads leave their choices alone.
+        preference._write_desktop_internal({"layout_version": 1})
+        self.env["dolan.desktop.folder"].with_user(self.user).search([
+            ("user_id", "=", self.user.id), ("name", "=", "Varios"),
+        ]).write({"name": "Mi carpeta"})
+        Desktop.current_user()
+        self.assertEqual(
+            set(self.env["dolan.desktop.folder"].with_user(self.user).search([
+                ("user_id", "=", self.user.id),
+            ]).mapped("name")),
+            {"Configuraciones", "Mi carpeta"},
+        )

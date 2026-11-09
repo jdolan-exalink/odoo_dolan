@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 
-import { DOLAN_UI_PALETTES, DOLAN_THEME_MODES, isSafePosShortcutUrl, normalizeWorkspaceOrder, resolveDarkTheme, selectVisibleKpis, selectWorkspaceMetrics, shouldHandleAppDrawerKeydown, sortDesktopApps } from "@DOLAN_theme/js/dolan_app_drawer";
+import { DOLAN_UI_PALETTES, DOLAN_THEME_MODES, isSafePosShortcutUrl, normalizeWorkspaceOrder, paletteLinkProperties, resolveDarkTheme, selectVisibleKpis, selectWorkspaceMetrics, shouldHandleAppDrawerKeydown, sortDesktopApps } from "@DOLAN_theme/js/dolan_app_drawer";
 import { iconStyleUsesMask, normalizeIconStyle, resolveActionIconAsset, resolveIconAsset, semanticAppId } from "@DOLAN_theme/js/dolan_icon_registry";
 
 test("theme mode respects explicit light and dark choices", () => {
@@ -19,7 +19,10 @@ test("high contrast is a separate dark accessibility theme", () => {
 });
 
 test("theme picker provides the standard DOLAN and alternate color combinations", () => {
-    expect(DOLAN_UI_PALETTES.map((palette) => palette.id)).toEqual(["dolan", "ocean", "forest", "sunset", "violet"]);
+    expect(DOLAN_UI_PALETTES.map((palette) => palette.id)).toEqual([
+        "dolan", "ocean", "forest", "sunset", "violet", "graphite", "emerald", "custom",
+    ]);
+    expect(DOLAN_UI_PALETTES[0].label).toBe("ERP");
     expect(DOLAN_UI_PALETTES.every((palette) => palette.primary.startsWith("#") && palette.secondary.startsWith("#"))).toBe(true);
 });
 
@@ -62,7 +65,7 @@ test("icon variants resolve local resources and retain legacy style aliases", ()
     expect(resolveIconAsset("app.unknown", "fluent", assignment)).toBe(null);
 });
 
-test("Mi Espacio only shows widgets saved for this user", () => {
+test("legacy Mi Espacio widget preferences can still be read", () => {
     const widgets = [{ key: "quotes_open" }, { key: "invoices_draft" }];
     expect(selectVisibleKpis(widgets, ["quotes_open"]).map((widget) => widget.key)).toEqual(["quotes_open"]);
     expect(selectVisibleKpis(widgets, []).length).toBe(0);
@@ -145,4 +148,10 @@ test("custom order is preserved and newly installed apps are appended alphabetic
         { menu_key: "base.menu_contacts", sequence: 10 },
     ]);
     expect(sorted.map((app) => app.id)).toEqual([2, 1, 3]);
+});
+
+test("form links follow the selected palette and stay readable in dark mode", () => {
+    expect(paletteLinkProperties("#0878b9")["--bs-link-color"]).toBe("#0878b9");
+    expect(paletteLinkProperties("#0878b9")["--bs-link-color-rgb"]).toBe("8, 120, 185");
+    expect(paletteLinkProperties("#7938d2", true)["--bs-link-color"]).toBe("#ac84e3");
 });

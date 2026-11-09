@@ -51,6 +51,15 @@ func TestDolanPOSResolvesPaymentTerminalAndMercadoPago(t *testing.T) {
 	}
 }
 
+func TestCommerceAndCompleteProfilesInstallMercadoPagoProvider(t *testing.T) {
+	for _, profile := range []core.Profile{core.ProfileCommerce, core.ProfileComplete} {
+		info := core.FindProfileInfo(profile)
+		if !hasCatalogEntry(info.SystemApps, "pos_mercado_pago") {
+			t.Errorf("profile %s must explicitly install pos_mercado_pago", profile)
+		}
+	}
+}
+
 func hasCatalogEntry(entries []string, expected string) bool {
 	for _, entry := range entries {
 		if entry == expected {

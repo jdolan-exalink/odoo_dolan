@@ -63,7 +63,7 @@ export function resolveDarkTheme(mode, systemPrefersDark) {
 }
 
 export const DOLAN_UI_PALETTES = [
-    { id: "dolan", label: "DOLAN", primary: "#7938d2", secondary: "#017e84" },
+    { id: "dolan", label: "ERP", primary: "#7938d2", secondary: "#017e84" },
     { id: "ocean", label: "Océano", primary: "#0878b9", secondary: "#16b8c9" },
     { id: "forest", label: "Bosque", primary: "#287271", secondary: "#70a288" },
     { id: "sunset", label: "Atardecer", primary: "#d9603b", secondary: "#e6a23c" },
@@ -130,7 +130,7 @@ export const DOLAN_WORKSPACE_ACTIONS = [
     { key: "new_payment", label: "Registrar cobranza", icon: "money", tone: "warning" },
     { key: "whatsapp", label: "WhatsApp", icon: "chat", tone: "success" },
     { key: "libro_iva", label: "Libro IVA & SICORE", icon: "chart-bar", tone: "secondary" },
-    { key: "toggle_ai", label: "Asistente DOLAN AI", icon: "sparkles", tone: "primary" },
+    { key: "toggle_ai", label: "Asistente AI", icon: "sparkles", tone: "primary" },
     { key: "open_search", label: "Búsqueda global", icon: "search", tone: "dark" },
 ];
 
@@ -140,9 +140,25 @@ export function normalizeWorkspaceOrder(order) {
     return [...new Set([...normalized, ...known])];
 }
 
+export function paletteLinkProperties(primary, dark = false) {
+    const rgb = String(primary).match(/^#?([\da-f]{6})$/i)
+        ? String(primary).replace("#", "").match(/[\da-f]{2}/gi).map((part) => parseInt(part, 16))
+        : [121, 56, 210];
+    const mixWith = (target, amount) => rgb.map((channel) => Math.round(channel + (target - channel) * amount));
+    const link = dark ? mixWith(255, 0.38) : rgb;
+    const hover = dark ? mixWith(255, 0.55) : mixWith(0, 0.15);
+    const hex = (channels) => `#${channels.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
+    return {
+        "--bs-link-color": hex(link),
+        "--bs-link-color-rgb": link.join(", "),
+        "--bs-link-hover-color": hex(hover),
+        "--bs-link-hover-color-rgb": hover.join(", "),
+    };
+}
+
 export function applyDolanPalette(palette, companyColors = {}, customColors = {}) {
     const targets = [document.documentElement, document.body, document.querySelector(".o_web_client")].filter(Boolean);
-    const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active"];
+    const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active", "--bs-link-color", "--bs-link-color-rgb", "--bs-link-hover-color", "--bs-link-hover-color-rgb"];
     const target = document.body;
     if (target.classList.contains("o_dolan_high_contrast")) {
         targets.forEach((node) => clearProperties.forEach((name) => node.style.removeProperty(name)));
@@ -168,6 +184,9 @@ export function applyDolanPalette(palette, companyColors = {}, customColors = {}
         "--NavBar-entry-borderColor-active": primary,
         "--dolan-color-primary-soft": `color-mix(in srgb, ${primary} 18%, transparent)`,
         "--dolan-color-secondary-soft": `color-mix(in srgb, ${secondary} 18%, transparent)`,
+        // Links (a, .btn-link, "Agregar una línea") follow the palette instead of
+        // Odoo's fixed brand color. On dark surfaces they are lightened for contrast.
+        ...paletteLinkProperties(primary, target.classList.contains("o_dolan_dark_mode")),
     };
     targets.forEach((node) => Object.entries(properties).forEach(([name, value]) => node.style.setProperty(name, value)));
     if (useCustom) {
@@ -239,6 +258,7 @@ export class DolanAppDrawerSystray extends Component {
     setup() {
         this.menuService = useService("menu");
         this.actionService = useService("action");
+        this.commandService = useService("command");
         this.notification = useService("notification");
 
         // Escuchar eventos globales del bus disparados desde NavBar o cualquier módulo
@@ -281,7 +301,7 @@ export class DolanAppDrawerSystray extends Component {
         const initialOpen =
             window.location.pathname === "/odoo" ||
             window.location.pathname === "/odoo/" ||
-            window.location.pathname === "/odoo/dolan-home" ||
+            window.location.pathname === "/odoo/home" ||
             window.location.pathname === "/web";
         if (initialOpen) {
             document.body.classList.add("o_home_menu_background");
@@ -343,7 +363,7 @@ export class DolanAppDrawerSystray extends Component {
             visibleSectionKeys: DOLAN_WORKSPACE_SECTIONS.map((section) => section.key),
             workspaceOrder: DOLAN_WORKSPACE_SECTIONS.map((section) => section.key),
             workspaceSizes: {},
-            indicatorMode: "priorities",
+            indicatorMode: "complete",
             visibleWidgetKeys: [],
             workspaceConfigOpen: false,
             kpisLoading: false,
@@ -591,7 +611,7 @@ export class DolanAppDrawerSystray extends Component {
             const openHomeAction = () => {
                 const activeAction = this.actionService.currentController?.action;
                 const isDolanHomeAction =
-                    window.location.pathname === "/odoo/dolan-home" ||
+                    window.location.pathname === "/odoo/home" ||
                     activeAction?.tag === "dolan_home" ||
                     Boolean(document.querySelector(".o_dolan_home_action"));
                 if (isDolanHomeAction) {
@@ -944,7 +964,7 @@ export class DolanAppDrawerSystray extends Component {
     }
 
     static isHomePath(pathname = window.location.pathname) {
-        return pathname === "/odoo" || pathname === "/odoo/" || pathname === "/odoo/dolan-home" || pathname === "/web";
+        return pathname === "/odoo" || pathname === "/odoo/" || pathname === "/odoo/home" || pathname === "/web";
     }
 
     openDrawer() {
@@ -1041,7 +1061,7 @@ export class DolanAppDrawerSystray extends Component {
     }
 
     activePaletteLabel() {
-        return this.state.paletteChoices.find((item) => item.id === this.state.palette)?.label || "DOLAN";
+        return this.state.paletteChoices.find((item) => item.id === this.state.palette)?.label || "ERP";
     }
 
     chooseSessionProfile(profile) {
@@ -1816,14 +1836,8 @@ export class DolanAppDrawerSystray extends Component {
 
     get visibleKpis() {
         const role = this.state.roleFilter;
-        const kpis = this.state.indicatorMode === "complete"
-            ? [...this.state.kpis]
-            : selectVisibleKpis(this.state.kpis, this.state.visibleWidgetKeys);
-        const byRole = role === "all" ? kpis : kpis.filter((k) => k.role === role || k.role === "general");
-        const notDismissed = byRole.filter((k) => !this._isHiddenKpi(k));
-        return this.state.indicatorMode === "priorities"
-            ? notDismissed.filter((k) => Number(k.count) > 0)
-            : notDismissed;
+        const byRole = role === "all" ? this.state.kpis : this.state.kpis.filter((k) => k.role === role || k.role === "general");
+        return byRole.filter((k) => !this._isHiddenKpi(k));
     }
 
     get attentionKpis() {
@@ -1842,7 +1856,7 @@ export class DolanAppDrawerSystray extends Component {
     get summaryKpis() {
         return selectWorkspaceMetrics(
             this.state.kpis.filter((kpi) => !this._isHiddenKpi(kpi)),
-            this.state.visibleWidgetKeys,
+            this.state.kpis.map((kpi) => kpi.key),
             this.state.roleFilter,
             ["po_pending", "receipts_pending", "mrp_open", "my_activities"]
         );
@@ -1851,7 +1865,7 @@ export class DolanAppDrawerSystray extends Component {
     get otherMetricKpis() {
         return selectWorkspaceMetrics(
             this.state.kpis.filter((kpi) => !this._isHiddenKpi(kpi)),
-            this.state.visibleWidgetKeys,
+            this.state.kpis.map((kpi) => kpi.key),
             this.state.roleFilter,
             ["bills_due_week", "quotes_expiring", "sales_to_invoice", "pickings_late", "maintenance_open"]
         );
@@ -1904,12 +1918,6 @@ export class DolanAppDrawerSystray extends Component {
 
     workspaceSectionSize(key) {
         return this.state.workspaceSizes[key] || "medium";
-    }
-
-    setIndicatorMode(mode) {
-        if (!["priorities", "complete", "custom"].includes(mode)) return;
-        this.state.indicatorMode = mode;
-        this.saveWorkspacePreferences({ indicator_mode: mode });
     }
 
     toggleWorkspaceSection(key) {
@@ -2030,7 +2038,7 @@ export class DolanAppDrawerSystray extends Component {
                 this.state.kpiStates = localKpiStates;
                 this.saveWorkspacePreferences({ kpi_states: localKpiStates });
             }
-            this.state.indicatorMode = res.indicator_mode || "priorities";
+            this.state.indicatorMode = "complete";
             this.state.visibleSectionKeys = Array.isArray(res.visible_section_keys)
                 ? res.visible_section_keys : DOLAN_WORKSPACE_SECTIONS.map((section) => section.key);
             this.state.workspaceOrder = normalizeWorkspaceOrder(res.workspace_order);
@@ -2101,9 +2109,9 @@ export class DolanAppDrawerSystray extends Component {
     }
 
     executeQuickAction(actionKey) {
-        this.closeDrawer({ restore: false });
         switch (actionKey) {
             case "new_invoice":
+                this.closeDrawer({ restore: false });
                 this.actionService.doAction({
                     type: "ir.actions.act_window",
                     res_model: "account.move",
@@ -2112,6 +2120,7 @@ export class DolanAppDrawerSystray extends Component {
                 });
                 break;
             case "new_sale":
+                this.closeDrawer({ restore: false });
                 this.actionService.doAction({
                     type: "ir.actions.act_window",
                     res_model: "sale.order",
@@ -2119,6 +2128,7 @@ export class DolanAppDrawerSystray extends Component {
                 });
                 break;
             case "new_partner":
+                this.closeDrawer({ restore: false });
                 this.actionService.doAction({
                     type: "ir.actions.act_window",
                     res_model: "res.partner",
@@ -2126,6 +2136,7 @@ export class DolanAppDrawerSystray extends Component {
                 });
                 break;
             case "new_payment":
+                this.closeDrawer({ restore: false });
                 this.actionService.doAction({
                     type: "ir.actions.act_window",
                     res_model: "account.payment",
@@ -2133,13 +2144,17 @@ export class DolanAppDrawerSystray extends Component {
                 });
                 break;
             case "whatsapp":
+                this.closeDrawer({ restore: false });
                 this.actionService.doAction("DOLAN_whatsapp.action_dolan_whatsapp_messages");
                 break;
             case "libro_iva":
+                this.closeDrawer({ restore: false });
                 this.actionService.doAction("DOLAN_l10n_ar_afip.action_l10n_ar_libro_iva_digital_wizard");
                 break;
             case "open_search":
-                window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }));
+                // Abrir por el servicio soportado evita un keydown sintético sin
+                // target real, que rompe HotkeyPlugin en algunos navegadores.
+                this.commandService.openMainPalette();
                 break;
             case "toggle_ai":
                 this.env.bus.trigger("DOLAN:TOGGLE_AI_CHAT");

@@ -1,0 +1,138 @@
+/* DOLAN UI — consistencia de formularios.
+ * Cargado al final de web.assets_backend. Toda la paleta sale de los tokens
+ * (--dolan-color-*), que applyDolanPalette() actualiza con la paleta elegida;
+ * nada de este archivo debe volver a usar el violeta fijo de Odoo (#714B67).
+ */
+
+:root {
+    --dolan-form-accent: var(--dolan-color-primary);
+    --dolan-form-accent-soft: color-mix(in srgb, var(--dolan-color-primary) 14%, transparent);
+    --dolan-form-control-bg: var(--dolan-color-surface);
+    --dolan-form-control-border: var(--dolan-color-border);
+}
+body.o_dolan_dark_mode {
+    /* En oscuro el primario de la paleta se aclara para mantener contraste AA. */
+    --dolan-form-accent: color-mix(in srgb, var(--dolan-color-primary) 62%, #fff);
+    --dolan-form-accent-soft: color-mix(in srgb, var(--dolan-color-primary) 26%, var(--dolan-color-surface));
+    --dolan-form-control-bg: var(--dolan-color-surface-raised);
+    --dolan-form-control-border: var(--dolan-color-border);
+}
+
+/* 1. Barra de control: guardar, descartar y el menú ⋮ comparten un único estilo. */
+body:not(.o_dolan_high_contrast) .o_control_panel :is(
+    .o_form_button_save, .o_form_button_cancel, .o_form_button_create,
+    .o_cp_action_menus .dropdown-toggle, .o_cp_action_menus > .btn
+) {
+    --btn-bg: var(--dolan-form-control-bg);
+    --btn-border-color: var(--dolan-form-control-border);
+    --btn-hover-bg: var(--dolan-form-accent-soft);
+    --btn-hover-border-color: var(--dolan-form-accent);
+    --btn-active-bg: var(--dolan-form-accent-soft);
+    --btn-active-border-color: var(--dolan-form-accent);
+    color: var(--dolan-color-text) !important;
+    background-color: var(--dolan-form-control-bg) !important;
+    border: 1px solid var(--dolan-form-control-border) !important;
+    border-radius: var(--dolan-radius-sm) !important;
+    box-shadow: none !important;
+}
+body:not(.o_dolan_high_contrast) .o_control_panel :is(
+    .o_form_button_save, .o_form_button_cancel, .o_form_button_create,
+    .o_cp_action_menus .dropdown-toggle, .o_cp_action_menus > .btn
+):is(:hover, :focus-visible, .show) {
+    color: var(--dolan-color-text) !important;
+    background-color: var(--dolan-form-accent-soft) !important;
+    border-color: var(--dolan-form-accent) !important;
+}
+body:not(.o_dolan_high_contrast) .o_control_panel .o_form_button_save :is(.fa, .oi, svg) {
+    color: var(--dolan-form-accent) !important;
+}
+body:not(.o_dolan_high_contrast) .o_control_panel .o_cp_action_menus .dropdown-toggle::before {
+    /* .o_btn_circle pinta su fondo en ::before; lo anulamos para que no quede
+       un círculo de otro color encima del botón unificado. */
+    background: transparent !important;
+}
+
+/* 2. Botones inteligentes (Apuntes contables, Pagos, etc.). */
+body:not(.o_dolan_high_contrast) .o_form_view .o-form-buttonbox .oe_stat_button {
+    color: var(--dolan-color-text) !important;
+    background-color: var(--dolan-form-control-bg) !important;
+    border: 1px solid var(--dolan-form-control-border) !important;
+    border-radius: var(--dolan-radius-sm) !important;
+    box-shadow: none !important;
+}
+body:not(.o_dolan_high_contrast) .o_form_view .o-form-buttonbox .oe_stat_button:is(:hover, :focus-visible) {
+    background-color: var(--dolan-form-accent-soft) !important;
+    border-color: var(--dolan-form-accent) !important;
+}
+body:not(.o_dolan_high_contrast) .o_form_view .o-form-buttonbox .oe_stat_button :is(.o_button_icon, .fa, .oi) {
+    color: var(--dolan-form-accent) !important;
+}
+
+/* 3. Barra de estado: misma forma de píldora y color de la paleta. */
+body:not(.o_dolan_high_contrast) .o_form_view :is(.o_form_statusbar, .o_form_statusbar .o_statusbar_status) {
+    background-color: transparent !important;
+}
+body:not(.o_dolan_high_contrast) .o_form_view .o_statusbar_status .o_arrow_button {
+    color: var(--dolan-color-text-muted) !important;
+    background-color: var(--dolan-form-control-bg) !important;
+    border: 1px solid var(--dolan-form-control-border) !important;
+}
+body:not(.o_dolan_high_contrast) .o_form_view .o_statusbar_status .o_arrow_button::before,
+body:not(.o_dolan_high_contrast) .o_form_view .o_statusbar_status .o_arrow_button::after {
+    /* Las flechas de Odoo usan bordes del color fijo; con píldoras sobran. */
+    display: none !important;
+}
+body:not(.o_dolan_high_contrast) .o_form_view .o_statusbar_status .o_arrow_button:not(:disabled):hover {
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-form-accent) !important;
+}
+body:not(.o_dolan_high_contrast) .o_form_view .o_statusbar_status .o_arrow_button_current,
+body:not(.o_dolan_high_contrast) .o_form_view .o_statusbar_status .o_arrow_button.o_arrow_button_current:disabled {
+    color: #fff !important;
+    background-color: var(--dolan-color-primary) !important;
+    border-color: var(--dolan-color-primary) !important;
+    opacity: 1 !important;
+}
+
+/* 4. Enlaces de formularios y listas embebidas ("Agregar una línea", "Catálogo"). */
+body:not(.o_dolan_high_contrast) :is(.o_form_view, .o_list_renderer) :is(
+    .o_field_x2many_list_row_add a, .o_field_x2many_list_row_add .btn-link,
+    .o_field_x2many_list_row_add button
+) {
+    color: var(--dolan-form-accent) !important;
+}
+body:not(.o_dolan_high_contrast) :is(.o_form_view, .o_list_renderer) :is(
+    .o_field_x2many_list_row_add a, .o_field_x2many_list_row_add .btn-link,
+    .o_field_x2many_list_row_add button
+):hover {
+    color: var(--dolan-color-text) !important;
+    text-decoration: underline;
+}
+body.o_dolan_dark_mode:not(.o_dolan_high_contrast) .o_form_view :is(
+    .o_form_sheet a:not(.btn):not(.dropdown-item):not(.nav-link):not(.o_external_button),
+    .o_form_sheet .btn-link
+) {
+    color: var(--dolan-form-accent) !important;
+}
+
+/* 5. Títulos: sin bloque de fondo distinto detrás de "Borrador" o el nombre. */
+body:not(.o_dolan_high_contrast) .o_form_view .oe_title,
+body:not(.o_dolan_high_contrast) .o_form_view .oe_title :is(h1, h2, .o_field_widget, span),
+body:not(.o_dolan_high_contrast) .o_form_view .oe_title :is(h1, h2) :is(input, .o_input) {
+    background-color: transparent !important;
+}
+
+/* 6. Pestañas y botones secundarios de formulario con el acento de la paleta. */
+body:not(.o_dolan_high_contrast) .o_form_view .o_notebook .nav-link.active {
+    color: var(--dolan-color-text) !important;
+    border-top-color: var(--dolan-color-primary) !important;
+}
+body:not(.o_dolan_high_contrast) .o_form_view .o_form_sheet .btn-secondary {
+    color: var(--dolan-color-text) !important;
+    background-color: var(--dolan-form-control-bg) !important;
+    border-color: var(--dolan-form-control-border) !important;
+}
+body:not(.o_dolan_high_contrast) .o_form_view .o_form_sheet .btn-secondary:is(:hover, :focus-visible) {
+    background-color: var(--dolan-form-accent-soft) !important;
+    border-color: var(--dolan-form-accent) !important;
+}

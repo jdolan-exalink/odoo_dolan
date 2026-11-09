@@ -51,10 +51,24 @@ body[data-dolan-icon-scale="large"] { --dolan-launcher-tile: 104px; --dolan-laun
     border-radius: var(--dolan-profile-radius, 16px) !important;
     box-shadow: var(--dolan-profile-shadow, none);
 }
-.o_dolan_home_menu_wrapper .o_dolan_app_cell .o_app img,
-.o_dolan_home_menu_wrapper .o_dolan_folder_cell .o_dolan_folder_icon {
+.o_dolan_home_menu_wrapper .o_dolan_app_cell .o_app .o_app_icon,
+.o_dolan_home_menu_wrapper .o_dolan_folder_cell .o_dolan_folder_tile {
     width: var(--dolan-launcher-tile, 88px);
     height: var(--dolan-launcher-tile, 88px);
+    min-width: var(--dolan-launcher-tile, 88px);
+    min-height: var(--dolan-launcher-tile, 88px);
+    max-width: var(--dolan-launcher-tile, 88px);
+    max-height: var(--dolan-launcher-tile, 88px);
+}
+.o_dolan_home_menu_wrapper .o_dolan_app_cell .o_dolan_variant_mask {
+    width: var(--dolan-launcher-icon, 56px);
+    height: var(--dolan-launcher-icon, 56px);
+    flex-basis: var(--dolan-launcher-icon, 56px);
+}
+.o_dolan_home_menu_wrapper .o_dolan_folder_cell .o_dolan_folder_preview {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
 }
 .o_dolan_workspace_3 {
     --ws-radius: var(--dolan-profile-radius, 18px);

@@ -34,7 +34,7 @@
             <!-- 3. IA Copilot (ChatGPT) -->
             <button type="button"
                     class="o_dolan_bottom_item o_dolan_bottom_item_ai btn btn-link p-0 d-flex flex-column align-items-center justify-content-center text-decoration-none"
-                    title="Asistente DOLAN AI"
+                    title="Asistente AI"
                     t-on-click="() => this.onAiClick()">
                 <div class="o_dolan_bottom_icon_ai d-flex align-items-center justify-content-center shadow-sm">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
