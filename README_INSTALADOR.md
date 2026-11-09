@@ -124,7 +124,7 @@ En perfiles `Comercio` y `Completo` queda incluido el checkout de POS para descu
 ## Qué queda configurado
 
 - Contenedores de Odoo, PostgreSQL, WAHA y Whisper local (o servicios nativos en Proxmox LXC).
-- Base inicial con el perfil elegido, idioma español y aplicaciones CE asociadas.
+- Base inicial con el perfil elegido, idioma español de Argentina (`es_AR`) y aplicaciones CE asociadas. `es_419` no se activa; Odoo conserva `en_US` como idioma técnico de origen.
 - Empresa principal con razón social, CUIT, domicilio y responsabilidad ARCA.
 - Usuario administrador con el correo y contraseña ingresados.
 - PV fiscal de facturación y, cuando PoS está instalado, su diario/configuración inicial.
