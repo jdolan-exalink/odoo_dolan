@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 
-import { DOLAN_UI_PALETTES, DOLAN_THEME_MODES, isSafePosShortcutUrl, normalizeWorkspaceOrder, paletteLinkProperties, resolveDarkTheme, selectVisibleKpis, selectWorkspaceMetrics, shouldHandleAppDrawerKeydown, sortDesktopApps } from "@DOLAN_theme/js/dolan_app_drawer";
+import { DOLAN_UI_PALETTES, DOLAN_THEME_MODES, isSafePosShortcutUrl, normalizeWorkspaceOrder, paletteLinkProperties, customSurfaceProperties, resolveDarkTheme, selectVisibleKpis, selectWorkspaceMetrics, shouldHandleAppDrawerKeydown, sortDesktopApps } from "@DOLAN_theme/js/dolan_app_drawer";
 import { iconStyleUsesMask, normalizeIconStyle, resolveActionIconAsset, resolveIconAsset, semanticAppId } from "@DOLAN_theme/js/dolan_icon_registry";
 
 test("theme mode respects explicit light and dark choices", () => {
@@ -157,4 +157,10 @@ test("form links follow the selected palette and stay readable in dark mode", ()
     // Odoo's Bootstrap build has no prefix: the unprefixed names must match.
     expect(paletteLinkProperties("#0878b9")["--link-color"]).toBe("#0878b9");
     expect(paletteLinkProperties("#0878b9")["--link-color-rgb"]).toBe("8, 120, 185");
+});
+
+test("custom palette surfaces apply in light mode only, never white panels in dark mode", () => {
+    const colors = { background: "#FAFAFA", surface: "#FFFFFF", text: "#111111", border: "#DDDDDD" };
+    expect(customSurfaceProperties(colors, false)["--dolan-color-surface-raised"]).toBe("#FFFFFF");
+    expect(customSurfaceProperties(colors, true)).toEqual({});
 });

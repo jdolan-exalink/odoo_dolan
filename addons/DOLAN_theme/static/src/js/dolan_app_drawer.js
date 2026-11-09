@@ -162,12 +162,31 @@ export function paletteLinkProperties(primary, dark = false) {
     };
 }
 
+const CUSTOM_SURFACE_PROPERTIES = ["--dolan-color-surface", "--dolan-color-surface-raised", "--dolan-color-text", "--dolan-color-border"];
+
+/**
+ * Background/surface/text/border of the "Personalizada" palette. They are light
+ * colors by design, so in dark mode the palette keeps only its primary and
+ * secondary accents and the dark tokens stay in charge of surfaces and text.
+ */
+export function customSurfaceProperties(customColors = {}, dark = false) {
+    if (dark) {
+        return {};
+    }
+    return {
+        "--dolan-color-surface": customColors.background || "#F7F8FA",
+        "--dolan-color-surface-raised": customColors.surface || "#FFFFFF",
+        "--dolan-color-text": customColors.text || "#263238",
+        "--dolan-color-border": customColors.border || "#DEE2E6",
+    };
+}
+
 export function applyDolanPalette(palette, companyColors = {}, customColors = {}) {
     const targets = [document.documentElement, document.body, document.querySelector(".o_web_client")].filter(Boolean);
     const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active", "--bs-link-color", "--bs-link-color-rgb", "--bs-link-hover-color", "--bs-link-hover-color-rgb", "--primary", "--primary-rgb", "--link-color", "--link-color-rgb", "--link-hover-color", "--link-hover-color-rgb"];
     const target = document.body;
     if (target.classList.contains("o_dolan_high_contrast")) {
-        targets.forEach((node) => clearProperties.forEach((name) => node.style.removeProperty(name)));
+        targets.forEach((node) => [...clearProperties, ...CUSTOM_SURFACE_PROPERTIES].forEach((name) => node.style.removeProperty(name)));
         target.dataset.dolanPalette = palette;
         return;
     }
@@ -198,13 +217,12 @@ export function applyDolanPalette(palette, companyColors = {}, customColors = {}
         ...paletteLinkProperties(primary, target.classList.contains("o_dolan_dark_mode")),
     };
     targets.forEach((node) => Object.entries(properties).forEach(([name, value]) => node.style.setProperty(name, value)));
+    // Custom surfaces are written inline, so they beat the dark-mode tokens in
+    // CSS. Always clear them first (switching palette or mode must not leave
+    // stale light surfaces) and only apply them in light mode.
+    targets.forEach((node) => CUSTOM_SURFACE_PROPERTIES.forEach((name) => node.style.removeProperty(name)));
     if (useCustom) {
-        const customProperties = {
-            "--dolan-color-surface": customColors.background || "#F7F8FA",
-            "--dolan-color-surface-raised": customColors.surface || "#FFFFFF",
-            "--dolan-color-text": customColors.text || "#263238",
-            "--dolan-color-border": customColors.border || "#DEE2E6",
-        };
+        const customProperties = customSurfaceProperties(customColors, target.classList.contains("o_dolan_dark_mode"));
         targets.forEach((node) => Object.entries(customProperties).forEach(([name, value]) => node.style.setProperty(name, value)));
     }
     document.body.dataset.dolanPalette = palette;
