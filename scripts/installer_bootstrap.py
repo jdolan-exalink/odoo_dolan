@@ -48,6 +48,8 @@ admin.write({
     "login": config["admin_email"],
     "email": config["admin_email"],
     "password": config["admin_password"],
+    "lang": "es_AR",
+    "tz": "America/Argentina/Buenos_Aires",
 })
 
 journals = env["account.journal"].sudo().search(

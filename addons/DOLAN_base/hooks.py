@@ -17,10 +17,16 @@ def post_init_hook(env):
         """
     )
 
-    # 2. Activar idioma Español (Argentina) es_AR y es_419 siempre
-    langs = env["res.lang"].with_context(active_test=False).search([("code", "in", ["es_AR", "es_419"])])
-    if langs:
-        langs.write({"active": True})
+    # 2. Mantener Español (Argentina) como único idioma español visible.
+    # es_419 cargaba etiquetas genéricas y dejaba sin traducir apps que sí
+    # tienen traducción específica para Argentina.
+    languages = env["res.lang"].with_context(active_test=False)
+    argentina = languages.search([("code", "=", "es_AR")], limit=1)
+    if argentina and not argentina.active:
+        argentina.write({"active": True})
+    latin_american = languages.search([("code", "=", "es_419")], limit=1)
+    if latin_american and latin_american.active:
+        latin_american.write({"active": False})
     try:
         # Keep the technical superuser in the framework's source language.
         # Native tests and service diagnostics must not inherit human UI defaults.

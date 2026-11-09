@@ -20,3 +20,11 @@ class TestInitialization(TransactionCase):
         users = self.env['res.users'].search([('share', '=', False), ('id', '!=', self.env.ref('base.user_root').id)])
         self.assertTrue(users)
         self.assertEqual(set(users.mapped('tz')), {'America/Argentina/Buenos_Aires'})
+
+    def test_only_argentina_spanish_is_active(self):
+        post_init_hook(self.env)
+        languages = self.env['res.lang'].with_context(active_test=False)
+        argentina = languages.search([('code', '=', 'es_AR')], limit=1)
+        latin_american = languages.search([('code', '=', 'es_419')], limit=1)
+        self.assertTrue(argentina.active)
+        self.assertFalse(latin_american.active)

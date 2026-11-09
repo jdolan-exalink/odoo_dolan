@@ -40,7 +40,7 @@ Uso: crear_odoo20.sh [opciones]
       --deploy            Desplegar con docker compose al terminar
       --no-deploy         No desplegar (solo generar el proyecto)
       --init-db NOMBRE    Crear/inicializar la DB NOMBRE tras el deploy con
-                          el perfil seleccionado, idioma es_AR/es_419 y ocultar OEEL-1
+                          el perfil seleccionado, idioma es_AR y ocultar OEEL-1
       --demo-data         Cargar Datos Demo DOLAN y ejemplos estándar de Odoo
                           para el perfil instalado (por defecto se omiten)
       --apps "A,B,C"      Lista personalizada de apps CE base a instalar en --init-db
@@ -557,7 +557,7 @@ if [[ -n "$INIT_DB" ]]; then
     INSTALL_LIST="${INSTALL_LIST},l10n_ar_fiscal_ws"
   fi
 
-  echo "Inicializando DB '${INIT_DB}' con idioma es_419/es_AR y perfil '${PROFILE}'..."
+  echo "Inicializando DB '${INIT_DB}' con idioma es_AR y perfil '${PROFILE}'..."
   echo "Esperando a que PostgreSQL esté listo..."
   DB_READY=0
   for _attempt in $(seq 1 60); do
@@ -578,7 +578,7 @@ if [[ -n "$INIT_DB" ]]; then
   DEMO_ARGS=()
   if [[ "$DEMO_DATA" -eq 0 ]]; then DEMO_ARGS+=(--without-demo); fi
   if MSYS_NO_PATHCONV=1 docker compose run --rm --no-deps odoo odoo --config=/etc/odoo/odoo.conf --logfile= \
-    --stop-after-init --no-http "${DEMO_ARGS[@]}" --load-language=es_419 \
+    --stop-after-init --no-http "${DEMO_ARGS[@]}" --load-language=es_AR \
     -d "$INIT_DB" -i "$INSTALL_LIST" >"$INIT_LOG" 2>&1; then
     grep -E "ERROR|CRITICAL|Modules loaded|Registry loaded" "$INIT_LOG" | tail -10 || true
   else

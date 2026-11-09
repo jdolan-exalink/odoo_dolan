@@ -501,7 +501,7 @@ if ($Deploy -and -not $NoDeploy) {
             Write-Host "Inicializando DB '$InitDb' (perfil: $Profile)..." -ForegroundColor Cyan
             $DemoArgs = @()
             if (-not $DemoData -and $DemoMode -eq "none") { $DemoArgs += "--without-demo" }
-            docker compose run --rm --no-deps odoo odoo --config=/etc/odoo/odoo.conf --logfile= --stop-after-init --no-http @DemoArgs --load-language=es_419 -d $InitDb -i $InstallList
+            docker compose run --rm --no-deps odoo odoo --config=/etc/odoo/odoo.conf --logfile= --stop-after-init --no-http @DemoArgs --load-language=es_AR -d $InitDb -i $InstallList
             if ($LASTEXITCODE -ne 0) { throw "La inicializacion de Odoo fallo (codigo $LASTEXITCODE)." }
             if ($DemoMode -eq "dolan") {
                 $seedScript = Join-Path $ScriptDir "scripts\seed_demo_integral.py"

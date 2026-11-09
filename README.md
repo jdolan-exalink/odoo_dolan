@@ -25,7 +25,7 @@ Distribución modular **Open Source (`LGPL-3`)** para **Odoo Community Edition 2
 
 | Módulo | Función Principal |
 | :--- | :--- |
-| **`DOLAN_base`** | Configuración automática `es_AR`/`es_419`, moneda `ARS`, limpieza de promociones `OEEL-1`, Asistente de Alta Rápida Multi-Empresa (CUIT) y Gestor de Perfiles de Cliente. |
+| **`DOLAN_base`** | Configuración automática de idioma `es_AR`, moneda `ARS`, limpieza de promociones `OEEL-1`, Asistente de Alta Rápida Multi-Empresa (CUIT) y Gestor de Perfiles de Cliente. |
 | **`DOLAN_theme`** | App Drawer a pantalla completa en **OWL 3** nativo (`Alt+Q`), Modo Claro/Oscuro, paleta `#714B67`, formularios expandidos y orden de menús igual a Odoo 20 Web. |
 | **`DOLAN_l10n_ar_afip`** | Integración ARCA en desarrollo. WSFE queda bloqueado hasta completar contrato y homologación; QR se omite si faltan datos fiscales. Libro IVA tiene un alcance limitado a facturas en ARS con IVA discriminado y datos completos; SICORE, WSFEX y WSMTXCA no están implementados. |
 | **`DOLAN_accounting`** | Menú Contabilidad, conciliación bancaria CSV/XLSX/OFX/CAMT.053 con coincidencia exacta de pagos, Activos Fijos, Préstamos (Francés/Alemán), Seguimiento de Deudores y reportes financieros. Cobertura y aceptación por perfiles siguen en curso. |
