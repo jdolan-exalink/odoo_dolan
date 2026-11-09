@@ -6,18 +6,18 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     dolan_primary_color = fields.Char(
-        string="Color Primario DOLAN",
+        string="Color Primario",
         default="#714B67",
     )
     dolan_secondary_color = fields.Char(
-        string="Color Secundario DOLAN",
+        string="Color Secundario",
         default="#017e84",
     )
     dolan_home_bg_style = fields.Selection(
         selection=[
-            ("enterprise", "Claro DOLAN (fondo con micro-puntos)"),
+            ("enterprise", "Claro (fondo con micro-puntos)"),
             ("custom", "Imagen de fondo personalizada"),
-            ("midnight", "Oscuro DOLAN"),
+            ("midnight", "Oscuro"),
             ("aurora", "Aurora violeta"),
             ("ocean", "Océano profundo"),
             ("mesh", "Malla suave"),

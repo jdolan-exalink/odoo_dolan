@@ -2,7 +2,7 @@
 <odoo>
     <!-- Sequence for Kitchen Tickets -->
     <record id="seq_dolan_pos_kitchen_ticket" model="ir.sequence">
-        <field name="name">Secuencia de Comandas de Cocina DOLAN</field>
+        <field name="name">Secuencia de Comandas de Cocina</field>
         <field name="code">dolan.pos.kitchen.ticket</field>
         <field name="prefix">CMD-</field>
         <field name="padding">4</field>

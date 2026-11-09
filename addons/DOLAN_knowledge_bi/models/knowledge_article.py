@@ -101,7 +101,7 @@ class DolanKnowledgeArticle(models.Model):
         help='Resumen estructurado utilizado como fuente de contexto RAG por los agentes de DOLAN_ai.',
     )
     is_rag_indexed = fields.Boolean(
-        string='Habilitado para RAG (DOLAN IA)',
+        string='Habilitado para RAG (IA)',
         default=True,
         help='Si está activo, este artículo se incluye en las búsquedas semánticas y de contexto de DOLAN_ai.',
     )

@@ -3,7 +3,7 @@
     <data noupdate="1">
         <!-- Secuencia para Órdenes de Alquiler -->
         <record id="seq_dolan_rental_order" model="ir.sequence">
-            <field name="name">Orden de Alquiler DOLAN</field>
+            <field name="name">Orden de Alquiler</field>
             <field name="code">dolan.rental.order</field>
             <field name="prefix">ALQ/</field>
             <field name="padding">4</field>

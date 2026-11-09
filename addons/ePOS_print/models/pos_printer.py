@@ -101,7 +101,7 @@ class PosPrinter(models.Model):
 
         now = fields.Datetime.context_timestamp(self, fields.Datetime.now())
         lines = [
-            (company.name or 'DOLAN ERP', 'center', True),
+            (company.name or 'Odoo ERP', 'center', True),
             ('TICKET DE PRUEBA', 'center', True),
             ('*** SIN VALOR FISCAL ***', 'center', True),
             ('--------------------------------', 'center', False),

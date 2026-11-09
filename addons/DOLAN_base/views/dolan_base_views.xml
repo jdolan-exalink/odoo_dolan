@@ -5,7 +5,7 @@
         <field name="name">dolan.client.profile.list</field>
         <field name="model">dolan.client.profile</field>
         <field name="arch" type="xml">
-            <list string="Perfiles de Cliente DOLAN">
+            <list string="Perfiles de Cliente">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
@@ -21,7 +21,7 @@
         <field name="name">dolan.client.profile.form</field>
         <field name="model">dolan.client.profile</field>
         <field name="arch" type="xml">
-            <form string="Perfil de Cliente DOLAN">
+            <form string="Perfil de Cliente">
                 <header>
                     <button name="action_apply_profile" string="Aplicar e Instalar Módulos del Perfil" type="object" class="oe_highlight"/>
                     <button name="action_hide_enterprise_tiles" string="Ocultar aplicaciones no disponibles en CE" type="object" class="btn-secondary"/>
@@ -50,7 +50,7 @@
 
     <!-- Acción de Perfiles de Cliente -->
     <record id="action_dolan_client_profile" model="ir.actions.act_window">
-        <field name="name">Perfiles de Cliente DOLAN</field>
+        <field name="name">Perfiles de Cliente</field>
         <field name="res_model">dolan.client.profile</field>
         <field name="view_mode">list,form</field>
     </record>
@@ -96,12 +96,12 @@
 
     <!-- Menús bajo Ajustes -->
     <menuitem id="menu_dolan_root_config"
-              name="Suite DOLAN Argentina"
+              name="Localización Argentina"
               parent="base.menu_administration"
               sequence="1"/>
 
     <menuitem id="menu_dolan_client_profiles"
-              name="Perfiles de Módulos DOLAN"
+              name="Perfiles de Módulos"
               parent="menu_dolan_root_config"
               action="action_dolan_client_profile"
               sequence="10"/>

@@ -4,7 +4,7 @@ from odoo.exceptions import AccessError, UserError
 
 class DolanDiscountAlert(models.Model):
     _name = 'dolan.discount.alert'
-    _description = 'Alerta de control de descuentos DOLAN'
+    _description = 'Alerta de control de descuentos'
     _order = 'severity desc, create_date desc, id desc'
     _check_company_auto = True
 

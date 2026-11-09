@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
     <record id="ir_cron_dolan_desktop_usage_cleanup" model="ir.cron">
-        <field name="name">DOLAN Desktop: limpiar uso antiguo</field>
+        <field name="name">Escritorio: limpiar uso antiguo</field>
         <field name="model_id" ref="model_dolan_desktop_usage_daily"/>
         <field name="state">code</field>
         <field name="code">model._cron_cleanup_old_usage()</field>

@@ -90,7 +90,7 @@ var Catalog = []ModuleSpec{
 	},
 	{
 		ID:          "DOLAN_ai",
-		Title:       "DOLAN AI - ChatGPT Plan & Whisper",
+		Title:       "AI - ChatGPT Plan & Whisper",
 		Version:     "20.0.1.34.0",
 		Category:    "IA",
 		Application: true,
@@ -108,7 +108,7 @@ var Catalog = []ModuleSpec{
 	},
 	{
 		ID:          "DOLAN_whatsapp",
-		Title:       "WhatsApp (WAHA)",
+		Title:       "Envíos y WhatsApp",
 		Version:     "20.0.1.0.0",
 		Category:    "Comunicación",
 		Application: true,

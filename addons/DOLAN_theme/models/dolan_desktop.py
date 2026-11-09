@@ -4,7 +4,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 
 class DolanDesktopPreference(models.Model):
     _name = 'dolan.desktop.preference'
-    _description = 'Preferencias de DOLAN Desktop'
+    _description = 'Preferencias de Escritorio'
 
     user_id = fields.Many2one('res.users', required=True, default=lambda self: self.env.user,
                               index=True, ondelete='cascade')
@@ -18,7 +18,7 @@ class DolanDesktopPreference(models.Model):
     layout_version = fields.Integer(default=0, readonly=True)
     recent_xmlids = fields.Json(default=list, copy=False)
 
-    _user_unique = models.Constraint('UNIQUE(user_id)', 'Ya existen preferencias DOLAN Desktop para este usuario.')
+    _user_unique = models.Constraint('UNIQUE(user_id)', 'Ya existen preferencias de Escritorio para este usuario.')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -106,7 +106,7 @@ class DolanDesktopPreference(models.Model):
 
 class DolanDesktopFolder(models.Model):
     _name = 'dolan.desktop.folder'
-    _description = 'Carpeta personal de DOLAN Desktop'
+    _description = 'Carpeta personal del Escritorio'
     _order = 'sequence, id'
 
     @api.model_create_multi
@@ -141,7 +141,7 @@ class DolanDesktopFolder(models.Model):
 
 class DolanDesktopItem(models.Model):
     _name = 'dolan.desktop.item'
-    _description = 'Ubicación personal de aplicación en DOLAN Desktop'
+    _description = 'Ubicación personal de aplicación en el Escritorio'
     _order = 'sequence, id'
 
     user_id = fields.Many2one('res.users', required=True, default=lambda self: self.env.user,
@@ -196,7 +196,7 @@ class DolanDesktopItem(models.Model):
 
 class DolanDesktopUsageDaily(models.Model):
     _name = 'dolan.desktop.usage.daily'
-    _description = 'Uso diario de aplicaciones desde DOLAN Desktop'
+    _description = 'Uso diario de aplicaciones desde el Escritorio'
     _order = 'usage_date desc'
 
     user_id = fields.Many2one('res.users', required=True, index=True, ondelete='cascade')

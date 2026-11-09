@@ -9,7 +9,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 
 class DolanDiscountCampaign(models.Model):
     _name = 'dolan.discount.campaign'
-    _description = 'Campaña de descuentos DOLAN'
+    _description = 'Campaña de descuentos'
     _order = 'priority desc, date_start, id desc'
     _check_company_auto = True
 
@@ -221,7 +221,7 @@ class DolanDiscountCampaign(models.Model):
 
 class DolanDiscountWeekday(models.Model):
     _name = 'dolan.discount.weekday'
-    _description = 'Día de la semana para una campaña DOLAN'
+    _description = 'Día de la semana para una campaña'
     _order = 'weekday'
 
     name = fields.Char(required=True)
@@ -232,7 +232,7 @@ class DolanDiscountWeekday(models.Model):
 
 class DolanDiscountExcludedDate(models.Model):
     _name = 'dolan.discount.excluded.date'
-    _description = 'Fecha excluida de promoción DOLAN'
+    _description = 'Fecha excluida de promoción'
     _order = 'date, id'
 
     campaign_id = fields.Many2one('dolan.discount.campaign', required=True, ondelete='cascade', index=True)

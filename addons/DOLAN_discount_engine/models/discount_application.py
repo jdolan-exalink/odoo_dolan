@@ -4,7 +4,7 @@ from odoo.exceptions import UserError
 
 class DolanDiscountApplication(models.Model):
     _name = 'dolan.discount.application'
-    _description = 'Aplicación auditable de descuento DOLAN'
+    _description = 'Aplicación auditable de descuento'
     _order = 'id desc'
     _check_company_auto = True
 

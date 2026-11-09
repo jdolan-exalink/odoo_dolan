@@ -54,7 +54,7 @@ export class DolanMercadoPagoQR extends PaymentInterface {
         }
         if (created?.uncertain) {
             line.setPaymentStatus('waitingScan');
-            this._message(_t('Mercado Pago no confirmó si recibió la orden. DOLAN consultará la misma referencia antes de permitir otro intento.'), _t('Estado incierto'));
+            this._message(_t('Mercado Pago no confirmó si recibió la orden. El sistema consultará la misma referencia antes de permitir otro intento.'), _t('Estado incierto'));
             return new Promise((resolve) => { this.resolver = resolve; this._poll(line, externalReference, null); });
         }
         if (!created?.order_id) {
@@ -121,7 +121,7 @@ export class DolanMercadoPagoQR extends PaymentInterface {
             // Preserve the lock in the UI and keep reconciling; never convert a timeout into success/failure.
             if (!this.networkWarningShown) {
                 this.networkWarningShown = true;
-                this._message(_t('Se perdió la consulta al proveedor. El estado del cobro es incierto: no inicies otro pago. DOLAN seguirá consultando esta misma orden.'), _t('Reconectando Mercado Pago'));
+                this._message(_t('Se perdió la consulta al proveedor. El estado del cobro es incierto: no inicies otro pago. El sistema seguirá consultando esta misma orden.'), _t('Reconectando Mercado Pago'));
             }
         }
         this.pollTimer = setTimeout(() => this._poll(line, externalReference, orderId), POLL_MS);

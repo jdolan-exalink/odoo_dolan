@@ -10,7 +10,7 @@
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="action_dolan_ocr_extract"
-                        string="Digitalizar con DOLAN IA (Sin IAP)"
+                        string="Digitalizar con IA (Sin IAP)"
                         type="object"
                         class="btn-secondary"
                         icon="fa-magic"
@@ -23,7 +23,7 @@
                         invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund', 'in_receipt') or not dolan_ocr_cae or l10n_ar_afip_auth_code == dolan_ocr_cae"/>
             </xpath>
             <xpath expr="//notebook" position="inside">
-                <page string="OCR &amp; QR AFIP (DOLAN IA)"
+                <page string="OCR &amp; QR AFIP (IA)"
                       name="dolan_ocr_tab"
                       invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt') and dolan_ocr_status == 'none'">
                     <group>
@@ -73,13 +73,13 @@
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="action_dolan_ocr_extract"
-                        string="Digitalizar con DOLAN IA (Sin IAP)"
+                        string="Digitalizar con IA (Sin IAP)"
                         type="object"
                         class="btn-secondary"
                         icon="fa-magic"/>
             </xpath>
             <xpath expr="//sheet" position="inside">
-                <group string="Extracción OCR DOLAN IA" invisible="dolan_ocr_status == 'none'">
+                <group string="Extracción OCR IA" invisible="dolan_ocr_status == 'none'">
                     <group>
                         <field name="dolan_ocr_status" widget="badge"
                                decoration-success="dolan_ocr_status in ('qr_extracted', 'ai_extracted')"/>

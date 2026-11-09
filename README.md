@@ -144,7 +144,7 @@ El flujo está pensado para una instalación abierta y alojada por el usuario. S
 El stack levanta `dolan_local_whisper` como servicio interno, sin publicar el puerto de transcripción al host. En **IA → Configuración → Proveedores de IA → Dictado Whisper**, elegir **Whisper local (contenedor DOLAN)**. El audio se envía desde Odoo a `http://whisper:8000` por la red Docker; no requiere API key. El modelo se descarga al volumen una sola vez. Para usar la API externa, cambiar el motor a **OpenAI Audio API** y cargar su clave.
 
 ### 4.3 Configurar Certificados ARCA / AFIP por Empresa (Multi-CUIT)
-1. Para crear una nueva razón social, ir a **Ajustes → Suite DOLAN Argentina → Alta Rápida Multi-Empresa (CUIT)**.
+1. Para crear una nueva razón social, ir a **Ajustes → Localización Argentina → Alta Rápida Multi-Empresa (CUIT)**.
 2. En **Contabilidad → Configuración → Ajustes → Facturación Electrónica ARCA**, cargar el certificado `.crt` y clave privada `.key` (o usar el entorno **Homologación** para pruebas inmediatas).
 
 La actualización respalda DB, addons y filestore antes de cambiar módulos. Al terminar la instalación se muestra el usuario administrador y la dirección de acceso; la contraseña nunca se imprime. Para evitar el error TourInteractive al abrir recorridos o el modo desarrollador, sirve Odoo 20 sobre HTTPS con un certificado confiable: una instancia por IP y HTTP no es un contexto seguro.

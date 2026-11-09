@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo noupdate="1">
     <record id="ir_cron_dolan_discount_expire_approvals" model="ir.cron">
-        <field name="name">DOLAN: vencer autorizaciones de descuentos</field>
+        <field name="name">Promociones: vencer autorizaciones de descuentos</field>
         <field name="model_id" ref="model_dolan_discount_approval"/>
         <field name="state">code</field>
         <field name="code">model._cron_expire_approvals()</field>
@@ -10,7 +10,7 @@
         <field name="active">True</field>
     </record>
     <record id="ir_cron_dolan_discount_cleanup_reservations" model="ir.cron">
-        <field name="name">DOLAN: limpiar reservas promocionales vencidas</field>
+        <field name="name">Promociones: limpiar reservas promocionales vencidas</field>
         <field name="model_id" ref="model_dolan_discount_reservation"/>
         <field name="state">code</field>
         <field name="code">model._cleanup_expired()</field>
@@ -19,7 +19,7 @@
         <field name="active">True</field>
     </record>
     <record id="ir_cron_dolan_discount_cleanup_employee_claims" model="ir.cron">
-        <field name="name">DOLAN: limpiar beneficios de empleado vencidos</field>
+        <field name="name">Promociones: limpiar beneficios de empleado vencidos</field>
         <field name="model_id" ref="model_dolan_discount_employee_claim"/>
         <field name="state">code</field>
         <field name="code">model._cleanup_expired()</field>

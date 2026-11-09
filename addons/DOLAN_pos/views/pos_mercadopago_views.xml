@@ -24,7 +24,7 @@
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
-                <group string="Terminal Clover DOLAN" invisible="payment_provider != 'dolan_clover'">
+                <group string="Integración Clover" invisible="payment_provider != 'dolan_clover'">
                     <field name="dolan_terminal_id" required="payment_provider == 'dolan_clover'"/>
                     <div class="text-muted">El pago se inicia desde el navegador del POS y se concilia con el identificador externo de Clover. Si se pierde la conexión durante el cobro, la operación queda bloqueada hasta resolverla.</div>
                 </group>

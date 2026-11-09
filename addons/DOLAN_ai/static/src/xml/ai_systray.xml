@@ -4,7 +4,7 @@
         <div class="o_dolan_ai_systray d-flex align-items-center">
             <button type="button"
                     class="btn btn-sm o_nav_entry d-flex align-items-center gap-1 px-2 py-1"
-                    title="Abrir ChatGPT / Copilot de DOLAN"
+                    title="Abrir ChatGPT / Copilot"
                     t-on-click="() => this.toggleDrawer()">
                 <img src="/DOLAN_ai/static/description/icon.svg" class="o_dolan_ai_systray_icon" alt="IA" width="20" height="20"/>
                 <span class="d-none d-md-inline fw-semibold">ChatGPT</span>
@@ -15,7 +15,7 @@
                 <div class="o_dolan_ai_floating_pill"
                      role="button"
                      tabindex="0"
-                     title="Abrir DOLAN ChatGPT"
+                     title="Abrir ChatGPT"
                      t-on-click="() => this.restoreFromMinimized()">
                     <img src="/DOLAN_ai/static/description/icon.svg" class="o_dolan_ai_pill_icon" alt="ChatGPT" width="28" height="28"/>
                     <span class="o_dolan_ai_status_dot" t-att-class="this.state.provider.oauth_status === 'connected' ? 'is-connected' : 'is-disconnected'"/>
@@ -29,13 +29,13 @@
             </t>
 
             <t t-if="this.state.isOpen">
-                <section class="o_dolan_ai_drawer" t-att-class="{'is-maximized': this.state.isMaximized, 'is-floating': !this.state.isMaximized}" role="dialog" aria-label="ChatGPT de DOLAN">
+                <section class="o_dolan_ai_drawer" t-att-class="{'is-maximized': this.state.isMaximized, 'is-floating': !this.state.isMaximized}" role="dialog" aria-label="ChatGPT">
                     <aside class="o_dolan_ai_sidebar" t-att-class="{'is-visible': this.state.showSidebar}">
                         <div class="o_dolan_ai_brand">
                             <span class="o_dolan_ai_brand_mark" aria-hidden="true">
-                                <img src="/DOLAN_ai/static/description/icon.svg" alt="DOLAN AI" width="20" height="20"/>
+                                <img src="/DOLAN_ai/static/description/icon.svg" alt="AI" width="20" height="20"/>
                             </span>
-                            <span>DOLAN AI</span>
+                            <span>AI</span>
                         </div>
                         <button type="button" class="o_dolan_ai_new_chat"
                                 t-on-click="() => this.startNewConversation()">

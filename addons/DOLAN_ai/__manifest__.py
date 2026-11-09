@@ -3,7 +3,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0).
 
 {
-    'name': 'DOLAN AI - ChatGPT Plan for Odoo 20',
+    'name': 'AI',
     'version': '20.0.1.34.0',
     'category': 'Productivity/AI',
     'sequence': 50,

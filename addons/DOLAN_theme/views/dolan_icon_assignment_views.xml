@@ -4,7 +4,7 @@
         <field name="name">dolan.icon.assignment.list</field>
         <field name="model">dolan.icon.assignment</field>
         <field name="arch" type="xml">
-            <list string="Administrador de iconos DOLAN">
+            <list string="Administrador de iconos">
                 <field name="semantic_id"/>
                 <field name="fluent_3d_asset" string="Fluent 3D"/>
                 <field name="fluent_flat_asset" string="Fluent Flat"/>
