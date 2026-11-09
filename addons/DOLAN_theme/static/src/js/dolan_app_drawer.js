@@ -353,7 +353,7 @@ export class DolanAppDrawerSystray extends Component {
             iconStylePreference: "global",
             hiddenAppXmlids: [],
             activeTab: "apps",
-            sortMode: "most_used",
+            sortMode: "custom",
             landingView: "apps",
             showRecents: true,
             layoutVersion: 0,
@@ -1232,7 +1232,7 @@ export class DolanAppDrawerSystray extends Component {
     async loadDesktopPreferences() {
         try {
             const data = await rpc("/dolan_theme/desktop/load", {});
-            this.state.sortMode = data.sort_mode || "most_used";
+            this.state.sortMode = data.sort_mode || "custom";
             this.state.landingView = data.landing_view || "apps";
             this.state.showRecents = data.show_recents !== false;
             this.state.layoutVersion = Number(data.layout_version || 0);

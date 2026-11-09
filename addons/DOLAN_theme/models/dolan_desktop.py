@@ -1,6 +1,18 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 
+POS_MENU_XMLID = 'point_of_sale.menu_point_root'
+# Default "Personalizado" desktop order for new users: Facturación, Ventas,
+# Contabilidad, Compras, Inventario y POS; the rest follows.
+DEFAULT_DESKTOP_APP_ORDER = (
+    'account.menu_finance',
+    'sale.sale_menu_root',
+    'DOLAN_accounting.menu_dolan_accounting_root',
+    'purchase.menu_purchase_root',
+    'stock.menu_stock_root',
+    POS_MENU_XMLID,
+)
+
 
 class DolanDesktopPreference(models.Model):
     _name = 'dolan.desktop.preference'
@@ -44,6 +56,30 @@ class DolanDesktopPreference(models.Model):
         roots = set(self.env['ir.ui.menu'].get_user_roots().ids)
         if not roots:
             return
+        Menu = self.env['ir.ui.menu']
+        Data = self.env['ir.model.data'].sudo()
+
+        def resolve(xmlid):
+            module, name = xmlid.split('.', 1)
+            data = Data.search([
+                ('module', '=', module), ('name', '=', name), ('model', '=', 'ir.ui.menu'),
+            ], limit=1)
+            menu = Menu.browse(data.res_id).exists() if data else Menu.browse()
+            return menu if menu and menu.id in roots and not menu.parent_id else Menu.browse()
+
+        # Main business apps lead the desktop in this order; everything else
+        # (folders first, then remaining apps alphabetically) comes after.
+        for sequence, xmlid in enumerate(DEFAULT_DESKTOP_APP_ORDER, start=1):
+            menu = resolve(xmlid)
+            if menu:
+                self.env['dolan.desktop.item'].create({
+                    'menu_id': menu.id, 'folder_id': False, 'sequence': sequence * 10,
+                })
+        profile = (self.env['ir.config_parameter'].sudo().get_param('dolan.installer.profile') or '').strip().lower()
+        if profile == 'comercio' and not self.favorite_menu_keys:
+            pos_menu = resolve(POS_MENU_XMLID)
+            if pos_menu:
+                self.write({'favorite_menu_keys': [POS_MENU_XMLID]})
         defaults = {
             'Configuraciones': [
                 'ePOS_print.menu_epos_print_root',
@@ -66,22 +102,17 @@ class DolanDesktopPreference(models.Model):
                 'mail.menu_root_discuss',
             ],
         }
-        Menu = self.env['ir.ui.menu']
-        Data = self.env['ir.model.data'].sudo()
         folder_ids = {}
         resolved_items = []
         for folder_sequence, (folder_name, xmlids) in enumerate(defaults.items(), start=1):
             for sequence, xmlid in enumerate(xmlids, start=1):
-                module, name = xmlid.split('.', 1)
-                data = Data.search([
-                    ('module', '=', module), ('name', '=', name), ('model', '=', 'ir.ui.menu'),
-                ], limit=1)
-                menu = Menu.browse(data.res_id).exists() if data else Menu.browse()
-                if menu and menu.id in roots and not menu.parent_id:
+                menu = resolve(xmlid)
+                if menu:
                     resolved_items.append((folder_name, menu, sequence))
             if any(name == folder_name for name, _menu, _sequence in resolved_items):
+                # Folders share the root ordering space with the main apps above.
                 folder_ids[folder_name] = self.env['dolan.desktop.folder'].create({
-                    'name': folder_name, 'sequence': folder_sequence * 10,
+                    'name': folder_name, 'sequence': 1000 + folder_sequence * 10,
                 })
         for folder_name, menu, sequence in resolved_items:
             self.env['dolan.desktop.item'].create({
