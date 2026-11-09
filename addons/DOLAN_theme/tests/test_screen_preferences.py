@@ -3,6 +3,7 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 from ..controllers.screen_preferences import _catalog_payload
+from ..models.dolan_desktop import DEFAULT_DESKTOP_APP_ORDER, POS_MENU_XMLID
 
 
 @tagged("post_install", "-at_install")
@@ -130,3 +131,48 @@ class TestScreenPreferences(TransactionCase):
             ]).mapped("name")),
             {"Configuraciones", "Mi carpeta"},
         )
+
+    def _desktop_user(self, login):
+        groups = [self.env.ref("base.group_user").id]
+        for xmlid in ("account.group_account_invoice", "sales_team.group_sale_salesman",
+                      "purchase.group_purchase_user", "stock.group_stock_user",
+                      "point_of_sale.group_pos_user"):
+            group = self.env.ref(xmlid, raise_if_not_found=False)
+            if group:
+                groups.append(group.id)
+        return self.env["res.users"].create({
+            "name": login, "login": login, "group_ids": [(6, 0, groups)],
+        })
+
+    def _expected_main_apps(self, user):
+        roots = set(self.env["ir.ui.menu"].with_user(user).get_user_roots().ids)
+        expected = []
+        for xmlid in DEFAULT_DESKTOP_APP_ORDER:
+            menu = self.env.ref(xmlid, raise_if_not_found=False)
+            if menu and menu.id in roots:
+                expected.append(xmlid)
+        return expected
+
+    def test_new_desktop_defaults_to_custom_order_with_main_apps_first(self):
+        user = self._desktop_user("dolan-desktop-order-test")
+        self.env["ir.config_parameter"].sudo().set_param("dolan.installer.profile", "completo")
+        preference = self.env["dolan.desktop.preference"].with_user(user).current_user()
+        self.assertEqual(preference.sort_mode, "custom")
+        self.assertFalse(preference.favorite_menu_keys)
+        items = self.env["dolan.desktop.item"].with_user(user).search([
+            ("user_id", "=", user.id), ("folder_id", "=", False),
+        ])
+        ordered = [item.menu_id.get_external_id()[item.menu_id.id] for item in items.sorted("sequence")]
+        self.assertEqual(ordered, self._expected_main_apps(user))
+        folders = self.env["dolan.desktop.folder"].with_user(user).search([("user_id", "=", user.id)])
+        if items and folders:
+            self.assertGreater(min(folders.mapped("sequence")), max(items.mapped("sequence")))
+
+    def test_commerce_profile_marks_pos_as_favorite(self):
+        user = self._desktop_user("dolan-desktop-commerce-test")
+        self.env["ir.config_parameter"].sudo().set_param("dolan.installer.profile", "comercio")
+        preference = self.env["dolan.desktop.preference"].with_user(user).current_user()
+        if POS_MENU_XMLID in self._expected_main_apps(user):
+            self.assertEqual(preference.favorite_menu_keys, [POS_MENU_XMLID])
+        else:
+            self.assertFalse(preference.favorite_menu_keys)
