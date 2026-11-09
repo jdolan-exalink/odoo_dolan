@@ -281,8 +281,8 @@
         <field name="semantic_id">app.scale</field>
         <field name="fluent_3d_asset">scale</field>
         <field name="fluent_flat_asset">scale_modern</field>
-        <field name="fluent_filled_asset">scale_modern</field>
-        <field name="fluent_regular_asset">scale_modern</field>
+        <field name="fluent_filled_asset">scale</field>
+        <field name="fluent_regular_asset">scale</field>
         <field name="fluent_asset">scale</field>
         <field name="tabler_asset">scale_modern</field>
     </record>
@@ -308,8 +308,8 @@
         <field name="semantic_id">app.barcode</field>
         <field name="fluent_3d_asset">barcode</field>
         <field name="fluent_flat_asset">barcode_label</field>
-        <field name="fluent_filled_asset">barcode_label</field>
-        <field name="fluent_regular_asset">barcode_label</field>
+        <field name="fluent_filled_asset">barcode</field>
+        <field name="fluent_regular_asset">barcode</field>
         <field name="tabler_asset">barcode_label</field>
     </record>
     <record id="icon_surveys" model="dolan.icon.assignment">
