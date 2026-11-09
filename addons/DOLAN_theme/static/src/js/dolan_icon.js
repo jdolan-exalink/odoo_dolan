@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Component, t, useProps } from "@odoo/owl";
-import { resolveActionIconAsset, resolveIconAsset } from "./dolan_icon_registry";
+import { appIconTileStyle, iconStyleUsesMask, resolveActionIconAsset, resolveIconAsset } from "./dolan_icon_registry";
 
 /**
  * Iconos SVG propios (24x24, trazo). No dependen de Font Awesome ni de ninguna fuente
@@ -107,7 +107,7 @@ export class DolanIcon extends Component {
             if (["fluent_3d_classic", "fluent_3d_soft", "fluent"].includes(style)) {
                 return "/DOLAN_theme/static/src/lib/fluent/folder.png";
             }
-            const filled = ["fluent_filled_pro", "fluent_filled_duotone", "tabler"].includes(style) || this.props.filled;
+            const filled = ["mosaic", "mosaic_brand", "fluent_filled_pro", "fluent_filled_duotone", "tabler"].includes(style) || this.props.filled;
             return filled
                 ? "/DOLAN_theme/static/src/lib/tabler/filled/folder.svg"
                 : "/DOLAN_theme/static/src/lib/tabler/folder.svg";
@@ -125,6 +125,19 @@ export class DolanIcon extends Component {
 
     get actionIconStyle() {
         return `--dolan-action-icon-image: url("${this.assetUrl}"); width: ${this.size}px; height: ${this.size}px;`;
+    }
+
+    get iconStyle() {
+        return this.props.iconStyle || document.body.dataset.dolanIconStyle || "odoo_original";
+    }
+
+    get isAppMask() {
+        const name = this.props.name || "";
+        return name.startsWith("app.") && iconStyleUsesMask(this.iconStyle) && Boolean(this.assetUrl);
+    }
+
+    get appMaskStyle() {
+        return `${appIconTileStyle(this.props.name, this.iconStyle, this.assetUrl)}; width: ${this.size}px; height: ${this.size}px;`;
     }
 
     get isTablerAsset() {

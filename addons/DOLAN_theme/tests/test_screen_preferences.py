@@ -40,11 +40,11 @@ class TestScreenPreferences(TransactionCase):
         Preference = self.env["dolan.screen.preference"].with_user(self.user)
         preference = Preference.create({})
         with self.assertRaises(AccessError):
-            preference.write({"icon_style": "tabler"})
+            preference.write({"icon_style": "mosaic"})
 
         params.set_param("dolan_ui.allow_user_icon_style", "True")
-        preference.write({"icon_style": "fluent_outline_color"})
-        self.assertEqual(preference.icon_style, "fluent_outline_color")
+        preference.write({"icon_style": "outline"})
+        self.assertEqual(preference.icon_style, "outline")
         preference.write({"icon_style": "odoo_original"})
         self.assertEqual(preference.icon_style, "odoo_original")
 

@@ -40,6 +40,8 @@ if node:
         ADDON / "static/src/js/dolan_app_drawer.js",
         ADDON / "static/src/js/dolan_icon.js",
         ADDON / "static/src/js/dolan_icon_registry.js",
+        ADDON / "static/src/js/dolan_palettes.js",
+        ADDON / "static/src/js/dolan_appearance_choice.js",
         ADDON / "static/src/js/dolan_login_theme.js",
         ADDON / "static/tests/dolan_app_drawer.test.js",
     ]

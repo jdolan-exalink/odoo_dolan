@@ -118,6 +118,7 @@
                                         t-att-aria-label="palette.label" t-att-aria-pressed="this.state.palette === palette.id ? 'true' : 'false'"
                                         t-att-title="palette.label" t-on-click="() => this.chooseSessionPalette(palette.id)">
                                     <span class="o_dolan_theme_swatch_colors">
+                                        <i t-att-style="'background-color:' + palette.navbar"/>
                                         <i t-att-style="'background-color:' + palette.primary"/>
                                         <i t-att-style="'background-color:' + palette.secondary"/>
                                     </span>
@@ -139,7 +140,7 @@
                                         <img src="/account/static/description/icon.png" alt=""/><img src="/sale/static/description/icon.png" alt=""/><img src="/stock/static/description/icon.png" alt=""/>
                                     </span>
                                     <span t-elif="this.isMaskIconStyle(this.state.iconStyle)" class="o_dolan_icon_style_preview" aria-hidden="true">
-                                        <i t-foreach="['app.invoicing', 'app.sales', 'app.whatsapp']" t-as="semanticId" t-key="semanticId" class="o_dolan_icon_style_mask_preview" t-att-class="{'o_dolan_icon_style_mask_preview_tabler': this.state.iconStyle === 'tabler'}" t-att-style="this.getIconStylePreviewMask(semanticId, this.state.iconStyle)"/>
+                                        <i t-foreach="['app.invoicing', 'app.sales', 'app.whatsapp']" t-as="semanticId" t-key="semanticId" class="o_dolan_icon_style_mask_preview" t-att-class="'o_dolan_icon_variant_' + this.state.iconStyle" t-att-style="this.getIconStylePreviewMask(semanticId, this.state.iconStyle)"/>
                                     </span>
                                     <span t-else="" class="o_dolan_icon_style_preview" aria-hidden="true">
                                         <DolanIcon name="'app.invoicing'" iconStyle="this.state.iconStyle" size="22"/>
@@ -157,7 +158,7 @@
                                             <img src="/account/static/description/icon.png" alt=""/><img src="/sale/static/description/icon.png" alt=""/><img src="/stock/static/description/icon.png" alt=""/>
                                         </span>
                                         <span t-elif="this.isMaskIconStyle(style[0])" class="o_dolan_icon_style_preview" aria-hidden="true">
-                                            <i t-foreach="['app.invoicing', 'app.sales', 'app.whatsapp']" t-as="semanticId" t-key="semanticId" class="o_dolan_icon_style_mask_preview" t-att-class="{'o_dolan_icon_style_mask_preview_tabler': style[0] === 'tabler'}" t-att-style="this.getIconStylePreviewMask(semanticId, style[0])"/>
+                                            <i t-foreach="['app.invoicing', 'app.sales', 'app.whatsapp']" t-as="semanticId" t-key="semanticId" class="o_dolan_icon_style_mask_preview" t-att-class="'o_dolan_icon_variant_' + style[0]" t-att-style="this.getIconStylePreviewMask(semanticId, style[0])"/>
                                         </span>
                                         <span t-else="" class="o_dolan_icon_style_preview" aria-hidden="true">
                                             <DolanIcon name="'app.invoicing'" iconStyle="style[0]" size="22"/>

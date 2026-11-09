@@ -20,9 +20,12 @@ test("high contrast is a separate dark accessibility theme", () => {
 
 test("theme picker provides the standard DOLAN and alternate color combinations", () => {
     expect(DOLAN_UI_PALETTES.map((palette) => palette.id)).toEqual([
-        "dolan", "ocean", "forest", "sunset", "violet", "graphite", "emerald", "custom",
+        "dolan", "ocean", "emerald", "forest", "sunset", "violet", "graphite", "custom",
     ]);
-    expect(DOLAN_UI_PALETTES[0].label).toBe("ERP");
+    expect(DOLAN_UI_PALETTES.map((palette) => palette.label)).toEqual([
+        "Índigo", "Océano", "Turquesa", "Bosque", "Terracota", "Ciruela", "Grafito", "Personalizada",
+    ]);
+    expect(DOLAN_UI_PALETTES.filter((palette) => palette.dark).every((palette) => palette.navbar && palette.canvas && palette.dark.canvas)).toBe(true);
     expect(DOLAN_UI_PALETTES.every((palette) => palette.primary.startsWith("#") && palette.secondary.startsWith("#"))).toBe(true);
 });
 
@@ -59,6 +62,12 @@ test("icon variants resolve local resources and retain legacy style aliases", ()
     expect(resolveIconAsset("app.whatsapp", "odoo_original", assignment)).toBe(null);
     expect(resolveIconAsset("app.sales", "fluent_3d_classic", { "app.sales": { fluent_3d: "../../secret.png" } })).toBe(null);
     expect(normalizeIconStyle("fluent")).toBe("fluent_3d_classic");
+    expect(normalizeIconStyle("tabler")).toBe("outline");
+    expect(normalizeIconStyle("fluent_flat_modern")).toBe("fluent_3d_classic");
+    expect(normalizeIconStyle("mosaic")).toBe("mosaic");
+    expect(resolveIconAsset("app.sales", "mosaic", assignment)).toBe("/DOLAN_theme/static/src/lib/fluent_filled/sales.svg");
+    expect(resolveIconAsset("app.sales", "outline", assignment)).toBe("/DOLAN_theme/static/src/lib/fluent_regular/sales.svg");
+    expect(iconStyleUsesMask("mosaic_brand")).toBe(true);
     expect(normalizeIconStyle("unknown_style")).toBe("odoo_original");
     expect(iconStyleUsesMask("fluent_filled_duotone")).toBe(true);
     expect(resolveActionIconAsset("search")).toBe("/DOLAN_theme/static/src/lib/tabler/search.svg");
@@ -164,14 +173,16 @@ test("custom palette keeps dark surfaces in dark mode and cleans up on switch", 
     const custom = { primary: "#0878b9", background: "#f7f8fa", surface: "#ffffff", text: "#263238", border: "#dee2e6" };
     body.classList.add("o_dolan_dark_mode");
     applyDolanPalette("custom", {}, custom);
-    expect(body.style.getPropertyValue("--dolan-color-surface")).toBe("");
-    expect(body.style.getPropertyValue("--dolan-color-primary")).toBe("#0878b9");
+    // Dark mode derives dark surfaces from the custom primary, never the light ones.
+    expect(body.style.getPropertyValue("--dolan-color-surface")).not.toBe("#f7f8fa");
+    expect(body.style.getPropertyValue("--dolan-color-primary")).toBe("#66abd4");
     body.classList.remove("o_dolan_dark_mode");
     applyDolanPalette("custom", {}, custom);
     expect(body.style.getPropertyValue("--dolan-color-surface")).toBe("#f7f8fa");
+    expect(body.style.getPropertyValue("--dolan-color-primary")).toBe("#0878b9");
     body.classList.add("o_dolan_dark_mode");
     applyDolanPalette("custom", {}, custom);
-    expect(body.style.getPropertyValue("--dolan-color-surface")).toBe("");
+    expect(body.style.getPropertyValue("--dolan-color-surface")).not.toBe("#f7f8fa");
     body.classList.remove("o_dolan_dark_mode");
     applyDolanPalette("ocean", {}, custom);
     expect(body.style.getPropertyValue("--dolan-color-text")).toBe("");
