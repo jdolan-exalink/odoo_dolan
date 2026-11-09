@@ -4,7 +4,7 @@
 
 {
     'name': 'DOLAN - Facturación Electrónica ARCA/AFIP, Padrón, QR y Libro IVA',
-    'version': '20.0.1.38.0',
+    'version': '20.0.1.39.0',
     'category': 'Accounting/Localizations/EDI',
     'summary': 'Integración ARCA en desarrollo; Libro IVA limitado a casos validados localmente',
     'description': """

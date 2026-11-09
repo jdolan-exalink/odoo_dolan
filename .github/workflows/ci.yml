@@ -21,6 +21,9 @@ jobs:
       - name: Validador QA de la suite DOLAN
         run: python scripts/validate_addons.py
 
+      - name: Verificar el orden de arranque de assets DOLAN_theme
+        run: python scripts/test_theme_asset_bootstrap.py
+
       - name: Compilar todo el código Python (sintaxis)
         run: python -m compileall -q addons scripts
 
