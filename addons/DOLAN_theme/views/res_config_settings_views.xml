@@ -17,6 +17,9 @@
                         <setting string="Paleta predeterminada" help="Elegí una combinación de colores para la interfaz. También podés probar otras paletas temporalmente desde la barra superior.">
                             <field name="dolan_ui_palette" widget="dolan_appearance_choice"/>
                         </setting>
+                        <setting string="Barra superior" help="Con “Color de la paleta” la barra superior toma el color de la paleta elegida, en claro y en oscuro.">
+                            <field name="dolan_ui_navbar_style" widget="radio" options="{'horizontal': true}"/>
+                        </setting>
                         <setting string="Personalización personal" help="Permite guardar tema y densidad desde Configuración de pantalla.">
                             <field name="dolan_ui_allow_personal_appearance" widget="boolean_toggle"/>
                         </setting>
@@ -28,7 +31,7 @@
                         </setting>
                     </block>
                     <block title="Iconografía" name="dolan_ui_appearance">
-                        <setting string="Estilo global de iconos" help="Define las variantes Fluent o los iconos originales de Odoo para aplicaciones y carpetas.">
+                        <setting string="Estilo global de iconos" help="Mosaico usa un color por área; Mosaico de marca usa los colores de la paleta; Contorno es una línea fina para pantallas densas.">
                             <field name="dolan_ui_icon_style" widget="dolan_appearance_choice"/>
                         </setting>
                         <setting string="Preferencia personal de iconos" help="Permite que cada usuario elija su estilo desde Configuración de pantalla.">
@@ -36,7 +39,7 @@
                         </setting>
                     </block>
                     <block title="Apariencia de la empresa" name="dolan_ui_company_appearance">
-                        <setting string="Paleta personalizada" help="Define los seis colores usados al seleccionar la paleta Personalizada.">
+                        <setting string="Paleta personalizada" help="Define los seis colores usados al seleccionar la paleta Personalizada. En modo oscuro se usan solo el primario y el secundario.">
                             <div class="content-group">
                                 <field name="dolan_ui_custom_primary" widget="color"/>
                                 <field name="dolan_ui_custom_secondary" widget="color"/>
@@ -46,7 +49,7 @@
                                 <field name="dolan_ui_custom_border" widget="color"/>
                             </div>
                         </setting>
-                        <setting string="Colores de la empresa" help="Estos colores se usan cuando la paleta seleccionada es ‘Colores configurados por empresa’.">
+                        <setting string="Colores de la empresa" help="Estos colores se usan cuando la paleta seleccionada es ‘Empresa’.">
                             <div class="content-group">
                                 <field name="company_id" invisible="1"/>
                                 <field name="dolan_ui_primary_color" widget="color"/>
@@ -57,7 +60,7 @@
                         <setting string="Fondo del escritorio" help="Selecciona el fondo usado en el menú de inicio.">
                             <field name="dolan_ui_home_bg_style"/>
                             <div class="o_dolan_settings_background_samples" aria-label="Fondos disponibles">
-                                <span class="is-dolan">Violeta</span><span class="is-aurora">Aurora</span><span class="is-ocean">Océano</span><span class="is-mesh">Malla</span><span class="is-midnight">Medianoche</span>
+                                <span class="is-palette">Según la paleta</span><span class="is-dolan">Puntos claros</span><span class="is-mesh">Malla suave</span><span class="is-midnight">Oscuro</span>
                             </div>
                         </setting>
                         <setting string="Formularios a ancho completo" help="Usa el ancho disponible en formularios de Odoo.">

@@ -3,18 +3,10 @@
 import { Component, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { DOLAN_UI_PALETTES, resolvePaletteColors } from "./dolan_palettes";
+import { appIconTileStyle, iconStyleUsesMask, resolveIconAsset } from "./dolan_icon_registry";
 
-const PALETTE_COLORS = {
-    dolan: ["#7938d2", "#017e84"],
-    ocean: ["#0878b9", "#16b8c9"],
-    forest: ["#287271", "#70a288"],
-    sunset: ["#d9603b", "#e6a23c"],
-    violet: ["#5f3b9c", "#d16bd3"],
-    graphite: ["#506477", "#42a5b5"],
-    emerald: ["#087f68", "#48b27e"],
-    custom: ["#714b67", "#017e84"],
-    company: ["#714b67", "#017e84"],
-};
+const PREVIEW_ICON_APPS = ["app.invoicing", "app.sales", "app.inventory", "app.whatsapp"];
 
 export class DolanAppearanceChoice extends Component {
     static template = "DOLAN_theme.DolanAppearanceChoice";
@@ -55,7 +47,7 @@ export class DolanAppearanceChoice extends Component {
     }
 
     choiceGlyph(value) {
-        if (this.isIconStyle) return ({ odoo_original: "▦", fluent_3d_classic: "🌈", fluent_flat_modern: "▰", fluent_filled_pro: "⬟", fluent_outline_color: "◇", tabler: "⌘" })[value] || "◇";
+        if (this.isIconStyle) return ({ odoo_original: "▦", fluent_3d_classic: "◆", mosaic: "▣", mosaic_brand: "▣", outline: "◇" })[value] || "◇";
         if (["dolan_ui_density", "density"].includes(this.props.name)) return value === "compact" ? "☷" : "▤";
         if (["dolan_ui_icon_scale", "icon_scale"].includes(this.props.name)) return value === "compact" ? "▪" : value === "large" ? "▣" : "▦";
         if (["dolan_ui_visual_effect", "visual_effect"].includes(this.props.name)) return value === "glass" ? "◈" : value === "soft" ? "◉" : "□";
@@ -65,36 +57,57 @@ export class DolanAppearanceChoice extends Component {
     profileDescription(value) {
         const aliases = { enterprise_classic: "odoo_classic", graphite: "dolan_fluent", glass: "dolan_liquid", minimal: "dolan_minimal" };
         const profile = ({
-            odoo_classic: "La experiencia familiar de Odoo, clara y equilibrada.",
-            dolan_fluent: "Capas sutiles y navegación de escritorio.",
-            dolan_liquid: "Transparencia limitada a navegación y paneles.",
-            dolan_material: "Superficies tonales y controles cómodos al tacto.",
-            dolan_minimal: "Interfaz plana y compacta para administración.",
+            odoo_classic: "Lo conocido de Odoo: plano, borde fino y esquinas chicas.",
+            dolan_fluent: "Tarjetas elevadas con sombra media y esquinas medias.",
+            dolan_liquid: "Paneles translúcidos sobre un fondo en degradado.",
+            dolan_material: "Botones grandes tipo píldora y superficies con color.",
+            dolan_minimal: "Plano y denso, sin sombras, para administración.",
         })[aliases[value] || value];
         return profile || "Perfil visual";
     }
 
     iconSamples(style) {
-        const folders = {
-            odoo_original: ["/account/static/description/icon.png", "/sale/static/description/icon.png", "/stock/static/description/icon.png"],
-            fluent_3d_classic: ["fluent_3d/invoicing.png", "fluent_3d/sales.png", "fluent_3d/whatsapp.png"],
-            fluent_flat_modern: ["fluent_flat/invoicing.svg", "fluent_flat/sales.svg", "fluent_flat/whatsapp.svg"],
-            fluent_filled_pro: ["fluent_filled/invoicing.svg", "fluent_filled/sales.svg", "fluent_filled/whatsapp.svg"],
-            fluent_outline_color: ["fluent_regular/invoicing.svg", "fluent_regular/sales.svg", "fluent_regular/whatsapp.svg"],
-            tabler: ["tabler/invoice.svg", "tabler/chart-line.svg", "tabler/whatsapp_brand.svg"],
+        if (style === "odoo_original") {
+            return ["/account/static/description/icon.png", "/sale/static/description/icon.png", "/stock/static/description/icon.png"]
+                .map((src) => ({ key: src, src }));
+        }
+        const assignments = window.dolanUiIconAssignments || {};
+        return PREVIEW_ICON_APPS.map((semanticId) => {
+            const fallback = `/DOLAN_theme/static/src/lib/${({ fluent_3d_classic: "fluent_3d", mosaic: "fluent_filled", mosaic_brand: "fluent_filled", outline: "fluent_regular" })[style] || "fluent_filled"}/${semanticId.replace("app.", "")}.${style === "fluent_3d_classic" ? "png" : "svg"}`;
+            const src = resolveIconAsset(semanticId, style, assignments) || fallback;
+            return { key: semanticId, src, mask: iconStyleUsesMask(style), style: appIconTileStyle(semanticId, style, src) };
+        });
+    }
+
+    get paletteCustomColors() {
+        const data = this.props.record.data;
+        return {
+            primary: data.dolan_ui_custom_primary, secondary: data.dolan_ui_custom_secondary,
+            background: data.dolan_ui_custom_background, surface: data.dolan_ui_custom_surface,
         };
-        return (folders[style] || folders.odoo_original).map((path) => path.startsWith("/") ? path : `/DOLAN_theme/static/src/lib/${path}`);
+    }
+
+    get paletteCompanyColors() {
+        const data = this.props.record.data;
+        return { primary: data.dolan_ui_primary_color, secondary: data.dolan_ui_secondary_color };
+    }
+
+    paletteHint(value) {
+        if (value === "company") return "Colores del logo";
+        return DOLAN_UI_PALETTES.find((item) => item.id === value)?.hint || "";
+    }
+
+    palettePreview(value) {
+        const options = { company: this.paletteCompanyColors, custom: this.paletteCustomColors };
+        const light = resolvePaletteColors(value, { ...options, dark: false });
+        const dark = resolvePaletteColors(value, { ...options, dark: true });
+        const half = (colors, text) => `--pv-nav:${colors.navbar};--pv-canvas:${colors.canvas};--pv-surface:${colors.surface};--pv-primary:${colors.primary};--pv-secondary:${colors.secondary};--pv-text:${text}`;
+        return { light: half(light, "#1b2230"), dark: half(dark, "#ffffff") };
     }
 
     colorStyle(value) {
-        const customPrimary = this.props.record.data.dolan_ui_primary_color;
-        const customSecondary = this.props.record.data.dolan_ui_secondary_color;
-        const primaryColor = /^#[0-9a-f]{6}$/i.test(customPrimary || "") ? customPrimary : null;
-        const secondaryColor = /^#[0-9a-f]{6}$/i.test(customSecondary || "") ? customSecondary : null;
-        const [defaultPrimary, defaultSecondary] = PALETTE_COLORS[value] || PALETTE_COLORS.dolan;
-        const primary = ["company", "custom"].includes(value) ? (primaryColor || defaultPrimary) : defaultPrimary;
-        const secondary = ["company", "custom"].includes(value) ? (secondaryColor || defaultSecondary) : defaultSecondary;
-        return `--choice-primary:${primary};--choice-secondary:${secondary}`;
+        const colors = resolvePaletteColors(value, { company: this.paletteCompanyColors, custom: this.paletteCustomColors });
+        return `--choice-primary:${colors.primary};--choice-secondary:${colors.secondary}`;
     }
 
     themeGlyph(value) {

@@ -15,15 +15,14 @@ class ResCompany(models.Model):
     )
     dolan_home_bg_style = fields.Selection(
         selection=[
-            ("enterprise", "Claro (fondo con micro-puntos)"),
-            ("custom", "Imagen de fondo personalizada"),
-            ("midnight", "Oscuro"),
-            ("aurora", "Aurora violeta"),
-            ("ocean", "Océano profundo"),
+            ("palette", "Según la paleta"),
+            ("enterprise", "Puntos claros"),
             ("mesh", "Malla suave"),
+            ("midnight", "Oscuro"),
+            ("custom", "Imagen personalizada"),
         ],
         string="Fondo del Menú de Inicio (Home Menu)",
-        default="enterprise",
+        default="palette",
     )
     dolan_full_width_sheets = fields.Boolean(
         string="Formularios a Ancho Completo",

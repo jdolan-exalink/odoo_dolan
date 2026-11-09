@@ -5,7 +5,8 @@ import { registry } from "@web/core/registry";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { DolanIcon } from "./dolan_icon";
-import { iconStyleUsesMask, normalizeIconStyle, resolveIconAsset, semanticAppId } from "./dolan_icon_registry";
+import { DOLAN_UI_PALETTES, mixHex, resolvePaletteColors } from "./dolan_palettes";
+import { appIconTileStyle, iconStyleUsesMask, normalizeIconStyle, resolveIconAsset, semanticAppId } from "./dolan_icon_registry";
 
 /**
  * SVG exacto de 14x14px (3 filas x 3 rectángulos) de Odoo 20 Enterprise (.o_menu_toggle)
@@ -62,23 +63,14 @@ export function resolveDarkTheme(mode, systemPrefersDark) {
     return mode === "dark" || mode === "contrast" || (mode === "system" && Boolean(systemPrefersDark));
 }
 
-export const DOLAN_UI_PALETTES = [
-    { id: "dolan", label: "ERP", primary: "#7938d2", secondary: "#017e84" },
-    { id: "ocean", label: "Océano", primary: "#0878b9", secondary: "#16b8c9" },
-    { id: "forest", label: "Bosque", primary: "#287271", secondary: "#70a288" },
-    { id: "sunset", label: "Atardecer", primary: "#d9603b", secondary: "#e6a23c" },
-    { id: "violet", label: "Violeta", primary: "#5f3b9c", secondary: "#d16bd3" },
-    { id: "graphite", label: "Graphite", primary: "#506477", secondary: "#42a5b5" },
-    { id: "emerald", label: "Esmeralda", primary: "#087f68", secondary: "#48b27e" },
-    { id: "custom", label: "Personalizada", primary: "#714B67", secondary: "#017e84" },
-];
+export { DOLAN_UI_PALETTES };
 
 export const DOLAN_APPEARANCE_PROFILES = [
-    { id: "odoo_classic", label: "Clásico Odoo", description: "Bordes discretos y elevación baja." },
-    { id: "dolan_fluent", label: "Fluent", description: "Esquinas suaves y sombra sutil." },
-    { id: "dolan_liquid", label: "Liquid", description: "Esquinas amplias, transparencia y desenfoque." },
-    { id: "dolan_material", label: "Material", description: "Controles redondeados y superficies tonales." },
-    { id: "dolan_minimal", label: "Minimal", description: "Esquinas compactas y superficies planas, sin sombras." },
+    { id: "odoo_classic", label: "Clásico", description: "Lo conocido de Odoo: plano, borde fino y esquinas chicas." },
+    { id: "dolan_fluent", label: "Suave", description: "Tarjetas elevadas con sombra media y esquinas medias." },
+    { id: "dolan_liquid", label: "Cristal", description: "Paneles translúcidos sobre un fondo en degradado." },
+    { id: "dolan_material", label: "Táctil", description: "Botones grandes tipo píldora y superficies con color." },
+    { id: "dolan_minimal", label: "Compacto", description: "Plano y denso, sin sombras, para administración." },
 ];
 
 const PROFILE_VISUAL_EFFECT = {
@@ -106,12 +98,11 @@ export const DOLAN_THEME_MODES = [
 ];
 
 export const DOLAN_ICON_STYLES = [
-    ["odoo_original", "Iconos originales de Odoo"],
-    ["fluent_3d_classic", "Fluent 3D"],
-    ["fluent_flat_modern", "Fluent Flat"],
-    ["fluent_filled_pro", "Fluent Filled"],
-    ["fluent_outline_color", "Fluent Outline"],
-    ["tabler", "Tabler Minimal"],
+    ["mosaic", "Mosaico"],
+    ["mosaic_brand", "Mosaico de marca"],
+    ["outline", "Contorno"],
+    ["fluent_3d_classic", "Expresivo 3D"],
+    ["odoo_original", "Originales de Odoo"],
 ];
 
 export const DOLAN_WORKSPACE_SECTIONS = [
@@ -173,48 +164,65 @@ export function customSurfaceProperties(customColors = {}) {
     };
 }
 
+export const PALETTE_SURFACE_PROPERTIES = ["--dolan-color-canvas", "--dolan-navbar-bg", "--dolan-navbar-fg", "--dolan-navbar-hover"];
+const DARK_SURFACE_PROPERTIES = ["--dolan-color-surface", "--dolan-color-surface-raised", "--dolan-color-border"];
+
 export function applyDolanPalette(palette, companyColors = {}, customColors = {}) {
     const targets = [document.documentElement, document.body, document.querySelector(".o_web_client")].filter(Boolean);
-    const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active", "--bs-link-color", "--bs-link-color-rgb", "--bs-link-hover-color", "--bs-link-hover-color-rgb", "--primary", "--primary-rgb", "--link-color", "--link-color-rgb", "--link-hover-color", "--link-hover-color-rgb"];
+    const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active", "--bs-link-color", "--bs-link-color-rgb", "--bs-link-hover-color", "--bs-link-hover-color-rgb", "--primary", "--primary-rgb", "--link-color", "--link-color-rgb", "--link-hover-color", "--link-hover-color-rgb", ...PALETTE_SURFACE_PROPERTIES];
     const target = document.body;
-    // Surfaces from the custom palette are inline too: always drop them first so
-    // switching palette or theme never leaves light surfaces behind.
-    targets.forEach((node) => CUSTOM_SURFACE_PROPERTIES.forEach((name) => node.style.removeProperty(name)));
+    // Surfaces are inline too: always drop them first so switching palette or
+    // theme never leaves light surfaces behind in dark mode (or the reverse).
+    targets.forEach((node) => [...CUSTOM_SURFACE_PROPERTIES, ...DARK_SURFACE_PROPERTIES].forEach((name) => node.style.removeProperty(name)));
     if (target.classList.contains("o_dolan_high_contrast")) {
         targets.forEach((node) => clearProperties.forEach((name) => node.style.removeProperty(name)));
         target.dataset.dolanPalette = palette;
         return;
     }
-    const selected = DOLAN_UI_PALETTES.find((item) => item.id === palette) || DOLAN_UI_PALETTES[0];
-    const useCompany = palette === "company";
+    const dark = target.classList.contains("o_dolan_dark_mode");
     const useCustom = palette === "custom";
-    const primary = useCompany ? (companyColors.primary || selected.primary) : useCustom ? (customColors.primary || selected.primary) : selected.primary;
-    const secondary = useCompany ? (companyColors.secondary || selected.secondary) : useCustom ? (customColors.secondary || selected.secondary) : selected.secondary;
+    const colors = resolvePaletteColors(palette, { dark, company: companyColors, custom: customColors });
+    const { primary, secondary } = colors;
+    const rgb = primary.match(/[\da-f]{2}/gi).map((part) => parseInt(part, 16)).join(", ");
+    const hover = dark ? mixHex(primary, "#ffffff", 0.15) : mixHex(primary, "#000000", 0.15);
     const properties = {
         "--dolan-primary": primary,
-        "--dolan-primary-hover": primary,
+        "--dolan-primary-hover": hover,
         "--dolan-secondary": secondary,
         "--dolan-color-primary": primary,
-        "--dolan-color-primary-hover": primary,
+        "--dolan-color-primary-hover": hover,
         "--dolan-color-focus": primary,
         "--dolan-color-secondary": secondary,
         "--o-brand-primary": primary,
         "--bs-primary": primary,
-        "--bs-primary-rgb": primary.match(/[\da-f]{2}/gi).map((part) => parseInt(part, 16)).join(", "),
+        "--bs-primary-rgb": rgb,
         // Same values under Odoo's unprefixed names (.text-primary, .bg-primary, ...).
         "--primary": primary,
-        "--primary-rgb": primary.match(/[\da-f]{2}/gi).map((part) => parseInt(part, 16)).join(", "),
+        "--primary-rgb": rgb,
         "--NavBar-entry-borderColor-active": primary,
         "--dolan-color-primary-soft": `color-mix(in srgb, ${primary} 18%, transparent)`,
         "--dolan-color-secondary-soft": `color-mix(in srgb, ${secondary} 18%, transparent)`,
-        // Links (a, .btn-link, "Agregar una línea") follow the palette instead of
-        // Odoo's fixed brand color. On dark surfaces they are lightened for contrast.
-        ...paletteLinkProperties(primary, target.classList.contains("o_dolan_dark_mode")),
+        // Barra superior y fondo propios de la paleta: es lo que hace que el
+        // cambio de paleta se note a simple vista.
+        "--dolan-color-canvas": colors.canvas,
+        "--dolan-navbar-bg": colors.navbar,
+        "--dolan-navbar-fg": "#ffffff",
+        "--dolan-navbar-hover": "rgb(255 255 255 / 14%)",
+        // Links follow the palette; the dark palettes already carry a lighter
+        // primary, so they are not lightened twice.
+        ...paletteLinkProperties(primary, false),
     };
+    if (dark) {
+        Object.assign(properties, {
+            "--dolan-color-surface": colors.surface,
+            "--dolan-color-surface-raised": mixHex(colors.surface, "#ffffff", 0.05),
+            "--dolan-color-border": mixHex(colors.surface, "#ffffff", 0.13),
+        });
+    }
     targets.forEach((node) => Object.entries(properties).forEach(([name, value]) => node.style.setProperty(name, value)));
     // Custom background/surface/text/border are a light scheme: in dark mode the
-    // dark tokens stay and only the custom primary/secondary are applied.
-    if (useCustom && !target.classList.contains("o_dolan_dark_mode")) {
+    // derived dark surfaces stay and only the custom primary/secondary are applied.
+    if (useCustom && !dark) {
         const customProperties = customSurfaceProperties(customColors);
         targets.forEach((node) => Object.entries(customProperties).forEach(([name, value]) => node.style.setProperty(name, value)));
     }
@@ -933,26 +941,11 @@ export class DolanAppDrawerSystray extends Component {
 
     getIconStylePreviewMask(semanticId, style) {
         const url = resolveIconAsset(semanticId, style, window.dolanUiIconAssignments || {});
-        const colors = { invoicing: "#1687ff", sales: "#13b8a6", whatsapp: "#25d366" };
-        const key = String(semanticId || "").replace("app.", "");
-        const accent = style === "tabler" ? "var(--dolan-color-primary)" : (colors[key] || "#8254d8");
-        const accentSecondary = style === "tabler" ? "; --dolan-icon-accent-secondary: var(--dolan-color-secondary)" : "";
-        return url ? `--dolan-icon-mask-image: url("${url}"); --dolan-icon-accent: ${accent}${accentSecondary}` : "";
+        return appIconTileStyle(semanticId, style, url);
     }
 
     getAppIconMaskStyle(app) {
-        const url = this.getAppIconUrl(app);
-        const semantic = semanticAppId(app);
-        const colors = {
-            blue: "#1687ff", teal: "#13b8a6", purple: "#9b6be8", orange: "#f08a24",
-            green: "#24a56a", pink: "#e875a8", yellow: "#d6a500", red: "#e25858",
-            violet: "#8254d8", gray: "#667085",
-        };
-        const catalog = window.dolanUiIconCatalog?.[semantic];
-        const isTabler = this.state.iconStyle === "tabler";
-        const accent = isTabler ? "var(--dolan-color-primary)" : (colors[catalog?.color] || "#7c5ce7");
-        const accentSecondary = isTabler ? "; --dolan-icon-accent-secondary: var(--dolan-color-secondary)" : "";
-        return url ? `--dolan-icon-mask-image: url("${url}"); --dolan-icon-accent: ${accent}${accentSecondary}` : "";
+        return appIconTileStyle(semanticAppId(app), this.state.iconStyle, this.getAppIconUrl(app));
     }
 
     getAppIconClass() {
@@ -1096,11 +1089,11 @@ export class DolanAppDrawerSystray extends Component {
 
     profileShortLabel(profile) {
         return ({
-            odoo_classic: "Clásico Odoo",
-            dolan_fluent: "Fluent",
-            dolan_liquid: "Liquid",
-            dolan_material: "Material",
-            dolan_minimal: "Minimal",
+            odoo_classic: "Clásico",
+            dolan_fluent: "Suave",
+            dolan_liquid: "Cristal",
+            dolan_material: "Táctil",
+            dolan_minimal: "Compacto",
         })[profile] || profile;
     }
 
@@ -1196,12 +1189,15 @@ export class DolanAppDrawerSystray extends Component {
             this.state.appearanceProfileChoices = DOLAN_APPEARANCE_PROFILES;
             this.state.iconScale = window.sessionStorage.getItem("dolan_session_icon_scale") || response.icon_scale || "normal";
             this.state.visualEffect = visualEffectForProfile(this.state.appearanceProfile);
+            this._companyColors = { primary: response.primary_color, secondary: response.secondary_color };
+            this._customColors = response.custom_colors || {};
             this.state.paletteChoices = [
                 ...DOLAN_UI_PALETTES,
                 { id: "company", label: "Empresa", primary: response.primary_color || "#714B67", secondary: response.secondary_color || "#017e84" },
-            ];
-            this._companyColors = { primary: response.primary_color, secondary: response.secondary_color };
-            this._customColors = response.custom_colors || {};
+            ].map((palette) => {
+                const colors = resolvePaletteColors(palette.id, { company: this._companyColors, custom: this._customColors });
+                return { ...palette, primary: colors.primary, secondary: colors.secondary, navbar: colors.navbar };
+            });
             window.dolanUiIconAssignments = response.icon_assignments || {};
             window.dolanUiIconNames = response.icon_names || {};
             window.dolanUiIconXmlids = response.icon_xmlids || {};
@@ -1209,7 +1205,8 @@ export class DolanAppDrawerSystray extends Component {
             document.body.dataset.dolanIconStyle = this.state.iconStyle;
             document.body.dataset.dolanIconScale = this.state.iconScale;
             this.applyAppearanceProfile(this.state.appearanceProfile);
-            document.body.dataset.dolanHomeBgStyle = response.home_bg_style || "enterprise";
+            document.body.dataset.dolanHomeBgStyle = response.home_bg_style || "palette";
+            document.body.dataset.dolanNavbar = response.navbar_style || "palette";
             this.state.compact = Boolean(response.compact_mode);
             this.state.hiddenAppXmlids = response.hidden_app_xmlids || [];
             document.body.classList.toggle("o_dolan_dark_mode", this.state.darkMode);

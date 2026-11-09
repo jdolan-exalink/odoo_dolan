@@ -16,23 +16,27 @@ THEME_MODE_CHOICES = [
     ("contrast", "Alto contraste"),
 ]
 PALETTE_CHOICES = [
-    ("dolan", "ERP — violeta y turquesa"),
-    ("ocean", "Océano — azul y celeste"),
-    ("forest", "Bosque — verde y menta"),
-    ("sunset", "Atardecer — coral y ámbar"),
-    ("violet", "Violeta — púrpura y magenta"),
-    ("graphite", "Graphite — gris y acero"),
-    ("emerald", "Esmeralda — verde petróleo"),
-    ("company", "Colores configurados por empresa"),
+    ("dolan", "Índigo"),
+    ("ocean", "Océano"),
+    ("emerald", "Turquesa"),
+    ("forest", "Bosque"),
+    ("sunset", "Terracota"),
+    ("violet", "Ciruela"),
+    ("graphite", "Grafito"),
+    ("company", "Empresa"),
     ("custom", "Personalizada"),
+]
+NAVBAR_STYLE_CHOICES = [
+    ("palette", "Color de la paleta"),
+    ("neutral", "Neutra (clara)"),
 ]
 DENSITY_CHOICES = [("normal", "Normal"), ("compact", "Compacta")]
 APPEARANCE_PROFILE_CHOICES = [
-    ("odoo_classic", "Clásico Odoo"),
-    ("dolan_fluent", "Fluent"),
-    ("dolan_liquid", "Liquid"),
-    ("dolan_material", "Material"),
-    ("dolan_minimal", "Minimal"),
+    ("odoo_classic", "Clásico"),
+    ("dolan_fluent", "Suave"),
+    ("dolan_liquid", "Cristal"),
+    ("dolan_material", "Táctil"),
+    ("dolan_minimal", "Compacto"),
     # Transitional values accepted so older databases never crash on onchange.
     ("legacy", "Compatibilidad heredada"),
     ("enterprise_classic", "Clásico (anterior)"),
@@ -56,6 +60,9 @@ class ResConfigSettings(models.TransientModel):
     dolan_ui_palette = fields.Selection(
         PALETTE_CHOICES, string="Paleta predeterminada", config_parameter="dolan_ui.palette", default="dolan",
     )
+    dolan_ui_navbar_style = fields.Selection(
+        NAVBAR_STYLE_CHOICES, string="Barra superior", config_parameter="dolan_ui.navbar_style", default="palette",
+    )
     dolan_ui_density = fields.Selection(
         DENSITY_CHOICES, string="Densidad predeterminada", config_parameter="dolan_ui.density", default="normal",
     )
@@ -73,7 +80,7 @@ class ResConfigSettings(models.TransientModel):
     )
     dolan_ui_icon_style = fields.Selection(
         ICON_STYLE_CHOICES,
-        string="Estilo global de iconos", config_parameter="dolan_ui.icon_style", default="odoo_original",
+        string="Estilo global de iconos", config_parameter="dolan_ui.icon_style", default="mosaic",
     )
     dolan_ui_allow_user_icon_style = fields.Boolean(
         string="Permitir preferencia individual", config_parameter="dolan_ui.allow_user_icon_style",

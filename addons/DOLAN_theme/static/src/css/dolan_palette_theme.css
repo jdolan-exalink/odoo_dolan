@@ -1,0 +1,253 @@
+/* Apariencia 4: la paleta pinta la barra superior, el fondo y los iconos,
+ * cada paleta tiene su propio modo oscuro y los perfiles se diferencian a
+ * simple vista. Los colores llegan como tokens desde applyDolanPalette
+ * (--dolan-navbar-bg, --dolan-color-canvas, --dolan-color-surface...).
+ * Este archivo va último en web.assets_backend para ganar la cascada.
+ */
+
+/* ---------- 1. Barra superior con el color de la paleta ---------- */
+body[data-dolan-navbar="palette"]:not(.o_dolan_high_contrast):not(.o_home_menu_background) .o_main_navbar {
+    --NavBar-bg: var(--dolan-navbar-bg);
+    --NavBar-entry-color: var(--dolan-navbar-fg, #fff);
+    --NavBar-entry-color--hover: var(--dolan-navbar-fg, #fff);
+    --NavBar-entry-color--active: var(--dolan-navbar-fg, #fff);
+    --NavBar-brand-color: var(--dolan-navbar-fg, #fff);
+    --NavBar-entry-backgroundColor--hover: var(--dolan-navbar-hover, rgb(255 255 255 / 14%));
+    --NavBar-entry-backgroundColor--active: var(--dolan-navbar-hover, rgb(255 255 255 / 14%));
+    --NavBar-entry-backgroundColor--focus: var(--dolan-navbar-hover, rgb(255 255 255 / 14%));
+    --NavBar-entry-borderColor-active: var(--dolan-navbar-fg, #fff);
+    background-color: var(--dolan-navbar-bg) !important;
+    border-bottom-color: transparent !important;
+    color: var(--dolan-navbar-fg, #fff) !important;
+}
+body[data-dolan-navbar="palette"]:not(.o_dolan_high_contrast):not(.o_home_menu_background) .o_main_navbar :is(
+    .o_menu_brand, .o_nav_entry, .o_menu_sections .dropdown-toggle, .o_menu_sections .o-dropdown,
+    .o_menu_systray .dropdown-toggle, .o_menu_systray button, .o_menu_toggle, .o_dolan_home_btn, .o_dolan_systray_apps_btn
+) {
+    color: var(--dolan-navbar-fg, #fff) !important;
+}
+body[data-dolan-navbar="palette"]:not(.o_dolan_high_contrast):not(.o_home_menu_background) .o_main_navbar :is(
+    .o_nav_entry, .o_menu_sections .dropdown-toggle, .o_menu_systray .dropdown-toggle, .o_menu_systray button,
+    .o_menu_toggle, .o_dolan_home_btn, .o_dolan_systray_apps_btn
+):is(:hover, :focus-visible, .active, .show) {
+    background-color: var(--dolan-navbar-hover, rgb(255 255 255 / 14%)) !important;
+}
+body[data-dolan-navbar="palette"]:not(.o_dolan_high_contrast):not(.o_home_menu_background) .o_main_navbar :is(svg, .oi, .fa) {
+    color: inherit;
+}
+/* Cristal: la barra de color queda translúcida, sin perder la paleta. */
+body[data-dolan-navbar="palette"][data-dolan-profile="dolan_liquid"]:not(.o_dolan_high_contrast):not(.o_home_menu_background) .o_main_navbar {
+    background-color: color-mix(in srgb, var(--dolan-navbar-bg) 84%, transparent) !important;
+}
+
+/* ---------- 2. Fondo de la paleta (claro) ---------- */
+body[data-dolan-palette]:not(.o_dolan_dark_mode):not(.o_dolan_high_contrast) :is(
+    .o_action_manager, .o_form_view .o_form_sheet_bg, .o_control_panel, .o_kanban_renderer:not(.o_kanban_grouped), .o-dashboard-background
+) {
+    background-color: var(--dolan-color-canvas) !important;
+}
+
+/* ---------- 3. Modo oscuro propio de cada paleta ---------- */
+body.o_dolan_dark_mode[data-dolan-palette]:not(.o_dolan_high_contrast) {
+    --bs-body-bg: var(--dolan-color-canvas);
+    --body-bg: var(--dolan-color-canvas);
+    --bs-light-bg-subtle: var(--dolan-color-surface);
+    --light-bg-subtle: var(--dolan-color-surface);
+}
+body.o_dolan_dark_mode[data-dolan-palette]:not(.o_dolan_high_contrast) :is(
+    .o_action_manager, .o_form_view .o_form_sheet_bg, .o_kanban_view, .o_list_view, .o_content, .o_control_panel, .o-dashboard-background
+) {
+    background-color: var(--dolan-color-canvas) !important;
+}
+body.o_dolan_dark_mode[data-dolan-palette]:not(.o_dolan_high_contrast) :is(.o_list_table thead th, .bg-100) {
+    background-color: var(--dolan-color-surface) !important;
+}
+body.o_dolan_dark_mode[data-dolan-palette]:not(.o_dolan_high_contrast) .o_list_table thead th {
+    border-bottom-color: var(--dolan-color-border) !important;
+}
+body.o_dolan_dark_mode[data-dolan-navbar="neutral"]:not(.o_dolan_high_contrast):not(.o_home_menu_background) .o_main_navbar {
+    --NavBar-bg: var(--dolan-color-surface);
+    background-color: var(--dolan-color-surface) !important;
+    border-bottom-color: var(--dolan-color-border) !important;
+}
+body.o_dolan_dark_mode[data-dolan-palette]:not(.o_dolan_high_contrast) .o_home_menu .o_app .o_app_icon {
+    background-color: var(--dolan-color-surface-raised);
+}
+
+/* ---------- 4. Fondo del escritorio "Según la paleta" ---------- */
+body[data-dolan-home-bg-style="palette"] :is(.o_home_menu_background, .o_dolan_home_menu_wrapper),
+body.o_dolan_dark_mode[data-dolan-home-bg-style="palette"] :is(.o_home_menu_background, .o_dolan_home_menu_wrapper),
+body.o_dolan_dark_mode[data-dolan-home-bg-style="palette"].o_home_menu_background {
+    background-color: var(--dolan-color-canvas, #f4f5fc) !important;
+    background-image:
+        radial-gradient(ellipse at 10% 8%, color-mix(in srgb, var(--dolan-color-primary) 24%, transparent), transparent 48%),
+        radial-gradient(ellipse at 92% 90%, color-mix(in srgb, var(--dolan-color-secondary) 20%, transparent), transparent 50%),
+        radial-gradient(color-mix(in srgb, var(--dolan-color-text, #172033) 11%, transparent) .7px, transparent .7px) !important;
+    background-size: auto, auto, 16px 16px !important;
+    background-repeat: no-repeat, no-repeat, repeat !important;
+    background-attachment: fixed;
+}
+
+/* ---------- 5. Iconos Mosaico, Mosaico de marca y Contorno ---------- */
+/* El mosaico es el propio <span> (degradado + esquinas) y el glifo blanco es su
+   ::before con la máscara SVG, así funciona igual en el escritorio, carpetas,
+   selector de carpetas, vistas previas y DolanIcon. */
+.o_dolan_variant_mask:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand),
+.o_dolan_variant_icon:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand) > .o_dolan_variant_mask,
+.o_dolan_icon_style_mask_preview:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand) {
+    position: relative;
+    display: grid !important;
+    place-items: center;
+    -webkit-mask: none !important;
+    mask: none !important;
+    filter: none !important;
+    border-radius: 24%;
+    background: linear-gradient(160deg, var(--dolan-icon-tile-1, #9b74f7), var(--dolan-icon-tile-2, #6430d4)) !important;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 28%), 0 1px 2px rgb(10 20 40 / 18%), 0 3px 8px -2px color-mix(in srgb, var(--dolan-icon-tile-2, #6430d4) 45%, transparent);
+}
+.o_dolan_variant_mask:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand)::before,
+.o_dolan_variant_icon:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand) > .o_dolan_variant_mask::before,
+.o_dolan_icon_style_mask_preview:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand)::before {
+    content: "";
+    width: 56%;
+    height: 56%;
+    background-color: #fff;
+    -webkit-mask: var(--dolan-icon-mask-image) center / contain no-repeat;
+    mask: var(--dolan-icon-mask-image) center / contain no-repeat;
+}
+/* En el escritorio el mosaico ocupa todo el cuadro del icono. */
+.o_home_menu .o_app .o_app_icon.o_dolan_variant_icon:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand),
+.o_dolan_home_menu_wrapper .o_app .o_app_icon.o_dolan_variant_icon:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand) {
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+.o_dolan_home_menu_wrapper .o_dolan_variant_icon:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand) > .o_dolan_variant_mask {
+    width: 100%;
+    height: 100%;
+    flex: 1 1 auto;
+    border-radius: 22%;
+}
+.o_home_menu .o_app:is(:hover, :focus) .o_app_icon.o_dolan_variant_icon:is(.o_dolan_icon_variant_mosaic, .o_dolan_icon_variant_mosaic_brand) > .o_dolan_variant_mask {
+    filter: brightness(1.06) !important;
+}
+
+/* Contorno: glifo de línea con el color del área sobre un fondo apenas teñido. */
+.o_dolan_variant_mask.o_dolan_icon_variant_outline,
+.o_dolan_variant_icon.o_dolan_icon_variant_outline > .o_dolan_variant_mask,
+.o_dolan_icon_style_mask_preview.o_dolan_icon_variant_outline {
+    color: var(--dolan-icon-tile-2, #4a5568);
+    background-color: var(--dolan-icon-tile-2, #4a5568) !important;
+    filter: none !important;
+}
+body.o_dolan_dark_mode :is(
+    .o_dolan_variant_mask.o_dolan_icon_variant_outline,
+    .o_dolan_variant_icon.o_dolan_icon_variant_outline > .o_dolan_variant_mask,
+    .o_dolan_icon_style_mask_preview.o_dolan_icon_variant_outline
+) {
+    background-color: var(--dolan-icon-tile-1, #8a95a6) !important;
+}
+.o_home_menu .o_app .o_app_icon.o_dolan_variant_icon.o_dolan_icon_variant_outline {
+    background-color: color-mix(in srgb, var(--dolan-color-primary) 6%, var(--dolan-color-surface-raised, #fff)) !important;
+    box-shadow: inset 0 0 0 1px var(--dolan-color-border, #e4e7ef) !important;
+}
+body.o_dolan_dark_mode .o_home_menu .o_app .o_app_icon.o_dolan_variant_icon.o_dolan_icon_variant_outline {
+    background-color: var(--dolan-color-surface-raised) !important;
+}
+
+/* ---------- 6. Perfiles con diferencias visibles ---------- */
+body[data-dolan-style="odoo_classic"] { --dolan-profile-radius: 4px; --dolan-profile-shadow: 0 1px 2px rgb(16 24 40 / 6%); }
+body[data-dolan-style="dolan_fluent"] { --dolan-profile-radius: 10px; --dolan-profile-shadow: 0 6px 18px rgb(20 30 60 / 11%); }
+body[data-dolan-style="dolan_liquid"] { --dolan-profile-radius: 18px; --dolan-profile-shadow: 0 12px 30px rgb(10 18 40 / 18%); }
+body[data-dolan-style="dolan_material"] { --dolan-profile-radius: 22px; --dolan-profile-shadow: 0 2px 6px rgb(20 30 60 / 8%); }
+body[data-dolan-style="dolan_minimal"] { --dolan-profile-radius: 3px; --dolan-profile-shadow: none; }
+
+/* Clásico y Compacto: botones de esquina chica, como Odoo de fábrica. */
+body:is([data-dolan-profile="odoo_classic"], [data-dolan-profile="dolan_minimal"]) :is(.o_control_panel, .o_form_view, .modal-footer, .o_dolan_home_menu_wrapper) .btn {
+    border-radius: 4px;
+}
+/* Suave: botones de esquinas medias. */
+body[data-dolan-profile="dolan_fluent"] :is(.o_control_panel, .o_form_view, .modal-footer) .btn {
+    border-radius: 8px;
+}
+/* Táctil: botones tipo píldora y más altos, superficies teñidas con la paleta. */
+body[data-dolan-profile="dolan_material"] :is(.o_control_panel, .o_form_statusbar, .modal-footer) .btn {
+    min-height: 2.5rem;
+    padding-inline: 1.1rem;
+    border-radius: 999px;
+}
+body[data-dolan-profile="dolan_material"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban)) {
+    border-color: transparent !important;
+    background-color: color-mix(in srgb, var(--dolan-color-primary) 5%, var(--dolan-color-surface, #fff)) !important;
+}
+body[data-dolan-profile="dolan_material"] :is(.o_input, .form-control, .form-select) {
+    min-height: 2.4rem;
+}
+/* Compacto: filas y controles más bajos, sin sombras. */
+body[data-dolan-profile="dolan_minimal"] .o_list_renderer .o_list_table :is(td, th) {
+    padding-top: .3rem;
+    padding-bottom: .3rem;
+}
+body[data-dolan-profile="dolan_minimal"] :is(.o_form_view .o_form_sheet, .o_list_renderer .o_list_table) {
+    box-shadow: none !important;
+}
+
+/* ---------- 7. Ajustes: vistas previas que anticipan el resultado ---------- */
+.o_dolan_settings_palette_choices { grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); }
+.o_dolan_settings_palette_choice.o_dolan_palette_preview_choice {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .4rem;
+    padding: .5rem;
+    text-align: left;
+}
+.o_dolan_palette_preview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 4.2rem;
+    overflow: hidden;
+    border: 1px solid var(--dolan-color-border);
+    border-radius: .45rem;
+}
+.o_dolan_palette_preview_half { display: flex; flex-direction: column; min-width: 0; }
+.o_dolan_palette_preview_half .is-nav { height: .7rem; background: var(--pv-nav); }
+.o_dolan_palette_preview_half .is-canvas { flex: 1; display: flex; flex-direction: column; gap: .25rem; padding: .3rem; background: var(--pv-canvas); }
+.o_dolan_palette_preview_half .is-card { display: flex; align-items: center; gap: .2rem; padding: .25rem; border-radius: .2rem; background: var(--pv-surface); box-shadow: 0 1px 2px rgb(0 0 0 / 12%); }
+.o_dolan_palette_preview_half .is-btn { width: 1.4rem; height: .5rem; border-radius: .15rem; background: var(--pv-primary); }
+.o_dolan_palette_preview_half .is-chip { width: .8rem; height: .5rem; border-radius: 1rem; background: var(--pv-secondary); }
+.o_dolan_palette_preview_half .is-line { width: 70%; height: .15rem; border-radius: 1rem; background: var(--pv-text); opacity: .45; }
+.o_dolan_palette_preview_name { display: flex; justify-content: space-between; gap: .3rem; font-weight: 600; }
+.o_dolan_palette_preview_hint { color: var(--dolan-color-text-muted); font-size: .76rem; font-weight: 400; }
+
+/* Miniaturas de perfil: muestran la forma real (esquinas, sombra, vidrio). */
+.o_dolan_theme_sample:is(.is-profile-odoo_classic, .is-profile-dolan_fluent, .is-profile-dolan_liquid, .is-profile-dolan_material, .is-profile-dolan_minimal) {
+    background: var(--dolan-color-canvas, #f4f5fc);
+}
+.o_dolan_theme_sample:is(.is-profile-odoo_classic, .is-profile-dolan_fluent, .is-profile-dolan_liquid, .is-profile-dolan_material, .is-profile-dolan_minimal) .o_dolan_theme_sample_top {
+    background: var(--dolan-navbar-bg, var(--dolan-color-primary));
+}
+.o_dolan_theme_sample:is(.is-profile-odoo_classic, .is-profile-dolan_fluent, .is-profile-dolan_liquid, .is-profile-dolan_material, .is-profile-dolan_minimal) .o_dolan_theme_sample_body {
+    background: var(--dolan-color-surface-raised, #fff);
+    border: 1px solid var(--dolan-color-border, #e4e7ef);
+}
+.o_dolan_theme_sample.is-profile-odoo_classic .o_dolan_theme_sample_body { border-radius: .12rem; box-shadow: none; }
+.o_dolan_theme_sample.is-profile-dolan_fluent .o_dolan_theme_sample_body { border-radius: .3rem; box-shadow: 0 3px 7px rgb(20 30 60 / 20%); border-color: transparent; }
+.o_dolan_theme_sample.is-profile-dolan_liquid {
+    background:
+        radial-gradient(at 15% 10%, color-mix(in srgb, var(--dolan-color-primary) 45%, transparent), transparent 60%),
+        radial-gradient(at 90% 90%, color-mix(in srgb, var(--dolan-color-secondary) 40%, transparent), transparent 60%),
+        var(--dolan-color-canvas, #f4f5fc);
+}
+.o_dolan_theme_sample.is-profile-dolan_liquid .o_dolan_theme_sample_top { background: color-mix(in srgb, var(--dolan-navbar-bg, var(--dolan-color-primary)) 70%, transparent); }
+.o_dolan_theme_sample.is-profile-dolan_liquid .o_dolan_theme_sample_body { border-radius: .5rem; background: rgb(255 255 255 / 55%); border-color: rgb(255 255 255 / 85%); box-shadow: 0 4px 10px rgb(10 18 40 / 22%); }
+.o_dolan_theme_sample.is-profile-dolan_material .o_dolan_theme_sample_body { border-radius: .65rem; border-color: transparent; background: color-mix(in srgb, var(--dolan-color-primary) 12%, var(--dolan-color-surface-raised, #fff)); }
+.o_dolan_theme_sample.is-profile-dolan_minimal .o_dolan_theme_sample_body { border-radius: 0; box-shadow: none; }
+.o_dolan_theme_sample.is-profile-dolan_minimal .o_dolan_theme_sample_top { background: var(--dolan-color-border, #e4e7ef); }
+body.o_dolan_dark_mode .o_dolan_theme_sample.is-profile-dolan_liquid .o_dolan_theme_sample_body { background: rgb(255 255 255 / 10%); border-color: rgb(255 255 255 / 18%); }
+
+/* Ajustes: muestras de estilo de iconos con mosaico. */
+.o_dolan_settings_icon_sample .o_dolan_icon_style_mask_preview { width: 1.6rem; height: 1.6rem; flex: 0 0 1.6rem; }
+
+@media (prefers-reduced-motion: reduce) {
+    body[data-dolan-home-bg-style="palette"] :is(.o_home_menu_background, .o_dolan_home_menu_wrapper) { background-attachment: scroll; }
+}

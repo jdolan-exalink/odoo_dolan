@@ -4,7 +4,7 @@ from pathlib import Path
 from odoo import http
 from odoo.http import request
 
-from ..models.icon_styles import ICON_STYLE_IDS, normalize_icon_style
+from ..models.icon_styles import DEFAULT_ICON_STYLE, ICON_STYLE_IDS, normalize_icon_style
 
 
 _ICON_CATALOG_PATH = Path(__file__).resolve().parents[1] / "static" / "src" / "lib" / "dolan_icon_catalog.json"
@@ -72,7 +72,7 @@ class DolanScreenPreferencesController(http.Controller):
     def screen_preferences(self, values=None, legacy_values=None):
         Preference = request.env["dolan.screen.preference"]
         params = request.env["ir.config_parameter"].sudo()
-        global_icon_style = normalize_icon_style(params.get_param("dolan_ui.icon_style", "odoo_original"))
+        global_icon_style = normalize_icon_style(params.get_param("dolan_ui.icon_style", DEFAULT_ICON_STYLE))
         allow_user_icon_style = params.get_param("dolan_ui.allow_user_icon_style", "False").lower() in ("1", "true", "yes")
         allow_personal_appearance = params.get_param("dolan_ui.allow_personal_appearance", "True").lower() in ("1", "true", "yes")
         global_theme_mode = params.get_param("dolan_ui.theme_mode", "system")
@@ -100,7 +100,7 @@ class DolanScreenPreferencesController(http.Controller):
             if allow_user_icon_style and values.get("icon_style") == "global":
                 allowed["icon_style"] = "global"
             elif allow_user_icon_style and values.get("icon_style") in ICON_STYLE_IDS:
-                allowed["icon_style"] = values["icon_style"]
+                allowed["icon_style"] = normalize_icon_style(values["icon_style"])
             if allow_personal_appearance and "compact_mode" in values:
                 allowed["compact_mode"] = bool(values["compact_mode"])
             if allow_personal_appearance and values.get("appearance_profile") == "global":
@@ -168,7 +168,8 @@ class DolanScreenPreferencesController(http.Controller):
                 "text": params.get_param("dolan_ui.custom_text", "#263238"),
                 "border": params.get_param("dolan_ui.custom_border", "#DEE2E6"),
             },
-            "home_bg_style": company.dolan_home_bg_style or "enterprise",
+            "home_bg_style": company.dolan_home_bg_style or "palette",
+            "navbar_style": params.get_param("dolan_ui.navbar_style", "palette") if params.get_param("dolan_ui.navbar_style", "palette") in ("palette", "neutral") else "palette",
             "full_width_sheets": company.dolan_full_width_sheets,
             "icon_style": normalize_icon_style(selected_style),
             "icon_style_preference": preference.icon_style if allow_user_icon_style else "global",

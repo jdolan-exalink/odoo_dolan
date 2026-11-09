@@ -3,14 +3,23 @@
     <t t-name="DOLAN_theme.DolanAppearanceChoice">
         <div t-if="this.isPalette" class="o_dolan_settings_choice_grid o_dolan_settings_palette_choices" role="radiogroup" aria-label="Paleta predeterminada">
             <button t-foreach="this.choices" t-as="choice" t-key="choice[0]" type="button"
-                    class="o_dolan_settings_choice o_dolan_settings_palette_choice"
+                    class="o_dolan_settings_choice o_dolan_settings_palette_choice o_dolan_palette_preview_choice"
                     t-att-class="this.value === choice[0] ? 'is-selected' : ''"
                     t-att-style="this.colorStyle(choice[0])"
                     t-att-aria-checked="this.value === choice[0] ? 'true' : 'false'"
                     role="radio" t-att-disabled="this.props.readonly"
                     t-on-click="() => this.select(choice[0])">
-                <span class="o_dolan_settings_palette_sample"><i/><i/></span>
-                <span t-out="choice[1]"/>
+                <t t-set="preview" t-value="this.palettePreview(choice[0])"/>
+                <span class="o_dolan_palette_preview" aria-hidden="true">
+                    <span class="o_dolan_palette_preview_half" t-att-style="preview.light">
+                        <span class="is-nav"/><span class="is-canvas"><span class="is-card"><span class="is-btn"/><span class="is-chip"/></span><span class="is-line"/></span>
+                    </span>
+                    <span class="o_dolan_palette_preview_half" t-att-style="preview.dark">
+                        <span class="is-nav"/><span class="is-canvas"><span class="is-card"><span class="is-btn"/><span class="is-chip"/></span><span class="is-line"/></span>
+                    </span>
+                </span>
+                <span class="o_dolan_palette_preview_name"><span t-out="choice[1]"/></span>
+                <span class="o_dolan_palette_preview_hint" t-out="this.paletteHint(choice[0])"/>
                 <span t-if="this.value === choice[0]" class="o_dolan_settings_choice_check" aria-hidden="true">✓</span>
             </button>
         </div>
@@ -39,7 +48,10 @@
                     role="radio" t-att-disabled="this.props.readonly"
                     t-on-click="() => this.select(choice[0])">
                 <span t-if="this.isIconStyle" class="o_dolan_settings_icon_sample" aria-hidden="true">
-                    <img t-foreach="this.iconSamples(choice[0])" t-as="src" t-key="src" t-att-src="src" alt="" loading="lazy"/>
+                    <t t-foreach="this.iconSamples(choice[0])" t-as="sample" t-key="sample.key">
+                        <i t-if="sample.mask" class="o_dolan_icon_style_mask_preview" t-att-class="'o_dolan_icon_variant_' + choice[0]" t-att-style="sample.style"/>
+                        <img t-else="" t-att-src="sample.src" alt="" loading="lazy"/>
+                    </t>
                 </span>
                 <span t-else="" class="o_dolan_settings_choice_glyph" aria-hidden="true" t-out="this.choiceGlyph(choice[0])"/>
                 <span class="o_dolan_settings_theme_label" t-out="choice[1]"/>

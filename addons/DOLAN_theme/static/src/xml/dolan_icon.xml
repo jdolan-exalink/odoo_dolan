@@ -3,6 +3,8 @@
     <t t-name="DOLAN_theme.Icon">
         <span t-if="this.isActionIconAsset" class="o_dolan_action_icon_asset" t-att-style="this.actionIconStyle"
               aria-hidden="true"/>
+        <span t-elif="this.isAppMask" class="o_dolan_variant_mask o_dolan_app_glyph" t-att-class="'o_dolan_icon_variant_' + this.iconStyle"
+              t-att-style="this.appMaskStyle" aria-hidden="true"/>
         <span t-elif="this.isTablerAsset" class="o_dolan_tabler_icon_asset" t-att-class="this.assetClass"
               t-att-style="this.actionIconStyle" aria-hidden="true"/>
         <img t-elif="this.assetUrl" class="o_dolan_icon_asset" t-att-class="this.assetClass"
