@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 
-import { DOLAN_UI_PALETTES, DOLAN_THEME_MODES, isSafePosShortcutUrl, normalizeWorkspaceOrder, paletteLinkProperties, resolveDarkTheme, selectVisibleKpis, selectWorkspaceMetrics, shouldHandleAppDrawerKeydown, sortDesktopApps } from "@DOLAN_theme/js/dolan_app_drawer";
+import { DOLAN_UI_PALETTES, DOLAN_THEME_MODES, applyDolanPalette, isSafePosShortcutUrl, normalizeWorkspaceOrder, paletteLinkProperties, resolveDarkTheme, selectVisibleKpis, selectWorkspaceMetrics, shouldHandleAppDrawerKeydown, sortDesktopApps } from "@DOLAN_theme/js/dolan_app_drawer";
 import { iconStyleUsesMask, normalizeIconStyle, resolveActionIconAsset, resolveIconAsset, semanticAppId } from "@DOLAN_theme/js/dolan_icon_registry";
 
 test("theme mode respects explicit light and dark choices", () => {
@@ -157,4 +157,23 @@ test("form links follow the selected palette and stay readable in dark mode", ()
     // Odoo's Bootstrap build has no prefix: the unprefixed names must match.
     expect(paletteLinkProperties("#0878b9")["--link-color"]).toBe("#0878b9");
     expect(paletteLinkProperties("#0878b9")["--link-color-rgb"]).toBe("8, 120, 185");
+});
+
+test("custom palette keeps dark surfaces in dark mode and cleans up on switch", () => {
+    const body = document.body;
+    const custom = { primary: "#0878b9", background: "#f7f8fa", surface: "#ffffff", text: "#263238", border: "#dee2e6" };
+    body.classList.add("o_dolan_dark_mode");
+    applyDolanPalette("custom", {}, custom);
+    expect(body.style.getPropertyValue("--dolan-color-surface")).toBe("");
+    expect(body.style.getPropertyValue("--dolan-color-primary")).toBe("#0878b9");
+    body.classList.remove("o_dolan_dark_mode");
+    applyDolanPalette("custom", {}, custom);
+    expect(body.style.getPropertyValue("--dolan-color-surface")).toBe("#f7f8fa");
+    body.classList.add("o_dolan_dark_mode");
+    applyDolanPalette("custom", {}, custom);
+    expect(body.style.getPropertyValue("--dolan-color-surface")).toBe("");
+    body.classList.remove("o_dolan_dark_mode");
+    applyDolanPalette("ocean", {}, custom);
+    expect(body.style.getPropertyValue("--dolan-color-text")).toBe("");
+    applyDolanPalette("dolan");
 });

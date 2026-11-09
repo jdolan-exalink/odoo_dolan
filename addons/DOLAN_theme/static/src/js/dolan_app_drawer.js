@@ -162,10 +162,24 @@ export function paletteLinkProperties(primary, dark = false) {
     };
 }
 
+export const CUSTOM_SURFACE_PROPERTIES = ["--dolan-color-surface", "--dolan-color-surface-raised", "--dolan-color-text", "--dolan-color-border"];
+
+export function customSurfaceProperties(customColors = {}) {
+    return {
+        "--dolan-color-surface": customColors.background || "#F7F8FA",
+        "--dolan-color-surface-raised": customColors.surface || "#FFFFFF",
+        "--dolan-color-text": customColors.text || "#263238",
+        "--dolan-color-border": customColors.border || "#DEE2E6",
+    };
+}
+
 export function applyDolanPalette(palette, companyColors = {}, customColors = {}) {
     const targets = [document.documentElement, document.body, document.querySelector(".o_web_client")].filter(Boolean);
     const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active", "--bs-link-color", "--bs-link-color-rgb", "--bs-link-hover-color", "--bs-link-hover-color-rgb", "--primary", "--primary-rgb", "--link-color", "--link-color-rgb", "--link-hover-color", "--link-hover-color-rgb"];
     const target = document.body;
+    // Surfaces from the custom palette are inline too: always drop them first so
+    // switching palette or theme never leaves light surfaces behind.
+    targets.forEach((node) => CUSTOM_SURFACE_PROPERTIES.forEach((name) => node.style.removeProperty(name)));
     if (target.classList.contains("o_dolan_high_contrast")) {
         targets.forEach((node) => clearProperties.forEach((name) => node.style.removeProperty(name)));
         target.dataset.dolanPalette = palette;
@@ -198,13 +212,10 @@ export function applyDolanPalette(palette, companyColors = {}, customColors = {}
         ...paletteLinkProperties(primary, target.classList.contains("o_dolan_dark_mode")),
     };
     targets.forEach((node) => Object.entries(properties).forEach(([name, value]) => node.style.setProperty(name, value)));
-    if (useCustom) {
-        const customProperties = {
-            "--dolan-color-surface": customColors.background || "#F7F8FA",
-            "--dolan-color-surface-raised": customColors.surface || "#FFFFFF",
-            "--dolan-color-text": customColors.text || "#263238",
-            "--dolan-color-border": customColors.border || "#DEE2E6",
-        };
+    // Custom background/surface/text/border are a light scheme: in dark mode the
+    // dark tokens stay and only the custom primary/secondary are applied.
+    if (useCustom && !target.classList.contains("o_dolan_dark_mode")) {
+        const customProperties = customSurfaceProperties(customColors);
         targets.forEach((node) => Object.entries(customProperties).forEach(([name, value]) => node.style.setProperty(name, value)));
     }
     document.body.dataset.dolanPalette = palette;
@@ -1153,6 +1164,8 @@ export class DolanAppDrawerSystray extends Component {
         document.body.classList.toggle("o_dolan_dark_mode", this.state.darkMode);
         document.body.classList.toggle("o_dolan_high_contrast", mode === "contrast");
         document.documentElement.style.colorScheme = this.state.darkMode ? "dark" : "light";
+        // Re-apply the palette: link contrast and custom surfaces depend on the theme.
+        applyDolanPalette(this.state.palette, this._companyColors || {}, this._customColors || {});
         syncColorSchemeCookie(this.state.darkMode);
         window.localStorage.setItem("dolan_theme_mode", mode);
         window.localStorage.setItem("dolan_dark_mode", this.state.darkMode ? "1" : "0");
