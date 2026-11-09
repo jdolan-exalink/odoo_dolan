@@ -24,6 +24,9 @@ jobs:
       - name: Verificar el orden de arranque de assets DOLAN_theme
         run: python scripts/test_theme_asset_bootstrap.py
 
+      - name: Verificar addons incluidos por perfil de despliegue
+        run: python scripts/test_install_profile_addons.py
+
       - name: Compilar todo el código Python (sintaxis)
         run: python -m compileall -q addons scripts
 

@@ -133,7 +133,7 @@ case "$PROFILE" in
     DOLAN_ADDONS="DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_knowledge_bi"
     ;;
   comercio)
-    DOLAN_ADDONS="DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_pos,DOLAN_knowledge_bi"
+    DOLAN_ADDONS="DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_pos,DOLAN_discount_engine,DOLAN_payment_terminal,DOLAN_knowledge_bi,ePOS_print,pos_scale_management"
     ;;
   servicios)
     DOLAN_ADDONS="DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_subscription,DOLAN_renting,DOLAN_views,DOLAN_knowledge_bi"
@@ -141,6 +141,7 @@ case "$PROFILE" in
   full)
     DOLAN_ADDONS="${ALL_DOLAN_MODULES[*]}"
     DOLAN_ADDONS="${DOLAN_ADDONS// /,}"
+    DOLAN_ADDONS+=",ePOS_print,pos_scale_management"
     ;;
   custom)
     if [[ -z "$CUSTOM_MODULES" && $INTERACTIVE -eq 1 && -t 0 ]]; then
@@ -496,13 +497,27 @@ if [[ -f l10n_ar_fiscal_ws/__manifest__.py ]]; then
   echo "  -> l10n_ar_fiscal_ws habilitado"
 fi
 
-echo "2/3 Copiando suite de modulos propios DOLAN_*..."
+echo "2/3 Copiando suite DOLAN y addons requeridos por los perfiles..."
 if [[ -d "$SCRIPT_DIR/addons" ]]; then
   for mod_dir in "$SCRIPT_DIR"/addons/DOLAN_*; do
     if [[ -d "$mod_dir" ]]; then
       cp -r "$mod_dir" .
       echo "  -> $(basename "$mod_dir") copiado"
     fi
+  done
+  # Los perfiles Comercio y Completo incluyen complementos funcionales cuyo
+  # nombre no empieza por DOLAN_. Sin copiarlos, DOLAN_pos no puede resolver
+  # sus dependencias al inicializar una base nueva.
+  IFS=',' read -ra REQUESTED_ADDONS <<< "$DOLAN_ADDONS"
+  for addon in "${REQUESTED_ADDONS[@]}"; do
+    [[ "$addon" == DOLAN_* ]] && continue
+    mod_dir="$SCRIPT_DIR/addons/$addon"
+    if [[ ! -d "$mod_dir" || ! -f "$mod_dir/__manifest__.py" ]]; then
+      echo "Error: el perfil $PROFILE requiere el addon '$addon', pero no está disponible en $mod_dir." >&2
+      exit 2
+    fi
+    cp -r "$mod_dir" .
+    echo "  -> $addon copiado"
   done
 fi
 cd ..
