@@ -12,6 +12,36 @@
             <meta name="mobile-web-app-capable" content="yes"/>
             <meta name="application-name" content="DOLAN"/>
         </xpath>
+        <xpath expr="//body" position="inside">
+            <!-- Aplica el último aspecto guardado antes de que arranque el cliente
+                 web, para que no se vea primero el estilo base (paleta, perfil,
+                 iconos y modo oscuro llegan después por RPC). -->
+            <script type="text/javascript">
+                (function () {
+                    try {
+                        var body = document.body;
+                        if (!body) { return; }
+                        if (!body.classList.contains("o_web_client")) {
+                            if (window.location.pathname.indexOf("/odoo") !== 0) { return; }
+                        }
+                        var raw = window.localStorage.getItem("dolan_boot_theme");
+                        if (!raw) { return; }
+                        var boot = JSON.parse(raw);
+                        (boot.classes || []).forEach(function (name) { body.classList.add(name); });
+                        var data = boot.data || {};
+                        Object.keys(data).forEach(function (key) { body.dataset[key] = data[key]; });
+                        var style = boot.style || {};
+                        Object.keys(style).forEach(function (name) {
+                            body.style.setProperty(name, style[name]);
+                            document.documentElement.style.setProperty(name, style[name]);
+                        });
+                        if (boot.colorScheme) { document.documentElement.style.colorScheme = boot.colorScheme; }
+                    } catch (error) {
+                        // Sin almacenamiento local el tema se aplica al cargar las preferencias.
+                    }
+                })();
+            </script>
+        </xpath>
     </template>
 
     <template id="login_theme_toggle" inherit_id="web.login">

@@ -14,6 +14,18 @@
  * las reglas de paleta sin !important, y respetan el alto contraste.
  */
 
+/* ======================= 0. Radios base ======================= */
+/* dolan_ui_31.css redondea hojas, tarjetas kanban, listas, menús y popovers con
+   --dolan-profile-radius. Fuera de los botones las curvas quedan sobrias. */
+body[data-dolan-style="odoo_classic"]:not(.o_dolan_high_contrast) { --dolan-profile-radius: 4px; }
+body[data-dolan-style="dolan_fluent"]:not(.o_dolan_high_contrast) { --dolan-profile-radius: 6px; }
+body[data-dolan-style="dolan_liquid"]:not(.o_dolan_high_contrast) { --dolan-profile-radius: 8px; }
+body[data-dolan-style="dolan_material"]:not(.o_dolan_high_contrast) { --dolan-profile-radius: 8px; }
+body[data-dolan-style="dolan_minimal"]:not(.o_dolan_high_contrast) { --dolan-profile-radius: 0px; }
+body[data-dolan-profile="dolan_minimal"][data-dolan-style="dolan_minimal"]:not(.o_dolan_high_contrast) :is(.o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_popover, .o-dropdown--menu, .dropdown-menu, .o_list_renderer .o_list_table) {
+    border-radius: 0;
+}
+
 /* ======================= 1. Tipografía ======================= */
 body[data-dolan-profile="dolan_fluent"][data-dolan-style="dolan_fluent"]:not(.o_dolan_high_contrast) {
     --bs-body-font-family: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
@@ -111,7 +123,7 @@ body[data-dolan-profile="odoo_classic"][data-dolan-style="odoo_classic"]:not(.o_
     border: 1px solid var(--dolan-color-border, rgb(0 0 0 / 10%));
 }
 body[data-dolan-profile="dolan_fluent"][data-dolan-style="dolan_fluent"]:not(.o_dolan_high_contrast) :is(.o_form_view .o_form_sheet, .o_kanban_record, .modal-content) {
-    border-radius: 8px;
+    border-radius: 6px;
     border: 1px solid rgb(0 0 0 / 6%);
     box-shadow: 0 2px 4px rgb(0 0 0 / 4%), 0 0 2px rgb(0 0 0 / 6%);
 }

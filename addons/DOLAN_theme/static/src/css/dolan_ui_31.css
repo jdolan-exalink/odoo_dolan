@@ -454,7 +454,6 @@ body.o_dolan_high_contrast .o_dolan_theme_picker_menu :is(.o_dolan_theme_mode_ch
 body[data-dolan-profile] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover, .o-dropdown--menu, .dropdown-menu) {
     border-radius: var(--dolan-profile-radius, 14px);
     box-shadow: var(--dolan-profile-shadow, 0 2px 8px rgb(38 50 56 / 7%));
-    transition: border-radius .18s ease, box-shadow .18s ease, background-color .18s ease, border-color .18s ease;
 }
 body[data-dolan-profile="odoo_classic"] :is(.o_form_view .o_form_sheet, .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban), .o_dialog .modal-content, .o_popover) {
     border: 1px solid var(--dolan-color-border, #e4e7ef);
@@ -500,7 +499,6 @@ body[data-dolan-profile] .o_list_renderer .o_list_table {
     border-radius: var(--dolan-profile-radius, 14px);
     border-spacing: 0;
     box-shadow: var(--dolan-profile-shadow, 0 2px 8px rgb(38 50 56 / 7%));
-    transition: border-radius .18s ease, box-shadow .18s ease, background-color .18s ease;
 }
 body.o_dolan_dark_mode[data-dolan-profile="dolan_fluent"] .o_list_renderer .o_list_table { background: #252a33; border-color: #3a424e; }
 body:not(.o_dolan_dark_mode)[data-dolan-profile="dolan_fluent"] .o_list_renderer .o_list_table { background: #fff; border-color: #d9dde4; }

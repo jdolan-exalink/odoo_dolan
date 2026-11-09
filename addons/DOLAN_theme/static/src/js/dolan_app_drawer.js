@@ -167,6 +167,38 @@ export function customSurfaceProperties(customColors = {}) {
 export const PALETTE_SURFACE_PROPERTIES = ["--dolan-color-canvas", "--dolan-navbar-bg", "--dolan-navbar-fg", "--dolan-navbar-hover"];
 const DARK_SURFACE_PROPERTIES = ["--dolan-color-surface", "--dolan-color-surface-raised", "--dolan-color-border"];
 
+const BOOT_THEME_KEY = "dolan_boot_theme";
+const BOOT_THEME_CLASSES = ["o_dolan_dark_mode", "o_dolan_high_contrast", "o_dolan_compact", "o_dolan_profile_minimal"];
+
+/**
+ * Guarda el aspecto ya aplicado (clases, data-dolan-* y variables de color del
+ * body) para que el script de arranque del layout lo aplique antes del primer
+ * pintado y no se vea primero el estilo base mientras llegan las preferencias.
+ */
+export function saveBootTheme() {
+    try {
+        const body = document.body;
+        if (!body) return;
+        const data = {};
+        for (const [key, value] of Object.entries(body.dataset)) {
+            if (key.startsWith("dolan")) data[key] = value;
+        }
+        const style = {};
+        for (const name of Array.from(body.style)) {
+            if (name.startsWith("--")) style[name] = body.style.getPropertyValue(name);
+        }
+        const boot = {
+            classes: BOOT_THEME_CLASSES.filter((name) => body.classList.contains(name)),
+            data,
+            style,
+            colorScheme: document.documentElement.style.colorScheme || "",
+        };
+        window.localStorage.setItem(BOOT_THEME_KEY, JSON.stringify(boot));
+    } catch {
+        // Sin almacenamiento local el tema se aplica igual, solo que más tarde.
+    }
+}
+
 export function applyDolanPalette(palette, companyColors = {}, customColors = {}) {
     const targets = [document.documentElement, document.body, document.querySelector(".o_web_client")].filter(Boolean);
     const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active", "--bs-link-color", "--bs-link-color-rgb", "--bs-link-hover-color", "--bs-link-hover-color-rgb", "--primary", "--primary-rgb", "--link-color", "--link-color-rgb", "--link-hover-color", "--link-hover-color-rgb", ...PALETTE_SURFACE_PROPERTIES];
@@ -227,6 +259,7 @@ export function applyDolanPalette(palette, companyColors = {}, customColors = {}
         targets.forEach((node) => Object.entries(customProperties).forEach(([name, value]) => node.style.setProperty(name, value)));
     }
     document.body.dataset.dolanPalette = palette;
+    saveBootTheme();
 }
 
 export function selectVisibleKpis(kpis, visibleKeys) {
@@ -1110,6 +1143,7 @@ export class DolanAppDrawerSystray extends Component {
         this.state.iconScale = scale;
         window.sessionStorage.setItem("dolan_session_icon_scale", scale);
         document.body.dataset.dolanIconScale = scale;
+        saveBootTheme();
     }
 
     applyAppearanceProfile(profile) {
@@ -1121,6 +1155,7 @@ export class DolanAppDrawerSystray extends Component {
         this.state.visualEffect = visualEffectForProfile(profile);
         document.body.dataset.dolanVisualEffect = this.state.visualEffect;
         document.body.classList.toggle("o_dolan_profile_minimal", profile === "dolan_minimal");
+        saveBootTheme();
     }
 
     chooseSessionIconStyle(style) {
@@ -1128,6 +1163,7 @@ export class DolanAppDrawerSystray extends Component {
         this.state.iconStyleMenuOpen = false;
         window.sessionStorage.setItem("dolan_session_icon_style", this.state.iconStyle);
         document.body.dataset.dolanIconStyle = this.state.iconStyle;
+        saveBootTheme();
     }
 
     resetSessionAppearance() {
@@ -1221,6 +1257,7 @@ export class DolanAppDrawerSystray extends Component {
             }
             window.localStorage.setItem("dolan_density", this.state.compact ? "compact" : "normal");
             syncColorSchemeCookie(this.state.darkMode);
+            saveBootTheme();
         } catch {
             // Conservar preferencias locales si el servidor no está disponible.
         }
