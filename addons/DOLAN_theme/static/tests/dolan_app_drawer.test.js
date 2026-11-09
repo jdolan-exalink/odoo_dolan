@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 
-import { DOLAN_UI_PALETTES, DOLAN_THEME_MODES, isSafePosShortcutUrl, normalizeWorkspaceOrder, resolveDarkTheme, selectVisibleKpis, selectWorkspaceMetrics, shouldHandleAppDrawerKeydown, sortDesktopApps } from "@DOLAN_theme/js/dolan_app_drawer";
+import { DOLAN_UI_PALETTES, DOLAN_THEME_MODES, isSafePosShortcutUrl, normalizeWorkspaceOrder, paletteLinkProperties, resolveDarkTheme, selectVisibleKpis, selectWorkspaceMetrics, shouldHandleAppDrawerKeydown, sortDesktopApps } from "@DOLAN_theme/js/dolan_app_drawer";
 import { iconStyleUsesMask, normalizeIconStyle, resolveActionIconAsset, resolveIconAsset, semanticAppId } from "@DOLAN_theme/js/dolan_icon_registry";
 
 test("theme mode respects explicit light and dark choices", () => {
@@ -148,4 +148,10 @@ test("custom order is preserved and newly installed apps are appended alphabetic
         { menu_key: "base.menu_contacts", sequence: 10 },
     ]);
     expect(sorted.map((app) => app.id)).toEqual([2, 1, 3]);
+});
+
+test("form links follow the selected palette and stay readable in dark mode", () => {
+    expect(paletteLinkProperties("#0878b9")["--bs-link-color"]).toBe("#0878b9");
+    expect(paletteLinkProperties("#0878b9")["--bs-link-color-rgb"]).toBe("8, 120, 185");
+    expect(paletteLinkProperties("#7938d2", true)["--bs-link-color"]).toBe("#ac84e3");
 });

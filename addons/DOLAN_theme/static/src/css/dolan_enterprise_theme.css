@@ -5,8 +5,8 @@
    ========================================================================== */
 
 :root {
-    --dolan-primary: #714B67;
-    --dolan-primary-hover: #604058;
+    --dolan-primary: var(--dolan-color-primary, #7938d2);
+    --dolan-primary-hover: color-mix(in srgb, var(--dolan-color-primary) 85%, #000);
     --dolan-secondary: #017e84;
     --dolan-secondary-soft: #e6f2f3;
     --NavBar-entry-color: #212529;
@@ -159,7 +159,7 @@ body.o_home_menu_background .o_main_navbar .o_menu_sections {
 
 /* Botón .o_menu_toggle (Grilla SVG 3x3 con crossfade a flecha ← dentro de una app) */
 .o_main_navbar .o_menu_toggle {
-    color: #714B67 !important;
+    color: var(--dolan-color-primary) !important;
     padding: 0 12px;
     height: 46px;
     min-width: 40px;
@@ -176,7 +176,7 @@ body.o_home_menu_background .o_main_navbar .o_menu_sections {
 
 .o_main_navbar .o_menu_toggle:hover,
 .o_main_navbar .o_menu_toggle:focus {
-    color: #604058 !important;
+    color: color-mix(in srgb, var(--dolan-color-primary) 85%, #000) !important;
     background-color: var(--NavBar-entry-backgroundColor--hover, #e7ebed) !important;
 }
 
@@ -225,14 +225,14 @@ body:not(.o_home_menu_background) .o_main_navbar .o_menu_toggle.hasImage:focus-v
 
 .o_main_navbar .o_dolan_home_btn:hover,
 .o_main_navbar .o_dolan_home_btn:focus {
-    color: #714B67 !important;
+    color: var(--dolan-color-primary) !important;
     background-color: var(--NavBar-entry-backgroundColor--hover, #e7ebed) !important;
 }
 
-/* Modo oscuro: el violeta #714B67 no se ve sobre la navbar oscura */
+/* Modo oscuro: el color primario no se ve sobre la navbar oscura */
 body.o_dolan_dark_mode .o_main_navbar .o_menu_toggle,
 body.o_dolan_dark_mode .o_main_navbar .o_dolan_home_btn {
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 body.o_dolan_dark_mode .o_main_navbar .o_menu_toggle:hover,
@@ -255,7 +255,7 @@ body.o_dolan_dark_mode .o_main_navbar .o_dolan_home_btn:focus {
         height: 36px !important;
         padding: 0 !important;
         margin-inline: 4px !important;
-        color: #f1f3f5 !important;
+        color: var(--dolan-color-text) !important;
         background-color: #292d36 !important;
         border: 1px solid #454c59 !important;
         border-radius: 8px !important;
@@ -264,7 +264,7 @@ body.o_dolan_dark_mode .o_main_navbar .o_dolan_home_btn:focus {
     }
 
     body.o_dolan_dark_mode .o_main_navbar .o_mobile_menu_toggle :is(svg, i, .oi) {
-        color: #f1f3f5 !important;
+        color: var(--dolan-color-text) !important;
         fill: currentColor !important;
         opacity: 1 !important;
     }
@@ -273,9 +273,9 @@ body.o_dolan_dark_mode .o_main_navbar .o_dolan_home_btn:focus {
     body.o_dolan_dark_mode .o_main_navbar .o_mobile_menu_toggle:active,
     body.o_dolan_dark_mode .o_main_navbar .o_mobile_menu_toggle:focus-visible {
         color: #ffffff !important;
-        background-color: #3a3040 !important;
-        border-color: #806b7c !important;
-        box-shadow: 0 0 0 2px rgba(195, 154, 181, .32) !important;
+        background-color: color-mix(in srgb, var(--dolan-color-primary) 18%, var(--dolan-color-surface)) !important;
+        border-color: color-mix(in srgb, var(--dolan-color-primary) 55%, #4a5160) !important;
+        box-shadow: 0 0 0 2px color-mix(in srgb, color-mix(in srgb, var(--dolan-color-primary) 55%, #fff) 32%, transparent) !important;
     }
 
     body.o_dolan_dark_mode .o_main_navbar .o_mobile_menu_toggle:focus:not(:focus-visible) {
@@ -422,7 +422,7 @@ body.o_dolan_home_action_active .o_action_manager {
     width: 100%;
     height: 100%;
     border-radius: 0.35rem;
-    background: linear-gradient(135deg, #714B67 0%, #017e84 100%);
+    background: linear-gradient(135deg, var(--dolan-color-primary) 0%, #017e84 100%);
     color: #ffffff;
     font-weight: 700;
     font-size: 1.35rem;
@@ -444,19 +444,19 @@ body.o_dolan_home_action_active .o_action_manager {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
-/* Pestañas (.o_notebook) con borde superior de 3px en #714B67 */
+/* Pestañas (.o_notebook) con borde superior de 3px en var(--dolan-color-primary) */
 .o_notebook {
     --Notebook-padding-x: 0;
     --Notebook-link-border-color: #d8dadd;
     --Notebook-link-border-color-active: #d8dadd;
-    --Notebook-link-border-color-active-accent: #714B67;
+    --Notebook-link-border-color-active-accent: var(--dolan-color-primary);
     --Notebook-link-background-color: #f8f9fa;
     --Notebook-link-background-color-hover: #e7ebed;
     --Notebook-link-background-color-disabled: #f8f9fa;
 }
 
 .o_notebook .nav-link.active {
-    border-top: 3px solid #714B67 !important;
+    border-top: 3px solid var(--dolan-color-primary) !important;
     font-weight: 600;
     color: #212529 !important;
 }
@@ -464,8 +464,8 @@ body.o_dolan_home_action_active .o_action_manager {
 /* Badges suaves con opacidad .15 y texto coloreado (Odoo 20 Enterprise) */
 .badge.text-bg-primary {
     --bg-opacity: .15;
-    color: #714B67 !important;
-    background-color: rgba(113, 75, 103, 0.15) !important;
+    color: var(--dolan-color-primary) !important;
+    background-color: color-mix(in srgb, var(--dolan-color-primary) 15%, transparent) !important;
 }
 
 .badge.text-bg-secondary {
@@ -560,13 +560,13 @@ body.o_dolan_dark_mode .o_dolan_home_menu_wrapper {
         radial-gradient(rgba(255, 255, 255, 0.08) 1px, #16181d 1px) !important;
     background-size: auto, 12px 12px !important;
     background-repeat: no-repeat, repeat !important;
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 body.o_dolan_dark_mode .o_main_navbar {
     background-color: #1e2128 !important;
     border-bottom-color: #2d323e !important;
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 body.o_dolan_dark_mode.o_home_menu_background .o_main_navbar {
@@ -578,7 +578,7 @@ body.o_dolan_dark_mode .o_main_navbar .o_menu_brand,
 body.o_dolan_dark_mode .o_main_navbar .o_nav_entry,
 body.o_dolan_dark_mode .o_main_navbar .o_menu_sections .dropdown-toggle,
 body.o_dolan_dark_mode .o_home_menu .o_caption {
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 body.o_dolan_dark_mode .o_home_menu .o_app .o_app_icon {
@@ -649,14 +649,14 @@ body.o_dolan_dark_mode .o_form_view .o_form_sheet_bg,
 body.o_dolan_dark_mode .o_kanban_view,
 body.o_dolan_dark_mode .o_list_view {
     background-color: #16181d !important;
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 body.o_dolan_dark_mode .o_form_view .o_form_sheet_bg > .o_form_sheet,
 body.o_dolan_dark_mode .o_kanban_renderer .o_kanban_record > div:not(.o_dropdown_kanban),
 body.o_dolan_dark_mode .table {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
     border-color: #2f3441 !important;
 }
 
@@ -664,7 +664,7 @@ body.o_dolan_dark_mode .table {
    6. Botón de acceso rápido a Apps en Systray y Header de Home Menu
    -------------------------------------------------------------------------- */
 .o_dolan_systray_apps_btn {
-    color: #714B67 !important;
+    color: var(--dolan-color-primary) !important;
     padding: 2px 7px !important;
     border-radius: 6px !important;
     transition: background-color 0.15s ease;
@@ -673,7 +673,7 @@ body.o_dolan_dark_mode .table {
     background-color: var(--NavBar-entry-backgroundColor--hover, #e7ebed) !important;
 }
 body.o_dolan_dark_mode .o_dolan_systray_apps_btn {
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 .o_home_menu_top_bar {
@@ -690,7 +690,7 @@ body.o_dolan_dark_mode .o_home_menu_title {
 body.o_dolan_dark_mode .o_home_menu_top_bar .btn {
     background-color: #242832 !important;
     border-color: #3b404d !important;
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 body.o_dolan_dark_mode .o_home_menu_top_bar kbd {
     background-color: #1e2128 !important;
@@ -731,8 +731,8 @@ body.o_dolan_dark_mode .o_home_menu_search_input::placeholder {
 
 .o_dolan_bottom_item:active,
 .o_dolan_bottom_item:focus {
-    color: #714B67;
-    background-color: rgba(113, 75, 103, 0.08);
+    color: var(--dolan-color-primary);
+    background-color: color-mix(in srgb, var(--dolan-color-primary) 8%, transparent);
 }
 
 .o_dolan_bottom_label {
@@ -745,11 +745,11 @@ body.o_dolan_dark_mode .o_home_menu_search_input::placeholder {
 .o_dolan_bottom_icon_ai {
     width: 38px;
     height: 38px;
-    background: linear-gradient(135deg, #714B67 0%, #017e84 100%);
+    background: linear-gradient(135deg, var(--dolan-color-primary) 0%, #017e84 100%);
     border-radius: 50%;
     margin-top: -12px;
     border: 2px solid #ffffff;
-    box-shadow: 0 4px 12px rgba(113, 75, 103, 0.35);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--dolan-color-primary) 35%, transparent);
 }
 
 /* Espacio inferior de seguridad en móvil para no tapar contenido */
@@ -795,7 +795,7 @@ body.o_dolan_dark_mode .o_dolan_bottom_icon_ai {
 .o_dolan_action_card:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
-    border-color: rgba(113, 75, 103, 0.25) !important;
+    border-color: color-mix(in srgb, var(--dolan-color-primary) 25%, transparent) !important;
 }
 
 .o_dolan_card_icon {
@@ -807,7 +807,7 @@ body.o_dolan_dark_mode .o_dolan_bottom_icon_ai {
 }
 
 body.o_dolan_dark_mode .o_dolan_action_card {
-    background: #20232b !important;
+    background: var(--dolan-color-surface) !important;
     border-color: #2f3441 !important;
 }
 
@@ -820,7 +820,7 @@ body.o_dolan_dark_mode .o_dolan_action_card p {
 }
 
 body.o_dolan_dark_mode .o_dolan_drawer_tab_group {
-    background-color: #20232b !important;
+    background-color: var(--dolan-color-surface) !important;
     border-color: #2f3441 !important;
 }
 
@@ -855,7 +855,7 @@ body.o_dolan_dark_mode .o_list_table thead th {
 }
 
 .o_list_table tbody tr:hover {
-    background-color: rgba(113, 75, 103, 0.04) !important;
+    background-color: color-mix(in srgb, var(--dolan-color-primary) 4%, transparent) !important;
 }
 
 body.o_dolan_dark_mode .o_list_table tbody tr:hover {
@@ -868,15 +868,15 @@ body.o_dolan_dark_mode .o_list_table tbody tr:hover {
 .o_form_view .o_input:focus,
 .o_form_view select:focus,
 .o_form_view textarea:focus {
-    border-color: #714B67 !important;
-    box-shadow: 0 0 0 3px rgba(113, 75, 103, 0.16) !important;
+    border-color: var(--dolan-color-primary) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--dolan-color-primary) 16%, transparent) !important;
     outline: none !important;
 }
 
 /* Botones principales destacados */
 .btn-primary {
-    background-color: #714B67 !important;
-    border-color: #714B67 !important;
+    background-color: var(--dolan-color-primary) !important;
+    border-color: var(--dolan-color-primary) !important;
     color: #ffffff !important;
     font-weight: 500;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -885,9 +885,9 @@ body.o_dolan_dark_mode .o_list_table tbody tr:hover {
 
 .btn-primary:hover,
 .btn-primary:focus {
-    background-color: #5e3d55 !important;
-    border-color: #5e3d55 !important;
-    box-shadow: 0 2px 6px rgba(113, 75, 103, 0.3) !important;
+    background-color: color-mix(in srgb, var(--dolan-color-primary) 85%, #000) !important;
+    border-color: color-mix(in srgb, var(--dolan-color-primary) 85%, #000) !important;
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--dolan-color-primary) 30%, transparent) !important;
 }
 
 /* Statusbar pills */
@@ -915,12 +915,12 @@ body.o_dolan_dark_mode .o_list_table tbody tr:hover {
 /* ===== PRD 04: Mi Espacio (KPIs), skeletons y densidad ===== */
 .o_dolan_kpi_grid { max-width: 960px; }
 .o_dolan_kpi { min-height: 64px; background: var(--bs-body-bg, #fff); cursor: pointer; border-inline-start: 4px solid #6c757d !important; }
-.o_dolan_kpi:focus-visible { outline: 3px solid #714B67; outline-offset: 2px; }
+.o_dolan_kpi:focus-visible { outline: 3px solid var(--dolan-color-primary); outline-offset: 2px; }
 .o_dolan_kpi_critical { border-inline-start-color: #b02a37 !important; }
 .o_dolan_kpi_critical .o_dolan_kpi_badge { background: #b02a37; color: #fff; }
 .o_dolan_kpi_warning { border-inline-start-color: #b36b00 !important; }
 .o_dolan_kpi_warning .o_dolan_kpi_badge { background: #ffe8c2; color: #5c3600; }
-.o_dolan_kpi_action { border-inline-start-color: #714B67 !important; }
+.o_dolan_kpi_action { border-inline-start-color: var(--dolan-color-primary) !important; }
 .o_dolan_kpi_action .o_dolan_kpi_badge { background: #eadfe7; color: #4a2f43; }
 .o_dolan_kpi_info .o_dolan_kpi_badge { background: #e9ecef; color: #343a40; }
 .o_dolan_skeleton { height: 76px; background: linear-gradient(90deg, #e9ecef 25%, #f4f5f7 37%, #e9ecef 63%); background-size: 400% 100%; animation: o_dolan_shimmer 1.4s ease infinite; }
@@ -996,11 +996,11 @@ body.o_dolan_dark_mode .o_dolan_skeleton { background: linear-gradient(90deg, #2
 .o_dolan_folder_cell:hover .o_dolan_folder_fav_btn, .o_dolan_folder_cell .o_dolan_folder_fav_btn:focus-visible,
 .o_dolan_fav_btn.o_dolan_fav_on { opacity: 1; }
 .o_dolan_fav_btn.o_dolan_fav_on { color: #b36b00; }
-.o_dolan_fav_btn:focus-visible { outline: 3px solid #714B67; outline-offset: 1px; }
+.o_dolan_fav_btn:focus-visible { outline: 3px solid var(--dolan-color-primary); outline-offset: 1px; }
 @media (hover: none) {
   .o_dolan_app_cell .o_dolan_fav_btn, .o_dolan_folder_cell .o_dolan_folder_fav_btn { opacity: 1; min-width: 36px; min-height: 36px; }
 }
-.o_dolan_kpi_main:focus-visible { outline: 3px solid #714B67; outline-offset: 2px; }
+.o_dolan_kpi_main:focus-visible { outline: 3px solid var(--dolan-color-primary); outline-offset: 2px; }
 
 /* ===== Iconos SVG propios ===== */
 .o_dolan_icon { flex-shrink: 0; vertical-align: -0.2em; }
@@ -1009,7 +1009,7 @@ body.o_dolan_dark_mode .o_dolan_skeleton { background: linear-gradient(90deg, #2
 .o_dolan_kpi_icon, .o_dolan_kpi .o_dolan_icon { color: inherit; }
 
 /* Keep quick-action glyphs visible when Bootstrap's bg-opacity utility is unavailable. */
-.o_dolan_card_icon.bg-primary { background-color: rgba(113, 75, 103, .14) !important; color: #714B67 !important; }
+.o_dolan_card_icon.bg-primary { background-color: color-mix(in srgb, var(--dolan-color-primary) 14%, transparent) !important; color: var(--dolan-color-primary) !important; }
 .o_dolan_card_icon.bg-success { background-color: rgba(25, 135, 84, .14) !important; color: #198754 !important; }
 .o_dolan_card_icon.bg-info { background-color: rgba(8, 121, 144, .14) !important; color: #087990 !important; }
 .o_dolan_card_icon.bg-warning { background-color: rgba(255, 193, 7, .22) !important; color: #805600 !important; }
@@ -1023,10 +1023,10 @@ body.o_dolan_dark_mode .o_dolan_card_icon.bg-dark { background-color: rgba(222, 
 body.o_dolan_dark_mode {
     color-scheme: dark;
     --bs-body-bg: #16181d;
-    --bs-body-color: #e4e6eb;
-    --bs-secondary-bg: #20232b;
-    --bs-tertiary-bg: #272b34;
-    --bs-border-color: #3a404c;
+    --bs-body-color: var(--dolan-color-text);
+    --bs-secondary-bg: var(--dolan-color-surface);
+    --bs-tertiary-bg: var(--dolan-color-surface-raised);
+    --bs-border-color: var(--dolan-color-border);
     --bs-emphasis-color: #f8f9fa;
     --bs-secondary-color: #adb5bd;
     --bs-link-color: #cba6c0;
@@ -1034,62 +1034,62 @@ body.o_dolan_dark_mode {
        --dark-bg-subtle, NOT --bs-dark-bg-subtle. Both spellings are set so the
        values apply no matter which one a given SCSS partial references. */
     --body-bg: #16181d;
-    --body-color: #e4e6eb;
-    --secondary-bg: #20232b;
-    --tertiary-bg: #272b34;
-    --border-color: #3a404c;
+    --body-color: var(--dolan-color-text);
+    --secondary-bg: var(--dolan-color-surface);
+    --tertiary-bg: var(--dolan-color-surface-raised);
+    --border-color: var(--dolan-color-border);
     --emphasis-color: #f8f9fa;
     --secondary-color: #adb5bd;
     --link-color: #cba6c0;
     /* Bootstrap 5.3 subtle backgrounds stay light in dark mode (Purchase
        dashboard cards use .bg-dark-subtle). Align them with the dark palette. */
-    --bs-primary-bg-subtle: #3a2f38;
-    --bs-secondary-bg-subtle: #272b34;
+    --bs-primary-bg-subtle: color-mix(in srgb, var(--dolan-color-primary) 15%, var(--dolan-color-surface));
+    --bs-secondary-bg-subtle: var(--dolan-color-surface-raised);
     --bs-success-bg-subtle: #1e3226;
     --bs-info-bg-subtle: #1c2e33;
     --bs-warning-bg-subtle: #38301c;
     --bs-danger-bg-subtle: #3a2426;
     --bs-light-bg-subtle: #1e2128;
-    --bs-dark-bg-subtle: #272b34;
-    --bs-primary-text-emphasis: #d7bfce;
-    --bs-secondary-text-emphasis: #c2c8d0;
+    --bs-dark-bg-subtle: var(--dolan-color-surface-raised);
+    --bs-primary-text-emphasis: color-mix(in srgb, var(--dolan-color-primary) 35%, #fff);
+    --bs-secondary-text-emphasis: var(--dolan-color-text-muted);
     --bs-success-text-emphasis: #9ed8b2;
     --bs-info-text-emphasis: #9fc9d1;
     --bs-warning-text-emphasis: #e8c87a;
     --bs-danger-text-emphasis: #eba9a5;
     --bs-light-text-emphasis: #c9ced6;
-    --bs-dark-text-emphasis: #e4e6eb;
-    --bs-primary-border-subtle: #806b7c;
+    --bs-dark-text-emphasis: var(--dolan-color-text);
+    --bs-primary-border-subtle: color-mix(in srgb, var(--dolan-color-primary) 55%, #4a5160);
     --bs-secondary-border-subtle: #4a5160;
     --bs-success-border-subtle: #2f5c43;
     --bs-info-border-subtle: #2f5a63;
     --bs-warning-border-subtle: #6b5a2a;
     --bs-danger-border-subtle: #6e3a3d;
-    --bs-light-border-subtle: #3a404c;
+    --bs-light-border-subtle: var(--dolan-color-border);
     --bs-dark-border-subtle: #4a5160;
-    --primary-bg-subtle: #3a2f38;
-    --secondary-bg-subtle: #272b34;
+    --primary-bg-subtle: color-mix(in srgb, var(--dolan-color-primary) 15%, var(--dolan-color-surface));
+    --secondary-bg-subtle: var(--dolan-color-surface-raised);
     --success-bg-subtle: #1e3226;
     --info-bg-subtle: #1c2e33;
     --warning-bg-subtle: #38301c;
     --danger-bg-subtle: #3a2426;
     --light-bg-subtle: #1e2128;
-    --dark-bg-subtle: #272b34;
-    --primary-text-emphasis: #d7bfce;
-    --secondary-text-emphasis: #c2c8d0;
+    --dark-bg-subtle: var(--dolan-color-surface-raised);
+    --primary-text-emphasis: color-mix(in srgb, var(--dolan-color-primary) 35%, #fff);
+    --secondary-text-emphasis: var(--dolan-color-text-muted);
     --success-text-emphasis: #9ed8b2;
     --info-text-emphasis: #9fc9d1;
     --warning-text-emphasis: #e8c87a;
     --danger-text-emphasis: #eba9a5;
     --light-text-emphasis: #c9ced6;
-    --dark-text-emphasis: #e4e6eb;
-    --primary-border-subtle: #806b7c;
+    --dark-text-emphasis: var(--dolan-color-text);
+    --primary-border-subtle: color-mix(in srgb, var(--dolan-color-primary) 55%, #4a5160);
     --secondary-border-subtle: #4a5160;
     --success-border-subtle: #2f5c43;
     --info-border-subtle: #2f5a63;
     --warning-border-subtle: #6b5a2a;
     --danger-border-subtle: #6e3a3d;
-    --light-border-subtle: #3a404c;
+    --light-border-subtle: var(--dolan-color-border);
     --dark-border-subtle: #4a5160;
 }
 
@@ -1102,9 +1102,9 @@ body.o_dolan_dark_mode .o_notebook .nav-link,
 body.o_dolan_dark_mode .o_search_panel,
 body.o_dolan_dark_mode .o_search_panel .o_search_panel_section,
 body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
 }
 
 /* The Libro IVA/SICORE wizard and other transient forms are rendered inside
@@ -1116,31 +1116,31 @@ body.o_dolan_dark_mode .o_dialog .o_form_sheet_bg,
 body.o_dolan_dark_mode .o_dialog .o_form_sheet,
 body.o_dolan_dark_mode .o_dialog .o_group,
 body.o_dolan_dark_mode .o_dialog .o_inner_group {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
-    --o-view-background-color: #20232b;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
+    --o-view-background-color: var(--dolan-color-surface);
 }
 body.o_dolan_dark_mode .o_dialog .o_form_view :is(h1, h2, h3, h4, h5, h6, label, .o_form_label, .o_field_label, .o_wrap_label, .text-muted, .text-secondary),
 body.o_dolan_dark_mode .o_dialog .o_form_view .o_field_widget,
 body.o_dolan_dark_mode .o_dialog .o_form_view .o_field_widget :is(span, p, a, small) {
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 body.o_dolan_dark_mode .o_dialog .o_form_view :is(input:not([type="checkbox"]):not([type="radio"]), textarea, select, .o_input, .o-autocomplete--input) {
-    color: #f1f3f5 !important;
-    background-color: #181b21 !important;
+    color: var(--dolan-color-text) !important;
+    background-color: var(--dolan-color-surface-raised) !important;
     border-color: #555d6b !important;
 }
 body.o_dolan_dark_mode .o_dialog .o_form_view .o_field_widget :is(.bg-white, .bg-light, .text-bg-light, .alert-light) {
-    color: #e4e6eb !important;
-    background-color: #2b3039 !important;
+    color: var(--dolan-color-text) !important;
+    background-color: var(--dolan-color-surface-raised) !important;
     border-color: #454c59 !important;
 }
 body.o_dolan_dark_mode .o_dialog .o_form_view .o_form_statusbar,
 body.o_dolan_dark_mode .o_dialog .o_form_view footer {
-    color: #e4e6eb !important;
-    background-color: #20232b !important;
-    border-color: #3a404c !important;
+    color: var(--dolan-color-text) !important;
+    background-color: var(--dolan-color-surface) !important;
+    border-color: var(--dolan-color-border) !important;
 }
 
 body.o_dolan_dark_mode .bg-white,
@@ -1157,9 +1157,9 @@ body.o_dolan_dark_mode .o_notification .o_notification_body,
 body.o_dolan_dark_mode .o-autocomplete--dropdown-menu,
 body.o_dolan_dark_mode .o_datetime_picker,
 body.o_dolan_dark_mode .o_datepicker {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
 }
 
 /* Odoo's gray-scale utilities (.bg-100..400) stay light in dark mode: Purchase
@@ -1169,7 +1169,7 @@ body.o_dolan_dark_mode .bg-100 {
 }
 
 body.o_dolan_dark_mode .bg-200 {
-    background-color: #272b34 !important;
+    background-color: var(--dolan-color-surface-raised) !important;
 }
 
 body.o_dolan_dark_mode .bg-300 {
@@ -1197,14 +1197,14 @@ body.o_dolan_dark_mode .btn-outline-secondary,
 body.o_dolan_dark_mode .btn-outline-primary,
 body.o_dolan_dark_mode .o_control_panel .o_cp_switch_buttons .btn:hover,
 body.o_dolan_dark_mode .o_notebook .nav-link:hover {
-    background-color: #2b3039 !important;
-    color: #f1f3f5 !important;
+    background-color: var(--dolan-color-surface-raised) !important;
+    color: var(--dolan-color-text) !important;
     border-color: #4a5160 !important;
 }
 
 body.o_dolan_dark_mode .btn-outline-primary {
-    color: #d7bfce !important;
-    border-color: #987d91 !important;
+    color: color-mix(in srgb, var(--dolan-color-primary) 35%, #fff) !important;
+    border-color: color-mix(in srgb, var(--dolan-color-primary) 65%, #4a5160) !important;
 }
 
 body.o_dolan_dark_mode .btn-outline-primary:hover,
@@ -1219,12 +1219,12 @@ body.o_dolan_dark_mode .o_list_renderer .o_list_table thead,
 body.o_dolan_dark_mode .o_list_renderer .o_list_table tbody,
 body.o_dolan_dark_mode .table,
 body.o_dolan_dark_mode .table > :not(caption) > * > * {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
-    --bs-table-bg: #20232b;
-    --bs-table-color: #e4e6eb;
-    --bs-table-border-color: #3a404c;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
+    --bs-table-bg: var(--dolan-color-surface);
+    --bs-table-color: var(--dolan-color-text);
+    --bs-table-border-color: var(--dolan-color-border);
 }
 
 body.o_dolan_dark_mode input:not([type="checkbox"]):not([type="radio"]),
@@ -1232,8 +1232,8 @@ body.o_dolan_dark_mode textarea,
 body.o_dolan_dark_mode select,
 body.o_dolan_dark_mode .o_input,
 body.o_dolan_dark_mode .o_searchview_input {
-    background-color: #181b21 !important;
-    color: #e4e6eb !important;
+    background-color: var(--dolan-color-surface-raised) !important;
+    color: var(--dolan-color-text) !important;
     border-color: #454c59 !important;
 }
 
@@ -1241,7 +1241,7 @@ body.o_dolan_dark_mode input::placeholder,
 body.o_dolan_dark_mode textarea::placeholder,
 body.o_dolan_dark_mode .text-muted,
 body.o_dolan_dark_mode .o_form_view .o_form_label {
-    color: #aeb6c2 !important;
+    color: var(--dolan-color-text-muted) !important;
 }
 
 body.o_dolan_dark_mode .o_control_panel .o_cp_switch_buttons .btn.active,
@@ -1254,16 +1254,16 @@ body.o_dolan_dark_mode .o_notebook .nav-link.active {
 body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .btn-light,
 body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .bg-white,
 body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
 }
 
 body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_action_card h6,
 body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_action_card p,
 body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_kpi,
 body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_kpi_main {
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 /* Accounting dashboards use their own card classes instead of Bootstrap's generic .card. */
@@ -1276,31 +1276,31 @@ body.o_dolan_dark_mode .o_kanban_renderer,
 body.o_dolan_dark_mode .o_searchview,
 body.o_dolan_dark_mode .o_searchview.bg-view,
 body.o_dolan_dark_mode .o_searchview_facet {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
-    --o-view-background-color: #20232b;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
+    --o-view-background-color: var(--dolan-color-surface);
 }
 
 body.o_dolan_dark_mode .o_account_dashboard_kpi_header,
 body.o_dolan_dark_mode .o_account_dashboard_kpi_name {
-    color: #aeb6c2 !important;
+    color: var(--dolan-color-text-muted) !important;
 }
 
 body.o_dolan_dark_mode .o_account_dashboard_kpi_value,
 body.o_dolan_dark_mode .o_account_dashboard_kpi_invoice_layout_card,
 body.o_dolan_dark_mode .o_account_dashboard_kpi_invoice_layout_card * {
-    color: #f1f3f5 !important;
+    color: var(--dolan-color-text) !important;
 }
 
 body.o_dolan_dark_mode .o_card_record .o_kanban_record_title,
 body.o_dolan_dark_mode .o_card_record .o_kanban_record_subtitle,
 body.o_dolan_dark_mode .o_card_record .text-muted {
-    color: #c2c8d0 !important;
+    color: var(--dolan-color-text-muted) !important;
 }
 
 body.o_dolan_dark_mode .o_card_record a.oe_kanban_action:not(.btn) {
-    color: #d7bfce !important;
+    color: color-mix(in srgb, var(--dolan-color-primary) 35%, #fff) !important;
 }
 
 body.o_dolan_dark_mode .o_account_dashboard .o_kanban_record_title,
@@ -1314,7 +1314,7 @@ body.o_dolan_dark_mode .o_main_navbar,
 body.o_dolan_dark_mode .o_main_navbar .o_menu_sections .dropdown-menu,
 body.o_dolan_dark_mode .o_menu_systray .dropdown-menu {
     --NavBar-bg: #1e2128;
-    --NavBar-entry-color: #e4e6eb;
+    --NavBar-entry-color: var(--dolan-color-text);
     --NavBar-entry-backgroundColor--hover: #303540;
     --NavBar-entry-backgroundColor--active: #303540;
 }
@@ -1323,13 +1323,13 @@ body.o_dolan_dark_mode .modal-header,
 body.o_dolan_dark_mode .modal-footer,
 body.o_dolan_dark_mode .dropdown-item,
 body.o_dolan_dark_mode .list-group-item-action {
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
 }
 
 body.o_dolan_dark_mode .dropdown-item:hover,
 body.o_dolan_dark_mode .list-group-item-action:hover {
-    background-color: #2b3039 !important;
+    background-color: var(--dolan-color-surface-raised) !important;
 }
 
 /* Odoo Settings renders a separate settings shell with hard-coded light panels. */
@@ -1341,19 +1341,19 @@ body.o_dolan_dark_mode .o_base_settings_view .settings_tab,
 body.o_dolan_dark_mode .o_base_settings_view .o_setting_box,
 body.o_dolan_dark_mode .o_base_settings_view .o_setting_right_pane,
 body.o_dolan_dark_mode .o_base_settings_view .o_setting_left_pane {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
-    --settings__tab-color: #c2c8d0;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
+    --settings__tab-color: var(--dolan-color-text-muted);
 }
 
 body.o_dolan_dark_mode .o_base_settings_view .settings h2,
 body.o_dolan_dark_mode .o_base_settings_view .settings h3,
 body.o_dolan_dark_mode .o_base_settings_view .settings .o_horizontal_separator,
 body.o_dolan_dark_mode .o_base_settings_view .settings .o_setting_header {
-    background-color: #2b3039 !important;
-    color: #f1f3f5 !important;
-    border-color: #3a404c !important;
+    background-color: var(--dolan-color-surface-raised) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
 }
 
 body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab,
@@ -1364,7 +1364,7 @@ body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab:focus {
 }
 
 body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab {
-    background-color: #20232b !important;
+    background-color: var(--dolan-color-surface) !important;
     color: #d7dce3 !important;
     border: 1px solid transparent !important;
 }
@@ -1378,10 +1378,10 @@ body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab:focus-visible {
 
 body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab.selected,
 body.o_dolan_dark_mode .o_base_settings_view .settings_tab .tab[aria-current="page"] {
-    background-color: #493b47 !important;
+    background-color: color-mix(in srgb, var(--dolan-color-primary) 28%, var(--dolan-color-surface)) !important;
     color: #ffffff !important;
-    border-color: #806b7c !important;
-    box-shadow: inset 3px 0 0 #c39ab5 !important;
+    border-color: color-mix(in srgb, var(--dolan-color-primary) 55%, #4a5160) !important;
+    box-shadow: inset 3px 0 0 color-mix(in srgb, var(--dolan-color-primary) 55%, #fff) !important;
 }
 
 body.o_dolan_dark_mode .o_base_settings_view .o_setting_box .text-muted,
@@ -1394,8 +1394,8 @@ body.o_dolan_dark_mode .o_base_settings_view .o_setting_box .o_form_uri {
 body.o_dolan_dark_mode .o_base_settings_view .o_field_boolean,
 body.o_dolan_dark_mode .o_base_settings_view .o_external_button,
 body.o_dolan_dark_mode .o_base_settings_view .btn-light {
-    background-color: #2b3039 !important;
-    color: #e4e6eb !important;
+    background-color: var(--dolan-color-surface-raised) !important;
+    color: var(--dolan-color-text) !important;
     border-color: #4a5160 !important;
 }
 
@@ -1403,8 +1403,8 @@ body.o_dolan_dark_mode .o_base_settings_view .o_setting_box input:not([type="che
 body.o_dolan_dark_mode .o_base_settings_view .o_setting_box select,
 body.o_dolan_dark_mode .o_base_settings_view .o_setting_box .o_input,
 body.o_dolan_dark_mode .o_base_settings_view .o_setting_box .o-autocomplete--input {
-    background-color: #181b21 !important;
-    color: #e4e6eb !important;
+    background-color: var(--dolan-color-surface-raised) !important;
+    color: var(--dolan-color-text) !important;
     border-color: #454c59 !important;
 }
 
@@ -1432,22 +1432,22 @@ body.o_dolan_dark_mode .fc-theme-standard th,
 body.o_dolan_dark_mode .fc .fc-daygrid-day,
 body.o_dolan_dark_mode .fc .fc-timegrid-slot,
 body.o_dolan_dark_mode .fc .fc-col-header-cell {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
-    --o-view-background-color: #20232b;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
+    --o-view-background-color: var(--dolan-color-surface);
 }
 
 body.o_dolan_dark_mode .o_kanban_header,
 body.o_dolan_dark_mode .o_kanban_group .o_kanban_header {
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 /* Kanban column titles use Bootstrap's text-900 utility, which stays dark in dark mode. */
 body.o_dolan_dark_mode .o_kanban_renderer .o_kanban_header .o_column_title,
 body.o_dolan_dark_mode .o_kanban_renderer .o_kanban_header .o_column_title *,
 body.o_dolan_dark_mode .o_kanban_renderer .o_kanban_header .o_kanban_counter {
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 /* Make activity pipeline progress visible, including the neutral "has records" segment. */
@@ -1470,9 +1470,9 @@ body.o_dolan_dark_mode .o_document_layout .o_form_renderer,
 body.o_dolan_dark_mode .o_document_layout .o_form_nosheet,
 body.o_dolan_dark_mode .o_document_layout .o_inner_group,
 body.o_dolan_dark_mode .o_document_layout .o_group {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
 }
 
 body.o_dolan_dark_mode .o_document_layout .o_cell.o_wrap_label,
@@ -1507,7 +1507,7 @@ body.o_dolan_dark_mode .o_dashboard_card_purple {
     --btn-active-bg: #554064;
 }
 body.o_dolan_dark_mode .o_dashboard_card_purple .o_dashboard_card_data {
-    color: #d7bfce !important;
+    color: color-mix(in srgb, var(--dolan-color-primary) 35%, #fff) !important;
 }
 body.o_dolan_dark_mode .o_dashboard_card_cyan {
     --btn-bg: #1f3a42;
@@ -1560,28 +1560,28 @@ body.o_dolan_dark_mode .o-mail-Composer,
 body.o_dolan_dark_mode .o-mail-Composer-bg,
 body.o_dolan_dark_mode .o-mail-Composer-inputContainer,
 body.o_dolan_dark_mode .o-mail-Composer-quickActions {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
 }
 
 body.o_dolan_dark_mode .o-mail-Discuss button,
 body.o_dolan_dark_mode .o-mail-MessagingMenu button,
 body.o_dolan_dark_mode .o-mail-Composer button,
 body.o_dolan_dark_mode .o-mail-DiscussContent .text-muted {
-    color: #c2c8d0 !important;
+    color: var(--dolan-color-text-muted) !important;
 }
 
 body.o_dolan_dark_mode .o-mail-Message-bubble,
 body.o_dolan_dark_mode .o-mail-Message-body,
 body.o_dolan_dark_mode .o-mail-Message-bubbleTailBg {
-    background-color: #2b3039 !important;
-    color: #e4e6eb !important;
+    background-color: var(--dolan-color-surface-raised) !important;
+    color: var(--dolan-color-text) !important;
     border-color: #454c59 !important;
 }
 
 body.o_dolan_dark_mode .o-mail-Message-date {
-    color: #aeb6c2 !important;
+    color: var(--dolan-color-text-muted) !important;
 }
 
 /* A few apps have their own landing panels instead of standard Odoo cards. */
@@ -1589,40 +1589,40 @@ body.o_dolan_dark_mode .o_view_nocontent_expense_receipt,
 body.o_dolan_dark_mode .o_lunch_banner,
 body.o_dolan_dark_mode .o_lunch_banner .bg-100,
 body.o_dolan_dark_mode .o_lunch_banner .bg-light {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
 }
 
 body.o_dolan_dark_mode .o_lunch_banner .bg-100,
 body.o_dolan_dark_mode .o_lunch_banner .text-muted {
-    color: #c2c8d0 !important;
+    color: var(--dolan-color-text-muted) !important;
 }
 
 /* Make selected values and dropdown focus states unambiguous in every form. */
 body.o_dolan_dark_mode .o_form_view .o_statusbar_status,
 body.o_dolan_dark_mode .o_form_view .o_form_statusbar .o_statusbar_status {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
 }
 
 body.o_dolan_dark_mode .o_form_view .o_statusbar_status .o_arrow_button_current {
-    background-color: #574453 !important;
+    background-color: color-mix(in srgb, var(--dolan-color-primary) 38%, var(--dolan-color-surface)) !important;
     color: #fff !important;
-    border-color: #987d91 !important;
+    border-color: color-mix(in srgb, var(--dolan-color-primary) 65%, #4a5160) !important;
 }
 
 body.o_dolan_dark_mode .o_select_menu_menu,
 body.o_dolan_dark_mode .o-autocomplete--dropdown-menu,
 body.o_dolan_dark_mode .o-autocomplete--dropdown-menu .dropdown-menu,
 body.o_dolan_dark_mode .o_field_many2many_tags .dropdown-menu {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
     border-color: #454c59 !important;
-    --bs-dropdown-bg: #20232b;
-    --bs-dropdown-color: #e4e6eb;
-    --bs-dropdown-link-color: #e4e6eb;
+    --bs-dropdown-bg: var(--dolan-color-surface);
+    --bs-dropdown-color: var(--dolan-color-text);
+    --bs-dropdown-link-color: var(--dolan-color-text);
     --bs-dropdown-link-hover-bg: #343946;
     --bs-dropdown-link-hover-color: #fff;
 }
@@ -1631,7 +1631,7 @@ body.o_dolan_dark_mode .o_select_menu_item,
 body.o_dolan_dark_mode .o-autocomplete--dropdown-menu .dropdown-item,
 body.o_dolan_dark_mode .o_field_many2many_tags .dropdown-item {
     background-color: transparent !important;
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 body.o_dolan_dark_mode .o_select_menu_item.selected,
@@ -1661,8 +1661,8 @@ body.o_dolan_dark_mode .o_form_view .o-autocomplete--input {
 
 body.o_dolan_dark_mode .o_form_view select option,
 body.o_dolan_dark_mode .o_form_view select option:checked {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
 }
 
 body.o_dolan_dark_mode .o_form_view input:focus,
@@ -1685,7 +1685,7 @@ body.o_dolan_dark_mode .o_form_view .form-check-input {
 body.o_dolan_dark_mode .o_form_view .o_tag,
 body.o_dolan_dark_mode .o_form_view .badge.bg-light {
     background-color: #343946 !important;
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
     border-color: #555d6b !important;
 }
 
@@ -1693,12 +1693,12 @@ body.o_dolan_dark_mode .o_control_panel .breadcrumb,
 body.o_dolan_dark_mode .o_control_panel .breadcrumb-item,
 body.o_dolan_dark_mode .o_control_panel .breadcrumb-item a,
 body.o_dolan_dark_mode .o_control_panel .breadcrumb-item.active {
-    background-color: #20232b !important;
+    background-color: var(--dolan-color-surface) !important;
     color: #c9ced6 !important;
-    border-color: #3a404c !important;
-    --bs-breadcrumb-bg: #20232b;
+    border-color: var(--dolan-color-border) !important;
+    --bs-breadcrumb-bg: var(--dolan-color-surface);
     --bs-breadcrumb-divider-color: #8b95a2;
-    --bs-breadcrumb-item-active-color: #e4e6eb;
+    --bs-breadcrumb-item-active-color: var(--dolan-color-text);
 }
 
 /* Give the action menu trigger a clear visual edge across every Odoo app.
@@ -1710,17 +1710,17 @@ body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .btn,
 body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .dropdown-toggle,
 body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus button,
 body.o_dolan_dark_mode .o_btn_circle.btn-light {
-    --btn-bg: #493b47;
-    --btn-border-color: #806b7c;
-    --btn-hover-bg: #624e60;
-    --btn-hover-border-color: #c39ab5;
-    --btn-active-bg: #574453;
-    --btn-active-border-color: #c39ab5;
-    --btn-disabled-bg: #2b3039;
+    --btn-bg: color-mix(in srgb, var(--dolan-color-primary) 28%, var(--dolan-color-surface));
+    --btn-border-color: color-mix(in srgb, var(--dolan-color-primary) 55%, #4a5160);
+    --btn-hover-bg: color-mix(in srgb, var(--dolan-color-primary) 45%, var(--dolan-color-surface));
+    --btn-hover-border-color: color-mix(in srgb, var(--dolan-color-primary) 55%, #fff);
+    --btn-active-bg: color-mix(in srgb, var(--dolan-color-primary) 38%, var(--dolan-color-surface));
+    --btn-active-border-color: color-mix(in srgb, var(--dolan-color-primary) 55%, #fff);
+    --btn-disabled-bg: var(--dolan-color-surface-raised);
     --btn-disabled-border-color: #4a5160;
-    background-color: #493b47;
+    background-color: color-mix(in srgb, var(--dolan-color-primary) 28%, var(--dolan-color-surface));
     color: #ffffff !important;
-    border-color: #806b7c !important;
+    border-color: color-mix(in srgb, var(--dolan-color-primary) 55%, #4a5160) !important;
 }
 
 body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .btn .oi,
@@ -1737,24 +1737,24 @@ body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .dropdown-toggle:hove
 body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus button:hover,
 body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .btn:focus-visible,
 body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus button:focus-visible {
-    background-color: #624e60 !important;
+    background-color: color-mix(in srgb, var(--dolan-color-primary) 45%, var(--dolan-color-surface)) !important;
     color: #ffffff !important;
-    border-color: #c39ab5 !important;
-    box-shadow: 0 0 0 2px rgba(195, 154, 181, .35) !important;
+    border-color: color-mix(in srgb, var(--dolan-color-primary) 55%, #fff) !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, color-mix(in srgb, var(--dolan-color-primary) 55%, #fff) 35%, transparent) !important;
 }
 
 body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .dropdown-menu,
 body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .o-dropdown--menu {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
     border: 1px solid #4a5160 !important;
-    --bs-dropdown-bg: #20232b;
-    --bs-dropdown-color: #e4e6eb;
+    --bs-dropdown-bg: var(--dolan-color-surface);
+    --bs-dropdown-color: var(--dolan-color-text);
 }
 
 body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .dropdown-item,
 body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .o-dropdown--menu .o-dropdown--item {
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 body.o_dolan_dark_mode .o_control_panel .o_cp_action_menus .dropdown-item:hover,
@@ -1772,11 +1772,11 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_it
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item,
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .form-control,
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_input {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
     border-color: #454c59 !important;
-    --bs-dropdown-bg: #20232b;
-    --bs-dropdown-color: #e4e6eb;
+    --bs-dropdown-bg: var(--dolan-color-surface);
+    --bs-dropdown-color: var(--dolan-color-text);
 }
 
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .company_label,
@@ -1784,12 +1784,12 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item .b
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item .btn-link,
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .form-check-label,
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .oi {
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item.alert-light,
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item.bg-primary-subtle {
-    background-color: #3a3040 !important;
+    background-color: color-mix(in srgb, var(--dolan-color-primary) 18%, var(--dolan-color-surface)) !important;
     color: #ffffff !important;
 }
 
@@ -1802,24 +1802,24 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_item:fo
 
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_buttons .btn-secondary {
     background-color: #343946 !important;
-    color: #f1f3f5 !important;
+    color: var(--dolan-color-text) !important;
     border-color: #555d6b !important;
 }
 
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
     border: 1px solid #454c59 !important;
     box-shadow: 0 12px 32px rgba(0, 0, 0, .45) !important;
-    --bs-dropdown-bg: #20232b;
-    --bs-dropdown-color: #e4e6eb;
+    --bs-dropdown-bg: var(--dolan-color-surface);
+    --bs-dropdown-color: var(--dolan-color-text);
 }
 
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_items .o_switch_company_item,
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_items .o_switch_company_item :is(span, label, .company_label, .btn, .oi),
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .form-control[role="search"],
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown [role="search"] .oi {
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_items .o_switch_company_item :is(.bg-white, .bg-light, .text-dark, .text-muted) {
@@ -1842,13 +1842,13 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_it
     body.o_dolan_dark_mode .o_form_view .o_field_one2many .o_list_table,
     body.o_dolan_dark_mode .o_form_view .o_field_many2many .o_list_table,
     body.o_dolan_dark_mode .o_form_view .o_field_x2many .o_list_table {
-        background-color: #20232b !important;
-        color: #e4e6eb !important;
-        border-color: #3a404c !important;
-        --o-view-background-color: #20232b;
-        --bs-table-bg: #20232b;
-        --bs-table-color: #e4e6eb;
-        --bs-table-border-color: #3a404c;
+        background-color: var(--dolan-color-surface) !important;
+        color: var(--dolan-color-text) !important;
+        border-color: var(--dolan-color-border) !important;
+        --o-view-background-color: var(--dolan-color-surface);
+        --bs-table-bg: var(--dolan-color-surface);
+        --bs-table-color: var(--dolan-color-text);
+        --bs-table-border-color: var(--dolan-color-border);
     }
 
     body.o_dolan_dark_mode .o_form_view .bg-white,
@@ -1856,29 +1856,29 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_it
     body.o_dolan_dark_mode .o_form_view .text-dark,
     body.o_dolan_dark_mode .o_form_view .o_field_one2many .bg-white,
     body.o_dolan_dark_mode .o_form_view .o_field_one2many .bg-light {
-        background-color: #20232b !important;
-        color: #e4e6eb !important;
-        border-color: #3a404c !important;
+        background-color: var(--dolan-color-surface) !important;
+        color: var(--dolan-color-text) !important;
+        border-color: var(--dolan-color-border) !important;
     }
 
     body.o_dolan_dark_mode .o_form_view .o_field_one2many .o_list_table thead th,
     body.o_dolan_dark_mode .o_form_view .o_field_one2many .o_list_table tbody td,
     body.o_dolan_dark_mode .o_form_view .o_field_x2many .o_list_table thead th,
     body.o_dolan_dark_mode .o_form_view .o_field_x2many .o_list_table tbody td {
-        background-color: #20232b !important;
-        color: #e4e6eb !important;
-        border-color: #3a404c !important;
+        background-color: var(--dolan-color-surface) !important;
+        color: var(--dolan-color-text) !important;
+        border-color: var(--dolan-color-border) !important;
     }
 
     body.o_dolan_dark_mode .o_form_view .o_field_one2many .o_list_table tbody tr:hover td,
     body.o_dolan_dark_mode .o_form_view .o_field_x2many .o_list_table tbody tr:hover td {
-        background-color: #2b3039 !important;
+        background-color: var(--dolan-color-surface-raised) !important;
     }
 
     body.o_dolan_dark_mode .o_form_view .o_notebook .nav-link,
     body.o_dolan_dark_mode .o_form_view .o_notebook .nav-link.active {
-        color: #e4e6eb !important;
-        border-color: #3a404c !important;
+        color: var(--dolan-color-text) !important;
+        border-color: var(--dolan-color-border) !important;
     }
 }
 
@@ -1899,9 +1899,9 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_it
     body.o_dolan_dark_mode .o_form_view .o_field_many2one_selection,
     body.o_dolan_dark_mode .o_form_view .o_field_many2many_selection {
         background-color: transparent !important;
-        color: #e4e6eb !important;
-        border-color: #3a404c !important;
-        --o-view-background-color: #20232b;
+        color: var(--dolan-color-text) !important;
+        border-color: var(--dolan-color-border) !important;
+        --o-view-background-color: var(--dolan-color-surface);
     }
 
     body.o_dolan_dark_mode .o_form_view .o_form_sheet,
@@ -1909,7 +1909,7 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_it
     body.o_dolan_dark_mode .o_form_view .o_inner_group,
     body.o_dolan_dark_mode .o_form_view .o_wrap_field,
     body.o_dolan_dark_mode .o_form_view .o_cell {
-        background-color: #20232b !important;
+        background-color: var(--dolan-color-surface) !important;
     }
 
     body.o_dolan_dark_mode .o_form_view .o_form_label,
@@ -1928,8 +1928,8 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_it
     body.o_dolan_dark_mode .o_form_view .o_input,
     body.o_dolan_dark_mode .o_form_view .o-autocomplete--input,
     body.o_dolan_dark_mode .o_form_view .o_field_many2one_selection .o_input {
-        background-color: #181b21 !important;
-        color: #f1f3f5 !important;
+        background-color: var(--dolan-color-surface-raised) !important;
+        color: var(--dolan-color-text) !important;
         border: 1px solid #555d6b !important;
         border-radius: 0.3rem !important;
         box-shadow: none !important;
@@ -1945,8 +1945,8 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown .o_switch_company_menu_it
     body.o_dolan_dark_mode .o_form_view .o_field_widget .bg-light,
     body.o_dolan_dark_mode .o_form_view .o_field_widget .text-bg-light,
     body.o_dolan_dark_mode .o_form_view .o_field_widget .alert-light {
-        background-color: #2b3039 !important;
-        color: #e4e6eb !important;
+        background-color: var(--dolan-color-surface-raised) !important;
+        color: var(--dolan-color-text) !important;
         border-color: #454c59 !important;
     }
 
@@ -1999,11 +1999,11 @@ body.o_dolan_dark_mode .o_switch_company_menu .bg-white,
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .bg-white,
 body.o_dolan_dark_mode .o_switch_company_menu .bg-light,
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .bg-light {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
     border-color: #454c59 !important;
-    --bs-dropdown-bg: #20232b;
-    --bs-dropdown-color: #e4e6eb;
+    --bs-dropdown-bg: var(--dolan-color-surface);
+    --bs-dropdown-color: var(--dolan-color-text);
 }
 
 body.o_dolan_dark_mode .o_switch_company_menu label,
@@ -2012,7 +2012,7 @@ body.o_dolan_dark_mode .o_switch_company_menu .company_label,
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .company_label,
 body.o_dolan_dark_mode .o_switch_company_menu .btn,
 body.o_dolan_dark_mode .o_switch_company_menu_dropdown .btn {
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 body.o_dolan_dark_mode .o_switch_company_menu input[type="checkbox"],
@@ -2032,33 +2032,33 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
     body.o_dolan_dark_mode .o_dialog .o_form_view,
     body.o_dolan_dark_mode .o_dialog .o_form_sheet_bg,
     body.o_dolan_dark_mode .o_dialog .o_form_sheet {
-        background-color: #20232b !important;
-        color: #e4e6eb !important;
-        border-color: #3a404c !important;
+        background-color: var(--dolan-color-surface) !important;
+        color: var(--dolan-color-text) !important;
+        border-color: var(--dolan-color-border) !important;
     }
 
     body.o_dolan_dark_mode .o_form_view .o_form_sheet_bg :is(.bg-white, .bg-light, .text-bg-light, .alert-light),
     body.o_dolan_dark_mode .o_dialog :is(.bg-white, .bg-light, .text-bg-light, .alert-light) {
-        background-color: #2b3039 !important;
-        color: #e4e6eb !important;
+        background-color: var(--dolan-color-surface-raised) !important;
+        color: var(--dolan-color-text) !important;
         border-color: #454c59 !important;
     }
 
     body.o_dolan_dark_mode .o_form_view .o_form_sheet_bg :is(.text-muted, .text-secondary, .form-text),
     body.o_dolan_dark_mode .o_dialog :is(.text-muted, .text-secondary, .form-text) {
-        color: #aeb6c2 !important;
+        color: var(--dolan-color-text-muted) !important;
     }
 
     body.o_dolan_dark_mode :is(.o_dashboard, .o_dashboard_view, .o_account_dashboard, .o_knowledge_dashboard, .o_spreadsheet_dashboard),
     body.o_dolan_dark_mode :is(.o_dashboard, .o_dashboard_view, .o_account_dashboard, .o_knowledge_dashboard, .o_spreadsheet_dashboard) :is(.card, .o_card, .o_kanban_record, .o_card_record, .o_dashboard_tile, .o_dashboard_kpi),
     body.o_dolan_dark_mode .o_kanban_view .o_kanban_renderer,
     body.o_dolan_dark_mode .o_kanban_view .o_kanban_record {
-        background-color: #20232b !important;
-        color: #e4e6eb !important;
-        border-color: #3a404c !important;
-        --o-view-background-color: #20232b;
-        --bs-card-bg: #20232b;
-        --bs-card-color: #e4e6eb;
+        background-color: var(--dolan-color-surface) !important;
+        color: var(--dolan-color-text) !important;
+        border-color: var(--dolan-color-border) !important;
+        --o-view-background-color: var(--dolan-color-surface);
+        --bs-card-bg: var(--dolan-color-surface);
+        --bs-card-color: var(--dolan-color-text);
     }
 
     body.o_dolan_dark_mode :is(.o_dashboard, .o_dashboard_view, .o_account_dashboard, .o_knowledge_dashboard, .o_spreadsheet_dashboard) :is(h1, h2, h3, h4, h5, h6, p, label, .text-dark, .text-muted) {
@@ -2067,8 +2067,8 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
 
     body.o_dolan_dark_mode .o_switch_company_menu :is(input, .form-control, .o_input),
     body.o_dolan_dark_mode .o_switch_company_menu_dropdown :is(input, .form-control, .o_input) {
-        background-color: #181b21 !important;
-        color: #f1f3f5 !important;
+        background-color: var(--dolan-color-surface-raised) !important;
+        color: var(--dolan-color-text) !important;
         border-color: #555d6b !important;
     }
 
@@ -2097,20 +2097,20 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
 
     body.o_dolan_dark_mode .o_main_navbar .o_menu_systray .o_switch_company_menu {
         background-color: #292d36 !important;
-        color: #f1f3f5 !important;
+        color: var(--dolan-color-text) !important;
         border: 1px solid #454c59 !important;
     }
 
     body.o_dolan_dark_mode .o_main_navbar .o_menu_systray .o_switch_company_menu .oi[data-icon="business"] {
-        color: #f1f3f5 !important;
+        color: var(--dolan-color-text) !important;
     }
 
     body.o_dolan_dark_mode .o_main_navbar .o_menu_systray .o_switch_company_menu:hover,
     body.o_dolan_dark_mode .o_main_navbar .o_menu_systray .o_switch_company_menu:focus-visible,
     body.o_dolan_dark_mode .o_main_navbar .o_menu_systray .o_switch_company_menu.show {
-        background-color: #3a3040 !important;
+        background-color: color-mix(in srgb, var(--dolan-color-primary) 18%, var(--dolan-color-surface)) !important;
         color: #ffffff !important;
-        border-color: #806b7c !important;
+        border-color: color-mix(in srgb, var(--dolan-color-primary) 55%, #4a5160) !important;
     }
 
     body:not(.o_dolan_dark_mode) .modal-content,
@@ -2131,8 +2131,8 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
     body.o_dolan_dark_mode .o_form_view :is(.o_form_label, .o_field_label, label, .o_wrap_label),
     body.o_dolan_dark_mode .o_form_view .o_group :is(.o_form_label, .o_field_label, label, .o_wrap_label),
     body.o_dolan_dark_mode .o_form_view .o_wrap_field :is(.o_form_label, .o_field_label, label, .o_wrap_label) {
-        color: #f1f3f5 !important;
-        background: #20232b !important;
+        color: var(--dolan-color-text) !important;
+        background: var(--dolan-color-surface) !important;
         background-image: none !important;
         border-color: transparent !important;
         box-shadow: none !important;
@@ -2157,13 +2157,13 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
         color: #cbd2dc !important;
         background-color: transparent !important;
         background-image: none !important;
-        border-color: #3a404c !important;
+        border-color: var(--dolan-color-border) !important;
     }
 
     body.o_dolan_dark_mode .o_form_view .o_group .o_field_widget :is(input, textarea, select, .o_input),
     body.o_dolan_dark_mode .o_form_view .o_wrap_field .o_field_widget :is(input, textarea, select, .o_input) {
-        color: #f1f3f5 !important;
-        background-color: #181b21 !important;
+        color: var(--dolan-color-text) !important;
+        background-color: var(--dolan-color-surface-raised) !important;
         border-color: #555d6b !important;
     }
 }
@@ -2185,7 +2185,7 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
         height: 36px !important;
         padding: 0 !important;
         margin: 0 4px !important;
-        color: #f1f3f5 !important;
+        color: var(--dolan-color-text) !important;
         background: #292d36 !important;
         border: 1px solid #596171 !important;
         border-radius: 8px !important;
@@ -2199,9 +2199,9 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
         button[title="Toggle menu"]
     ):is(:hover, :active, :focus-visible) {
         color: #ffffff !important;
-        background: #3a3040 !important;
+        background: color-mix(in srgb, var(--dolan-color-primary) 18%, var(--dolan-color-surface)) !important;
         border-color: #a8899c !important;
-        box-shadow: 0 0 0 2px rgba(195, 154, 181, .32) !important;
+        box-shadow: 0 0 0 2px color-mix(in srgb, color-mix(in srgb, var(--dolan-color-primary) 55%, #fff) 32%, transparent) !important;
     }
 
     body.o_dolan_dark_mode header.o_navbar :is(
@@ -2218,30 +2218,30 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
        and company picker white while the rest of the app is in dark mode. */
     body.o_dolan_dark_mode .o_burger_menu {
         color: #e8ebf0 !important;
-        background-color: #20232b !important;
-        border-left: 1px solid #3a404c !important;
+        background-color: var(--dolan-color-surface) !important;
+        border-left: 1px solid var(--dolan-color-border) !important;
     }
 
     body.o_dolan_dark_mode .o_burger_menu .o_sidebar_topbar {
-        color: #f1f3f5 !important;
+        color: var(--dolan-color-text) !important;
         background-color: #292d36 !important;
-        border-bottom: 1px solid #3a404c !important;
+        border-bottom: 1px solid var(--dolan-color-border) !important;
     }
 
     body.o_dolan_dark_mode .o_burger_menu .o_sidebar_topbar :is(button, a, span, i, .oi) {
-        color: #f1f3f5 !important;
+        color: var(--dolan-color-text) !important;
     }
 
     body.o_dolan_dark_mode .o_burger_menu .o_sidebar_topbar :is(button, a):is(:hover, :focus-visible, :active) {
         color: #ffffff !important;
-        background-color: #3a3040 !important;
-        border-color: #806b7c !important;
+        background-color: color-mix(in srgb, var(--dolan-color-primary) 18%, var(--dolan-color-surface)) !important;
+        border-color: color-mix(in srgb, var(--dolan-color-primary) 55%, #4a5160) !important;
     }
 
     body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_content,
     body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies {
         color: #e8ebf0 !important;
-        background-color: #20232b !important;
+        background-color: var(--dolan-color-surface) !important;
     }
 
     body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies :is(h1, h2, h3, h4, h5, h6, label, span, a, p, .text-muted, .text-dark) {
@@ -2249,13 +2249,13 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
     }
 
     body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies :is(.form-control, .o_input, input) {
-        color: #f1f3f5 !important;
-        background-color: #181b21 !important;
+        color: var(--dolan-color-text) !important;
+        background-color: var(--dolan-color-surface-raised) !important;
         border-color: #596171 !important;
     }
 
     body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies :is(.form-control, .o_input, input)::placeholder {
-        color: #aeb6c2 !important;
+        color: var(--dolan-color-text-muted) !important;
         opacity: 1 !important;
     }
 
@@ -2267,13 +2267,13 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
     body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies :is(.form-check, .o_company, .o_burger_menu_company).active,
     body.o_dolan_dark_mode .o_burger_menu .o_burger_menu_companies :is(.form-check, .o_company, .o_burger_menu_company).o_active {
         color: #ffffff !important;
-        background-color: #3a3040 !important;
+        background-color: color-mix(in srgb, var(--dolan-color-primary) 18%, var(--dolan-color-surface)) !important;
     }
 
     body.o_dolan_dark_mode .o_burger_menu :is(.bg-white, .bg-light, .text-bg-light, .dropdown-menu) {
         color: #e8ebf0 !important;
-        background-color: #20232b !important;
-        border-color: #3a404c !important;
+        background-color: var(--dolan-color-surface) !important;
+        border-color: var(--dolan-color-border) !important;
     }
 
     body.o_dolan_dark_mode .o_burger_menu :is(.dropdown-item, .o_nav_entry, a, button) {
@@ -2531,20 +2531,20 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
 .o_dolan_home_menu_wrapper .o_dolan_folder_cell.o_dolan_drop_active .o_dolan_folder_tile,
 .o_dolan_home_menu_wrapper .o_dolan_folder_dialog.o_dolan_drop_active,
 .o_dolan_home_menu_wrapper .o_dolan_app_cell.o_dolan_drop_active {
-    border-color: var(--o-brand-primary, #714b67);
+    border-color: var(--o-brand-primary, var(--dolan-color-primary));
     transform: translateY(-1px);
-    box-shadow: 0 0 0 3px rgba(113, 75, 103, .22);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--dolan-color-primary) 22%, transparent);
 }
 
 .o_dolan_home_menu_wrapper .o_dolan_app_cell.o_dolan_drop_active .o_app {
-    outline: 2px dashed var(--o-brand-primary, #714b67);
+    outline: 2px dashed var(--o-brand-primary, var(--dolan-color-primary));
     outline-offset: 3px;
 }
 
 .o_dolan_home_menu_wrapper .o_dolan_folder_icon {
     display: grid;
     place-items: center;
-    color: var(--o-brand-primary, #714b67);
+    color: var(--o-brand-primary, var(--dolan-color-primary));
     height: 48px;
 }
 
@@ -2682,7 +2682,7 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
 
 .o_dolan_home_menu_wrapper .o_dolan_folder_app_open:hover,
 .o_dolan_home_menu_wrapper .o_dolan_folder_app_open:focus-visible {
-    border-color: var(--o-brand-primary, #714b67);
+    border-color: var(--o-brand-primary, var(--dolan-color-primary));
     background: rgba(127, 127, 127, .08);
 }
 
@@ -2703,7 +2703,7 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
 .o_dolan_home_menu_wrapper .o_dolan_folder_root_drop {
     margin-top: .75rem;
     padding: .8rem;
-    border: 1px dashed var(--o-brand-primary, #714b67);
+    border: 1px dashed var(--o-brand-primary, var(--dolan-color-primary));
     border-radius: .75rem;
     text-align: center;
     color: var(--body-color, inherit);
@@ -2742,7 +2742,7 @@ body.o_dolan_dark_mode .o_switch_company_menu_dropdown input[type="checkbox"] {
 
 body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_folder_tile,
 body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_folder_dialog {
-    --body-bg: #20232b;
+    --body-bg: var(--dolan-color-surface);
     --body-color: #e7e9ee;
     --border-color: #3d424e;
 }
@@ -2886,24 +2886,24 @@ body.o_dolan_dark_mode .o_dialog .o_form_renderer.o_form_nosheet,
 body.o_dolan_dark_mode .o_dialog .o_form_renderer .o_group,
 body.o_dolan_dark_mode .o_dialog .o_form_renderer .o_inner_group,
 body.o_dolan_dark_mode .o_dialog .o_form_renderer .o_wrap_field {
-    background-color: #20232b !important;
-    color: #e4e6eb !important;
-    border-color: #3a404c !important;
-    --o-view-background-color: #20232b;
+    background-color: var(--dolan-color-surface) !important;
+    color: var(--dolan-color-text) !important;
+    border-color: var(--dolan-color-border) !important;
+    --o-view-background-color: var(--dolan-color-surface);
 }
 
 body.o_dolan_dark_mode .o_dialog .o_form_renderer :is(
     .o_form_label, .o_field_label, label, .o_wrap_label, h1, h2, h3, h4, h5, h6,
     .text-muted, .text-secondary, .form-text
 ) {
-    color: #e4e6eb !important;
+    color: var(--dolan-color-text) !important;
 }
 
 body.o_dolan_dark_mode .o_dialog .o_form_renderer :is(
     input:not([type="checkbox"]):not([type="radio"]), textarea, select, .o_input,
     .o-autocomplete--input
 ) {
-    color: #f1f3f5 !important;
-    background-color: #181b21 !important;
+    color: var(--dolan-color-text) !important;
+    background-color: var(--dolan-color-surface-raised) !important;
     border-color: #555d6b !important;
 }

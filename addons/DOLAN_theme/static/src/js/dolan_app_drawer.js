@@ -140,9 +140,25 @@ export function normalizeWorkspaceOrder(order) {
     return [...new Set([...normalized, ...known])];
 }
 
+export function paletteLinkProperties(primary, dark = false) {
+    const rgb = String(primary).match(/^#?([\da-f]{6})$/i)
+        ? String(primary).replace("#", "").match(/[\da-f]{2}/gi).map((part) => parseInt(part, 16))
+        : [121, 56, 210];
+    const mixWith = (target, amount) => rgb.map((channel) => Math.round(channel + (target - channel) * amount));
+    const link = dark ? mixWith(255, 0.38) : rgb;
+    const hover = dark ? mixWith(255, 0.55) : mixWith(0, 0.15);
+    const hex = (channels) => `#${channels.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
+    return {
+        "--bs-link-color": hex(link),
+        "--bs-link-color-rgb": link.join(", "),
+        "--bs-link-hover-color": hex(hover),
+        "--bs-link-hover-color-rgb": hover.join(", "),
+    };
+}
+
 export function applyDolanPalette(palette, companyColors = {}, customColors = {}) {
     const targets = [document.documentElement, document.body, document.querySelector(".o_web_client")].filter(Boolean);
-    const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active"];
+    const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active", "--bs-link-color", "--bs-link-color-rgb", "--bs-link-hover-color", "--bs-link-hover-color-rgb"];
     const target = document.body;
     if (target.classList.contains("o_dolan_high_contrast")) {
         targets.forEach((node) => clearProperties.forEach((name) => node.style.removeProperty(name)));
@@ -168,6 +184,9 @@ export function applyDolanPalette(palette, companyColors = {}, customColors = {}
         "--NavBar-entry-borderColor-active": primary,
         "--dolan-color-primary-soft": `color-mix(in srgb, ${primary} 18%, transparent)`,
         "--dolan-color-secondary-soft": `color-mix(in srgb, ${secondary} 18%, transparent)`,
+        // Links (a, .btn-link, "Agregar una línea") follow the palette instead of
+        // Odoo's fixed brand color. On dark surfaces they are lightened for contrast.
+        ...paletteLinkProperties(primary, target.classList.contains("o_dolan_dark_mode")),
     };
     targets.forEach((node) => Object.entries(properties).forEach(([name, value]) => node.style.setProperty(name, value)));
     if (useCustom) {

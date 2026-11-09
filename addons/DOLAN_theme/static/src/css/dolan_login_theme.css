@@ -8,7 +8,7 @@
     width: 2.75rem;
     height: 2.75rem;
     padding: .55rem;
-    border: 1px solid rgba(113, 75, 103, .22);
+    border: 1px solid color-mix(in srgb, var(--dolan-color-primary) 22%, transparent);
     border-radius: 999px;
     color: #51424e;
     background: rgba(255, 255, 255, .82);
@@ -22,13 +22,13 @@
 
 .o_web_login .dolan_login_theme_toggle:hover,
 .o_web_login .dolan_login_theme_toggle:focus-visible {
-    border-color: #714b67;
-    color: #714b67;
+    border-color: var(--dolan-color-primary);
+    color: var(--dolan-color-primary);
     transform: translateY(-1px);
 }
 
 .o_web_login .dolan_login_theme_toggle:focus-visible {
-    outline: 3px solid rgba(113, 75, 103, .28);
+    outline: 3px solid color-mix(in srgb, var(--dolan-color-primary) 28%, transparent);
     outline-offset: 2px;
 }
 
