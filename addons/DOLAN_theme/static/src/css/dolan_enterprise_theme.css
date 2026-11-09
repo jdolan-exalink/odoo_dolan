@@ -941,23 +941,8 @@ body.o_dolan_compact .o_dolan_home_menu_wrapper .o_dolan_folder_cell {
     margin-bottom: .35rem !important;
 }
 
-body.o_dolan_compact .o_dolan_home_menu_wrapper .o_home_menu .o_app .o_app_icon,
-body.o_dolan_compact .o_dolan_home_menu_wrapper .o_dolan_folder_cell .o_dolan_folder_tile,
-body.o_dolan_compact .o_dolan_home_menu_wrapper .o_dolan_folder_preview {
-    width: 54px;
-    height: 54px;
-    min-width: 54px;
-    min-height: 54px;
-    max-width: 54px;
-    max-height: 54px;
-}
-
 body.o_dolan_compact .o_dolan_home_menu_wrapper .o_home_menu .o_app .o_app_icon {
     padding: 7px;
-}
-
-body.o_dolan_compact .o_dolan_home_menu_wrapper .o_dolan_folder_cell .o_dolan_folder_tile {
-    flex-basis: 54px;
 }
 
 body.o_dolan_compact .o_dolan_home_menu_wrapper .o_dolan_app_cell .o_caption,
@@ -2756,12 +2741,6 @@ body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_folder_tile {
 /* Folder tiles use the same outer footprint as regular app tiles. */
 .o_dolan_home_menu_wrapper .o_dolan_folder_cell .o_dolan_folder_tile {
     box-sizing: border-box;
-    width: 70px;
-    height: 70px;
-    min-width: 70px;
-    min-height: 70px;
-    max-width: 70px;
-    max-height: 70px;
 }
 
 .o_dolan_home_menu_wrapper .o_dolan_folder_cell {
@@ -2772,7 +2751,7 @@ body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_folder_tile {
 }
 
 .o_dolan_home_menu_wrapper .o_dolan_folder_cell .o_dolan_folder_tile {
-    flex: 0 0 70px;
+    flex: 0 0 var(--dolan-launcher-tile, 88px);
     margin-inline: auto;
 }
 

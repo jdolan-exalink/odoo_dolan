@@ -3,6 +3,6 @@
     <record id="action_dolan_home" model="ir.actions.client">
         <field name="name">Inicio DOLAN</field>
         <field name="tag">dolan_home</field>
-        <field name="path">dolan-home</field>
+        <field name="path">home</field>
     </record>
 </odoo>

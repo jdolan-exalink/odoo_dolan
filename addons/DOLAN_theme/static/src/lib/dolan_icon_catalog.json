@@ -882,6 +882,32 @@
       }
     },
     {
+      "id": "app.promotions",
+      "label": "Promociones",
+      "category": "commerce",
+      "semantic": "percentage_tag",
+      "aliases": [
+        "promociones dolan",
+        "promociones",
+        "descuentos",
+        "discount campaigns"
+      ],
+      "xmlids": [
+        "DOLAN_discount_engine.menu_dolan_discount_root"
+      ],
+      "module_ids": [
+        "DOLAN_discount_engine"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/promotions.svg",
+        "fluent_flat": "fluent_flat/promotions.svg",
+        "fluent_filled": "fluent_filled/promotions.svg",
+        "fluent_regular": "fluent_regular/promotions.svg",
+        "tabler": "tabler/promotions.svg"
+      }
+    },
+    {
       "id": "app.settings",
       "label": "Ajustes",
       "category": "tools",

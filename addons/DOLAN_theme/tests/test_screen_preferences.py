@@ -2,6 +2,8 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
+from ..controllers.screen_preferences import _catalog_payload
+
 
 @tagged("post_install", "-at_install")
 class TestScreenPreferences(TransactionCase):
@@ -59,6 +61,18 @@ class TestScreenPreferences(TransactionCase):
         self.assertTrue(record.filled_preview)
         self.assertTrue(record.regular_preview)
         self.assertGreaterEqual(self.env["dolan.icon.assignment"].search_count([]), 44)
+
+    def test_launcher_uses_home_path_and_promotions_has_icon_families(self):
+        launcher = self.env.ref("DOLAN_theme.action_dolan_home")
+        self.assertEqual(launcher.path, "home")
+
+        assignments, names, xmlids = _catalog_payload(self.env["dolan.icon.assignment"].browse())
+        self.assertEqual(xmlids["dolan_discount_engine.menu_dolan_discount_root"], "app.promotions")
+        self.assertEqual(names["promociones"], "app.promotions")
+        self.assertEqual(
+            set(assignments["app.promotions"]),
+            {"fluent_3d", "fluent_flat", "fluent_filled", "fluent_regular", "tabler"},
+        )
 
     def test_workspace_preferences_are_personal_and_validate_widget_keys(self):
         Preference = self.env["dolan.workspace.preference"].with_user(self.user)

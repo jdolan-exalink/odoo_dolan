@@ -281,7 +281,7 @@ export class DolanAppDrawerSystray extends Component {
         const initialOpen =
             window.location.pathname === "/odoo" ||
             window.location.pathname === "/odoo/" ||
-            window.location.pathname === "/odoo/dolan-home" ||
+            window.location.pathname === "/odoo/home" ||
             window.location.pathname === "/web";
         if (initialOpen) {
             document.body.classList.add("o_home_menu_background");
@@ -591,7 +591,7 @@ export class DolanAppDrawerSystray extends Component {
             const openHomeAction = () => {
                 const activeAction = this.actionService.currentController?.action;
                 const isDolanHomeAction =
-                    window.location.pathname === "/odoo/dolan-home" ||
+                    window.location.pathname === "/odoo/home" ||
                     activeAction?.tag === "dolan_home" ||
                     Boolean(document.querySelector(".o_dolan_home_action"));
                 if (isDolanHomeAction) {
@@ -944,7 +944,7 @@ export class DolanAppDrawerSystray extends Component {
     }
 
     static isHomePath(pathname = window.location.pathname) {
-        return pathname === "/odoo" || pathname === "/odoo/" || pathname === "/odoo/dolan-home" || pathname === "/web";
+        return pathname === "/odoo" || pathname === "/odoo/" || pathname === "/odoo/home" || pathname === "/web";
     }
 
     openDrawer() {
