@@ -66,11 +66,11 @@ export function resolveDarkTheme(mode, systemPrefersDark) {
 export { DOLAN_UI_PALETTES };
 
 export const DOLAN_APPEARANCE_PROFILES = [
-    { id: "odoo_classic", label: "Clásico", description: "Lo conocido de Odoo: plano, borde fino y esquinas chicas." },
-    { id: "dolan_fluent", label: "Suave", description: "Tarjetas elevadas con sombra media y esquinas medias." },
-    { id: "dolan_liquid", label: "Cristal", description: "Paneles translúcidos sobre un fondo en degradado." },
-    { id: "dolan_material", label: "Táctil", description: "Botones grandes tipo píldora y superficies con color." },
-    { id: "dolan_minimal", label: "Compacto", description: "Plano y denso, sin sombras, para administración." },
+    { id: "odoo_classic", label: "Enterprise Classic", description: "Inspirado en Odoo Enterprise: plano, claro y familiar." },
+    { id: "dolan_fluent", label: "Fluent", description: "Inspirado en Windows 11 Fluent 2: ERP de escritorio y productividad." },
+    { id: "dolan_liquid", label: "Liquid", description: "Inspirado en macOS Liquid Glass: interfaz premium, launcher y Mi Espacio." },
+    { id: "dolan_material", label: "Material", description: "Inspirado en Android Material 3 Expressive: móvil, tablet y touch." },
+    { id: "dolan_minimal", label: "Minimal", description: "Inspirado en Omarchy y los temas de terminal: administración y alta densidad." },
 ];
 
 const PROFILE_VISUAL_EFFECT = {
@@ -1089,11 +1089,11 @@ export class DolanAppDrawerSystray extends Component {
 
     profileShortLabel(profile) {
         return ({
-            odoo_classic: "Clásico",
-            dolan_fluent: "Suave",
-            dolan_liquid: "Cristal",
-            dolan_material: "Táctil",
-            dolan_minimal: "Compacto",
+            odoo_classic: "Enterprise Classic",
+            dolan_fluent: "Fluent",
+            dolan_liquid: "Liquid",
+            dolan_material: "Material",
+            dolan_minimal: "Minimal",
         })[profile] || profile;
     }
 
