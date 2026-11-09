@@ -1029,7 +1029,7 @@ body.o_dolan_dark_mode {
     --bs-border-color: var(--dolan-color-border);
     --bs-emphasis-color: #f8f9fa;
     --bs-secondary-color: #adb5bd;
-    --bs-link-color: #cba6c0;
+    --bs-link-color: color-mix(in srgb, var(--dolan-color-primary) 62%, #fff);
     /* Odoo compiles Bootstrap with an EMPTY $prefix: utility classes consume
        --dark-bg-subtle, NOT --bs-dark-bg-subtle. Both spellings are set so the
        values apply no matter which one a given SCSS partial references. */
@@ -1040,7 +1040,7 @@ body.o_dolan_dark_mode {
     --border-color: var(--dolan-color-border);
     --emphasis-color: #f8f9fa;
     --secondary-color: #adb5bd;
-    --link-color: #cba6c0;
+    --link-color: color-mix(in srgb, var(--dolan-color-primary) 62%, #fff);
     /* Bootstrap 5.3 subtle backgrounds stay light in dark mode (Purchase
        dashboard cards use .bg-dark-subtle). Align them with the dark palette. */
     --bs-primary-bg-subtle: color-mix(in srgb, var(--dolan-color-primary) 15%, var(--dolan-color-surface));
@@ -1209,7 +1209,7 @@ body.o_dolan_dark_mode .btn-outline-primary {
 
 body.o_dolan_dark_mode .btn-outline-primary:hover,
 body.o_dolan_dark_mode .btn-outline-primary:focus {
-    background-color: #51404f !important;
+    background-color: color-mix(in srgb, var(--dolan-color-primary) 30%, var(--dolan-color-surface)) !important;
     color: #fff !important;
 }
 
@@ -1502,9 +1502,9 @@ body.o_dolan_dark_mode .o-dashboard-background {
    which community never serves (ir_http.color_scheme() is hard-coded "light"),
    so the dark palette is themed here. */
 body.o_dolan_dark_mode .o_dashboard_card_purple {
-    --btn-bg: #453252;
-    --btn-hover-bg: #554064;
-    --btn-active-bg: #554064;
+    --btn-bg: color-mix(in srgb, var(--dolan-color-primary) 26%, var(--dolan-color-surface));
+    --btn-hover-bg: color-mix(in srgb, var(--dolan-color-primary) 38%, var(--dolan-color-surface));
+    --btn-active-bg: color-mix(in srgb, var(--dolan-color-primary) 38%, var(--dolan-color-surface));
 }
 body.o_dolan_dark_mode .o_dashboard_card_purple .o_dashboard_card_data {
     color: color-mix(in srgb, var(--dolan-color-primary) 35%, #fff) !important;
@@ -1647,7 +1647,7 @@ body.o_dolan_dark_mode .o_field_many2many_tags .dropdown-item:hover,
 body.o_dolan_dark_mode .o-autocomplete--dropdown-menu .ui-state-active,
 body.o_dolan_dark_mode .o-autocomplete--dropdown-menu .ui-state-active:hover,
 body.o_dolan_dark_mode .o-autocomplete--dropdown-menu .dropdown-item.ui-state-active {
-    background-color: #51404f !important;
+    background-color: color-mix(in srgb, var(--dolan-color-primary) 30%, var(--dolan-color-surface)) !important;
     color: #fff !important;
 }
 

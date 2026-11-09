@@ -154,4 +154,7 @@ test("form links follow the selected palette and stay readable in dark mode", ()
     expect(paletteLinkProperties("#0878b9")["--bs-link-color"]).toBe("#0878b9");
     expect(paletteLinkProperties("#0878b9")["--bs-link-color-rgb"]).toBe("8, 120, 185");
     expect(paletteLinkProperties("#7938d2", true)["--bs-link-color"]).toBe("#ac84e3");
+    // Odoo's Bootstrap build has no prefix: the unprefixed names must match.
+    expect(paletteLinkProperties("#0878b9")["--link-color"]).toBe("#0878b9");
+    expect(paletteLinkProperties("#0878b9")["--link-color-rgb"]).toBe("8, 120, 185");
 });

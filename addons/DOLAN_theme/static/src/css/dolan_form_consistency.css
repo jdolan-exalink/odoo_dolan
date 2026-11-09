@@ -136,3 +136,69 @@ body:not(.o_dolan_high_contrast) .o_form_view .o_form_sheet .btn-secondary:is(:h
     background-color: var(--dolan-form-accent-soft) !important;
     border-color: var(--dolan-form-accent) !important;
 }
+
+/* 7. Restos del primario compilado de Odoo ($o-community-color #71639e).
+ * Odoo compila Bootstrap con $primary fijo; estos componentes no leen variables
+ * CSS, así que se los reasigna a la paleta en claro y oscuro. */
+body:not(.o_dolan_high_contrast) .form-check-input:checked,
+body:not(.o_dolan_high_contrast) .form-check-input[type="checkbox"]:indeterminate {
+    background-color: var(--dolan-color-primary) !important;
+    border-color: var(--dolan-color-primary) !important;
+}
+body:not(.o_dolan_high_contrast) .form-check-input:focus {
+    border-color: var(--dolan-form-accent) !important;
+    box-shadow: 0 0 0 0.2rem var(--dolan-form-accent-soft) !important;
+}
+body:not(.o_dolan_high_contrast) .o-form-buttonbox .oe_stat_button :is(.o_stat_value, .o_stat_info .o_field_widget, .o_pie_value, .o_pie_text) {
+    color: var(--dolan-form-accent) !important;
+}
+body:not(.o_dolan_high_contrast) :is(.o_action_manager, .o-mail-Chatter, .modal-content) :is(
+    a:not(.btn):not(.dropdown-item):not(.nav-link):not(.o_external_button):not(.o_dolan_app_cell):not([class*="o_colorlist"]),
+    .btn-link:not(.text-danger):not(.text-muted)
+) {
+    color: var(--link-color, var(--dolan-form-accent));
+}
+body:not(.o_dolan_high_contrast) .text-primary {
+    color: var(--dolan-form-accent) !important;
+}
+
+/* 8. Tarjetas del tablero de Ventas: la violeta sigue la paleta. */
+body:not(.o_dolan_high_contrast) .o_dashboard_card {
+    --DashboardCard__purple-bg-color: var(--dolan-color-primary-soft, var(--dolan-form-accent-soft));
+    --DashboardCard__purple-bg-color--active: color-mix(in srgb, var(--dolan-color-primary) 28%, transparent);
+    --DashboardCard__purple-color: var(--dolan-form-accent);
+    --DashboardCard__purple-color--active: var(--dolan-form-accent);
+}
+
+/* 9. Puntero de los tours guiados (gota violeta sobre "Nuevo"). */
+body:not(.o_dolan_high_contrast) .o_tour_pointer .o_tour_pointer_tip {
+    background-image: radial-gradient(color-mix(in srgb, var(--dolan-color-primary) 82%, #fff), var(--dolan-color-primary)) !important;
+}
+
+/* 10. Botones contorneados primarios y foco del buscador (claro). */
+body:not(.o_dolan_dark_mode):not(.o_dolan_high_contrast) .btn-outline-primary {
+    --btn-color: var(--dolan-color-primary);
+    --btn-border-color: var(--dolan-color-primary);
+    --btn-hover-bg: var(--dolan-color-primary);
+    --btn-hover-border-color: var(--dolan-color-primary);
+    --btn-active-bg: var(--dolan-color-primary);
+    --btn-active-border-color: var(--dolan-color-primary);
+    --btn-disabled-color: var(--dolan-color-primary);
+    --btn-disabled-border-color: var(--dolan-color-primary);
+}
+body:not(.o_dolan_high_contrast) .o_searchview:focus-within,
+body:not(.o_dolan_high_contrast) .o_searchview:focus-within + .o_searchview_dropdown_toggler {
+    border-color: var(--dolan-form-accent) !important;
+}
+
+/* 11. Títulos de registro fuera de .oe_title (p. ej. el nombre del empleado):
+ * mismo tratamiento sin bloque de fondo que el resto de los formularios. */
+body:not(.o_dolan_high_contrast) .o_form_view .o_form_sheet :is(h1, h2) .o_field_widget :is(input, .o_input) {
+    background-color: transparent !important;
+}
+
+/* 12. Chatter: no pintar una burbuja vacía cuando el mensaje solo trae
+ * seguimiento ("Factura creada") y su cuerpo es <div><p></p></div>. */
+.o-mail-Message-body:has(> div:only-child > p:only-child:empty) {
+    display: none !important;
+}

@@ -148,17 +148,23 @@ export function paletteLinkProperties(primary, dark = false) {
     const link = dark ? mixWith(255, 0.38) : rgb;
     const hover = dark ? mixWith(255, 0.55) : mixWith(0, 0.15);
     const hex = (channels) => `#${channels.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
+    // Odoo compiles Bootstrap with an empty $prefix, so its components read
+    // --link-color; the --bs-* spelling is kept for third-party styles.
     return {
         "--bs-link-color": hex(link),
         "--bs-link-color-rgb": link.join(", "),
         "--bs-link-hover-color": hex(hover),
         "--bs-link-hover-color-rgb": hover.join(", "),
+        "--link-color": hex(link),
+        "--link-color-rgb": link.join(", "),
+        "--link-hover-color": hex(hover),
+        "--link-hover-color-rgb": hover.join(", "),
     };
 }
 
 export function applyDolanPalette(palette, companyColors = {}, customColors = {}) {
     const targets = [document.documentElement, document.body, document.querySelector(".o_web_client")].filter(Boolean);
-    const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active", "--bs-link-color", "--bs-link-color-rgb", "--bs-link-hover-color", "--bs-link-hover-color-rgb"];
+    const clearProperties = ["--dolan-primary", "--dolan-primary-hover", "--dolan-secondary", "--dolan-color-primary", "--dolan-color-primary-hover", "--dolan-color-focus", "--dolan-color-secondary", "--dolan-color-primary-soft", "--dolan-color-secondary-soft", "--o-brand-primary", "--bs-primary", "--bs-primary-rgb", "--NavBar-entry-borderColor-active", "--bs-link-color", "--bs-link-color-rgb", "--bs-link-hover-color", "--bs-link-hover-color-rgb", "--primary", "--primary-rgb", "--link-color", "--link-color-rgb", "--link-hover-color", "--link-hover-color-rgb"];
     const target = document.body;
     if (target.classList.contains("o_dolan_high_contrast")) {
         targets.forEach((node) => clearProperties.forEach((name) => node.style.removeProperty(name)));
@@ -181,6 +187,9 @@ export function applyDolanPalette(palette, companyColors = {}, customColors = {}
         "--o-brand-primary": primary,
         "--bs-primary": primary,
         "--bs-primary-rgb": primary.match(/[\da-f]{2}/gi).map((part) => parseInt(part, 16)).join(", "),
+        // Same values under Odoo's unprefixed names (.text-primary, .bg-primary, ...).
+        "--primary": primary,
+        "--primary-rgb": primary.match(/[\da-f]{2}/gi).map((part) => parseInt(part, 16)).join(", "),
         "--NavBar-entry-borderColor-active": primary,
         "--dolan-color-primary-soft": `color-mix(in srgb, ${primary} 18%, transparent)`,
         "--dolan-color-secondary-soft": `color-mix(in srgb, ${secondary} 18%, transparent)`,
