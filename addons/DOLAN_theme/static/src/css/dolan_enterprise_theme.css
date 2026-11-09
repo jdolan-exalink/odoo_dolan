@@ -1107,6 +1107,42 @@ body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_drawer_tab_group {
     border-color: #3a404c !important;
 }
 
+/* The Libro IVA/SICORE wizard and other transient forms are rendered inside
+   Odoo dialogs, outside .o_action_manager. Apply the same theme tokens to the
+   complete dialog on desktop and mobile, including field labels and controls. */
+body.o_dolan_dark_mode .o_dialog .o_dialog_content,
+body.o_dolan_dark_mode .o_dialog .o_form_view,
+body.o_dolan_dark_mode .o_dialog .o_form_sheet_bg,
+body.o_dolan_dark_mode .o_dialog .o_form_sheet,
+body.o_dolan_dark_mode .o_dialog .o_group,
+body.o_dolan_dark_mode .o_dialog .o_inner_group {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+    --o-view-background-color: #20232b;
+}
+body.o_dolan_dark_mode .o_dialog .o_form_view :is(h1, h2, h3, h4, h5, h6, label, .o_form_label, .o_field_label, .o_wrap_label, .text-muted, .text-secondary),
+body.o_dolan_dark_mode .o_dialog .o_form_view .o_field_widget,
+body.o_dolan_dark_mode .o_dialog .o_form_view .o_field_widget :is(span, p, a, small) {
+    color: #e4e6eb !important;
+}
+body.o_dolan_dark_mode .o_dialog .o_form_view :is(input:not([type="checkbox"]):not([type="radio"]), textarea, select, .o_input, .o-autocomplete--input) {
+    color: #f1f3f5 !important;
+    background-color: #181b21 !important;
+    border-color: #555d6b !important;
+}
+body.o_dolan_dark_mode .o_dialog .o_form_view .o_field_widget :is(.bg-white, .bg-light, .text-bg-light, .alert-light) {
+    color: #e4e6eb !important;
+    background-color: #2b3039 !important;
+    border-color: #454c59 !important;
+}
+body.o_dolan_dark_mode .o_dialog .o_form_view .o_form_statusbar,
+body.o_dolan_dark_mode .o_dialog .o_form_view footer {
+    color: #e4e6eb !important;
+    background-color: #20232b !important;
+    border-color: #3a404c !important;
+}
+
 body.o_dolan_dark_mode .bg-white,
 body.o_dolan_dark_mode .bg-light,
 body.o_dolan_dark_mode .o_dolan_action_card,
@@ -2840,4 +2876,34 @@ body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_folder_dialog {
 
 body.o_dolan_dark_mode .o_dolan_home_menu_wrapper .o_dolan_folder_title {
     color: #f2f4f8;
+}
+
+/* Some transient Odoo wizards use o_form_renderer.o_form_nosheet directly
+   instead of .o_form_view/.o_form_sheet. Keep those renderer surfaces themed
+   too (for example Libro IVA Digital y SICORE). */
+body.o_dolan_dark_mode .o_dialog .o_form_renderer,
+body.o_dolan_dark_mode .o_dialog .o_form_renderer.o_form_nosheet,
+body.o_dolan_dark_mode .o_dialog .o_form_renderer .o_group,
+body.o_dolan_dark_mode .o_dialog .o_form_renderer .o_inner_group,
+body.o_dolan_dark_mode .o_dialog .o_form_renderer .o_wrap_field {
+    background-color: #20232b !important;
+    color: #e4e6eb !important;
+    border-color: #3a404c !important;
+    --o-view-background-color: #20232b;
+}
+
+body.o_dolan_dark_mode .o_dialog .o_form_renderer :is(
+    .o_form_label, .o_field_label, label, .o_wrap_label, h1, h2, h3, h4, h5, h6,
+    .text-muted, .text-secondary, .form-text
+) {
+    color: #e4e6eb !important;
+}
+
+body.o_dolan_dark_mode .o_dialog .o_form_renderer :is(
+    input:not([type="checkbox"]):not([type="radio"]), textarea, select, .o_input,
+    .o-autocomplete--input
+) {
+    color: #f1f3f5 !important;
+    background-color: #181b21 !important;
+    border-color: #555d6b !important;
 }

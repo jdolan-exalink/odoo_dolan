@@ -34,7 +34,12 @@ class TestPosMercadoPago(TransactionCase):
             'mp_external_pos_id': 'CAJA_01', 'mp_point_device_id': 'SMARTPOS_01',
         }
         vals.update(extra)
-        return self.env['pos.payment.method'].create(vals)
+        # Odoo's native Mercado Pago addon tries to discover a real Point terminal
+        # while creating a payment method. Keep these unit tests hermetic: they
+        # validate DOLAN's checkout requests below, not the provider's live API.
+        payment_method_model = self.env['pos.payment.method']
+        with patch.object(type(payment_method_model), '_find_terminal', return_value=False):
+            return payment_method_model.create(vals)
 
     def test_mock_credentials_are_rejected(self):
         method = self._method(mp_bearer_token='mock')

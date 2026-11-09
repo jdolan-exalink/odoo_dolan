@@ -62,7 +62,7 @@ var ProfileCatalog = []ProfileInfo{
 		},
 		SystemApps: []string{
 			"contacts", "calendar", "mail", "crm", "sale_management", "purchase", "stock",
-			"point_of_sale", "pos_restaurant",
+			"point_of_sale", "pos_restaurant", "pos_mercado_pago",
 			"l10n_ar", "l10n_ar_withholding", "l10n_ar_pos", "l10n_ar_stock",
 			"l10n_latam_check", "l10n_latam_invoice_document",
 		},
@@ -84,7 +84,7 @@ var ProfileCatalog = []ProfileInfo{
 		},
 		SystemApps: []string{
 			"contacts", "calendar", "mail", "crm", "sale_management", "purchase", "stock",
-			"mrp", "point_of_sale", "pos_restaurant", "project", "project_todo",
+			"mrp", "point_of_sale", "pos_restaurant", "pos_mercado_pago", "project", "project_todo",
 			"hr", "hr_expense", "hr_skills", "fleet", "maintenance",
 			"l10n_ar", "l10n_ar_withholding", "l10n_ar_pos", "l10n_ar_stock",
 			"l10n_latam_check", "l10n_latam_invoice_document",

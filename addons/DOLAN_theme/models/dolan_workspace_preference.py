@@ -32,7 +32,7 @@ class DolanWorkspacePreference(models.Model):
     kpi_states = fields.Json(default=dict, help="Estados personales de posponer o marcar leído.")
     indicator_mode = fields.Selection(
         [("priorities", "Prioridades"), ("complete", "Completo"), ("custom", "Personalizado")],
-        required=True, default="priorities",
+        required=True, default="complete",
     )
     visible_section_keys = fields.Json(default=False)
     workspace_order = fields.Json(default=False)

@@ -19,7 +19,10 @@ test("high contrast is a separate dark accessibility theme", () => {
 });
 
 test("theme picker provides the standard DOLAN and alternate color combinations", () => {
-    expect(DOLAN_UI_PALETTES.map((palette) => palette.id)).toEqual(["dolan", "ocean", "forest", "sunset", "violet"]);
+    expect(DOLAN_UI_PALETTES.map((palette) => palette.id)).toEqual([
+        "dolan", "ocean", "forest", "sunset", "violet", "graphite", "emerald", "custom",
+    ]);
+    expect(DOLAN_UI_PALETTES[0].label).toBe("ERP");
     expect(DOLAN_UI_PALETTES.every((palette) => palette.primary.startsWith("#") && palette.secondary.startsWith("#"))).toBe(true);
 });
 
@@ -62,7 +65,7 @@ test("icon variants resolve local resources and retain legacy style aliases", ()
     expect(resolveIconAsset("app.unknown", "fluent", assignment)).toBe(null);
 });
 
-test("Mi Espacio only shows widgets saved for this user", () => {
+test("legacy Mi Espacio widget preferences can still be read", () => {
     const widgets = [{ key: "quotes_open" }, { key: "invoices_draft" }];
     expect(selectVisibleKpis(widgets, ["quotes_open"]).map((widget) => widget.key)).toEqual(["quotes_open"]);
     expect(selectVisibleKpis(widgets, []).length).toBe(0);

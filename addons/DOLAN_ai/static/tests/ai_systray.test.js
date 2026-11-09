@@ -1,6 +1,21 @@
 import { expect, test } from "@odoo/hoot";
 
-import { DolanAiSystray } from "@DOLAN_ai/js/ai_systray";
+import { DolanAiSystray, normalizeStructuredReply } from "@DOLAN_ai/js/ai_systray";
+
+test("structured JSON replies render as readable Spanish bullets", () => {
+    const result = normalizeStructuredReply('{"records":[{"display_name":"Cliente Demo","amount_total":1250,"invoice_date":"2026-11-01"}]}');
+    expect(result).toBe("**Registros**\n- **Cliente Demo** — Importe: 1250; Fecha: 2026-11-01");
+});
+
+test("JSON prose and non-JSON AI answers remain readable", () => {
+    expect(normalizeStructuredReply('{"reply":"Encontré dos facturas."}')).toBe("Encontré dos facturas.");
+    expect(normalizeStructuredReply("El saldo es **positivo**.")).toBe("El saldo es **positivo**.");
+});
+
+test("JSON wrapped by the Odoo AI status prefix renders as readable Spanish", () => {
+    const result = normalizeStructuredReply('Resultado procesado por Odoo AI:\n{"status":"ok","lines":[{"account_id":1216,"debit:sum":1250,"credit:sum":500,"balance:sum":750}]}');
+    expect(result).toBe("**Estado:** ok\n\n**Líneas**\n- **Cuenta 1216** — Débitos: 1250; Créditos: 500; Saldo: 750");
+});
 
 function dispatchComposerKey(key, shiftKey = false) {
     const chat = document.createElement("section");

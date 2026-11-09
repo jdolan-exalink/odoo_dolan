@@ -99,3 +99,34 @@ class TestScreenPreferences(TransactionCase):
             preference.write({"quick_action_keys": ["delete_database"]})
         with self.assertRaises(ValidationError):
             preference.write({"workspace_sizes": {"activity": "gigantic"}})
+
+    def test_workspace_indicator_mode_defaults_to_complete(self):
+        preference = self.env["dolan.workspace.preference"].with_user(self.user).create({})
+        self.assertEqual(preference.indicator_mode, "complete")
+
+    def test_new_desktop_preferences_seed_default_folders_without_overwriting_layout(self):
+        Desktop = self.env["dolan.desktop.preference"].with_user(self.user)
+        preference = Desktop.current_user()
+        folders = self.env["dolan.desktop.folder"].with_user(self.user).search([
+            ("user_id", "=", self.user.id),
+        ])
+        self.assertEqual(set(folders.mapped("name")), {"Configuraciones", "Varios"})
+        items = self.env["dolan.desktop.item"].with_user(self.user).search([
+            ("user_id", "=", self.user.id),
+        ])
+        placed = {item.menu_id.get_external_id()[item.menu_id.id]: item.folder_id.name for item in items}
+        self.assertEqual(placed.get("base.menu_management"), "Configuraciones")
+        self.assertEqual(placed.get("mail.menu_root_discuss"), "Varios")
+
+        # Once a user saves a layout, subsequent reads leave their choices alone.
+        preference._write_desktop_internal({"layout_version": 1})
+        self.env["dolan.desktop.folder"].with_user(self.user).search([
+            ("user_id", "=", self.user.id), ("name", "=", "Varios"),
+        ]).write({"name": "Mi carpeta"})
+        Desktop.current_user()
+        self.assertEqual(
+            set(self.env["dolan.desktop.folder"].with_user(self.user).search([
+                ("user_id", "=", self.user.id),
+            ]).mapped("name")),
+            {"Configuraciones", "Mi carpeta"},
+        )

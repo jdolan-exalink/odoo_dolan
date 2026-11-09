@@ -276,17 +276,6 @@
                                         t-on-click="() => this.setRoleFilter(space.key)">
                                     <DolanIcon name="space.icon" size="17"/><t t-out="space.label"/>
                                 </button>
-                                <div class="o_dolan_workspace_mode" role="group" aria-label="Modo de indicadores">
-                                    <button type="button" t-att-aria-pressed="this.state.indicatorMode === 'priorities' ? 'true' : 'false'"
-                                            t-att-class="this.state.indicatorMode === 'priorities' ? 'is-active' : ''"
-                                            t-on-click="() => this.setIndicatorMode('priorities')">Prioridades</button>
-                                    <button type="button" t-att-aria-pressed="this.state.indicatorMode === 'complete' ? 'true' : 'false'"
-                                            t-att-class="this.state.indicatorMode === 'complete' ? 'is-active' : ''"
-                                            t-on-click="() => this.setIndicatorMode('complete')">Completo</button>
-                                    <button type="button" t-att-aria-pressed="this.state.indicatorMode === 'custom' ? 'true' : 'false'"
-                                            t-att-class="this.state.indicatorMode === 'custom' ? 'is-active' : ''"
-                                            t-on-click="() => this.setIndicatorMode('custom')">Personalizado</button>
-                                </div>
                             </nav>
 
                             <section t-if="this.state.workspaceConfigOpen" class="o_dolan_workspace_editor" aria-label="Personalización de Mi Espacio">
@@ -306,9 +295,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <h2>Indicadores y accesos</h2>
+                                        <h2>Accesos rápidos</h2>
                                         <div class="o_dolan_workspace_editor_options">
-                                            <label t-foreach="this.state.kpis" t-as="widget" t-key="widget.key"><input type="checkbox" t-att-checked="this.state.visibleWidgetKeys.includes(widget.key)" t-on-change="() => this.toggleWorkspaceWidget(widget.key)"/><span t-out="widget.label"/></label>
                                             <label t-foreach="this.availableWorkspaceActions" t-as="action" t-key="action.key"><input type="checkbox" t-att-checked="this.state.quickActionKeys.includes(action.key)" t-on-change="() => this.toggleQuickAction(action.key)"/><span t-out="action.label"/></label>
                                         </div>
                                     </div>
@@ -764,7 +752,7 @@
                                                 <DolanIcon name="'sparkles'" size="26"/>
                                             </div>
                                             <div>
-                                                <h6 class="fw-bold mb-1">Asistente DOLAN AI</h6>
+                                                <h6 class="fw-bold mb-1">Asistente AI</h6>
                                                 <p class="text-muted small mb-0">Chat Copilot con ChatGPT</p>
                                             </div>
                                         </div>

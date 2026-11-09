@@ -38,18 +38,15 @@
 .o_dolan_workspace_header_actions { gap: .7rem; }
 .o_dolan_workspace_clock { color: var(--ws-muted); white-space: nowrap; font-size: .9rem; }
 .o_dolan_workspace_spaces { display: flex; align-items: center; flex-wrap: wrap; gap: .45rem; margin: 0 0 1rem; }
-.o_dolan_workspace_space,
-.o_dolan_workspace_mode button {
+.o_dolan_workspace_space {
     display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
     min-height: 38px; padding: .45rem .8rem; color: var(--ws-text); background: var(--ws-card);
     border: 1px solid var(--ws-border); border-radius: 999px; font-weight: 600;
 }
-.o_dolan_workspace_space:hover, .o_dolan_workspace_mode button:hover { border-color: var(--ws-accent); }
-.o_dolan_workspace_space.is-active, .o_dolan_workspace_mode button.is-active {
+.o_dolan_workspace_space:hover { border-color: var(--ws-accent); }
+.o_dolan_workspace_space.is-active {
     color: #fff; background: var(--ws-accent); border-color: var(--ws-accent);
 }
-.o_dolan_workspace_mode { display: inline-flex; gap: .25rem; margin-left: auto; padding: .2rem; border: 1px solid var(--ws-border); border-radius: 999px; }
-.o_dolan_workspace_mode button { min-height: 32px; padding: .3rem .7rem; background: transparent; border-color: transparent; font-size: .84rem; }
 .o_dolan_workspace_grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: .9rem; }
 .o_dolan_workspace_section { min-width: 0; order: 0; }
 .o_dolan_workspace_size_small { grid-column: span 4; }
@@ -152,8 +149,6 @@
     .o_dolan_workspace_clock { font-size: .75rem; }
     .o_dolan_workspace_spaces { flex-wrap: nowrap; overflow-x: auto; padding: .15rem .1rem .45rem; }
     .o_dolan_workspace_space { white-space: nowrap; }
-    .o_dolan_workspace_mode { flex: 0 0 100%; margin-left: 0; }
-    .o_dolan_workspace_mode button { flex: 1; padding-inline: .35rem; }
     .o_dolan_workspace_grid { display: flex; flex-direction: column; }
     .o_dolan_workspace_quick_actions { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .o_dolan_workspace_action { min-height: 92px; font-size: .72rem; }
@@ -220,16 +215,12 @@ body.o_dolan_high_contrast .o_dolan_workspace_3 :is(.o_dolan_workspace_pos, .o_d
     background-color: var(--ws-card) !important;
     border-color: var(--ws-border) !important;
 }
-body.o_dolan_dark_mode .o_dolan_workspace_3 :is(.o_dolan_workspace_space, .o_dolan_workspace_mode, .o_dolan_workspace_pos_choice, .o_dolan_workspace_reorder .form-select),
-body.o_dolan_high_contrast .o_dolan_workspace_3 :is(.o_dolan_workspace_space, .o_dolan_workspace_mode, .o_dolan_workspace_pos_choice, .o_dolan_workspace_reorder .form-select) {
+body.o_dolan_dark_mode .o_dolan_workspace_3 :is(.o_dolan_workspace_space, .o_dolan_workspace_pos_choice, .o_dolan_workspace_reorder .form-select),
+body.o_dolan_high_contrast .o_dolan_workspace_3 :is(.o_dolan_workspace_space, .o_dolan_workspace_pos_choice, .o_dolan_workspace_reorder .form-select) {
     color: var(--ws-text);
     background-color: var(--ws-card);
     border-color: var(--ws-border);
 }
-body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_mode button {
-    color: var(--ws-text);
-}
-body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_mode button.is-active,
 body.o_dolan_dark_mode .o_dolan_workspace_3 .o_dolan_workspace_space.is-active {
     color: #fff;
     background-color: var(--ws-accent);
