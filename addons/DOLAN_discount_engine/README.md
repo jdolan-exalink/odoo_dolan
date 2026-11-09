@@ -28,8 +28,8 @@ Addon para Odoo 20 Community. Usa los productos, impuestos, listas de precios, p
 2. Asignar **Supervisor de descuentos** a quienes pueden aprobar excepciones; nunca usar la misma cuenta que solicitó el descuento.
 3. Asignar **Cajero con descuentos** y el grupo nativo de usuario POS al equipo de caja.
 4. Configurar límites de descuento manual en cada POS. Cero bloquea el descuento manual del cajero.
-5. Crear campaña, reglas y exclusiones desde **Punto de Venta → Promociones DOLAN**. Publicar solo después de revisar alcance, vigencia y topes.
-6. Para el beneficio de empleado, crear el beneficio desde **Punto de Venta → Promociones DOLAN → Beneficios de empleados**, seleccionar empresa, partner, DNI, productos y límites. El DNI se consulta en caja y solo es legible para administradores comerciales.
+5. Crear campaña, reglas y exclusiones desde **Punto de Venta → Promociones**. Publicar solo después de revisar alcance, vigencia y topes.
+6. Para el beneficio de empleado, crear el beneficio desde **Punto de Venta → Promociones → Beneficios de empleados**, seleccionar empresa, partner, DNI, productos y límites. El DNI se consulta en caja y solo es legible para administradores comerciales.
 7. En caja, el POS valida la promoción o el DNI en el servidor antes de entrar al cobro. Para descuento manual solicita el motivo; si excede el límite, un supervisor lo aprueba desde **Autorizaciones** y el cajero vuelve a presionar Cobrar.
 8. Para revertir un descuento, registrar una devolución POS real con la línea original. No editar la aplicación promocional a mano.
 

@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 
 class DolanDiscountSimulator(models.TransientModel):
     _name = 'dolan.discount.simulator'
-    _description = 'Simulador de promociones DOLAN'
+    _description = 'Simulador de promociones'
 
     company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
     pos_config_id = fields.Many2one('pos.config', required=True, domain="[('company_id', '=', company_id)]")

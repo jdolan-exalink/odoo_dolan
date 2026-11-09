@@ -107,16 +107,16 @@
                 <h2>🏷️ Administrar campañas y descuentos</h2>
                 <h3>Crear una promoción</h3>
                 <ol>
-                    <li>Entrá a <strong>Punto de Venta → Promociones DOLAN → Campañas</strong> y creá un borrador.</li>
+                    <li>Entrá a <strong>Punto de Venta → Promociones → Campañas</strong> y creá un borrador.</li>
                     <li>Definí empresa, cajas/sucursales, prioridad, vigencia, zona horaria, días y horarios.</li>
                     <li>Añadí reglas por producto/categoría, exclusiones, cliente, cantidad mínima y beneficio.</li>
                     <li>Configurá presupuesto y máximo por pedido. Probá el alcance con el simulador y publicá una versión.</li>
                 </ol>
                 <p>Una campaña publicada queda versionada. Para cambiar condiciones, pausala y publicá una nueva versión; no edites manualmente aplicaciones ya registradas.</p>
                 <h3>🙋 Descuento manual y supervisor</h3>
-                <p>En cada POS configurá el límite de caja. El cajero ingresa un motivo; si excede su límite, un supervisor diferente aprueba desde <strong>Promociones DOLAN → Autorizaciones</strong>. Luego el cajero vuelve a iniciar el cobro y revisa el total.</p>
+                <p>En cada POS configurá el límite de caja. El cajero ingresa un motivo; si excede su límite, un supervisor diferente aprueba desde <strong>Promociones → Autorizaciones</strong>. Luego el cajero vuelve a iniciar el cobro y revisa el total.</p>
                 <h3>🪪 Beneficio por DNI</h3>
-                <p>Un administrador crea el beneficio desde <strong>Promociones DOLAN → Beneficios de empleados</strong>, define partner, DNI, empresa, cajas, productos, vigencia y topes. En la caja, el cajero pulsa <strong>Beneficio empleado</strong> e ingresa DNI antes del cobro.</p>
+                <p>Un administrador crea el beneficio desde <strong>Promociones → Beneficios de empleados</strong>, define partner, DNI, empresa, cajas, productos, vigencia y topes. En la caja, el cajero pulsa <strong>Beneficio empleado</strong> e ingresa DNI antes del cobro.</p>
                 <div class="alert alert-warning"><strong>📡 Conexión y límites actuales</strong><br/>Las campañas y beneficios sujetos a validación del servidor requieren conexión. La aprobación de supervisor para beneficios por DNI aún no está habilitada. Los descuentos por medio de pago no se publican sin confirmación verificable del adquirente. Si una campaña supera el presupuesto o la validación falla, verificá el total antes de cobrar.</div>
                 <h3>↩️ Devoluciones y auditoría</h3>
                 <p>Para revertir, usá una devolución POS real con la línea original. Revisá <strong>Aplicaciones</strong>, <strong>Auditoría</strong>, <strong>Autorizaciones</strong> y <strong>Alertas</strong> para seguir el historial.</p>
