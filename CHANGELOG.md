@@ -12,6 +12,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 - Añadidos auditoría, arquitectura objetivo, roadmap P0–P3 y matriz inicial de notices en `docs/DOLAN_DISTRIBUTION_*.md` y `docs/THIRD_PARTY_NOTICES.md`.
 
 ### Agregado
+- `DOLAN_credit_limit 20.0.1.0.0` y `DOLAN_credit_limit_pos 20.0.1.0.0` (nuevos): el límite de crédito nativo pasa de aviso a bloqueo configurable por empresa. El riesgo suma saldo, pedidos sin facturar y cheques de terceros en cartera no vencidos; se puede bloquear el crédito de un cliente a mano y un grupo autoriza excepciones (quedan en el pedido). El POS consulta el límite antes de validar una venta en cuenta corriente.
 - `DOLAN_pricelist 20.0.1.0.0` (nuevo): actualización masiva de precios por porcentaje, monto o margen sobre el costo, filtrada por categoría, proveedor o productos, con vista previa editable, redondeo y reversión del lote. Actualiza precio de venta, costo o precios fijos de una lista. Precios atados al dólar recalculados con la cotización del día (acción y cron) e historial de precios por producto.
 - `DOLAN_ai 20.0.1.34.0`: dictado Whisper con servicio local `faster-whisper` en Docker, endpoint interno compatible con multipart, modelo CPU `small`/`int8` y alternativa opcional OpenAI API. El audio queda dentro de la red local.
 
