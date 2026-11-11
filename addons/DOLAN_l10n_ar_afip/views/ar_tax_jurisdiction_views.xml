@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_ar_tax_jurisdiction_list" model="ir.ui.view">
+        <field name="name">dolan.ar.tax.jurisdiction.list</field>
+        <field name="model">dolan.ar.tax.jurisdiction</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="jurisdiction"/>
+                <field name="state_id"/>
+                <field name="perception_active"/>
+                <field name="withholding_active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_ar_tax_jurisdiction_form" model="ir.ui.view">
+        <field name="name">dolan.ar.tax.jurisdiction.form</field>
+        <field name="model">dolan.ar.tax.jurisdiction</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_sync_withholding_regimes" type="object"
+                            string="Actualizar retenciones de proveedores"
+                            invisible="not withholding_active"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="jurisdiction"/>
+                            <field name="state_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Percepciones en ventas">
+                            <field name="perception_active"/>
+                            <field name="perception_account_id" invisible="not perception_active"
+                                   required="perception_active"/>
+                            <field name="perception_min_base" invisible="not perception_active"/>
+                            <field name="perception_only_local" invisible="not perception_active"/>
+                        </group>
+                        <group string="Retenciones en pagos">
+                            <field name="withholding_active"/>
+                            <field name="withholding_account_id" invisible="not withholding_active"
+                                   required="withholding_active"/>
+                            <field name="withholding_non_taxable_amount" invisible="not withholding_active"/>
+                            <field name="withholding_minimum_amount" invisible="not withholding_active"/>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        La alícuota sale del padrón vigente a la fecha del comprobante. Las percepciones se
+                        agregan solas al publicar la factura (tributo ARCA 07). Los proveedores del padrón quedan
+                        inscriptos en el régimen de retención y el asistente de pago propone la retención.
+                    </div>
+                    <notebook>
+                        <page string="Impuestos generados" name="taxes">
+                            <field name="tax_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="type_tax_use"/>
+                                    <field name="amount"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_ar_tax_jurisdiction" model="ir.actions.act_window">
+        <field name="name">Percepciones y retenciones IIBB</field>
+        <field name="res_model">dolan.ar.tax.jurisdiction</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Configurá dónde sos agente de percepción o retención</p>
+            <p>Agregá una jurisdicción por provincia. Con el padrón importado, Dolan aplica la alícuota de cada
+               cliente y proveedor automáticamente.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_dolan_ar_tax_jurisdiction"
+              name="Percepciones y retenciones IIBB"
+              parent="menu_l10n_ar_afip_root"
+              action="action_dolan_ar_tax_jurisdiction"
+              sequence="30"/>
+
+    <record id="ir_cron_dolan_padron_withholding_sync" model="ir.cron">
+        <field name="name">IIBB: actualizar regímenes de retención desde el padrón</field>
+        <field name="model_id" ref="model_dolan_ar_tax_jurisdiction"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_sync_withholding_regimes()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="view_move_form_dolan_padron_perceptions" model="ir.ui.view">
+        <field name="name">account.move.form.dolan.padron.perceptions</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_dolan_apply_padron_perceptions"
+                        type="object"
+                        string="Aplicar percepciones del padrón"
+                        class="btn-secondary"
+                        invisible="state != 'draft' or move_type not in ('out_invoice', 'out_refund')"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_form_dolan_perception_exempt" model="ir.ui.view">
+        <field name="name">res.partner.form.dolan.perception.exempt</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="dolan_iibb_perception_exempt" invisible="not is_company and parent_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -6,6 +6,8 @@ import logging
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+from .ar_tax_jurisdiction import PADRON_JURISDICTIONS
+
 _logger = logging.getLogger(__name__)
 
 
@@ -26,13 +28,9 @@ class DolanIibbPadron(models.Model):
         compute='_compute_partner_id',
         store=True,
     )
-    jurisdiction = fields.Selection([
-        ('arba', 'ARBA - Provincia de Buenos Aires'),
-        ('agip', 'AGIP - CABA'),
-        ('cordoba', 'Rentas Córdoba'),
-        ('santa_fe', 'API Santa Fe'),
-        ('sircar', 'SIRCAR / Convenio Multilateral'),
-    ], string='Jurisdicción', required=True, default='arba', index=True)
+    jurisdiction = fields.Selection(
+        PADRON_JURISDICTIONS, string='Jurisdicción', required=True, default='arba', index=True,
+    )
 
     from_date = fields.Date(string='Vigencia Desde', required=True)
     to_date = fields.Date(string='Vigencia Hasta', required=True)

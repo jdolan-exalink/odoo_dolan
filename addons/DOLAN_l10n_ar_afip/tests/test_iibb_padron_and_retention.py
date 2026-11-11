@@ -36,6 +36,7 @@ class TestIibbPadronAndRetention(TransactionCase):
             'from_date': date(2026, 10, 1),
             'to_date': date(2026, 10, 31),
             'attachment_filename': 'PadronARBA_102026.csv',
+            'only_known_partners': False,
             'attachment_file': base64.b64encode(padron_csv.encode('utf-8')).decode('ascii'),
         })
         wizard.action_import_padron()
