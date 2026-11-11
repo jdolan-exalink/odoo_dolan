@@ -80,6 +80,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_payroll_ar",
+		Title:       "Sueldos y Jornales Argentina",
+		Version:     "20.0.1.0.0",
+		Category:    "Recursos Humanos",
+		Application: true,
+		Depends:     []string{"hr", "account", "l10n_ar", "mail"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_exchange",
 		Title:       "Cotizaciones USD y Tipo de Cambio BNA",
 		Version:     "20.0.1.0.0",
