@@ -773,11 +773,17 @@ class AccountMove(models.Model):
                     'después de completar y aprobar las pruebas de homologación ARCA.'
                 ))
             afip_ws = move.journal_id.l10n_ar_afip_ws or 'wsfe'
-            if afip_ws != 'wsfe':
+            if afip_ws not in ('wsfe', 'wsfex', 'wsmtxca'):
                 raise UserError(_('El servicio seleccionado todavía no tiene un emisor implementado y validado.'))
             conn = self.env['l10n_ar.afipws.connection'].get_active_connection(move.company_id, afip_ws)
             if conn.is_simulated:
                 raise UserError(_('Un ticket simulado no puede autorizar un comprobante fiscal.'))
+            if afip_ws == 'wsfex':
+                move._l10n_ar_request_cae_wsfex(conn)
+                continue
+            if afip_ws == 'wsmtxca':
+                move._l10n_ar_request_cae_wsmtxca(conn)
+                continue
             req_xml = move._l10n_ar_build_wsfe_request_xml(conn)
             ws_url = AFIP_WS_URLS[conn.type][afip_ws]
             if move.journal_id.l10n_ar_caea_journal_id and not conn._wsfe_check_available(conn.type):
@@ -864,14 +870,16 @@ class AccountMove(models.Model):
         return (
             self.country_code == 'AR'
             and self.move_type in ('out_invoice', 'out_refund')
-            and self.journal_id.l10n_ar_afip_pos_system == 'DOLAN_WSFE'
+            and self.journal_id.l10n_ar_afip_pos_system in ('DOLAN_WSFE', 'DOLAN_WSFEX', 'DOLAN_WSMTXCA')
             and self.journal_id.l10n_ar_afip_ws
             and not self.l10n_ar_afip_auth_code
         )
 
     def _post(self, soft=True):
         needs_cae = self.filtered(lambda m: m.state == 'draft' and m._l10n_ar_needs_wsfe_cae())
-        with_contingency = needs_cae.filtered(lambda m: m.journal_id.l10n_ar_caea_journal_id)
+        with_contingency = needs_cae.filtered(
+            lambda m: m.journal_id.l10n_ar_caea_journal_id and m.journal_id.l10n_ar_afip_pos_system == 'DOLAN_WSFE'
+        )
         regular = self - with_contingency
         posted = super(AccountMove, regular)._post(soft=soft) if regular else self.browse()
         ar_electronic_moves = (regular & needs_cae).filtered(
