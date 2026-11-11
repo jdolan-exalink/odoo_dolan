@@ -4,6 +4,7 @@
 
 import base64
 import logging
+import socket
 import ssl
 import time
 import urllib.request
@@ -35,6 +36,37 @@ AFIP_WS_URLS = {
         'ws_sr_constancia_inscripcion': 'https://aws.arca.gob.ar/sr-padron/webservices/personaServiceA5',
     },
 }
+
+
+class ArcaUnavailableError(UserError):
+    """ARCA could not be reached before any authorization request was processed.
+
+    Raised only when it is certain that ARCA did not receive (or could not have
+    processed) a request: DNS/connection failures, an unhealthy ``FEDummy`` or an
+    HTTP 5xx answer. Callers may then fall back to CAEA contingency without the
+    risk of duplicating an authorization that ARCA already granted.
+    """
+
+
+def _arca_ssl_context():
+    ssl_context = ssl.create_default_context()
+    # Keep certificate/hostname validation and TLS 1.2+, while allowing the
+    # legacy DH group still negotiated by ARCA's WSFE endpoints.
+    ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2
+    ssl_context.set_ciphers('HIGH:!aNULL:!MD5:@SECLEVEL=1')
+    return ssl_context
+
+
+def _is_connection_failure(exc):
+    """True when the request certainly never reached ARCA's application layer."""
+    if isinstance(exc, urllib.error.HTTPError):
+        return exc.code >= 500
+    if isinstance(exc, urllib.error.URLError):
+        reason = exc.reason
+        # A timeout while waiting for the answer is ambiguous: ARCA may have
+        # processed the request. Only connect-phase failures are certain.
+        return not isinstance(reason, (TimeoutError, socket.timeout))
+    return isinstance(exc, (ConnectionRefusedError, socket.gaierror))
 
 
 class L10nArAfipwsConnection(models.Model):
@@ -232,9 +264,12 @@ class L10nArAfipwsConnection(models.Model):
                 raw_xml = response.read().decode('utf-8')
         except urllib.error.HTTPError as http_err:
             err_body = http_err.read().decode('utf-8', errors='ignore')
-            raise UserError(_("Error HTTP de WSAA ARCA/AFIP (%s): %s") % (http_err.code, err_body))
+            error_class = ArcaUnavailableError if http_err.code >= 500 else UserError
+            raise error_class(_("Error HTTP de WSAA ARCA/AFIP (%s): %s") % (http_err.code, err_body[:500]))
         except Exception as exc:
-            raise UserError(_("No se pudo conectar con WSAA ARCA/AFIP (%s): %s") % (url, exc))
+            # WSAA only issues access tickets: no fiscal authorization can be
+            # lost here, so any network failure means ARCA is unavailable.
+            raise ArcaUnavailableError(_("No se pudo conectar con WSAA ARCA/AFIP (%s): %s") % (url, exc))
 
         root = ET.fromstring(raw_xml)
         login_return = None
@@ -401,6 +436,170 @@ class L10nArAfipwsConnection(models.Model):
                 if not values_by_name.get('Id', '').isdigit() or not values_by_name.get('Desc') or not values_by_name.get('Cmp_Clase'):
                     raise UserError(_('ARCA devolvió una condición IVA incompleta.'))
         return result
+
+    # ------------------------------------------------------------------
+    # WSFEv1 transport shared by CAEA operations
+    # ------------------------------------------------------------------
+    WSFE_NS = 'http://ar.gov.afip.dif.FEV1/'
+
+    def _wsfe_post_envelope(self, envelope_xml, method, timeout=25):
+        """POST a WSFEv1 SOAP envelope and return the parsed response root.
+
+        Connection-phase failures raise :class:`ArcaUnavailableError`; every
+        other failure is a plain :class:`UserError` (ARCA may have processed it).
+        """
+        self.ensure_one()
+        if isinstance(envelope_xml, str):
+            envelope_xml = envelope_xml.encode('utf-8')
+        request = urllib.request.Request(
+            AFIP_WS_URLS[self.type]['wsfe'],
+            data=envelope_xml,
+            headers={'Content-Type': 'text/xml; charset=utf-8', 'SOAPAction': f'"{self.WSFE_NS}{method}"'},
+            method='POST',
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=timeout, context=_arca_ssl_context()) as response:
+                raw = response.read()
+        except Exception as exc:
+            if _is_connection_failure(exc):
+                raise ArcaUnavailableError(_('ARCA no responde (%s).') % type(exc).__name__) from exc
+            raise UserError(_(
+                'No se pudo confirmar la respuesta de ARCA (%s). Consulte el servicio antes de reintentar.'
+            ) % type(exc).__name__) from exc
+        try:
+            root = ET.fromstring(raw)
+        except ET.ParseError as exc:
+            raise UserError(_('ARCA devolvió una respuesta SOAP inválida.')) from exc
+        fault = next((node for node in root.iter() if node.tag.split('}')[-1] == 'Fault'), None)
+        if fault is not None:
+            fault_message = next((
+                (node.text or '').strip()
+                for node in fault.iter()
+                if node.tag.split('}')[-1] in ('faultstring', 'Text') and (node.text or '').strip()
+            ), '')
+            raise UserError(_('ARCA rechazó la operación %s: %s') % (method, fault_message[:400] or _('sin detalle')))
+        return root
+
+    def _wsfe_envelope(self, method, values=None, with_auth=True):
+        """Build a flat WSFEv1 envelope. ``values`` may contain nested dicts."""
+        self.ensure_one()
+        soap_ns = 'http://schemas.xmlsoap.org/soap/envelope/'
+        ns = self.WSFE_NS
+        envelope = ET.Element(f'{{{soap_ns}}}Envelope')
+        body = ET.SubElement(envelope, f'{{{soap_ns}}}Body')
+        operation = ET.SubElement(body, f'{{{ns}}}{method}')
+        if with_auth:
+            if self.is_simulated or self.l10n_ar_afip_ws != 'wsfe':
+                raise UserError(_('La operación requiere un ticket real del servicio WSFE.'))
+            cuit = ''.join(ch for ch in (self.company_id.vat or '') if ch.isdigit())
+            if len(cuit) != 11:
+                raise UserError(_('Configure el CUIT emisor antes de operar con ARCA.'))
+            auth = ET.SubElement(operation, f'{{{ns}}}Auth')
+            for key, value in (('Token', self.token), ('Sign', self.sign), ('Cuit', cuit)):
+                ET.SubElement(auth, f'{{{ns}}}{key}').text = str(value or '')
+
+        def fill(parent, data):
+            for key, value in data.items():
+                node = ET.SubElement(parent, f'{{{ns}}}{key}')
+                if isinstance(value, dict):
+                    fill(node, value)
+                else:
+                    node.text = str(value)
+
+        fill(operation, values or {})
+        return ET.tostring(envelope, encoding='utf-8', xml_declaration=True)
+
+    @staticmethod
+    def _wsfe_messages(root, tags=('Err',), limit=5):
+        messages = []
+        for node in root.iter():
+            if node.tag.split('}')[-1] not in tags:
+                continue
+            values = {child.tag.split('}')[-1]: (child.text or '').strip() for child in node}
+            code, message = values.get('Code', ''), values.get('Msg', '')
+            if code or message:
+                messages.append(f'{code}: {message}' if code and message else (code or message))
+            if len(messages) == limit:
+                break
+        return [message[:300] for message in messages]
+
+    @api.model
+    def _wsfe_check_available(self, environment='testing', timeout=5):
+        """Return True when ARCA's WSFEv1 answers FEDummy with all servers OK.
+
+        FEDummy needs no ticket and authorizes nothing, so it is safe to call
+        before deciding between CAE and CAEA contingency.
+        """
+        probe = self.new({'type': environment, 'l10n_ar_afip_ws': 'wsfe'})
+        envelope = probe._wsfe_envelope('FEDummy', with_auth=False)
+        try:
+            root = probe._wsfe_post_envelope(envelope, 'FEDummy', timeout=timeout)
+        except UserError:
+            return False
+        status = {
+            node.tag.split('}')[-1]: (node.text or '').strip().upper()
+            for node in root.iter()
+            if node.tag.split('}')[-1] in ('AppServer', 'DbServer', 'AuthServer')
+        }
+        return len(status) == 3 and all(value == 'OK' for value in status.values())
+
+    def _caea_parse_result(self, root, method):
+        result = next((node for node in root.iter() if node.tag.split('}')[-1] == 'ResultGet'), None)
+        values = {}
+        if result is not None:
+            values = {
+                child.tag.split('}')[-1]: (child.text or '').strip()
+                for child in result
+                if len(child) == 0
+            }
+        code = values.get('CAEA', '')
+        if not (code.isdigit() and len(code) == 14):
+            errors = self._wsfe_messages(root)
+            raise UserError(_('ARCA no otorgó el CAEA (%s). %s') % (method, '; '.join(errors) or _('Sin detalle.')))
+
+        def to_date(text):
+            text = (text or '')[:8]
+            if len(text) != 8 or not text.isdigit():
+                return False
+            return fields.Date.to_date(f'{text[:4]}-{text[4:6]}-{text[6:8]}')
+
+        return {
+            'code': code,
+            'period': values.get('Periodo', ''),
+            'order': values.get('Orden', ''),
+            'date_from': to_date(values.get('FchVigDesde')),
+            'date_to': to_date(values.get('FchVigHasta')),
+            'inform_deadline': to_date(values.get('FchTopeInf')),
+            'observations': '; '.join(self._wsfe_messages(root, tags=('Obs',))),
+        }
+
+    def _caea_request(self, period, order):
+        """FECAEASolicitar; when ARCA says it was already granted, FECAEAConsultar."""
+        self.ensure_one()
+        values = {'Periodo': period, 'Orden': order}
+        root = self._wsfe_post_envelope(self._wsfe_envelope('FECAEASolicitar', values), 'FECAEASolicitar')
+        try:
+            return self._caea_parse_result(root, 'FECAEASolicitar')
+        except UserError as request_error:
+            consult = self._wsfe_post_envelope(self._wsfe_envelope('FECAEAConsultar', values), 'FECAEAConsultar')
+            try:
+                return self._caea_parse_result(consult, 'FECAEAConsultar')
+            except UserError:
+                raise request_error from None
+
+    def _caea_inform_without_movement(self, pos_number, caea_code):
+        """FECAEASinMovimientoInformar for one contingency point of sale."""
+        self.ensure_one()
+        values = {'PtoVta': pos_number, 'CAEA': caea_code}
+        method = 'FECAEASinMovimientoInformar'
+        root = self._wsfe_post_envelope(self._wsfe_envelope(method, values), method)
+        result = next((
+            (node.text or '').strip() for node in root.iter() if node.tag.split('}')[-1] == 'Resultado'
+        ), '')
+        if result != 'A':
+            errors = self._wsfe_messages(root)
+            raise UserError(_('ARCA no aceptó el informe sin movimiento: %s') % ('; '.join(errors) or _('sin detalle')))
+        return True
 
     def _call_padron_get_person(self, cuit, represented_cuit=None):
         """Read one taxpayer from ARCA's authenticated ws_sr_constancia_inscripcion service."""

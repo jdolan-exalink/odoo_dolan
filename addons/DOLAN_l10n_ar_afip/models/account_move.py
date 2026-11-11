@@ -6,13 +6,14 @@ import base64
 import json
 import logging
 import ssl
+import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
-from .afipws_connection import AFIP_WS_URLS
+from .afipws_connection import AFIP_WS_URLS, ArcaUnavailableError
 
 _logger = logging.getLogger(__name__)
 
@@ -51,6 +52,36 @@ class AccountMove(models.Model):
         copy=False,
         help='Debe ser igual o posterior a la fecha inicial y no posterior a la fecha del comprobante.',
     )
+    l10n_ar_caea_id = fields.Many2one(
+        'l10n_ar.caea',
+        string='CAEA utilizado',
+        copy=False,
+        readonly=True,
+        index='btree_not_null',
+        ondelete='restrict',
+    )
+    l10n_ar_caea_report_state = fields.Selection(
+        selection=[
+            ('pending', 'Pendiente de informar'),
+            ('informed', 'Informado a ARCA'),
+            ('rejected', 'Rechazado por ARCA'),
+        ],
+        string='Informe CAEA',
+        copy=False,
+        readonly=True,
+        tracking=True,
+    )
+    l10n_ar_caea_generated_at = fields.Datetime(
+        string='Generado en contingencia',
+        copy=False,
+        readonly=True,
+        help='Fecha y hora de generación que se informa a ARCA (CbteFchHsGen).',
+    )
+    l10n_ar_caea_report_message = fields.Char(
+        string='Respuesta del informe CAEA',
+        copy=False,
+        readonly=True,
+    )
     l10n_ar_afip_result = fields.Selection(
         selection=[
             ('A', 'Aprobado'),
@@ -68,6 +99,7 @@ class AccountMove(models.Model):
             ('draft_no_cae', 'Borrador (sin CAE)'),
             ('authorized', 'CAE emitido'),
             ('authorized_observations', 'CAE emitido (con observaciones)'),
+            ('caea_pending', 'CAEA (pendiente de informar)'),
             ('rejected', 'Rechazado por ARCA'),
             ('cancel', 'Anulado'),
         ],
@@ -128,7 +160,7 @@ class AccountMove(models.Model):
 
     @api.depends(
         'country_code', 'move_type', 'state', 'l10n_latam_document_type_id',
-        'l10n_ar_afip_auth_code', 'l10n_ar_afip_result',
+        'l10n_ar_afip_auth_code', 'l10n_ar_afip_result', 'l10n_ar_caea_report_state',
     )
     def _compute_l10n_ar_afip_display_status(self):
         """Expose fiscal authorization independently of Odoo's accounting state.
@@ -145,8 +177,10 @@ class AccountMove(models.Model):
                 move.l10n_ar_afip_display_status = False
             elif move.state == 'cancel':
                 move.l10n_ar_afip_display_status = 'cancel'
-            elif move.l10n_ar_afip_result == 'R':
+            elif move.l10n_ar_afip_result == 'R' or move.l10n_ar_caea_report_state == 'rejected':
                 move.l10n_ar_afip_display_status = 'rejected'
+            elif move.l10n_ar_caea_report_state == 'pending':
+                move.l10n_ar_afip_display_status = 'caea_pending'
             elif move.l10n_ar_afip_auth_code:
                 move.l10n_ar_afip_display_status = (
                     'authorized_observations'
@@ -335,8 +369,13 @@ class AccountMove(models.Model):
             # tested encoder. Keep the legacy field empty rather than publishing a guess.
             move.l10n_ar_afip_barcode = False
 
-    def _l10n_ar_build_wsfe_request_xml(self, conn):
+    def _l10n_ar_build_wsfe_request_xml(self, conn, caea=None):
         """Build a validated single-document WSFEv1 request supported here.
+
+        Without ``caea`` it is a ``FECAESolicitar`` request. With a
+        ``l10n_ar.caea`` record it is the ``FECAEARegInformativo`` report of a
+        document issued in contingency, carrying the CAEA and its generation
+        time (``CbteFchHsGen``).
 
         A/B invoices and notes are for RI issuers; C invoices and notes are for
         monotributo/exempt issuers. Class C reports the subtotal as ImpNeto and
@@ -632,19 +671,20 @@ class AccountMove(models.Model):
         ET.register_namespace('ar', wsfe_ns)
         envelope = ET.Element(f'{{{soap_ns}}}Envelope')
         body = ET.SubElement(envelope, f'{{{soap_ns}}}Body')
-        operation = ET.SubElement(body, f'{{{wsfe_ns}}}FECAESolicitar')
+        operation_name = 'FECAEARegInformativo' if caea else 'FECAESolicitar'
+        operation = ET.SubElement(body, f'{{{wsfe_ns}}}{operation_name}')
         auth = ET.SubElement(operation, f'{{{wsfe_ns}}}Auth')
         ET.SubElement(auth, f'{{{wsfe_ns}}}Token').text = conn.token
         ET.SubElement(auth, f'{{{wsfe_ns}}}Sign').text = conn.sign
         ET.SubElement(auth, f'{{{wsfe_ns}}}Cuit').text = cuit
 
-        cae_request = ET.SubElement(operation, f'{{{wsfe_ns}}}FeCAEReq')
+        cae_request = ET.SubElement(operation, f'{{{wsfe_ns}}}{"FeCAEARegInfReq" if caea else "FeCAEReq"}')
         header = ET.SubElement(cae_request, f'{{{wsfe_ns}}}FeCabReq')
         ET.SubElement(header, f'{{{wsfe_ns}}}CantReg').text = '1'
         ET.SubElement(header, f'{{{wsfe_ns}}}PtoVta').text = str(self.journal_id.l10n_ar_afip_pos_number)
         ET.SubElement(header, f'{{{wsfe_ns}}}CbteTipo').text = document_type.code
         detail_request = ET.SubElement(cae_request, f'{{{wsfe_ns}}}FeDetReq')
-        detail = ET.SubElement(detail_request, f'{{{wsfe_ns}}}FECAEDetRequest')
+        detail = ET.SubElement(detail_request, f'{{{wsfe_ns}}}{"FECAEADetRequest" if caea else "FECAEDetRequest"}')
         values = (
             ('Concepto', concept),
             ('DocTipo', doc_type),
@@ -703,6 +743,18 @@ class AccountMove(models.Model):
                 ET.SubElement(tribute, f'{{{wsfe_ns}}}Alic').text = f'{aliquot_rate:.2f}'
                 ET.SubElement(tribute, f'{{{wsfe_ns}}}Importe').text = amount_text(row['amount'])
 
+        if caea:
+            if not (caea.code or '').isdigit() or len(caea.code) != 14:
+                raise UserError(_('El CAEA asociado no es válido.'))
+            if not (caea.date_from <= self.invoice_date <= caea.date_to):
+                raise UserError(_('La fecha del comprobante está fuera de la vigencia del CAEA.'))
+            generated_at = fields.Datetime.context_timestamp(
+                self.with_context(tz='America/Argentina/Buenos_Aires'),
+                self.l10n_ar_caea_generated_at or self.create_date or fields.Datetime.now(),
+            )
+            ET.SubElement(detail, f'{{{wsfe_ns}}}CAEA').text = caea.code
+            ET.SubElement(detail, f'{{{wsfe_ns}}}CbteFchHsGen').text = generated_at.strftime('%Y%m%d%H%M%S')
+
         return ET.tostring(envelope, encoding='utf-8', xml_declaration=True).decode('utf-8')
 
     def action_l10n_ar_request_cae(self):
@@ -710,6 +762,8 @@ class AccountMove(models.Model):
         for move in self:
             if move.move_type not in ('out_invoice', 'out_refund') or move.l10n_ar_afip_auth_code:
                 continue
+            if move.journal_id.l10n_ar_afip_pos_system == 'DOLAN_CAEA':
+                raise UserError(_('Los puntos de venta CAEA no piden CAE: se informan con el CAEA vigente.'))
             wsfe_enabled = self.env['ir.config_parameter'].sudo().get_bool(
                 'l10n_ar_afip.wsfe_submission_enabled', default=False,
             )
@@ -726,6 +780,9 @@ class AccountMove(models.Model):
                 raise UserError(_('Un ticket simulado no puede autorizar un comprobante fiscal.'))
             req_xml = move._l10n_ar_build_wsfe_request_xml(conn)
             ws_url = AFIP_WS_URLS[conn.type][afip_ws]
+            if move.journal_id.l10n_ar_caea_journal_id and not conn._wsfe_check_available(conn.type):
+                # Nothing was sent yet: safe to issue the document under CAEA.
+                raise ArcaUnavailableError(_('ARCA no responde (FEDummy).'))
             try:
                 req = urllib.request.Request(
                     ws_url, data=req_xml.encode('utf-8'),
@@ -759,6 +816,11 @@ class AccountMove(models.Model):
             except UserError:
                 raise
             except Exception as exc:
+                from .afipws_connection import _is_connection_failure
+                # An HTTP answer means ARCA got the request; only connect-phase
+                # failures guarantee that no CAE could have been granted.
+                if not isinstance(exc, urllib.error.HTTPError) and _is_connection_failure(exc):
+                    raise ArcaUnavailableError(_('ARCA no responde (%s).') % type(exc).__name__) from exc
                 # Do not expose credential-bearing request/response bodies in errors or logs.
                 raise UserError(_(
                     'No se pudo confirmar la autorización ARCA (%s). '
@@ -794,15 +856,125 @@ class AccountMove(models.Model):
                 break
         return [message[:300] for message in messages]
 
+    # ------------------------------------------------------------------
+    # Posting with CAE and CAEA contingency
+    # ------------------------------------------------------------------
+    def _l10n_ar_needs_wsfe_cae(self):
+        self.ensure_one()
+        return (
+            self.country_code == 'AR'
+            and self.move_type in ('out_invoice', 'out_refund')
+            and self.journal_id.l10n_ar_afip_pos_system == 'DOLAN_WSFE'
+            and self.journal_id.l10n_ar_afip_ws
+            and not self.l10n_ar_afip_auth_code
+        )
+
     def _post(self, soft=True):
-        res = super()._post(soft=soft)
-        ar_electronic_moves = self.filtered(
-            lambda m: m.country_code == 'AR'
-            and m.move_type in ('out_invoice', 'out_refund')
-            and m.journal_id.l10n_ar_afip_pos_system == 'DOLAN_WSFE'
-            and m.journal_id.l10n_ar_afip_ws
-            and not m.l10n_ar_afip_auth_code
+        needs_cae = self.filtered(lambda m: m.state == 'draft' and m._l10n_ar_needs_wsfe_cae())
+        with_contingency = needs_cae.filtered(lambda m: m.journal_id.l10n_ar_caea_journal_id)
+        regular = self - with_contingency
+        posted = super(AccountMove, regular)._post(soft=soft) if regular else self.browse()
+        ar_electronic_moves = (regular & needs_cae).filtered(
+            lambda m: m.state == 'posted' and not m.l10n_ar_afip_auth_code
         )
         if ar_electronic_moves:
             ar_electronic_moves.action_l10n_ar_request_cae()
-        return res
+        for move in with_contingency:
+            posted |= move._l10n_ar_post_with_caea_contingency(soft)
+        return posted
+
+    def _l10n_ar_post_with_caea_contingency(self, soft):
+        """Post one document asking for CAE; when ARCA is down, issue it under CAEA.
+
+        The CAE attempt runs inside a savepoint, so a failure rolls back the
+        number taken on the CAE point of sale and leaves no gap in its sequence.
+        """
+        self.ensure_one()
+        company = self.company_id
+        reason = False
+        if not company._l10n_ar_caea_contingency_active():
+            try:
+                with self.env.cr.savepoint():
+                    posted = super(AccountMove, self)._post(soft=soft)
+                    if self.state == 'posted' and not self.l10n_ar_afip_auth_code:
+                        self.action_l10n_ar_request_cae()
+                return posted
+            except ArcaUnavailableError as error:
+                reason = str(error)
+                company.sudo()._l10n_ar_caea_mark_unavailable()
+        contingency_journal = self.journal_id.l10n_ar_caea_journal_id
+        issue_date = self.invoice_date or fields.Date.context_today(self)
+        caea = self.env['l10n_ar.caea'].sudo()._get_valid_for(company, issue_date)
+        if not caea:
+            raise UserError(_(
+                'ARCA no responde y no hay un CAEA vigente para %(date)s. Pedí el CAEA de la quincena '
+                'en Contabilidad > Configuración > ARCA / AFIP > CAEA y volvé a intentar.',
+                date=issue_date.strftime('%d/%m/%Y'),
+            ))
+        document_type = self.l10n_latam_document_type_id
+        self.write({'journal_id': contingency_journal.id})
+        if document_type and self.l10n_latam_document_type_id != document_type:
+            self.l10n_latam_document_type_id = document_type
+        posted = super(AccountMove, self)._post(soft=soft)
+        if self.state != 'posted':
+            return posted
+        self.write({
+            'l10n_ar_afip_auth_mode': 'CAEA',
+            'l10n_ar_afip_auth_code': caea.code,
+            'l10n_ar_afip_auth_code_due': caea.date_to,
+            'l10n_ar_caea_id': caea.id,
+            'l10n_ar_caea_report_state': 'pending',
+            'l10n_ar_caea_generated_at': fields.Datetime.now(),
+        })
+        self.message_post(body=_(
+            'ARCA no respondió%(reason)s. Comprobante emitido en contingencia con el CAEA %(caea)s; '
+            'se informará automáticamente cuando el servicio vuelva.',
+            reason=f' ({reason})' if reason else '',
+            caea=caea.code,
+        ))
+        return posted
+
+    def _l10n_ar_caea_inform(self):
+        """Report contingency documents with FECAEARegInformativo, one by one."""
+        for move in self:
+            caea = move.l10n_ar_caea_id
+            if not caea or move.l10n_ar_caea_report_state == 'informed' or move.state != 'posted':
+                continue
+            conn = self.env['l10n_ar.afipws.connection'].get_active_connection(move.company_id, 'wsfe')
+            try:
+                req_xml = move._l10n_ar_build_wsfe_request_xml(conn, caea=caea)
+            except UserError as error:
+                move.write({'l10n_ar_caea_report_state': 'rejected', 'l10n_ar_caea_report_message': str(error)[:250]})
+                continue
+            root = conn._wsfe_post_envelope(req_xml, 'FECAEARegInformativo')
+            details = [node for node in root.iter() if node.tag.split('}')[-1] == 'FECAEADetResponse']
+            values = {node.tag.split('}')[-1]: (node.text or '').strip() for node in details[0]} if len(details) == 1 else {}
+            observations = conn._wsfe_messages(root, tags=('Obs',))
+            errors = conn._wsfe_messages(root)
+            request_root = ET.fromstring(req_xml)
+            for node in request_root.iter():
+                if node.tag.split('}')[-1] in ('Token', 'Sign'):
+                    node.text = '[REDACTED]'
+            audit = {
+                'l10n_ar_afip_xml_request': ET.tostring(request_root, encoding='unicode'),
+                'l10n_ar_afip_xml_response': ET.tostring(root, encoding='unicode'),
+            }
+            if values.get('Resultado') == 'A' and values.get('CAEA', caea.code) == caea.code:
+                move.write(dict(
+                    audit,
+                    l10n_ar_caea_report_state='informed',
+                    l10n_ar_afip_result='O' if observations else 'A',
+                    l10n_ar_caea_report_message='; '.join(observations)[:250] or False,
+                ))
+            else:
+                move.write(dict(
+                    audit,
+                    l10n_ar_caea_report_state='rejected',
+                    l10n_ar_caea_report_message='; '.join(errors + observations)[:250] or _('Rechazado sin detalle.'),
+                ))
+                move.message_post(body=_('ARCA rechazó el informe CAEA: %s', move.l10n_ar_caea_report_message))
+        return True
+
+    def action_l10n_ar_caea_inform(self):
+        self.filtered('l10n_ar_caea_id')._l10n_ar_caea_inform()
+        return True

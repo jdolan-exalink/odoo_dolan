@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_ar_caea_list" model="ir.ui.view">
+        <field name="name">l10n_ar.caea.list</field>
+        <field name="model">l10n_ar.caea</field>
+        <field name="arch" type="xml">
+            <list create="false" decoration-warning="state == 'to_inform'" decoration-muted="state == 'informed'">
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="code"/>
+                <field name="period"/>
+                <field name="fortnight"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="inform_deadline"/>
+                <field name="move_count"/>
+                <field name="pending_count"/>
+                <field name="rejected_count"/>
+                <field name="environment"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-warning="state == 'to_inform'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_ar_caea_form" model="ir.ui.view">
+        <field name="name">l10n_ar.caea.form</field>
+        <field name="model">l10n_ar.caea</field>
+        <field name="arch" type="xml">
+            <form create="false">
+                <header>
+                    <button name="action_inform" type="object" string="Informar a ARCA"
+                            class="btn-primary" invisible="state == 'informed'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="code"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="period"/>
+                            <field name="fortnight"/>
+                            <field name="environment"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="inform_deadline"/>
+                            <field name="pending_count"/>
+                            <field name="rejected_count"/>
+                        </group>
+                    </group>
+                    <field name="observations" invisible="not observations"/>
+                    <notebook>
+                        <page string="Comprobantes emitidos en contingencia" name="moves">
+                            <field name="move_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="invoice_date"/>
+                                    <field name="partner_id"/>
+                                    <field name="amount_total"/>
+                                    <field name="l10n_ar_caea_generated_at"/>
+                                    <field name="l10n_ar_caea_report_state" widget="badge"
+                                           decoration-success="l10n_ar_caea_report_state == 'informed'"
+                                           decoration-warning="l10n_ar_caea_report_state == 'pending'"
+                                           decoration-danger="l10n_ar_caea_report_state == 'rejected'"/>
+                                    <field name="l10n_ar_caea_report_message"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Puntos de venta sin movimiento" name="no_movement">
+                            <field name="no_movement_journal_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="l10n_ar_afip_pos_number"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ar_caea" model="ir.actions.act_window">
+        <field name="name">CAEA (contingencia)</field>
+        <field name="res_model">l10n_ar.caea</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Todavía no hay CAEA</p>
+            <p>El CAEA se pide solo cada quincena para las compañías con un punto de venta de
+               contingencia. Si ARCA no responde al pedir el CAE, el comprobante sale con el CAEA
+               vigente y se informa cuando vuelve el servicio.</p>
+        </field>
+    </record>
+
+    <record id="action_l10n_ar_caea_request_current" model="ir.actions.server">
+        <field name="name">Pedir CAEA de la quincena</field>
+        <field name="model_id" ref="model_l10n_ar_caea"/>
+        <field name="binding_model_id" ref="model_l10n_ar_caea"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = model.action_request_current()</field>
+    </record>
+
+    <menuitem id="menu_l10n_ar_caea"
+              name="CAEA (contingencia)"
+              parent="menu_l10n_ar_afip_root"
+              action="action_l10n_ar_caea"
+              sequence="20"/>
+
+    <record id="ir_cron_l10n_ar_caea_request" model="ir.cron">
+        <field name="name">ARCA: pedir CAEA de la quincena</field>
+        <field name="model_id" ref="model_l10n_ar_caea"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_request_caea()</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="ir_cron_l10n_ar_caea_inform" model="ir.cron">
+        <field name="name">ARCA: informar comprobantes emitidos con CAEA</field>
+        <field name="model_id" ref="model_l10n_ar_caea"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_inform_caea()</field>
+        <field name="interval_number">30</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>
