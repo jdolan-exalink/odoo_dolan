@@ -8,3 +8,4 @@ from . import account_followup
 from . import account_dashboard
 from . import account_entry_security
 from . import res_partner_bank
+from . import inflation_adjustment

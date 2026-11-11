@@ -43,3 +43,8 @@ dolan_dolan_bank_reconciliation_wizard_company_rule,dolan.bank.reconciliation.wi
 dolan_dolan_bank_reconciliation_line_company_rule,dolan.bank.reconciliation.line.company.rule,dolan.bank.reconciliation.line,,crud,"[('wizard_id.journal_id.company_id', 'in', company_ids)]"
 dolan_dolan_financial_report_wizard_company_rule,dolan.financial.report.wizard.company.rule,dolan.financial.report.wizard,,crud,"[('company_id', 'in', company_ids)]"
 dolan_dolan_financial_report_line_company_rule,dolan.financial.report.line.company.rule,dolan.financial.report.line,,crud,"[('wizard_id.company_id', 'in', company_ids)]"
+access_dolan_inflation_index_user,dolan.inflation.index.user,dolan.inflation.index,account.group_account_user,r,
+access_dolan_inflation_index_manager,dolan.inflation.index.manager,dolan.inflation.index,account.group_account_manager,crud,
+access_dolan_inflation_adjustment_wizard,dolan.inflation.adjustment.wizard,dolan.inflation.adjustment.wizard,account.group_account_manager,crud,
+access_dolan_inflation_adjustment_line,dolan.inflation.adjustment.line,dolan.inflation.adjustment.line,account.group_account_manager,crud,
+access_dolan_inflation_index_import_wizard,dolan.inflation.index.import.wizard,dolan.inflation.index.import.wizard,account.group_account_manager,crud,

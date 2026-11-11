@@ -11,3 +11,4 @@ from . import test_assets_loans
 from . import test_argentine_banking
 from . import test_mercadopago_settlement
 from . import test_fiscal_close_and_loan_reclass
+from . import test_inflation_adjustment
