@@ -1,0 +1,6 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_marketplace_account_manager,Marketplaces: administrador,dolan.marketplace.account,DOLAN_marketplace.group_marketplace_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_marketplace_account_salesman,Marketplaces: vendedor,dolan.marketplace.account,sales_team.group_sale_salesman,r,"[('company_id', 'in', company_ids)]"
+access_dolan_marketplace_listing_manager,Publicaciones: administrador,dolan.marketplace.listing,DOLAN_marketplace.group_marketplace_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_marketplace_listing_salesman,Publicaciones: vendedor,dolan.marketplace.listing,sales_team.group_sale_salesman,r,"[('company_id', 'in', company_ids)]"
+access_dolan_marketplace_log_manager,Registro: administrador,dolan.marketplace.log,DOLAN_marketplace.group_marketplace_manager,crud,"[('company_id', 'in', company_ids)]"
