@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_dolan_cot" model="ir.ui.view">
+        <field name="name">stock.picking.form.dolan.cot</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="l10n_ar_stock.stock_picking_form_inherit_l10n_ar_stock"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='l10n_ar_action_send_delivery_guide']" position="after">
+                <button name="action_dolan_request_cot" type="object" string="Solicitar COT"
+                        class="btn-primary"
+                        invisible="not dolan_cot_required or dolan_cot_state == 'done' or not l10n_ar_delivery_guide_number"/>
+            </xpath>
+            <field name="l10n_ar_delivery_guide_number" position="after">
+                <field name="dolan_cot_number" invisible="not dolan_cot_number" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_picking_form_dolan_cot_page" model="ir.ui.view">
+        <field name="name">stock.picking.form.dolan.cot.page</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <page name="extra" position="before">
+                <page string="Traslado / COT" name="dolan_cot" invisible="picking_type_code != 'outgoing'">
+                    <div class="alert alert-info mb-2" role="status"
+                         invisible="not dolan_cot_required or dolan_cot_state == 'done'">
+                        Este remito sale de o llega a Provincia de Buenos Aires y supera el valor mínimo:
+                        necesita COT de ARBA antes del traslado.
+                    </div>
+                    <div class="alert alert-danger mb-2" role="alert" invisible="dolan_cot_state != 'error'">
+                        <field name="dolan_cot_message"/>
+                    </div>
+                    <group>
+                        <group string="Transporte">
+                            <field name="dolan_cot_carrier_id"/>
+                            <field name="dolan_cot_vehicle_plate"/>
+                            <field name="dolan_cot_trailer_plate"/>
+                            <field name="dolan_cot_departure"/>
+                            <field name="dolan_cot_route_type"/>
+                        </group>
+                        <group string="COT">
+                            <field name="dolan_cot_required"/>
+                            <field name="dolan_cot_currency_id" invisible="1"/>
+                            <field name="dolan_cot_amount"/>
+                            <field name="dolan_cot_state"/>
+                            <field name="dolan_cot_number"/>
+                            <field name="dolan_cot_date"/>
+                            <field name="dolan_cot_file_id"/>
+                            <button name="action_dolan_reset_cot" type="object" string="Reiniciar COT"
+                                    class="btn-link" invisible="dolan_cot_state == 'none'"
+                                    groups="stock.group_stock_manager"
+                                    confirm="Se borra el COT registrado para volver a pedirlo. ¿Continuar?"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+
+    <record id="view_picking_list_dolan_cot" model="ir.ui.view">
+        <field name="name">stock.picking.list.dolan.cot</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="dolan_cot_number" optional="hide"/>
+                <field name="dolan_cot_state" optional="hide" widget="badge"
+                       decoration-success="dolan_cot_state == 'done'" decoration-danger="dolan_cot_state == 'error'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_picking_search_dolan_cot" model="ir.ui.view">
+        <field name="name">stock.picking.search.dolan.cot</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="dolan_cot_number"/>
+                <filter string="COT rechazado" name="dolan_cot_error" domain="[('dolan_cot_state', '=', 'error')]"/>
+                <filter string="Con COT" name="dolan_cot_done" domain="[('dolan_cot_state', '=', 'done')]"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_dolan_request_cot_multi" model="ir.actions.server">
+        <field name="name">Solicitar COT ARBA</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_dolan_request_cot()</field>
+    </record>
+</odoo>

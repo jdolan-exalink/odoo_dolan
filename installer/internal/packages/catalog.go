@@ -89,6 +89,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_l10n_ar_cot",
+		Title:       "Remito electrónico y COT ARBA",
+		Version:     "20.0.1.0.0",
+		Category:    "Inventario",
+		Application: false,
+		Depends:     []string{"l10n_ar_stock"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_exchange",
 		Title:       "Cotizaciones USD y Tipo de Cambio BNA",
 		Version:     "20.0.1.0.0",
