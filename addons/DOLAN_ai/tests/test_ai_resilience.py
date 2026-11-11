@@ -223,7 +223,7 @@ class TestAiResilience(TransactionCase):
 
     def test_time_budget_skips_extra_model_calls(self):
         session = self._session()
-        self.env['ir.config_parameter'].sudo().set_param('dolan_ai.response_budget_seconds', '20')
+        self.env['ir.config_parameter'].sudo().set_str('dolan_ai.response_budget_seconds', '20')
         first = completion(tool_calls=[{'id': 'c1', 'name': 'search_read', 'arguments': {'model': 'res.partner'}}])
         read_result = {
             'status': 'ok', 'model': 'res.partner', 'count': 1,

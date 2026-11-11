@@ -141,9 +141,10 @@ class AiSession(models.Model):
     @api.model
     def _get_response_budget(self):
         try:
-            budget = int(self.env['ir.config_parameter'].sudo().get_param(
-                'dolan_ai.response_budget_seconds', DEFAULT_RESPONSE_BUDGET,
-            ))
+            raw = self.env['ir.config_parameter'].sudo().get_str(
+                'dolan_ai.response_budget_seconds', default='',
+            )
+            budget = int(raw) if raw else DEFAULT_RESPONSE_BUDGET
         except (TypeError, ValueError):
             budget = DEFAULT_RESPONSE_BUDGET
         return min(max(budget, 20), 600)

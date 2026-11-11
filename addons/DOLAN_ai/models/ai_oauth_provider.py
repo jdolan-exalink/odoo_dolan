@@ -830,7 +830,7 @@ class DolanAiProvider(models.Model):
             'Authorization': f'Bearer {self.api_key}',
             'X-Title': 'Odoo AI',
         }
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_str('web.base.url', default='')
         if base_url:
             headers['HTTP-Referer'] = base_url
         return headers
