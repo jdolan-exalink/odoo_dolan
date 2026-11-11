@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Factura -->
+    <record id="view_move_form_dolan_fce" model="ir.ui.view">
+        <field name="name">account.move.form.dolan.fce</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_dolan_fce_refresh" type="object" string="Consultar FCE en ARCA"
+                        class="btn-secondary"
+                        invisible="not dolan_fce_is_fce or state != 'posted' or move_type not in ('out_invoice', 'in_invoice')"/>
+                <button name="action_dolan_fce_accept" type="object" string="Aceptar FCE" class="btn-primary"
+                        invisible="not dolan_fce_is_fce or state != 'posted' or move_type != 'in_invoice' or dolan_fce_state != 'pending'"
+                        confirm="Se informa a ARCA la aceptación de la factura de crédito por el total. ¿Continuar?"/>
+                <button name="action_dolan_fce_reject_wizard" type="object" string="Rechazar FCE"
+                        invisible="not dolan_fce_is_fce or state != 'posted' or move_type != 'in_invoice' or dolan_fce_state != 'pending'"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mb-0" role="alert" invisible="not dolan_fce_suggested">
+                    Este cliente está obligado a recibir Factura de Crédito Electrónica MiPyME por este monto.
+                    <button name="action_dolan_fce_switch" type="object" class="btn-link p-0 ms-1"
+                            string="Pasar a FCE"/>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='l10n_ar_afip_edi']//group[last()]" position="after">
+                <group string="Factura de Crédito Electrónica MiPyME" invisible="not dolan_fce_is_fce">
+                    <field name="dolan_fce_is_fce" invisible="1"/>
+                    <field name="dolan_fce_suggested" invisible="1"/>
+                    <field name="dolan_fce_state" widget="badge"
+                           decoration-success="dolan_fce_state == 'accepted'"
+                           decoration-danger="dolan_fce_state == 'rejected'"
+                           decoration-info="dolan_fce_state == 'pending'"/>
+                    <field name="dolan_fce_cancellation" invisible="move_type not in ('out_refund', 'in_refund')"/>
+                    <field name="dolan_fce_ctacte_code"/>
+                    <field name="dolan_fce_balance"/>
+                    <field name="dolan_fce_last_check"/>
+                    <field name="dolan_fce_rejection_reason" invisible="not dolan_fce_rejection_reason"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_out_invoice_tree_dolan_fce" model="ir.ui.view">
+        <field name="name">account.move.list.dolan.fce</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_currency_id']" position="after">
+                <field name="dolan_fce_state" optional="hide" widget="badge"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter_dolan_fce" model="ir.ui.view">
+        <field name="name">account.move.search.dolan.fce</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <filter string="FCE pendientes de aceptación" name="dolan_fce_pending"
+                        domain="[('dolan_fce_state', '=', 'pending')]"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Contacto -->
+    <record id="view_partner_form_dolan_fce" model="ir.ui.view">
+        <field name="name">res.partner.form.dolan.fce</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="FCE MiPyME" name="dolan_fce" invisible="not is_company">
+                    <group>
+                        <group>
+                            <field name="dolan_fce_currency_id" invisible="1"/>
+                            <field name="dolan_fce_obligated"/>
+                            <field name="dolan_fce_min_amount" invisible="not dolan_fce_obligated"/>
+                            <field name="dolan_fce_check_date"/>
+                        </group>
+                        <group>
+                            <button name="action_dolan_fce_check" type="object" class="btn-secondary"
+                                    string="Consultar obligación en ARCA" groups="account.group_account_invoice"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Ajustes -->
+    <record id="res_config_settings_view_form_dolan_fce" model="ir.ui.view">
+        <field name="name">res.config.settings.form.dolan.fce</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="DOLAN_l10n_ar_afip.res_config_settings_view_form_inherit_dolan_l10n_ar_afip"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_ar_fce_transmission_type']/.." position="before">
+                <div class="row mt8">
+                    <label for="dolan_fce_is_mipyme" class="col-lg-5 o_light_label"/>
+                    <field name="dolan_fce_is_mipyme"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Rechazo -->
+    <record id="view_dolan_fce_reject_wizard_form" model="ir.ui.view">
+        <field name="name">dolan.fce.reject.wizard.form</field>
+        <field name="model">dolan.fce.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rechazar FCE">
+                <group>
+                    <field name="move_ids" widget="many2many_tags" readonly="1"/>
+                    <field name="reason"/>
+                    <field name="justification"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Rechazar en ARCA" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="ir_cron_dolan_fce_refresh" model="ir.cron">
+        <field name="name">FCE MiPyME: actualizar estado en ARCA</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_dolan_fce_refresh()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

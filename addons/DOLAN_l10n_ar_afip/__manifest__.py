@@ -72,6 +72,7 @@ Características principales:
         'views/ar_tax_jurisdiction_views.xml',
         'wizard/provincial_ddjj_views.xml',
         'views/currency_ar_views.xml',
+        'views/fce_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

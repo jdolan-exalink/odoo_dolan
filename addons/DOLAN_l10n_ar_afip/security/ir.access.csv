@@ -17,3 +17,4 @@ access_dolan_ar_tax_jurisdiction_manager,dolan.ar.tax.jurisdiction.manager,dolan
 access_dolan_ar_provincial_ddjj_wizard_user,dolan.ar.provincial.ddjj.wizard.user,dolan.ar.provincial.ddjj.wizard,account.group_account_invoice,crud,
 access_dolan_ar_rate_backfill_wizard,dolan.ar.rate.backfill.wizard,dolan.ar.rate.backfill.wizard,account.group_account_manager,crud,
 access_dolan_ar_revaluation_wizard,dolan.ar.revaluation.wizard,dolan.ar.revaluation.wizard,account.group_account_manager,crud,
+access_dolan_fce_reject_wizard_user,dolan.fce.reject.wizard.user,dolan.fce.reject.wizard,account.group_account_invoice,crud,

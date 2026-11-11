@@ -27,12 +27,14 @@ AFIP_WS_URLS = {
         'wsfe': 'https://wswhomo.afip.gov.ar/wsfev1/service.asmx',
         'wsfex': 'https://wswhomo.afip.gov.ar/wsfexv1/service.asmx',
         'wsmtxca': 'https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService',
+        'wsfecred': 'https://fwshomo.afip.gov.ar/wsfecred/FECredService',
         'ws_sr_constancia_inscripcion': 'https://awshomo.arca.gob.ar/sr-padron/webservices/personaServiceA5',
     },
     'production': {
         'wsfe': 'https://servicios1.afip.gov.ar/wsfev1/service.asmx',
         'wsfex': 'https://servicios1.afip.gov.ar/wsfexv1/service.asmx',
         'wsmtxca': 'https://serviciosjava.afip.gov.ar/wsmtxca/services/MTXCAService',
+        'wsfecred': 'https://serviciosjava.afip.gov.ar/wsfecred/FECredService',
         'ws_sr_constancia_inscripcion': 'https://aws.arca.gob.ar/sr-padron/webservices/personaServiceA5',
     },
 }
@@ -87,6 +89,7 @@ class L10nArAfipwsConnection(models.Model):
             ('wsfe', 'Mercado interno -sin detalle- RG2485 (WSFEv1)'),
             ('wsfex', 'Exportación -con detalle- RG2758 (WSFEXv1)'),
             ('wsmtxca', 'Mercado interno -con detalle- RG2904 (WSMTXCA)'),
+            ('wsfecred', 'Factura de Crédito Electrónica MiPyME (WSFECRED)'),
             ('ws_sr_constancia_inscripcion', 'Consulta de Padrón Constancia de Inscripción (A5)'),
         ],
         string='Webservice ARCA/AFIP',
