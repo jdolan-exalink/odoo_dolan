@@ -28,7 +28,7 @@ var ProfileCatalog = []ProfileInfo{
 			"l10n_latam_check", "l10n_latam_invoice_document",
 		},
 		DolanModules: []string{
-			"DOLAN_base", "DOLAN_theme", "DOLAN_l10n_ar_afip", "DOLAN_accounting", "DOLAN_account_reports",
+			"DOLAN_base", "DOLAN_theme", "DOLAN_l10n_ar_afip", "DOLAN_accounting", "DOLAN_account_reports", "DOLAN_bank_ar", "DOLAN_collections",
 			"DOLAN_ai", "DOLAN_ocr", "DOLAN_whatsapp", "DOLAN_knowledge_bi",
 		},
 	},
@@ -47,7 +47,7 @@ var ProfileCatalog = []ProfileInfo{
 			"l10n_latam_check", "l10n_latam_invoice_document",
 		},
 		DolanModules: []string{
-			"DOLAN_base", "DOLAN_theme", "DOLAN_l10n_ar_afip", "DOLAN_accounting", "DOLAN_account_reports",
+			"DOLAN_base", "DOLAN_theme", "DOLAN_l10n_ar_afip", "DOLAN_accounting", "DOLAN_account_reports", "DOLAN_bank_ar", "DOLAN_collections",
 			"DOLAN_ai", "DOLAN_ocr", "DOLAN_whatsapp", "DOLAN_subscription",
 			"DOLAN_renting", "DOLAN_views", "DOLAN_knowledge_bi",
 		},
@@ -67,10 +67,10 @@ var ProfileCatalog = []ProfileInfo{
 			"l10n_latam_check", "l10n_latam_invoice_document",
 		},
 		DolanModules: []string{
-			"DOLAN_base", "DOLAN_theme", "DOLAN_l10n_ar_afip", "DOLAN_accounting", "DOLAN_account_reports",
+			"DOLAN_base", "DOLAN_theme", "DOLAN_l10n_ar_afip", "DOLAN_accounting", "DOLAN_account_reports", "DOLAN_bank_ar", "DOLAN_collections",
 			"DOLAN_ai", "DOLAN_ocr", "DOLAN_whatsapp", "DOLAN_pos",
 			"DOLAN_discount_engine", "DOLAN_payment_terminal", "DOLAN_pricelist", "DOLAN_knowledge_bi",
-			"ePOS_print", "pos_scale_management", "DOLAN_credit_limit", "DOLAN_credit_limit_pos", "DOLAN_marketplace",
+			"ePOS_print", "pos_scale_management", "DOLAN_credit_limit", "DOLAN_credit_limit_pos", "DOLAN_marketplace", "DOLAN_l10n_ar_cot",
 		},
 	},
 	{
@@ -90,11 +90,11 @@ var ProfileCatalog = []ProfileInfo{
 			"l10n_latam_check", "l10n_latam_invoice_document",
 		},
 		DolanModules: []string{
-			"DOLAN_base", "DOLAN_theme", "DOLAN_l10n_ar_afip", "DOLAN_accounting", "DOLAN_account_reports",
+			"DOLAN_base", "DOLAN_theme", "DOLAN_l10n_ar_afip", "DOLAN_accounting", "DOLAN_account_reports", "DOLAN_bank_ar", "DOLAN_collections",
 			"DOLAN_ai", "DOLAN_ocr", "DOLAN_whatsapp", "DOLAN_views",
 			"DOLAN_pos", "DOLAN_stock_mrp", "DOLAN_subscription", "DOLAN_renting",
 			"DOLAN_knowledge_bi", "DOLAN_exchange", "DOLAN_marketplace", "DOLAN_credit_limit_pos", "DOLAN_credit_limit", "DOLAN_pricelist", "DOLAN_discount_engine",
-			"DOLAN_payment_terminal", "ePOS_print", "pos_scale_management",
+			"DOLAN_payment_terminal", "ePOS_print", "pos_scale_management", "DOLAN_l10n_ar_cot", "DOLAN_payroll_ar",
 		},
 	},
 	{
