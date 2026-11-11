@@ -2,7 +2,7 @@
 
 {
     'name': 'DOLAN Advanced Views (Gantt, Cohort, Grid & Map)',
-    'version': '20.0.1.2.0',
+    'version': '20.0.1.3.0',
     'category': 'Hidden/Tools',
     'summary': 'Clean-room CE implementation of Gantt, Cohort, Weekly Grid and OpenStreetMap views for Odoo 20.0',
     'description': """
@@ -13,6 +13,10 @@ Clean-room LGPL-3 implementation replacing proprietary Enterprise view types:
 - web_cohort -> Retention and recurrence cohort matrix visualization.
 - web_grid -> Matrix hours and timesheet imputations by day/week.
 - web_map -> Free OpenStreetMap Leaflet integration without proprietary Mapbox tokens.
+
+Tipos de vista genéricos (dolan_gantt, dolan_map, dolan_grid, dolan_cohort) que sirven
+para cualquier modelo y se agregan solos a Proyecto, Partes de horas, Fabricación,
+Flota, Alquileres, Suscripciones, Contactos, CRM y Ventas cuando están instalados.
     """,
     'author': 'DOLAN Open Source',
     'license': 'LGPL-3',
@@ -20,12 +24,17 @@ Clean-room LGPL-3 implementation replacing proprietary Enterprise view types:
     'data': [
         'security/ir.access.csv',
         'views/dolan_views_views.xml',
+        'data/dolan_generic_views_data.xml',
     ],
+    'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_backend': [
             'DOLAN_views/static/src/css/dolan_views.css',
             'DOLAN_views/static/src/xml/dolan_views.xml',
             'DOLAN_views/static/src/js/dolan_views.js',
+            'DOLAN_views/static/src/generic/generic_views.scss',
+            'DOLAN_views/static/src/generic/generic_views.xml',
+            'DOLAN_views/static/src/generic/generic_views.js',
         ],
     },
     'installable': True,

@@ -1,0 +1,144 @@
+.o_dolan_generic_view {
+    .o_dolan_generic_content {
+        overflow: auto;
+    }
+    .o_weekend {
+        background: rgba(0, 0, 0, 0.03);
+    }
+}
+
+.o_dolan_gantt {
+    --dolan-gantt-label: 220px;
+    min-width: 720px;
+
+    .o_dolan_gantt_row {
+        display: flex;
+        border-bottom: 1px solid var(--border-color, #dee2e6);
+        min-height: 38px;
+    }
+    .o_dolan_gantt_header {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: var(--o-view-background-color, #fff);
+        min-height: 30px;
+        font-size: 0.8rem;
+    }
+    .o_dolan_gantt_label {
+        flex: 0 0 var(--dolan-gantt-label);
+        padding: 6px 8px;
+        border-right: 1px solid var(--border-color, #dee2e6);
+    }
+    .o_dolan_gantt_track {
+        flex: 1 1 auto;
+        position: relative;
+        display: flex;
+    }
+    .o_dolan_gantt_header .o_dolan_gantt_col {
+        flex: 1 1 0;
+        text-align: center;
+        padding: 6px 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border-left: 1px solid var(--border-color, #dee2e6);
+    }
+    .o_dolan_gantt_grid {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        .o_dolan_gantt_col {
+            flex: 1 1 0;
+            border-left: 1px solid var(--border-color, #eee);
+        }
+    }
+    .o_today {
+        background: rgba(var(--primary-rgb, 113, 75, 103), 0.08);
+    }
+    .o_dolan_gantt_bars {
+        position: relative;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        padding: 4px 0;
+    }
+    .o_dolan_gantt_bar {
+        position: relative;
+        height: 24px;
+        border-radius: 4px;
+        overflow: hidden;
+        color: #fff;
+        font-size: 0.78rem;
+        line-height: 24px;
+        cursor: pointer;
+        user-select: none;
+        touch-action: none;
+        &.o_movable {
+            cursor: grab;
+        }
+        &:active {
+            cursor: grabbing;
+        }
+    }
+    .o_dolan_gantt_progress {
+        position: absolute;
+        inset: 0 auto 0 0;
+        background: rgba(0, 0, 0, 0.18);
+    }
+    .o_dolan_gantt_bar_label {
+        position: relative;
+        padding: 0 6px;
+        white-space: nowrap;
+    }
+    $dolan-gantt-colors: #3f7fbf, #2e9d7f, #c27c0e, #8e5ea2, #c0504d, #5b8c3a, #3a8fa8, #a65f8a, #6b6fc4, #b5762c, #4f7c6b, #8a6d3b;
+    @for $i from 0 through 11 {
+        .o_dolan_color_#{$i} {
+            background: nth($dolan-gantt-colors, $i + 1);
+        }
+    }
+}
+
+.o_dolan_map_list {
+    max-height: 70vh;
+    overflow: auto;
+}
+.o_dolan_map_frame {
+    width: 100%;
+    height: 420px;
+    border: 0;
+}
+.o_dolan_map_overview {
+    height: 160px;
+    margin: 0;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.02);
+    .o_dolan_map_pin {
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        border-radius: 50% 50% 50% 0;
+        transform: translate(-50%, -100%) rotate(-45deg);
+        background: #3f7fbf;
+        border: 2px solid #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        &.o_selected {
+            background: #c0504d;
+            z-index: 1;
+        }
+    }
+}
+
+.o_dolan_grid_table {
+    .o_dolan_grid_input {
+        min-width: 4.5rem;
+    }
+}
+
+.o_dolan_cohort_table {
+    @for $i from 0 through 9 {
+        .o_dolan_cohort_#{$i} {
+            background: rgba(46, 157, 127, 0.08 + $i * 0.08);
+        }
+    }
+}
