@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_price_update_list" model="ir.ui.view">
+        <field name="name">dolan.price.update.list</field>
+        <field name="model">dolan.price.update</field>
+        <field name="arch" type="xml">
+            <list string="Actualizaciones de precios" decoration-muted="state == 'reverted'" decoration-info="state == 'preview'">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="target"/>
+                <field name="method"/>
+                <field name="value"/>
+                <field name="line_count" string="Precios"/>
+                <field name="total_variation_pct"/>
+                <field name="applied_date"/>
+                <field name="applied_by_id" widget="many2one_avatar_user"/>
+                <field name="origin" optional="hide"/>
+                <field name="state" widget="badge" decoration-success="state == 'applied'"
+                       decoration-info="state == 'preview'" decoration-muted="state == 'reverted'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_price_update_form" model="ir.ui.view">
+        <field name="name">dolan.price.update.form</field>
+        <field name="model">dolan.price.update</field>
+        <field name="arch" type="xml">
+            <form string="Actualización masiva de precios">
+                <header>
+                    <button name="action_compute" type="object" string="Calcular vista previa" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_apply" type="object" string="Aplicar precios" class="btn-primary"
+                            invisible="state != 'preview'"
+                            confirm="Se van a reemplazar los precios de la vista previa. ¿Continuar?"/>
+                    <button name="action_compute" type="object" string="Recalcular" invisible="state != 'preview'"/>
+                    <button name="action_reset_draft" type="object" string="Volver a borrador" invisible="state != 'preview'"/>
+                    <button name="action_revert" type="object" string="Revertir" invisible="state != 'applied'"
+                            confirm="Se restaurarán los precios anteriores de todos los productos del lote. ¿Continuar?"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,preview,applied"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" readonly="state in ('applied', 'reverted')"/></h1>
+                    </div>
+                    <group>
+                        <group string="Qué actualizar">
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="target" widget="radio" readonly="state != 'draft'"/>
+                            <field name="pricelist_id" invisible="target != 'pricelist'" required="target == 'pricelist'"
+                                   readonly="state != 'draft'"/>
+                            <field name="method" readonly="state != 'draft'"/>
+                            <label for="value" invisible="method == 'usd'"/>
+                            <div class="d-flex align-items-baseline gap-2" invisible="method == 'usd'">
+                                <field name="value" readonly="state != 'draft'" class="oe_inline"/>
+                                <span invisible="method == 'amount'">%</span>
+                            </div>
+                            <label for="rounding" invisible="method == 'usd'"/>
+                            <div class="d-flex align-items-baseline gap-2" invisible="method == 'usd'">
+                                <field name="rounding" readonly="state != 'draft'" class="oe_inline"/>
+                                <field name="rounding_method" readonly="state != 'draft'" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group string="A qué productos">
+                            <field name="categ_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                            <field name="seller_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                            <field name="product_tmpl_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                            <field name="only_saleable" readonly="state != 'draft'" invisible="target == 'standard_price'"/>
+                            <div colspan="2" class="text-muted small">
+                                Sin filtros se actualizan todos los productos. Los filtros se combinan entre sí.
+                            </div>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="status" invisible="method != 'usd'">
+                        Se recalcula el precio de venta de los productos atados al dólar con la cotización USD
+                        del día y el redondeo configurado en Ajustes.
+                    </div>
+                    <group invisible="state == 'draft'">
+                        <group>
+                            <field name="line_count" string="Precios a cambiar"/>
+                            <field name="total_variation_pct"/>
+                        </group>
+                        <group invisible="state not in ('applied', 'reverted')">
+                            <field name="applied_date"/>
+                            <field name="applied_by_id"/>
+                        </group>
+                    </group>
+                    <notebook invisible="state == 'draft'">
+                        <page string="Precios" name="lines">
+                            <field name="line_ids" readonly="state != 'preview'">
+                                <list editable="bottom" create="false" decoration-danger="new_price &lt; old_price">
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="state" column_invisible="1"/>
+                                    <field name="product_tmpl_id" readonly="1"/>
+                                    <field name="default_code" optional="show"/>
+                                    <field name="categ_id" optional="hide"/>
+                                    <field name="pricelist_item_id" optional="hide" readonly="1"/>
+                                    <field name="old_price" widget="monetary"/>
+                                    <field name="new_price" widget="monetary"/>
+                                    <field name="variation_pct"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_price_update_search" model="ir.ui.view">
+        <field name="name">dolan.price.update.search</field>
+        <field name="model">dolan.price.update</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Aplicados" name="applied" domain="[('state', '=', 'applied')]"/>
+                <filter string="Pendientes" name="pending" domain="[('state', 'in', ('draft', 'preview'))]"/>
+                <filter string="Automáticos" name="cron" domain="[('origin', '=', 'cron')]"/>
+                <group>
+                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Destino" name="group_target" context="{'group_by': 'target'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_price_update" model="ir.actions.act_window">
+        <field name="name">Actualización masiva de precios</field>
+        <field name="res_model">dolan.price.update</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Creá una actualización de precios</p>
+            <p>Subí precios por porcentaje, monto o margen sobre el costo, filtrando por categoría o proveedor.
+               Vas a ver la vista previa antes de aplicar y podés revertir el lote.</p>
+        </field>
+    </record>
+</odoo>

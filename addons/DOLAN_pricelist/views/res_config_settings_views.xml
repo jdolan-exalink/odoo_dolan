@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_dolan_pricelist" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.dolan.pricelist</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="product.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='product_general_settings']" position="after">
+                <block title="Precios atados al dólar" id="dolan_usd_price_settings">
+                    <setting id="dolan_usd_price_rounding_setting" string="Redondeo"
+                             help="Cómo se redondea el precio en pesos calculado desde el precio en USD">
+                        <div class="d-flex gap-2 align-items-baseline">
+                            <span>Redondear a</span>
+                            <field name="dolan_usd_price_rounding" class="o_light_label" style="max-width: 6rem;"/>
+                            <field name="dolan_usd_price_rounding_method" class="o_light_label"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

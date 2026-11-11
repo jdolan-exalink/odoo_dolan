@@ -69,7 +69,7 @@ var ProfileCatalog = []ProfileInfo{
 		DolanModules: []string{
 			"DOLAN_base", "DOLAN_theme", "DOLAN_l10n_ar_afip", "DOLAN_accounting",
 			"DOLAN_ai", "DOLAN_ocr", "DOLAN_whatsapp", "DOLAN_pos",
-			"DOLAN_discount_engine", "DOLAN_payment_terminal", "DOLAN_knowledge_bi",
+			"DOLAN_discount_engine", "DOLAN_payment_terminal", "DOLAN_pricelist", "DOLAN_knowledge_bi",
 			"ePOS_print", "pos_scale_management",
 		},
 	},
@@ -93,7 +93,7 @@ var ProfileCatalog = []ProfileInfo{
 			"DOLAN_base", "DOLAN_theme", "DOLAN_l10n_ar_afip", "DOLAN_accounting",
 			"DOLAN_ai", "DOLAN_ocr", "DOLAN_whatsapp", "DOLAN_views",
 			"DOLAN_pos", "DOLAN_stock_mrp", "DOLAN_subscription", "DOLAN_renting",
-			"DOLAN_knowledge_bi", "DOLAN_exchange", "DOLAN_discount_engine",
+			"DOLAN_knowledge_bi", "DOLAN_exchange", "DOLAN_pricelist", "DOLAN_discount_engine",
 			"DOLAN_payment_terminal", "ePOS_print", "pos_scale_management",
 		},
 	},

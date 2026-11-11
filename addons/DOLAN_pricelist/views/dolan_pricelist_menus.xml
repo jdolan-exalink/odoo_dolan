@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dolan_price_update"
+              name="Actualización masiva de precios"
+              parent="sale.product_menu_catalog"
+              action="action_dolan_price_update"
+              groups="sales_team.group_sale_manager"
+              sequence="45"/>
+    <menuitem id="menu_dolan_price_history"
+              name="Historial de precios"
+              parent="sale.product_menu_catalog"
+              action="action_dolan_price_history"
+              sequence="46"/>
+</odoo>
