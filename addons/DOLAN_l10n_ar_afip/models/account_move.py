@@ -300,6 +300,7 @@ class AccountMove(models.Model):
         'l10n_latam_document_number',
         'journal_id.l10n_ar_afip_pos_number',
         'currency_id',
+        'invoice_currency_rate',
         'name',
     )
     def _compute_l10n_ar_afip_qr_and_barcode(self):
@@ -324,7 +325,9 @@ class AccountMove(models.Model):
                 len(company_digits) != 11 or not partner_code or not partner_number
                 or not str(partner_code).isdigit() or not str(partner_number).isdigit()
                 or not doc_type or not doc_type.code or not pos_number or not document_number
-                or not move.invoice_date or move.currency_id.name != 'ARS'
+                or not move.invoice_date
+                or (move.currency_id != move.company_currency_id
+                    and not (move.currency_id.l10n_ar_afip_code and move.invoice_currency_rate))
                 or len(auth_code) != 14
             ):
                 move.l10n_ar_afip_qr_code = False
@@ -355,8 +358,8 @@ class AccountMove(models.Model):
                 'tipoCmp': doc_code,
                 'nroCmp': cbte_nro,
                 'importe': round(move.amount_total, 2),
-                'moneda': 'PES',
-                'ctz': 1,
+                'moneda': 'PES' if move.currency_id == move.company_currency_id else move.currency_id.l10n_ar_afip_code,
+                'ctz': 1 if move.currency_id == move.company_currency_id else round(1.0 / move.invoice_currency_rate, 6),
                 'tipoDocRec': partner_doc_tipo,
                 'nroDocRec': partner_doc_nro,
                 'tipoCodAut': 'A' if move.l10n_ar_afip_auth_mode == 'CAEA' else 'E',
@@ -473,12 +476,15 @@ class AccountMove(models.Model):
             raise UserError(_('El comprobante todavía no tiene un número fiscal asignado.'))
 
         currency = self.currency_id
-        if (
-            currency.name != 'ARS'
-            or currency.l10n_ar_afip_code != 'PES'
-            or company.currency_id != currency
-        ):
-            raise UserError(_('WSFE solo admite ARS con moneda funcional ARS en esta versión; otras monedas requieren cotización validada.'))
+        if company.currency_id.name != 'ARS' or company.currency_id.l10n_ar_afip_code != 'PES':
+            raise UserError(_('WSFE requiere una compañía con moneda funcional ARS.'))
+        foreign_currency = currency != company.currency_id
+        currency_code, currency_rate = 'PES', 1.0
+        if foreign_currency:
+            currency_code = (currency.l10n_ar_afip_code or '').strip()
+            if not currency_code or not self.invoice_currency_rate:
+                raise UserError(_('La moneda %s necesita código ARCA y cotización para emitir por WSFE.') % currency.name)
+            currency_rate = round(1.0 / self.invoice_currency_rate, 6)
         product_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
         if not product_lines or any(not line.product_id for line in product_lines):
             raise UserError(_('WSFE requiere líneas con productos identificados.'))
@@ -542,6 +548,14 @@ class AccountMove(models.Model):
             tribute_id = (group.l10n_ar_tribute_afip_code or '').strip()
             line_amount = abs(tax_line.amount_currency)
             line_base = abs(tax_line.tax_base_amount)
+            if foreign_currency:
+                # tax_base_amount is in company currency; WSFE wants the
+                # document currency, which the taxed lines already carry.
+                line_base = sum(
+                    abs(line.price_subtotal)
+                    for line in self.invoice_line_ids
+                    if line.display_type == 'product' and tax_line.tax_line_id in line.tax_ids
+                )
             if vat_id in allowed_vat_ids:
                 if document_letter == 'C':
                     if currency.compare_amounts(line_amount, 0.0):
@@ -698,8 +712,9 @@ class AccountMove(models.Model):
             ('ImpOpEx', amount_text(exempt_amount)),
             ('ImpIVA', amount_text(vat_amount)),
             ('ImpTrib', amount_text(tribute_amount)),
-            ('MonId', 'PES'),
-            ('MonCotiz', '1.000000'),
+            ('MonId', currency_code),
+            ('MonCotiz', f'{currency_rate:.6f}'),
+        ) + ((('CanMisMonExt', self.l10n_ar_payment_in_same_currency or 'N'),) if foreign_currency else ()) + (
             ('CondicionIVAReceptorId', recipient_code),
         ) + service_dates
         for tag, value in values:

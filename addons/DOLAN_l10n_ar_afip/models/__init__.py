@@ -12,3 +12,4 @@ from . import res_partner
 from . import iibb_padron
 from . import l10n_ar_caea
 from . import ar_tax_jurisdiction
+from . import currency_ar
