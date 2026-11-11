@@ -4,10 +4,10 @@
         <div class="o_dolan_ai_systray d-flex align-items-center">
             <button type="button"
                     class="btn btn-sm o_nav_entry d-flex align-items-center gap-1 px-2 py-1"
-                    title="Abrir ChatGPT / Copilot"
+                    title="Abrir Odoo AI"
                     t-on-click="() => this.toggleDrawer()">
                 <img src="/DOLAN_ai/static/description/icon.svg" class="o_dolan_ai_systray_icon" alt="IA" width="20" height="20"/>
-                <span class="d-none d-md-inline fw-semibold">ChatGPT</span>
+                <span class="d-none d-md-inline fw-semibold">Odoo AI</span>
             </button>
 
             <!-- Floating Minimized Pill Widget (Clean circle without text) -->
@@ -15,9 +15,9 @@
                 <div class="o_dolan_ai_floating_pill"
                      role="button"
                      tabindex="0"
-                     title="Abrir ChatGPT"
+                     title="Abrir Odoo AI"
                      t-on-click="() => this.restoreFromMinimized()">
-                    <img src="/DOLAN_ai/static/description/icon.svg" class="o_dolan_ai_pill_icon" alt="ChatGPT" width="28" height="28"/>
+                    <img src="/DOLAN_ai/static/description/icon.svg" class="o_dolan_ai_pill_icon" alt="Odoo AI" width="28" height="28"/>
                     <span class="o_dolan_ai_status_dot" t-att-class="this.state.provider.oauth_status === 'connected' ? 'is-connected' : 'is-disconnected'"/>
                     <button type="button" class="o_dolan_ai_pill_close" title="Cerrar" t-on-click.stop="() => this.closeMinimized()">
                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -29,7 +29,7 @@
             </t>
 
             <t t-if="this.state.isOpen">
-                <section class="o_dolan_ai_drawer" t-att-class="{'is-maximized': this.state.isMaximized, 'is-floating': !this.state.isMaximized}" role="dialog" aria-label="ChatGPT">
+                <section class="o_dolan_ai_drawer" t-att-class="{'is-maximized': this.state.isMaximized, 'is-floating': !this.state.isMaximized}" role="dialog" aria-label="Odoo AI">
                     <aside class="o_dolan_ai_sidebar" t-att-class="{'is-visible': this.state.showSidebar}">
                         <div class="o_dolan_ai_brand">
                             <span class="o_dolan_ai_brand_mark" aria-hidden="true">
@@ -112,10 +112,10 @@
                                         <line x1="3" y1="18" x2="21" y2="18"></line>
                                     </svg>
                                 </button>
-                                <img src="/DOLAN_ai/static/description/icon.svg" alt="ChatGPT" width="28" height="28" class="o_dolan_ai_header_logo"/>
+                                <img src="/DOLAN_ai/static/description/icon.svg" alt="IA" width="28" height="28" class="o_dolan_ai_header_logo"/>
                                 <div class="o_dolan_ai_title_col">
-                                    <span class="o_dolan_ai_title_main">ChatGPT</span>
-                                    <span class="o_dolan_ai_title_sub" t-out="this.state.provider.model || 'gpt-4o'"/>
+                                    <span class="o_dolan_ai_title_main" t-out="this.state.provider.name || 'Odoo AI'"/>
+                                    <span class="o_dolan_ai_title_sub" t-out="this.state.provider.model || ''"/>
                                 </div>
                             </div>
 
@@ -163,7 +163,7 @@
                                     <span class="o_dolan_ai_led" t-att-class="this.state.provider.oauth_status === 'connected' ? 'is-connected' : 'is-disconnected'" title="Modelo conectado activo"/>
                                     <select class="o_dolan_ai_model_select" t-on-change="(ev) => this.onModelSelect(ev)"
                                             t-att-disabled="!this.state.provider.can_change_model"
-                                            t-att-title="this.state.provider.can_change_model ? 'Seleccionar modelo de ChatGPT' : 'Solo un administrador puede cambiar el modelo de la compañía'">
+                                            t-att-title="this.state.provider.can_change_model ? 'Seleccionar modelo' : 'Solo un administrador puede cambiar el modelo de la compañía'">
                                         <t t-foreach="this.state.availableModels || []" t-as="m" t-key="m.id">
                                             <option t-att-value="m.id" t-att-selected="this.state.provider.model === m.id">
                                                 <t t-out="m.name || m.id"/>
@@ -177,6 +177,15 @@
                             </div>
                         </header>
 
+                        <div t-if="!this.state.isBootstrapping and this.state.provider.id and this.state.provider.oauth_status !== 'connected'"
+                             class="alert alert-info mx-3 mt-2 mb-0 d-flex align-items-center gap-2 o_dolan_ai_not_connected" role="status">
+                            <span class="flex-grow-1">
+                                <t t-if="this.state.provider.can_change_model">La IA todavía no tiene una conexión lista.</t>
+                                <t t-else="">La IA todavía no está configurada. Pedile a un administrador que cree la conexión.</t>
+                            </span>
+                            <button t-if="this.state.provider.can_change_model" type="button" class="btn btn-sm btn-primary"
+                                    t-on-click="() => this.openConnectionWizard()">Nueva conexión</button>
+                        </div>
                         <div t-if="this.state.provider.usage_limit" class="alert alert-warning mx-3 mt-2 mb-0 o_dolan_ai_usage_limit" role="status">
                             <t t-out="this.state.provider.usage_limit"/>
                         </div>

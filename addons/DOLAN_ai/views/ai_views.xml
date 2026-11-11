@@ -7,7 +7,12 @@
         <field name="name">dolan.ai.provider.list</field>
         <field name="model">dolan.ai.provider</field>
         <field name="arch" type="xml">
-            <list string="Proveedores de IA">
+            <list string="Conexiones de IA" decoration-bf="is_default">
+                <header>
+                    <button name="%(DOLAN_ai.action_dolan_ai_connection_wizard)d" type="action"
+                            string="Nueva conexión" class="btn-primary" display="always"
+                            groups="base.group_system"/>
+                </header>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="provider_mode"/>
@@ -19,8 +24,10 @@
                        decoration-danger="oauth_status == 'expired'"
                        decoration-muted="oauth_status == 'disconnected'"/>
                 <field name="chatgpt_user_email"/>
-                <field name="token_expires_at"/>
-                <field name="is_default"/>
+                <field name="token_expires_at" optional="hide"/>
+                <field name="is_default" widget="boolean_toggle" readonly="1"/>
+                <button name="action_set_default" type="object" string="Usar esta"
+                        icon="fa-check-circle" invisible="is_default" groups="base.group_system"/>
             </list>
         </field>
     </record>
@@ -31,6 +38,18 @@
         <field name="arch" type="xml">
             <form string="Proveedor de IA">
                 <header>
+                    <button name="action_set_default"
+                            string="Usar esta conexión"
+                            type="object"
+                            class="btn-primary"
+                            groups="base.group_system"
+                            invisible="is_default"/>
+                    <button name="action_open_model_picker"
+                            string="Elegir modelo"
+                            type="object"
+                            class="btn-secondary"
+                            groups="base.group_system"
+                            invisible="provider_mode == 'chatgpt_oauth' and oauth_status != 'connected'"/>
                     <button name="action_start_chatgpt_oauth"
                             string="1. Vincular Cuenta ChatGPT"
                             type="object"
@@ -67,7 +86,7 @@
                             class="btn-link"
                             groups="base.group_system"
                             invisible="provider_mode != 'chatgpt_oauth' or oauth_status == 'disconnected'"/>
-                    <field name="oauth_status" widget="statusbar" statusbar_visible="disconnected,pending,connected"/>
+                    <field name="oauth_status" widget="statusbar" statusbar_visible="disconnected,connected"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -79,7 +98,7 @@
                             <field name="provider_mode"/>
                             <field name="default_model"/>
                             <field name="company_id"/>
-                            <field name="is_default"/>
+                            <field name="is_default" readonly="1"/>
                             <field name="active"/>
                         </group>
                         <group string="Estado de Cuenta ChatGPT OAuth" invisible="provider_mode != 'chatgpt_oauth'">
@@ -157,9 +176,13 @@
     </record>
 
     <record id="action_dolan_ai_provider" model="ir.actions.act_window">
-        <field name="name">Proveedores de IA (ChatGPT OAuth / API / Ollama)</field>
+        <field name="name">Conexiones de IA</field>
         <field name="res_model">dolan.ai.provider</field>
         <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay conexiones de IA</p>
+            <p>Usá <strong>Nueva conexión</strong> para elegir el proveedor (OpenRouter, ChatGPT, OpenAI u Ollama) y el modelo.</p>
+        </field>
     </record>
 
     <!-- =================================================================== -->
@@ -503,8 +526,15 @@
               action="action_ai_skill"
               sequence="20"/>
 
+    <menuitem id="menu_dolan_ai_new_connection"
+              name="Nueva conexión"
+              parent="menu_dolan_ai_config"
+              action="action_dolan_ai_connection_wizard"
+              groups="base.group_system"
+              sequence="25"/>
+
     <menuitem id="menu_dolan_ai_providers"
-              name="Proveedores OAuth (ChatGPT / Ollama)"
+              name="Conexiones de IA"
               parent="menu_dolan_ai_config"
               action="action_dolan_ai_provider"
               sequence="30"/>

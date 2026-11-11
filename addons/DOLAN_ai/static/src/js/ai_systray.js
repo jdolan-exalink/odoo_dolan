@@ -529,14 +529,20 @@ export class DolanAiSystray extends Component {
     }
 
     async openOAuthConfig() {
+        const provider = this.state.provider;
+        const canConfigure = Boolean(provider.can_change_model);
+        if (canConfigure && provider.oauth_status !== "connected") {
+            // Sin conexión lista: el asistente guía proveedor, clave y modelo.
+            await this.openConnectionWizard();
+            return;
+        }
         this.state.isOpen = false;
-        await this.actionService.doAction({
-            type: "ir.actions.act_window",
-            res_model: "dolan.ai.provider",
-            res_id: this.state.provider.id || false,
-            views: [[false, "form"]],
-            view_mode: "form",
-            target: "current",
+        await this.actionService.doAction("DOLAN_ai.action_dolan_ai_provider");
+    }
+
+    async openConnectionWizard() {
+        await this.actionService.doAction("DOLAN_ai.action_dolan_ai_connection_wizard", {
+            onClose: () => this.bootstrapChat(this.state.sessionId),
         });
     }
 

@@ -4,7 +4,7 @@
 
 {
     'name': 'AI',
-    'version': '20.0.1.35.0',
+    'version': '20.0.1.36.0',
     'category': 'Productivity/AI',
     'sequence': 50,
     'summary': 'IA agéntica Odoo 20 con Sign in with ChatGPT, Responses API, Skills ORM y chat OWL',
@@ -32,6 +32,7 @@ Reemplazo clean-room 100% libre (LGPL-3) de los 20 módulos de IA de Odoo 20:
     ],
     'data': [
         'security/ir.access.csv',
+        'views/ai_connection_wizard_views.xml',
         'views/ai_views.xml',
         'data/ai_default_data.xml',
     ],
