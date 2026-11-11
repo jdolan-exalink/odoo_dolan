@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_dolan_pricelist" model="ir.ui.view">
+        <field name="name">product.template.form.dolan.pricelist</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_dolan_view_price_history" type="object" class="oe_stat_button"
+                        icon="fa-line-chart" invisible="dolan_price_history_count == 0">
+                    <field name="dolan_price_history_count" widget="statinfo" string="Historial de precios"/>
+                </button>
+            </xpath>
+            <xpath expr="//div[@name='list_price_per_uom_id']" position="after">
+                <label for="dolan_usd_linked" string="Atado al dólar"/>
+                <div name="dolan_usd_price" class="d-flex align-items-baseline gap-2">
+                    <field name="dolan_usd_linked" nolabel="1"/>
+                    <field name="dolan_usd_currency_id" invisible="1"/>
+                    <field name="dolan_usd_price" widget="monetary" nolabel="1"
+                           options="{'currency_field': 'dolan_usd_currency_id', 'field_digits': True}"
+                           invisible="not dolan_usd_linked" required="dolan_usd_linked"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='list_price']" position="attributes">
+                <attribute name="readonly">dolan_usd_linked</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_search_view_dolan_pricelist" model="ir.ui.view">
+        <field name="name">product.template.search.dolan.pricelist</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='filter_to_sell']" position="before">
+                <filter string="Atado al dólar" name="dolan_usd_linked" domain="[('dolan_usd_linked', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_dolan_price_update_from_products" model="ir.actions.server">
+        <field name="name">Actualizar precios en lote</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list,kanban</field>
+        <field name="group_ids" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = env['dolan.price.update'].with_context(active_ids=records.ids).action_open_from_products()</field>
+    </record>
+
+    <record id="action_dolan_usd_prices_from_products" model="ir.actions.server">
+        <field name="name">Recalcular precios atados al dólar</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list,kanban,form</field>
+        <field name="group_ids" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_dolan_update_usd_prices()</field>
+    </record>
+</odoo>

@@ -152,6 +152,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_pricelist",
+		Title:       "Actualización masiva de precios e historial",
+		Version:     "20.0.1.0.0",
+		Category:    "Ventas",
+		Application: false,
+		Depends:     []string{"mail", "product", "sale_management"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_discount_engine",
 		Title:       "Promociones y Control de Descuentos POS",
 		Version:     "20.0.1.2.0",
