@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form_dolan_payroll" model="ir.ui.view">
+        <field name="name">hr.employee.form.dolan.payroll</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_dolan_open_payslips" type="object" class="oe_stat_button"
+                        icon="fa-file-text-o" groups="hr.group_hr_user">
+                    <field name="dolan_payslip_count" widget="statinfo" string="Recibos"/>
+                </button>
+            </div>
+            <page name="payroll_information" position="after">
+                <page name="dolan_payroll_ar" string="Sueldos AR" groups="hr.group_hr_user">
+                    <group>
+                        <group string="Liquidación">
+                            <field name="dolan_file_number"/>
+                            <field name="dolan_cuil" placeholder="20-12345678-9"/>
+                            <field name="dolan_payroll_agreement_id"/>
+                            <field name="dolan_payroll_category_id"/>
+                            <field name="dolan_payroll_basic"/>
+                            <field name="dolan_seniority_date"/>
+                            <field name="dolan_seniority_years"/>
+                            <field name="dolan_vacation_days"/>
+                            <field name="dolan_union_member"/>
+                        </group>
+                        <group string="Pago">
+                            <field name="dolan_payment_method"/>
+                            <field name="dolan_cbu" invisible="dolan_payment_method != '3'"/>
+                        </group>
+                        <group string="Ganancias 4ta categoría">
+                            <field name="dolan_has_spouse_deduction"/>
+                            <field name="dolan_children_deduction"/>
+                        </group>
+                        <group string="Obra social">
+                            <field name="dolan_health_insurance_name"/>
+                            <field name="dolan_health_insurance_code"/>
+                            <field name="dolan_health_adherents"/>
+                        </group>
+                        <group string="Códigos SICOSS / F.931">
+                            <field name="dolan_sicoss_situation"/>
+                            <field name="dolan_sicoss_condition"/>
+                            <field name="dolan_sicoss_activity"/>
+                            <field name="dolan_sicoss_contract_mode"/>
+                            <field name="dolan_sicoss_zone"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

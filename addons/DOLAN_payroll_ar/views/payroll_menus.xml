@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dolan_payroll_root"
+              name="Sueldos"
+              sequence="45"
+              web_icon="DOLAN_payroll_ar,static/description/icon.svg"
+              groups="base.group_user"/>
+
+    <menuitem id="menu_dolan_payroll_my_slips" name="Mis recibos" parent="menu_dolan_payroll_root"
+              action="action_dolan_payroll_my_slips" sequence="5"/>
+
+    <menuitem id="menu_dolan_payroll_main" name="Liquidación" parent="menu_dolan_payroll_root"
+              sequence="10" groups="hr.group_hr_user"/>
+    <menuitem id="menu_dolan_payroll_runs" name="Liquidaciones" parent="menu_dolan_payroll_main"
+              action="action_dolan_payroll_run" sequence="10"/>
+    <menuitem id="menu_dolan_payroll_slips" name="Recibos" parent="menu_dolan_payroll_main"
+              action="action_dolan_payroll_slip" sequence="20"/>
+    <menuitem id="menu_dolan_payroll_employees" name="Empleados" parent="menu_dolan_payroll_main"
+              action="hr.open_view_employee_list_my" sequence="30"/>
+
+    <menuitem id="menu_dolan_payroll_config" name="Configuración" parent="menu_dolan_payroll_root"
+              sequence="90" groups="hr.group_hr_user"/>
+    <menuitem id="menu_dolan_payroll_agreements" name="Convenios" parent="menu_dolan_payroll_config"
+              action="action_dolan_payroll_agreement" sequence="10"/>
+    <menuitem id="menu_dolan_payroll_concepts" name="Conceptos" parent="menu_dolan_payroll_config"
+              action="action_dolan_payroll_concept" sequence="20"/>
+    <menuitem id="menu_dolan_payroll_parameters" name="Parámetros legales" parent="menu_dolan_payroll_config"
+              action="action_dolan_payroll_parameter" sequence="30"/>
+    <menuitem id="menu_dolan_payroll_tax_brackets" name="Escala de Ganancias" parent="menu_dolan_payroll_config"
+              action="action_dolan_payroll_tax_bracket" sequence="40"/>
+    <menuitem id="menu_dolan_payroll_company" name="Parámetros de la compañía" parent="menu_dolan_payroll_config"
+              action="action_dolan_payroll_company_settings" sequence="50" groups="hr.group_hr_manager"/>
+</odoo>

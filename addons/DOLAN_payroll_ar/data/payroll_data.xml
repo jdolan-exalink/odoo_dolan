@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_dolan_payroll_slip" model="ir.sequence">
+            <field name="name">Recibos de haberes</field>
+            <field name="code">dolan.payroll.slip</field>
+            <field name="prefix">REC/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <!-- Parámetros legales: los marcados como referencia deben actualizarse -->
+        <record id="param_apo_jub" model="dolan.payroll.parameter">
+            <field name="code">APO_JUB</field>
+            <field name="name">Aporte jubilatorio (SIPA) %</field>
+            <field name="date_from">2025-01-01</field>
+            <field name="value">11.0</field>
+            <field name="note">Ley 24.241</field>
+        </record>
+        <record id="param_apo_pami" model="dolan.payroll.parameter">
+            <field name="code">APO_PAMI</field>
+            <field name="name">Aporte Ley 19.032 %</field>
+            <field name="date_from">2025-01-01</field>
+            <field name="value">3.0</field>
+            <field name="note">Ley 19.032</field>
+        </record>
+        <record id="param_apo_os" model="dolan.payroll.parameter">
+            <field name="code">APO_OS</field>
+            <field name="name">Aporte obra social %</field>
+            <field name="date_from">2025-01-01</field>
+            <field name="value">3.0</field>
+            <field name="note">Ley 23.660</field>
+        </record>
+        <record id="param_cont_ss_pyme" model="dolan.payroll.parameter">
+            <field name="code">CONT_SS_PYME</field>
+            <field name="name">Contribuciones SS empleador PyME %</field>
+            <field name="date_from">2025-01-01</field>
+            <field name="value">18.0</field>
+            <field name="note">Dto. 814/01 art. 2 inc. b, Ley 27.430</field>
+        </record>
+        <record id="param_cont_ss_large" model="dolan.payroll.parameter">
+            <field name="code">CONT_SS_LARGE</field>
+            <field name="name">Contribuciones SS grandes empresas %</field>
+            <field name="date_from">2025-01-01</field>
+            <field name="value">20.4</field>
+            <field name="note">Dto. 814/01 art. 2 inc. a, Ley 27.430</field>
+        </record>
+        <record id="param_cont_os" model="dolan.payroll.parameter">
+            <field name="code">CONT_OS</field>
+            <field name="name">Contribución obra social %</field>
+            <field name="date_from">2025-01-01</field>
+            <field name="value">6.0</field>
+            <field name="note">Ley 23.660</field>
+        </record>
+        <record id="param_tope_max" model="dolan.payroll.parameter">
+            <field name="code">TOPE_MAX</field>
+            <field name="name">Base imponible máxima de aportes</field>
+            <field name="date_from">2025-01-01</field>
+            <field name="value">3500000.0</field>
+            <field name="note">VALOR DE REFERENCIA: actualizar todos los meses con la resolución de ANSES (movilidad).</field>
+        </record>
+        <record id="param_gan_mni" model="dolan.payroll.parameter">
+            <field name="code">GAN_MNI</field>
+            <field name="name">Ganancias: ganancia no imponible anual</field>
+            <field name="date_from">2025-01-01</field>
+            <field name="value">3091035.0</field>
+            <field name="note">VALOR DE REFERENCIA 2025: verificar la tabla vigente publicada por ARCA (art. 30 LIG).</field>
+        </record>
+        <record id="param_gan_esp" model="dolan.payroll.parameter">
+            <field name="code">GAN_ESP</field>
+            <field name="name">Ganancias: deducción especial 4ta categoría anual</field>
+            <field name="date_from">2025-01-01</field>
+            <field name="value">14836968.0</field>
+            <field name="note">VALOR DE REFERENCIA 2025: verificar la tabla vigente publicada por ARCA.</field>
+        </record>
+        <record id="param_gan_cony" model="dolan.payroll.parameter">
+            <field name="code">GAN_CONY</field>
+            <field name="name">Ganancias: cónyuge anual</field>
+            <field name="date_from">2025-01-01</field>
+            <field name="value">2911135.0</field>
+            <field name="note">VALOR DE REFERENCIA 2025: verificar la tabla vigente publicada por ARCA.</field>
+        </record>
+        <record id="param_gan_hijo" model="dolan.payroll.parameter">
+            <field name="code">GAN_HIJO</field>
+            <field name="name">Ganancias: hijo anual</field>
+            <field name="date_from">2025-01-01</field>
+            <field name="value">1468096.0</field>
+            <field name="note">VALOR DE REFERENCIA 2025: verificar la tabla vigente publicada por ARCA.</field>
+        </record>
+        <!-- Escala art. 94 LIG, 1er semestre 2025 (referencia: cargar la vigente) -->
+        <record id="tax_bracket_2025_1" model="dolan.payroll.tax.bracket">
+            <field name="date_from">2025-01-01</field>
+            <field name="amount_from">0</field>
+            <field name="amount_to">1360200</field>
+            <field name="fixed_amount">0</field>
+            <field name="rate">5</field>
+        </record>
+        <record id="tax_bracket_2025_2" model="dolan.payroll.tax.bracket">
+            <field name="date_from">2025-01-01</field>
+            <field name="amount_from">1360200</field>
+            <field name="amount_to">2720400</field>
+            <field name="fixed_amount">68010</field>
+            <field name="rate">9</field>
+        </record>
+        <record id="tax_bracket_2025_3" model="dolan.payroll.tax.bracket">
+            <field name="date_from">2025-01-01</field>
+            <field name="amount_from">2720400</field>
+            <field name="amount_to">4080600</field>
+            <field name="fixed_amount">190428</field>
+            <field name="rate">12</field>
+        </record>
+        <record id="tax_bracket_2025_4" model="dolan.payroll.tax.bracket">
+            <field name="date_from">2025-01-01</field>
+            <field name="amount_from">4080600</field>
+            <field name="amount_to">6120900</field>
+            <field name="fixed_amount">353652</field>
+            <field name="rate">15</field>
+        </record>
+        <record id="tax_bracket_2025_5" model="dolan.payroll.tax.bracket">
+            <field name="date_from">2025-01-01</field>
+            <field name="amount_from">6120900</field>
+            <field name="amount_to">12241800</field>
+            <field name="fixed_amount">659697</field>
+            <field name="rate">19</field>
+        </record>
+        <record id="tax_bracket_2025_6" model="dolan.payroll.tax.bracket">
+            <field name="date_from">2025-01-01</field>
+            <field name="amount_from">12241800</field>
+            <field name="amount_to">18362700</field>
+            <field name="fixed_amount">1822668</field>
+            <field name="rate">23</field>
+        </record>
+        <record id="tax_bracket_2025_7" model="dolan.payroll.tax.bracket">
+            <field name="date_from">2025-01-01</field>
+            <field name="amount_from">18362700</field>
+            <field name="amount_to">27544050</field>
+            <field name="fixed_amount">3230475</field>
+            <field name="rate">27</field>
+        </record>
+        <record id="tax_bracket_2025_8" model="dolan.payroll.tax.bracket">
+            <field name="date_from">2025-01-01</field>
+            <field name="amount_from">27544050</field>
+            <field name="amount_to">41316075</field>
+            <field name="fixed_amount">5709439.5</field>
+            <field name="rate">31</field>
+        </record>
+        <record id="tax_bracket_2025_9" model="dolan.payroll.tax.bracket">
+            <field name="date_from">2025-01-01</field>
+            <field name="amount_from">41316075</field>
+            <field name="amount_to">0</field>
+            <field name="fixed_amount">9978767.25</field>
+            <field name="rate">35</field>
+        </record>
+        <!-- Convenios -->
+        <record id="agreement_comercio" model="dolan.payroll.agreement">
+            <field name="name">Empleados de Comercio</field>
+            <field name="code">130/75</field>
+            <field name="sequence">10</field>
+            <field name="union_rate">2.0</field>
+            <field name="solidarity_rate">0.5</field>
+            <field name="employer_fund_rate">0.0</field>
+            <field name="seniority_rate">1.0</field>
+            <field name="attendance_rate">8.33</field>
+            <field name="monthly_hours">200</field>
+            <field name="note">Aporte solidario: FAECYS 0,5 %. Cargar en cada categoría la escala salarial homologada vigente.</field>
+        </record>
+        <record id="agreement_comercio_cat_maestranza_a" model="dolan.payroll.agreement.category">
+            <field name="agreement_id" ref="agreement_comercio"/>
+            <field name="name">Maestranza A</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="agreement_comercio_cat_admin_a" model="dolan.payroll.agreement.category">
+            <field name="agreement_id" ref="agreement_comercio"/>
+            <field name="name">Administrativo A</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="agreement_comercio_cat_admin_b" model="dolan.payroll.agreement.category">
+            <field name="agreement_id" ref="agreement_comercio"/>
+            <field name="name">Administrativo B</field>
+            <field name="sequence">30</field>
+        </record>
+        <record id="agreement_comercio_cat_vendedor_a" model="dolan.payroll.agreement.category">
+            <field name="agreement_id" ref="agreement_comercio"/>
+            <field name="name">Vendedor A</field>
+            <field name="sequence">40</field>
+        </record>
+        <record id="agreement_comercio_cat_vendedor_b" model="dolan.payroll.agreement.category">
+            <field name="agreement_id" ref="agreement_comercio"/>
+            <field name="name">Vendedor B</field>
+            <field name="sequence">50</field>
+        </record>
+        <record id="agreement_uom" model="dolan.payroll.agreement">
+            <field name="name">Unión Obrera Metalúrgica</field>
+            <field name="code">260/75</field>
+            <field name="sequence">20</field>
+            <field name="union_rate">2.5</field>
+            <field name="seniority_rate">1.0</field>
+            <field name="monthly_hours">200</field>
+            <field name="note">Completar categorías, escala y adicionales de rama.</field>
+        </record>
+        <record id="agreement_fuera_convenio" model="dolan.payroll.agreement">
+            <field name="name">Fuera de convenio</field>
+            <field name="sequence">90</field>
+            <field name="is_agreement" eval="False"/>
+            <field name="note">Usar el básico pactado de cada empleado.</field>
+        </record>
+        <!-- Conceptos -->
+        <record id="concept_basico" model="dolan.payroll.concept">
+            <field name="name">Sueldo básico</field>
+            <field name="code">BASICO</field>
+            <field name="sequence">10</field>
+            <field name="kind">rem</field>
+            <field name="formula">basic * (worked_days - inp('VACDIAS') - inp('AUSINJ')) / 30.0</field>
+            <field name="quantity_formula">worked_days - inp('VACDIAS') - inp('AUSINJ')</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="sac_base" eval="True"/>
+            <field name="sicoss_bucket">sueldo</field>
+            <field name="afip_code">1000</field>
+        </record>
+        <record id="concept_antig" model="dolan.payroll.concept">
+            <field name="name">Antigüedad</field>
+            <field name="code">ANTIG</field>
+            <field name="sequence">20</field>
+            <field name="kind">rem</field>
+            <field name="formula">rules.get('BASICO', 0.0) * agreement.seniority_rate * years / 100.0</field>
+            <field name="quantity_formula">years</field>
+            <field name="condition">agreement.seniority_rate and years</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="sac_base" eval="True"/>
+            <field name="sicoss_bucket">sueldo</field>
+            <field name="afip_code">1010</field>
+        </record>
+        <record id="concept_present" model="dolan.payroll.concept">
+            <field name="name">Presentismo</field>
+            <field name="code">PRESENT</field>
+            <field name="sequence">30</field>
+            <field name="kind">rem</field>
+            <field name="formula">(rules.get('BASICO', 0.0) + rules.get('ANTIG', 0.0)) * agreement.attendance_rate / 100.0</field>
+            <field name="quantity_formula">agreement.attendance_rate</field>
+            <field name="condition">agreement.attendance_rate and not inp('AUSINJ')</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="sac_base" eval="True"/>
+            <field name="sicoss_bucket">adic</field>
+            <field name="afip_code">1020</field>
+        </record>
+        <record id="concept_he50" model="dolan.payroll.concept">
+            <field name="name">Horas extra al 50 %</field>
+            <field name="code">HE50</field>
+            <field name="sequence">40</field>
+            <field name="kind">rem</field>
+            <field name="formula">hour_value * 1.5 * inp('HE50')</field>
+            <field name="quantity_formula">inp('HE50')</field>
+            <field name="condition">inp('HE50')</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="sac_base" eval="True"/>
+            <field name="sicoss_bucket">extra</field>
+            <field name="afip_code">1030</field>
+        </record>
+        <record id="concept_he100" model="dolan.payroll.concept">
+            <field name="name">Horas extra al 100 %</field>
+            <field name="code">HE100</field>
+            <field name="sequence">41</field>
+            <field name="kind">rem</field>
+            <field name="formula">hour_value * 2.0 * inp('HE100')</field>
+            <field name="quantity_formula">inp('HE100')</field>
+            <field name="condition">inp('HE100')</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="sac_base" eval="True"/>
+            <field name="sicoss_bucket">extra</field>
+            <field name="afip_code">1031</field>
+        </record>
+        <record id="concept_vac" model="dolan.payroll.concept">
+            <field name="name">Vacaciones</field>
+            <field name="code">VAC</field>
+            <field name="sequence">50</field>
+            <field name="kind">rem</field>
+            <field name="formula">vacation_amount()</field>
+            <field name="quantity_formula">inp('VACDIAS')</field>
+            <field name="condition">inp('VACDIAS')</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="False"/>
+            <field name="sac_base" eval="True"/>
+            <field name="sicoss_bucket">vac</field>
+            <field name="afip_code">1040</field>
+        </record>
+        <record id="concept_premio" model="dolan.payroll.concept">
+            <field name="name">Premio</field>
+            <field name="code">PREMIO</field>
+            <field name="sequence">60</field>
+            <field name="kind">rem</field>
+            <field name="formula">inp('PREMIO')</field>
+            <field name="condition">inp('PREMIO')</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="sac_base" eval="True"/>
+            <field name="sicoss_bucket">premios</field>
+            <field name="afip_code">1050</field>
+        </record>
+        <record id="concept_sac" model="dolan.payroll.concept">
+            <field name="name">Sueldo anual complementario</field>
+            <field name="code">SAC</field>
+            <field name="sequence">70</field>
+            <field name="kind">rem</field>
+            <field name="formula">sac_amount()</field>
+            <field name="in_monthly" eval="False"/>
+            <field name="in_sac" eval="True"/>
+            <field name="in_final" eval="False"/>
+            <field name="sicoss_bucket">sac</field>
+            <field name="afip_code">1100</field>
+        </record>
+        <record id="concept_sacprop" model="dolan.payroll.concept">
+            <field name="name">SAC proporcional</field>
+            <field name="code">SACPROP</field>
+            <field name="sequence">80</field>
+            <field name="kind">rem</field>
+            <field name="formula">proportional_sac()</field>
+            <field name="in_monthly" eval="False"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="sicoss_bucket">sac</field>
+            <field name="afip_code">1101</field>
+        </record>
+        <record id="concept_vacng" model="dolan.payroll.concept">
+            <field name="name">Vacaciones no gozadas</field>
+            <field name="code">VACNG</field>
+            <field name="sequence">90</field>
+            <field name="kind">norem</field>
+            <field name="formula">unused_vacation()</field>
+            <field name="in_monthly" eval="False"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="afip_code">1200</field>
+        </record>
+        <record id="concept_sacvacng" model="dolan.payroll.concept">
+            <field name="name">SAC sobre vacaciones no gozadas</field>
+            <field name="code">SACVACNG</field>
+            <field name="sequence">91</field>
+            <field name="kind">norem</field>
+            <field name="formula">rules.get('VACNG', 0.0) / 12.0</field>
+            <field name="condition">rules.get('VACNG')</field>
+            <field name="in_monthly" eval="False"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="afip_code">1201</field>
+        </record>
+        <record id="concept_indem" model="dolan.payroll.concept">
+            <field name="name">Indemnización por antigüedad (art. 245)</field>
+            <field name="code">INDEM</field>
+            <field name="sequence">95</field>
+            <field name="kind">norem</field>
+            <field name="formula">severance()</field>
+            <field name="in_monthly" eval="False"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="afip_code">1210</field>
+        </record>
+        <record id="concept_preaviso" model="dolan.payroll.concept">
+            <field name="name">Indemnización sustitutiva de preaviso</field>
+            <field name="code">PREAVISO</field>
+            <field name="sequence">96</field>
+            <field name="kind">norem</field>
+            <field name="formula">notice()</field>
+            <field name="in_monthly" eval="False"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="afip_code">1220</field>
+        </record>
+        <record id="concept_sacpreav" model="dolan.payroll.concept">
+            <field name="name">SAC sobre preaviso</field>
+            <field name="code">SACPREAV</field>
+            <field name="sequence">97</field>
+            <field name="kind">norem</field>
+            <field name="formula">rules.get('PREAVISO', 0.0) / 12.0</field>
+            <field name="condition">rules.get('PREAVISO')</field>
+            <field name="in_monthly" eval="False"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="afip_code">1221</field>
+        </record>
+        <record id="concept_integr" model="dolan.payroll.concept">
+            <field name="name">Integración mes de despido</field>
+            <field name="code">INTEGR</field>
+            <field name="sequence">98</field>
+            <field name="kind">norem</field>
+            <field name="formula">month_integration()</field>
+            <field name="in_monthly" eval="False"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="afip_code">1230</field>
+        </record>
+        <record id="concept_sacinteg" model="dolan.payroll.concept">
+            <field name="name">SAC sobre integración mes de despido</field>
+            <field name="code">SACINTEG</field>
+            <field name="sequence">99</field>
+            <field name="kind">norem</field>
+            <field name="formula">rules.get('INTEGR', 0.0) / 12.0</field>
+            <field name="condition">rules.get('INTEGR')</field>
+            <field name="in_monthly" eval="False"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="afip_code">1231</field>
+        </record>
+        <record id="concept_norem" model="dolan.payroll.concept">
+            <field name="name">Suma no remunerativa</field>
+            <field name="code">NOREM</field>
+            <field name="sequence">100</field>
+            <field name="kind">norem</field>
+            <field name="formula">inp('NOREM')</field>
+            <field name="condition">inp('NOREM')</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="sicoss_bucket">norem</field>
+            <field name="afip_code">1300</field>
+        </record>
+        <record id="concept_jub" model="dolan.payroll.concept">
+            <field name="name">Jubilación</field>
+            <field name="code">JUB</field>
+            <field name="sequence">200</field>
+            <field name="kind">ded</field>
+            <field name="formula">aportes_base() * param('APO_JUB') / 100.0</field>
+            <field name="quantity_formula">param('APO_JUB')</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="True"/>
+            <field name="in_final" eval="True"/>
+            <field name="gan_deductible" eval="True"/>
+            <field name="afip_code">2000</field>
+        </record>
+        <record id="concept_pami" model="dolan.payroll.concept">
+            <field name="name">Ley 19.032 (PAMI)</field>
+            <field name="code">PAMI</field>
+            <field name="sequence">210</field>
+            <field name="kind">ded</field>
+            <field name="formula">aportes_base() * param('APO_PAMI') / 100.0</field>
+            <field name="quantity_formula">param('APO_PAMI')</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="True"/>
+            <field name="in_final" eval="True"/>
+            <field name="gan_deductible" eval="True"/>
+            <field name="afip_code">2010</field>
+        </record>
+        <record id="concept_os" model="dolan.payroll.concept">
+            <field name="name">Obra social</field>
+            <field name="code">OS</field>
+            <field name="sequence">220</field>
+            <field name="kind">ded</field>
+            <field name="formula">aportes_base() * param('APO_OS') / 100.0</field>
+            <field name="quantity_formula">param('APO_OS')</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="True"/>
+            <field name="in_final" eval="True"/>
+            <field name="gan_deductible" eval="True"/>
+            <field name="afip_code">2020</field>
+        </record>
+        <record id="concept_sind" model="dolan.payroll.concept">
+            <field name="name">Cuota sindical</field>
+            <field name="code">SIND</field>
+            <field name="sequence">230</field>
+            <field name="kind">ded</field>
+            <field name="formula">REM * agreement.union_rate / 100.0</field>
+            <field name="quantity_formula">agreement.union_rate</field>
+            <field name="condition">is_union_member and agreement.union_rate</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="True"/>
+            <field name="in_final" eval="True"/>
+            <field name="gan_deductible" eval="True"/>
+            <field name="afip_code">2030</field>
+        </record>
+        <record id="concept_solid" model="dolan.payroll.concept">
+            <field name="name">Aporte solidario del convenio</field>
+            <field name="code">SOLID</field>
+            <field name="sequence">240</field>
+            <field name="kind">ded</field>
+            <field name="formula">REM * agreement.solidarity_rate / 100.0</field>
+            <field name="quantity_formula">agreement.solidarity_rate</field>
+            <field name="condition">agreement.solidarity_rate</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="True"/>
+            <field name="in_final" eval="True"/>
+            <field name="gan_deductible" eval="True"/>
+            <field name="afip_code">2040</field>
+        </record>
+        <record id="concept_adelanto" model="dolan.payroll.concept">
+            <field name="name">Adelanto de sueldo</field>
+            <field name="code">ADELANTO</field>
+            <field name="sequence">250</field>
+            <field name="kind">ded</field>
+            <field name="formula">inp('ADELANTO')</field>
+            <field name="condition">inp('ADELANTO')</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="True"/>
+            <field name="afip_code">2100</field>
+        </record>
+        <record id="concept_otrodesc" model="dolan.payroll.concept">
+            <field name="name">Otros descuentos</field>
+            <field name="code">OTRODESC</field>
+            <field name="sequence">260</field>
+            <field name="kind">ded</field>
+            <field name="formula">inp('OTRODESC')</field>
+            <field name="condition">inp('OTRODESC')</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="True"/>
+            <field name="in_final" eval="True"/>
+            <field name="afip_code">2110</field>
+        </record>
+        <record id="concept_gan" model="dolan.payroll.concept">
+            <field name="name">Impuesto a las Ganancias 4ta categoría</field>
+            <field name="code">GAN</field>
+            <field name="sequence">290</field>
+            <field name="kind">ded</field>
+            <field name="formula">ganancias()</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="True"/>
+            <field name="in_final" eval="True"/>
+            <field name="gan_withholding" eval="True"/>
+            <field name="afip_code">2200</field>
+        </record>
+        <record id="concept_cont_ss" model="dolan.payroll.concept">
+            <field name="name">Contribuciones Seguridad Social</field>
+            <field name="code">CONT_SS</field>
+            <field name="sequence">300</field>
+            <field name="kind">contrib</field>
+            <field name="formula">aportes_base() * contrib_rate() / 100.0</field>
+            <field name="quantity_formula">contrib_rate()</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="True"/>
+            <field name="in_final" eval="True"/>
+        </record>
+        <record id="concept_cont_os" model="dolan.payroll.concept">
+            <field name="name">Contribución Obra Social</field>
+            <field name="code">CONT_OS</field>
+            <field name="sequence">310</field>
+            <field name="kind">contrib</field>
+            <field name="formula">aportes_base() * param('CONT_OS') / 100.0</field>
+            <field name="quantity_formula">param('CONT_OS')</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="True"/>
+            <field name="in_final" eval="True"/>
+        </record>
+        <record id="concept_art" model="dolan.payroll.concept">
+            <field name="name">ART</field>
+            <field name="code">ART</field>
+            <field name="sequence">320</field>
+            <field name="kind">contrib</field>
+            <field name="formula">REM * company.dolan_payroll_art_rate / 100.0 + (company.dolan_payroll_art_fixed if slip.kind != 'sac' else 0.0)</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="True"/>
+            <field name="in_final" eval="True"/>
+        </record>
+        <record id="concept_svo" model="dolan.payroll.concept">
+            <field name="name">Seguro de vida obligatorio</field>
+            <field name="code">SVO</field>
+            <field name="sequence">330</field>
+            <field name="kind">contrib</field>
+            <field name="formula">company.dolan_payroll_life_insurance</field>
+            <field name="condition">company.dolan_payroll_life_insurance</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="False"/>
+            <field name="in_final" eval="False"/>
+        </record>
+        <record id="concept_fondocct" model="dolan.payroll.concept">
+            <field name="name">Contribución patronal del convenio</field>
+            <field name="code">FONDOCCT</field>
+            <field name="sequence">340</field>
+            <field name="kind">contrib</field>
+            <field name="formula">REM * agreement.employer_fund_rate / 100.0</field>
+            <field name="condition">agreement.employer_fund_rate</field>
+            <field name="in_monthly" eval="True"/>
+            <field name="in_sac" eval="True"/>
+            <field name="in_final" eval="True"/>
+        </record>
+    </data>
+</odoo>

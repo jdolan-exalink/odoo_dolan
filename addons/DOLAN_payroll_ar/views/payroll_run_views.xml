@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_payroll_run_list" model="ir.ui.view">
+        <field name="name">dolan.payroll.run.list</field>
+        <field name="model">dolan.payroll.run</field>
+        <field name="arch" type="xml">
+            <list string="Liquidaciones" decoration-muted="state == 'cancel'">
+                <field name="name"/>
+                <field name="kind"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="payment_date"/>
+                <field name="slip_count"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="total_net"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'"
+                       decoration-info="state == 'computed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_payroll_run_form" model="ir.ui.view">
+        <field name="name">dolan.payroll.run.form</field>
+        <field name="model">dolan.payroll.run</field>
+        <field name="arch" type="xml">
+            <form string="Liquidación">
+                <header>
+                    <button name="action_generate_slips" type="object" string="Generar recibos"
+                            invisible="state not in ('draft', 'computed')"/>
+                    <button name="action_compute" type="object" string="Calcular" class="btn-primary"
+                            invisible="state not in ('draft', 'computed')"/>
+                    <button name="action_confirm" type="object" string="Confirmar" class="btn-primary"
+                            invisible="state != 'computed'"
+                            confirm="Se numeran los recibos, se firma cada uno con su huella y se genera el asiento. ¿Continuar?"/>
+                    <button name="action_print_receipts" type="object" string="Imprimir recibos"
+                            invisible="state != 'done'"/>
+                    <button name="action_export_f931" type="object" string="Exportar F.931 (SICOSS)"
+                            invisible="state != 'done'"/>
+                    <button name="action_export_lsd" type="object" string="Exportar Libro de Sueldos Digital"
+                            invisible="state != 'done'"/>
+                    <button name="action_cancel" type="object" string="Anular"
+                            invisible="state != 'done'" groups="hr.group_hr_manager"
+                            confirm="Se anula el asiento y los recibos no firmados. ¿Continuar?"/>
+                    <button name="action_draft" type="object" string="Volver a borrador"
+                            invisible="state not in ('computed', 'cancel')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,computed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_dolan_payroll_slip)d" type="action" class="oe_stat_button"
+                                icon="fa-file-text-o" context="{'search_default_run_id': id}">
+                            <field name="slip_count" widget="statinfo" string="Recibos"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Sueldos noviembre 2026" readonly="state == 'done'"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="kind" readonly="state != 'draft'"/>
+                            <field name="date_from" readonly="state == 'done'"/>
+                            <field name="date_to" readonly="state == 'done'"/>
+                            <field name="payment_date" readonly="state == 'done'"/>
+                            <field name="sequence_number" readonly="state == 'done'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Último depósito de aportes (recibo)">
+                            <field name="last_deposit_period"/>
+                            <field name="last_deposit_date"/>
+                            <field name="last_deposit_bank"/>
+                            <field name="move_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Recibos" name="slips">
+                            <field name="slip_ids" context="{'default_kind': kind, 'default_date_from': date_from, 'default_date_to': date_to, 'default_company_id': company_id}">
+                                <list decoration-muted="state == 'cancel'">
+                                    <field name="employee_id"/>
+                                    <field name="worked_days"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="total_rem" sum="Total"/>
+                                    <field name="total_norem" sum="Total" optional="show"/>
+                                    <field name="total_ded" sum="Total"/>
+                                    <field name="net" sum="Total"/>
+                                    <field name="total_contrib" sum="Total" optional="show"/>
+                                    <field name="employee_sign_state" optional="show"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_rem"/>
+                                <field name="total_norem"/>
+                                <field name="total_ded"/>
+                                <field name="total_net" class="oe_subtotal_footer_separator"/>
+                                <field name="total_contrib"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_payroll_run" model="ir.actions.act_window">
+        <field name="name">Liquidaciones</field>
+        <field name="res_model">dolan.payroll.run</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Creá la primera liquidación de sueldos</p>
+            <p>Generá los recibos de los empleados con convenio o básico pactado, cargá las
+               novedades del mes y calculá.</p>
+        </field>
+    </record>
+</odoo>

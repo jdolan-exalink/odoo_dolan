@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_payroll_receipt" model="ir.actions.report">
+        <field name="name">Recibo de haberes</field>
+        <field name="model">dolan.payroll.slip</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">DOLAN_payroll_ar.report_payroll_receipt</field>
+        <field name="print_report_name">'Recibo_%s_%s' % ((object.employee_id.name or '').replace(' ', '_'), object.date_to.strftime('%Y%m'))</field>
+        <field name="binding_model_id" ref="model_dolan_payroll_slip"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_payroll_receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="emp" t-value="o.employee_id.sudo()"/>
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-size: 11px;">
+                        <h4 class="text-center">RECIBO DE HABERES (art. 140 LCT)</h4>
+                        <table class="table table-sm table-bordered mb-2">
+                            <tr>
+                                <td><strong>Empleador:</strong> <span t-field="o.company_id.name"/></td>
+                                <td><strong>CUIT:</strong> <span t-field="o.company_id.vat"/></td>
+                                <td><strong>Recibo N°:</strong> <span t-field="o.name"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>Domicilio:</strong>
+                                    <span t-out="', '.join(p for p in [o.company_id.street, o.company_id.city, o.company_id.state_id.name] if p)"/></td>
+                                <td><strong>Período:</strong>
+                                    <span t-out="o.date_to.strftime('%m/%Y')"/>
+                                    (<span t-field="o.kind"/>)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Empleado:</strong> <span t-out="emp.name"/></td>
+                                <td><strong>CUIL:</strong> <span t-out="emp.dolan_cuil"/></td>
+                                <td><strong>Legajo:</strong> <span t-out="emp.dolan_file_number"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Convenio / categoría:</strong>
+                                    <span t-out="o.category_id.display_name or o.agreement_id.name or 'Fuera de convenio'"/></td>
+                                <td><strong>Fecha de ingreso:</strong>
+                                    <span t-out="emp.dolan_start_date() and emp.dolan_start_date().strftime('%d/%m/%Y')"/></td>
+                                <td><strong>Básico:</strong>
+                                    <span t-field="o.basic" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                            </tr>
+                        </table>
+
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Cód.</th>
+                                    <th>Concepto</th>
+                                    <th class="text-end">Cant.</th>
+                                    <th class="text-end">Remunerativo</th>
+                                    <th class="text-end">No remunerativo</th>
+                                    <th class="text-end">Descuentos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.line_ids.filtered(lambda l: l.kind in ('rem', 'norem', 'ded'))" t-as="line">
+                                    <td><span t-out="line.code"/></td>
+                                    <td><span t-out="line.name"/></td>
+                                    <td class="text-end"><span t-if="line.quantity" t-out="'%g' % line.quantity"/></td>
+                                    <td class="text-end"><span t-if="line.kind == 'rem'" t-field="line.amount"/></td>
+                                    <td class="text-end"><span t-if="line.kind == 'norem'" t-field="line.amount"/></td>
+                                    <td class="text-end"><span t-if="line.kind == 'ded'" t-field="line.amount"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"><strong>Totales</strong></td>
+                                    <td class="text-end"><strong t-field="o.total_rem"/></td>
+                                    <td class="text-end"><strong t-field="o.total_norem"/></td>
+                                    <td class="text-end"><strong t-field="o.total_ded"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p>
+                            <strong>Neto a cobrar:</strong>
+                            <span t-field="o.net" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                            — Son pesos <span t-out="o.amount_to_text_es()"/>.
+                        </p>
+                        <p>
+                            <strong>Lugar y fecha de pago:</strong>
+                            <span t-out="o.company_id.dolan_payroll_place or o.company_id.city"/>,
+                            <span t-out="o.payment_date and o.payment_date.strftime('%d/%m/%Y')"/>.
+                            <strong>Forma de pago:</strong> <span t-out="o.payment_method_label()"/>.
+                        </p>
+                        <p t-if="o.run_id.last_deposit_period">
+                            <strong>Último depósito de aportes:</strong>
+                            período <span t-out="o.run_id.last_deposit_period"/>,
+                            <span t-out="o.run_id.last_deposit_date and o.run_id.last_deposit_date.strftime('%d/%m/%Y')"/>,
+                            <span t-out="o.run_id.last_deposit_bank"/>.
+                        </p>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <p class="mb-0"><strong>Firma del empleador (electrónica)</strong></p>
+                                <p class="mb-0" style="font-family: monospace; font-size: 9px; word-break: break-all;">
+                                    SHA-256: <span t-out="o.employer_hash"/></p>
+                            </div>
+                            <div class="col-6">
+                                <p class="mb-0"><strong>Firma del empleado</strong></p>
+                                <t t-if="o.employee_sign_state != 'pending'">
+                                    <p class="mb-0"><span t-field="o.employee_sign_state"/> el
+                                        <span t-field="o.employee_sign_date"/></p>
+                                </t>
+                                <t t-else="">
+                                    <p class="mb-0 mt-4">______________________________</p>
+                                    <p class="mb-0">Recibí el importe neto y copia de este recibo.</p>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
