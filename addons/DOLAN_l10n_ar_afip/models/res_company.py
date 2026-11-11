@@ -3,6 +3,8 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0).
 
 import base64
+from datetime import timedelta
+
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
@@ -56,6 +58,12 @@ class ResCompany(models.Model):
     l10n_ar_daily_book_start_entry_number = fields.Integer(
         string='Número Inicial de Asiento en Libro Diario',
         default=1,
+    )
+    l10n_ar_caea_contingency_until = fields.Datetime(
+        string='Contingencia CAEA activa hasta',
+        copy=False,
+        help='Mientras ARCA no responde, los comprobantes de diarios con punto de venta de '
+             'contingencia se emiten directamente con CAEA hasta esta hora, sin esperar al servicio.',
     )
     l10n_ar_connection_ids = fields.One2many(
         'l10n_ar.afipws.connection',
@@ -141,3 +149,17 @@ class ResCompany(models.Model):
             'url': f'/web/content/{attachment.id}?download=true',
             'target': 'self',
         }
+
+    CAEA_CONTINGENCY_MINUTES = 5
+
+    def _l10n_ar_caea_contingency_active(self):
+        self.ensure_one()
+        until = self.sudo().l10n_ar_caea_contingency_until
+        return bool(until and until > fields.Datetime.now())
+
+    def _l10n_ar_caea_mark_unavailable(self):
+        for company in self:
+            if not company._l10n_ar_caea_contingency_active():
+                company.l10n_ar_caea_contingency_until = (
+                    fields.Datetime.now() + timedelta(minutes=self.CAEA_CONTINGENCY_MINUTES)
+                )

@@ -93,6 +93,7 @@
                        widget="badge"
                        invisible="not l10n_ar_afip_display_status"
                        decoration-info="l10n_ar_afip_display_status in ('draft', 'draft_no_cae')"
+                       decoration-warning="l10n_ar_afip_display_status == 'caea_pending'"
                        decoration-success="l10n_ar_afip_display_status in ('authorized', 'authorized_observations')"
                        decoration-danger="l10n_ar_afip_display_status == 'rejected'"
                        decoration-muted="l10n_ar_afip_display_status == 'cancel'"/>
@@ -103,6 +104,11 @@
                         string="Solicitar CAE (ARCA/AFIP)"
                         class="btn-secondary"
                         invisible="state != 'posted' or move_type not in ('out_invoice', 'out_refund') or bool(l10n_ar_afip_auth_code)"/>
+                <button name="action_l10n_ar_caea_inform"
+                        type="object"
+                        string="Informar CAEA a ARCA"
+                        class="btn-secondary"
+                        invisible="l10n_ar_caea_report_state not in ('pending', 'rejected')"/>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page string="ARCA / AFIP Factura Electrónica"
@@ -113,6 +119,10 @@
                             <field name="l10n_ar_afip_auth_mode"/>
                             <field name="l10n_ar_afip_auth_code"/>
                             <field name="l10n_ar_afip_auth_code_due"/>
+                            <field name="l10n_ar_caea_id" invisible="not l10n_ar_caea_id"/>
+                            <field name="l10n_ar_caea_report_state" invisible="not l10n_ar_caea_id"/>
+                            <field name="l10n_ar_caea_generated_at" invisible="not l10n_ar_caea_id"/>
+                            <field name="l10n_ar_caea_report_message" invisible="not l10n_ar_caea_report_message"/>
                             <field name="l10n_ar_afip_result" widget="badge"
                                    decoration-success="l10n_ar_afip_result == 'A'"
                                    decoration-warning="l10n_ar_afip_result == 'O'"
@@ -142,6 +152,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='type']" position="after">
                 <field name="l10n_ar_afip_ws" invisible="type != 'sale'"/>
+                <field name="l10n_ar_caea_journal_id"
+                       invisible="type != 'sale' or l10n_ar_afip_pos_system != 'DOLAN_WSFE'"/>
             </xpath>
         </field>
     </record>

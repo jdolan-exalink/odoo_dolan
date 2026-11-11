@@ -4,7 +4,7 @@
 
 {
     'name': 'DOLAN - Facturación Electrónica ARCA/AFIP, Padrón, QR y Libro IVA',
-    'version': '20.0.1.39.0',
+    'version': '20.0.1.40.0',
     'category': 'Accounting/Localizations/EDI',
     'summary': 'Integración ARCA en desarrollo; Libro IVA limitado a casos validados localmente',
     'description': """
@@ -19,6 +19,10 @@ Características principales:
   Generación de TRA XML, firma CMS (PKCS#7) con ``certificate.certificate`` y ``certificate.key``,
   autenticación contra ``wsaahomo.afip.gov.ar`` y ``wsaa.afip.gov.ar``, más modo simulación seguro en homologación.
 * **WSAA / WSFEv1**: soporte acotado para A/B/M y C, con IVA y tributos adicionales mapeados al catálogo ARCA, reconciliación de importes y notas asociadas. Emisión real bloqueada hasta homologación y autorización.
+* **CAEA y contingencia (RG 5782/2025)**: pedido quincenal automático (``FECAEASolicitar`` /
+  ``FECAEAConsultar``), emisión en un punto de venta CAEA exclusivo cuando ARCA no responde
+  al pedir el CAE (también desde el POS), informe con ``FECAEARegInformativo`` y puntos de
+  venta sin movimiento con ``FECAEASinMovimientoInformar``.
 * **Recuperación WSFE**: consulta comprobantes autorizados y permite sincronizar el CAE con un único comprobante local publicado si coinciden tipo, PV, número, fecha, cliente e importe; no crea movimientos contables.
 * **QR y Transparencia Fiscal**: requieren completar y contrastar sus datos de origen antes de uso fiscal.
 * **Consulta manual de Padrón ARCA por CUIT**:
@@ -50,6 +54,7 @@ Características principales:
         'wizard/libro_iva_digital_views.xml',
         'wizard/fiscal_report_views.xml',
         'views/iibb_padron_views.xml',
+        'views/l10n_ar_caea_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
