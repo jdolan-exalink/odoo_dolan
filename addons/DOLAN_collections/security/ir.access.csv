@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_direct_debit_batch_user,dolan.direct.debit.batch.user,dolan.direct.debit.batch,account.group_account_invoice,crud,
+dolan_direct_debit_batch_company_rule,dolan.direct.debit.batch.company.rule,dolan.direct.debit.batch,,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_direct_debit_line_user,dolan.direct.debit.line.user,dolan.direct.debit.line,account.group_account_invoice,crud,
