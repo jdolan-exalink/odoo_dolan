@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_bank_statement_line_list" model="ir.ui.view">
+        <field name="name">account.bank.statement.line.list.dolan</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <list string="Movimientos bancarios" create="false" decoration-muted="is_reconciled">
+                <field name="date"/>
+                <field name="journal_id"/>
+                <field name="statement_id" optional="show"/>
+                <field name="payment_ref"/>
+                <field name="partner_id" optional="show"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="amount" sum="Total"/>
+                <field name="dolan_rule_id" optional="show"/>
+                <field name="dolan_bank_kind" optional="show" widget="badge"/>
+                <field name="is_reconciled" widget="boolean_toggle" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_bank_statement_line_search" model="ir.ui.view">
+        <field name="name">account.bank.statement.line.search.dolan</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="payment_ref"/>
+                <field name="journal_id"/>
+                <field name="partner_id"/>
+                <filter string="Sin conciliar" name="not_reconciled" domain="[('is_reconciled', '=', False)]"/>
+                <filter string="Con regla bancaria" name="with_rule" domain="[('dolan_rule_id', '!=', False)]"/>
+                <group>
+                    <filter string="Concepto bancario" name="group_kind" context="{'group_by': 'dolan_bank_kind'}"/>
+                    <filter string="Banco" name="group_journal" context="{'group_by': 'journal_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_bank_statement_lines" model="ir.actions.act_window">
+        <field name="name">Movimientos bancarios</field>
+        <field name="res_model">account.bank.statement.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_dolan_bank_statement_line_list"/>
+        <field name="search_view_id" ref="view_dolan_bank_statement_line_search"/>
+        <field name="context">{'search_default_not_reconciled': 1}</field>
+    </record>
+
+    <menuitem id="menu_dolan_bank_statement_lines" name="Movimientos bancarios"
+              parent="account.account_closing_menu" action="action_dolan_bank_statement_lines" sequence="6"/>
+
+    <record id="action_server_dolan_post_rules_lines" model="ir.actions.server">
+        <field name="name">Imputar impuestos y gastos bancarios</field>
+        <field name="model_id" ref="account.model_account_bank_statement_line"/>
+        <field name="binding_model_id" ref="account.model_account_bank_statement_line"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_dolan_post_rules()</field>
+    </record>
+
+    <record id="action_server_dolan_post_rules_statement" model="ir.actions.server">
+        <field name="name">Imputar impuestos y gastos bancarios</field>
+        <field name="model_id" ref="account.model_account_bank_statement"/>
+        <field name="binding_model_id" ref="account.model_account_bank_statement"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_dolan_post_rules()</field>
+    </record>
+</odoo>
