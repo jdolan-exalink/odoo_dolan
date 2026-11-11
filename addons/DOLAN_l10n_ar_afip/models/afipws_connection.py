@@ -443,7 +443,11 @@ class L10nArAfipwsConnection(models.Model):
     WSFE_NS = 'http://ar.gov.afip.dif.FEV1/'
 
     def _wsfe_post_envelope(self, envelope_xml, method, timeout=25):
-        """POST a WSFEv1 SOAP envelope and return the parsed response root.
+        """POST a WSFEv1 SOAP envelope and return the parsed response root."""
+        return self._ws_post_envelope(envelope_xml, 'wsfe', f'{self.WSFE_NS}{method}', method, timeout=timeout)
+
+    def _ws_post_envelope(self, envelope_xml, service, soap_action, method, timeout=25):
+        """POST a SOAP envelope to an ARCA invoicing service and parse the answer.
 
         Connection-phase failures raise :class:`ArcaUnavailableError`; every
         other failure is a plain :class:`UserError` (ARCA may have processed it).
@@ -452,9 +456,9 @@ class L10nArAfipwsConnection(models.Model):
         if isinstance(envelope_xml, str):
             envelope_xml = envelope_xml.encode('utf-8')
         request = urllib.request.Request(
-            AFIP_WS_URLS[self.type]['wsfe'],
+            AFIP_WS_URLS[self.type][service],
             data=envelope_xml,
-            headers={'Content-Type': 'text/xml; charset=utf-8', 'SOAPAction': f'"{self.WSFE_NS}{method}"'},
+            headers={'Content-Type': 'text/xml; charset=utf-8', 'SOAPAction': f'"{soap_action}"'},
             method='POST',
         )
         try:

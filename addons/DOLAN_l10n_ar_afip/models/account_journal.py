@@ -8,6 +8,13 @@ from odoo.exceptions import ValidationError
 # Points of sale numbered by DOLAN that report through WSFEv1: the regular CAE
 # point of sale and the dedicated CAEA contingency point of sale (RG 5782/2025).
 DOLAN_WSFE_POS_SYSTEMS = ('DOLAN_WSFE', 'DOLAN_CAEA')
+# Each DOLAN point-of-sale system and the ARCA web service that authorizes it.
+DOLAN_POS_SYSTEM_WS = {
+    'DOLAN_WSFE': 'wsfe',
+    'DOLAN_CAEA': 'wsfe',
+    'DOLAN_WSFEX': 'wsfex',
+    'DOLAN_WSMTXCA': 'wsmtxca',
+}
 
 
 class AccountJournal(models.Model):
@@ -37,6 +44,8 @@ class AccountJournal(models.Model):
         return super()._get_l10n_ar_afip_pos_types_selection() + [
             ('DOLAN_WSFE', 'Webservice WSFEv1'),
             ('DOLAN_CAEA', 'Webservice WSFEv1 - CAEA (contingencia)'),
+            ('DOLAN_WSFEX', 'Webservice WSFEXv1 - Factura E de exportación'),
+            ('DOLAN_WSMTXCA', 'Webservice WSMTXCA - Factura con detalle'),
         ]
 
     @api.model
@@ -45,6 +54,10 @@ class AccountJournal(models.Model):
             # Same documents WSFEv1 authorizes: A/B/C/M invoices and notes,
             # receipts and MiPyME FCE.
             return super()._get_codes_per_journal_type('RAW_MAW')
+        if afip_pos_system == 'DOLAN_WSFEX' and self.type == 'sale':
+            return [('code', 'in', ['19', '20', '21'])]
+        if afip_pos_system == 'DOLAN_WSMTXCA' and self.type == 'sale':
+            return [('code', 'in', ['1', '2', '3', '6', '7', '8'])]
         return super()._get_codes_per_journal_type(afip_pos_system)
 
     @api.depends('l10n_ar_afip_pos_system', 'type')
@@ -53,8 +66,8 @@ class AccountJournal(models.Model):
             # Preprinted, online portal and fiscal-controller journals are native
             # circuits, not an implicit authorization to invoke a web service.
             journal.l10n_ar_afip_ws = (
-                'wsfe'
-                if journal.type == 'sale' and journal.l10n_ar_afip_pos_system in DOLAN_WSFE_POS_SYSTEMS
+                DOLAN_POS_SYSTEM_WS.get(journal.l10n_ar_afip_pos_system, False)
+                if journal.type == 'sale'
                 else False
             )
 

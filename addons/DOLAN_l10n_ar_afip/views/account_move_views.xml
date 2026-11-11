@@ -135,6 +135,18 @@
                             <field name="l10n_ar_afip_asoc_period_start"/>
                             <field name="l10n_ar_afip_asoc_period_end"/>
                         </group>
+                        <field name="l10n_ar_journal_pos_system" invisible="1"/>
+                        <group string="Exportación (Factura E)"
+                               invisible="l10n_ar_journal_pos_system != 'DOLAN_WSFEX'">
+                            <field name="l10n_ar_export_permit_existing"/>
+                            <field name="l10n_ar_export_permit_number"
+                                   invisible="l10n_ar_export_permit_existing != 'S'"/>
+                            <field name="l10n_ar_export_permit_country_id"
+                                   invisible="l10n_ar_export_permit_existing != 'S'"/>
+                            <field name="invoice_incoterm_id"/>
+                            <field name="l10n_ar_export_language"/>
+                            <field name="l10n_ar_export_commercial_notes"/>
+                        </group>
                     </group>
                     <group string="Auditoría XML Webservice ARCA/AFIP" groups="base.group_no_one">
                         <field name="l10n_ar_afip_xml_request"/>

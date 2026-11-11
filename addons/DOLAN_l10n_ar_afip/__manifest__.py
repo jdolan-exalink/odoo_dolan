@@ -4,7 +4,7 @@
 
 {
     'name': 'DOLAN - Facturación Electrónica ARCA/AFIP, Padrón, QR y Libro IVA',
-    'version': '20.0.1.40.0',
+    'version': '20.0.1.41.0',
     'category': 'Accounting/Localizations/EDI',
     'summary': 'Integración ARCA en desarrollo; Libro IVA limitado a casos validados localmente',
     'description': """
@@ -23,6 +23,10 @@ Características principales:
   ``FECAEAConsultar``), emisión en un punto de venta CAEA exclusivo cuando ARCA no responde
   al pedir el CAE (también desde el POS), informe con ``FECAEARegInformativo`` y puntos de
   venta sin movimiento con ``FECAEASinMovimientoInformar``.
+* **Factura E (WSFEXv1) y factura con detalle (WSMTXCA)**: puntos de venta ``DOLAN_WSFEX`` y
+  ``DOLAN_WSMTXCA`` con pedido de CAE propio: permiso de embarque, Incoterm, país y moneda de
+  destino, idioma y CUIT país para exportación; ítems con GTIN, unidad ARCA e IVA por línea
+  para WSMTXCA.
 * **Recuperación WSFE**: consulta comprobantes autorizados y permite sincronizar el CAE con un único comprobante local publicado si coinciden tipo, PV, número, fecha, cliente e importe; no crea movimientos contables.
 * **QR y Transparencia Fiscal**: requieren completar y contrastar sus datos de origen antes de uso fiscal.
 * **Consulta manual de Padrón ARCA por CUIT**:
