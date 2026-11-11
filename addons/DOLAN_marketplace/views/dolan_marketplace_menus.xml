@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dolan_marketplace_orders" name="Ventas de marketplaces" parent="sale.menu_sale_marketplaces"
+              action="action_dolan_marketplace_orders" sequence="10"/>
+    <menuitem id="menu_dolan_marketplace_listings" name="Publicaciones" parent="sale.menu_sale_marketplaces"
+              action="action_dolan_marketplace_listing" sequence="20"/>
+    <menuitem id="menu_dolan_marketplace_accounts" name="Cuentas" parent="sale.menu_sale_marketplaces"
+              action="action_dolan_marketplace_account" sequence="30"
+              groups="DOLAN_marketplace.group_marketplace_manager"/>
+    <menuitem id="menu_dolan_marketplace_log" name="Registro de sincronización" parent="sale.menu_sale_marketplaces"
+              action="action_dolan_marketplace_log" sequence="40"
+              groups="DOLAN_marketplace.group_marketplace_manager"/>
+</odoo>

@@ -133,7 +133,7 @@ case "$PROFILE" in
     DOLAN_ADDONS="DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_knowledge_bi"
     ;;
   comercio)
-    DOLAN_ADDONS="DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_pos,DOLAN_discount_engine,DOLAN_payment_terminal,DOLAN_pricelist,DOLAN_credit_limit,DOLAN_credit_limit_pos,DOLAN_knowledge_bi,ePOS_print,pos_scale_management"
+    DOLAN_ADDONS="DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_pos,DOLAN_discount_engine,DOLAN_payment_terminal,DOLAN_pricelist,DOLAN_credit_limit,DOLAN_credit_limit_pos,DOLAN_marketplace,DOLAN_knowledge_bi,ePOS_print,pos_scale_management"
     ;;
   servicios)
     DOLAN_ADDONS="DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_subscription,DOLAN_renting,DOLAN_views,DOLAN_credit_limit,DOLAN_knowledge_bi"

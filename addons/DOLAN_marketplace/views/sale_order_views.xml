@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_dolan_marketplace" model="ir.ui.view">
+        <field name="name">sale.order.form.dolan.marketplace</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="dolan_marketplace_account_id" invisible="not dolan_marketplace_account_id"/>
+                <field name="dolan_marketplace_order_ref" invisible="not dolan_marketplace_order_ref"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mb-0" role="alert" invisible="not dolan_marketplace_invoice_error">
+                    <strong>No se pudo facturar automáticamente:</strong>
+                    <field name="dolan_marketplace_invoice_error" readonly="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter_dolan_marketplace" model="ir.ui.view">
+        <field name="name">sale.order.search.dolan.marketplace</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="dolan_marketplace_order_ref"/>
+                <filter string="Ventas de marketplaces" name="dolan_marketplace"
+                        domain="[('dolan_marketplace_account_id', '!=', False)]"/>
+                <filter string="Marketplace" name="group_dolan_marketplace"
+                        context="{'group_by': 'dolan_marketplace_account_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_dolan_marketplace_orders" model="ir.actions.act_window">
+        <field name="name">Ventas de marketplaces</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('dolan_marketplace_account_id', '!=', False)]</field>
+    </record>
+</odoo>

@@ -179,6 +179,15 @@ var Catalog = []ModuleSpec{
 		HasData:     false,
 	},
 	{
+		ID:          "DOLAN_marketplace",
+		Title:       "Mercado Libre y Tiendanube",
+		Version:     "20.0.1.0.0",
+		Category:    "Ventas",
+		Application: false,
+		Depends:     []string{"sale_management", "sale_stock"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_discount_engine",
 		Title:       "Promociones y Control de Descuentos POS",
 		Version:     "20.0.1.2.0",

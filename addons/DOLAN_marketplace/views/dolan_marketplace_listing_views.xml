@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_marketplace_listing_list" model="ir.ui.view">
+        <field name="name">dolan.marketplace.listing.list</field>
+        <field name="model">dolan.marketplace.listing</field>
+        <field name="arch" type="xml">
+            <list string="Publicaciones" editable="bottom" create="false"
+                  decoration-muted="state == 'unlinked'" decoration-danger="state == 'error'">
+                <field name="currency_id" column_invisible="1"/>
+                <field name="account_id" optional="show" readonly="1"/>
+                <field name="title" readonly="1"/>
+                <field name="item_id" optional="show" readonly="1"/>
+                <field name="variation_id" optional="hide" readonly="1"/>
+                <field name="remote_sku" readonly="1"/>
+                <field name="product_id"/>
+                <field name="remote_price" readonly="1"/>
+                <field name="publish_price"/>
+                <field name="remote_stock" readonly="1"/>
+                <field name="publish_stock"/>
+                <field name="sync_enabled" widget="boolean_toggle"/>
+                <field name="last_sync" optional="hide"/>
+                <field name="state" widget="badge" decoration-success="state == 'linked'" decoration-danger="state == 'error'"/>
+                <field name="url" widget="url" optional="hide" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_marketplace_listing_form" model="ir.ui.view">
+        <field name="name">dolan.marketplace.listing.form</field>
+        <field name="model">dolan.marketplace.listing</field>
+        <field name="arch" type="xml">
+            <form string="Publicación">
+                <header>
+                    <button name="action_push" type="object" string="Enviar stock y precio" class="btn-primary"
+                            invisible="not product_id"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="title" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="account_id" readonly="1"/>
+                            <field name="item_id" readonly="1"/>
+                            <field name="variation_id" readonly="1"/>
+                            <field name="remote_sku" readonly="1"/>
+                            <field name="url" widget="url" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="product_id"/>
+                            <field name="sync_enabled"/>
+                            <field name="remote_price" readonly="1"/>
+                            <field name="publish_price"/>
+                            <field name="remote_stock" readonly="1"/>
+                            <field name="publish_stock"/>
+                            <field name="last_sync"/>
+                        </group>
+                    </group>
+                    <field name="last_error" invisible="not last_error" class="text-danger"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_marketplace_listing_search" model="ir.ui.view">
+        <field name="name">dolan.marketplace.listing.search</field>
+        <field name="model">dolan.marketplace.listing</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="title"/>
+                <field name="remote_sku"/>
+                <field name="product_id"/>
+                <field name="item_id"/>
+                <filter string="Sin vincular" name="unlinked" domain="[('product_id', '=', False)]"/>
+                <filter string="Con error" name="error" domain="[('state', '=', 'error')]"/>
+                <separator/>
+                <filter string="Archivadas" name="inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Cuenta" name="group_account" context="{'group_by': 'account_id'}"/>
+                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_marketplace_listing" model="ir.actions.act_window">
+        <field name="name">Publicaciones</field>
+        <field name="res_model">dolan.marketplace.listing</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_dolan_marketplace_link_by_sku" model="ir.actions.server">
+        <field name="name">Vincular por SKU</field>
+        <field name="model_id" ref="model_dolan_marketplace_listing"/>
+        <field name="binding_model_id" ref="model_dolan_marketplace_listing"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_link_by_sku()</field>
+    </record>
+
+    <record id="action_dolan_marketplace_push" model="ir.actions.server">
+        <field name="name">Enviar stock y precio</field>
+        <field name="model_id" ref="model_dolan_marketplace_listing"/>
+        <field name="binding_model_id" ref="model_dolan_marketplace_listing"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.filtered('product_id').action_push()</field>
+    </record>
+</odoo>

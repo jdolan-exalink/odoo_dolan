@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_marketplace_account_list" model="ir.ui.view">
+        <field name="name">dolan.marketplace.account.list</field>
+        <field name="model">dolan.marketplace.account</field>
+        <field name="arch" type="xml">
+            <list string="Cuentas de marketplace">
+                <field name="name"/>
+                <field name="provider"/>
+                <field name="remote_name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="last_order_sync"/>
+                <field name="state" widget="badge" decoration-success="state == 'connected'" decoration-danger="state == 'error'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_marketplace_account_form" model="ir.ui.view">
+        <field name="name">dolan.marketplace.account.form</field>
+        <field name="model">dolan.marketplace.account</field>
+        <field name="arch" type="xml">
+            <form string="Cuenta de marketplace">
+                <header>
+                    <button name="action_connect" type="object" string="Conectar con Mercado Libre" class="btn-primary"
+                            invisible="provider != 'mercadolibre' or state == 'connected'"/>
+                    <button name="action_test_connection" type="object" string="Probar conexión"
+                            class="btn-primary" invisible="provider != 'tiendanube' or state == 'connected'"/>
+                    <button name="action_test_connection" type="object" string="Probar conexión" invisible="state != 'connected'"/>
+                    <button name="action_fetch_listings" type="object" string="Leer publicaciones" invisible="state != 'connected'"/>
+                    <button name="action_sync_listings" type="object" string="Enviar stock y precios" invisible="state != 'connected'"/>
+                    <button name="action_import_orders" type="object" string="Bajar ventas" invisible="state != 'connected'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_listings" type="object" class="oe_stat_button" icon="fa-tags">
+                            <field name="listing_count" widget="statinfo" string="Publicaciones"/>
+                        </button>
+                        <button name="action_view_orders" type="object" class="oe_stat_button" icon="fa-shopping-cart">
+                            <field name="order_count" widget="statinfo" string="Ventas"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archivada" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Ej.: Mercado Libre tienda oficial"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="provider" widget="radio" options="{'horizontal': True}" readonly="state == 'connected'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="remote_name" invisible="not remote_name"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="last_order_sync"/>
+                            <field name="token_expiry" invisible="provider != 'mercadolibre'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Credenciales" name="credentials" groups="DOLAN_marketplace.group_marketplace_manager">
+                            <group>
+                                <group>
+                                    <field name="client_id" required="provider == 'mercadolibre'"/>
+                                    <field name="client_secret" password="True" required="provider == 'mercadolibre'"/>
+                                    <field name="remote_user_id" required="provider == 'tiendanube'"/>
+                                    <field name="access_token" password="True" invisible="provider != 'tiendanube'"
+                                           required="provider == 'tiendanube'"/>
+                                    <field name="api_contact" invisible="provider != 'tiendanube'"
+                                           required="provider == 'tiendanube'" placeholder="ventas@tuempresa.com.ar"/>
+                                </group>
+                                <group>
+                                    <field name="redirect_uri" widget="CopyClipboardChar" invisible="provider != 'mercadolibre'"/>
+                                    <field name="webhook_url" widget="CopyClipboardChar"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-info" role="status" invisible="provider != 'mercadolibre'">
+                                Creá una aplicación en el portal de desarrolladores de Mercado Libre, cargá como URL de
+                                redirección la que figura arriba, activá el tópico de notificaciones <b>orders_v2</b> con
+                                la URL de notificaciones y después tocá <b>Conectar con Mercado Libre</b>.
+                            </div>
+                            <div class="alert alert-info" role="status" invisible="provider != 'tiendanube'">
+                                Con el token de tu app de Tiendanube, cargá el ID de la tienda, el access token, la clave
+                                secreta de la app (firma los webhooks) y un correo de contacto. Registrá los webhooks
+                                <b>order/paid</b> y <b>order/cancelled</b> con la URL de notificaciones.
+                            </div>
+                        </page>
+                        <page string="Operación" name="operation">
+                            <group>
+                                <group string="Publicaciones">
+                                    <field name="warehouse_id"/>
+                                    <field name="pricelist_id"/>
+                                    <field name="prices_include_tax"/>
+                                    <field name="sync_stock"/>
+                                    <field name="stock_reserve" invisible="not sync_stock"/>
+                                    <field name="sync_price"/>
+                                </group>
+                                <group string="Ventas">
+                                    <field name="import_orders"/>
+                                    <field name="team_id"/>
+                                    <field name="user_id"/>
+                                    <field name="fallback_product_id"/>
+                                    <field name="shipping_product_id" invisible="provider != 'tiendanube'"/>
+                                    <field name="auto_invoice"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Registro" name="log">
+                            <field name="log_ids" readonly="1">
+                                <list limit="50" decoration-danger="state == 'error'">
+                                    <field name="create_date" string="Fecha"/>
+                                    <field name="operation"/>
+                                    <field name="reference"/>
+                                    <field name="message"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_marketplace_account" model="ir.actions.act_window">
+        <field name="name">Cuentas de marketplace</field>
+        <field name="res_model">dolan.marketplace.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Conectá Mercado Libre o Tiendanube</p>
+            <p>Sincronizá stock y precios de tus publicaciones y bajá las ventas como pedidos de Odoo.</p>
+        </field>
+    </record>
+</odoo>
