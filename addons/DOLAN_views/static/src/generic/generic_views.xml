@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="DOLAN_views.GenericView">
+        <div t-attf-class="o_dolan_generic_view o_{{ this.info.type }}_view h-100 {{ this.props.className or '' }}" t-ref="this.rootRef">
+            <Layout display="this.props.display">
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu/>
+                </t>
+                <t t-set-slot="control-panel-actions">
+                    <SearchBar toggler="this.searchBarToggler"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-component="this.searchBarToggler.component" t-props="this.searchBarToggler.props"/>
+                </t>
+                <t t-set-slot="default">
+                    <div class="o_dolan_generic_content p-3">
+                        <div t-if="this.state.truncated" class="alert alert-warning py-1 small">
+                            Se muestran los primeros 2000 registros. Filtrá la búsqueda para ver el resto.
+                        </div>
+                        <t t-if="this.info.type === 'dolan_gantt'" t-call="DOLAN_views.GenericGantt"/>
+                        <t t-elif="this.info.type === 'dolan_map'" t-call="DOLAN_views.GenericMap"/>
+                        <t t-elif="this.info.type === 'dolan_grid'" t-call="DOLAN_views.GenericGrid"/>
+                        <t t-elif="this.info.type === 'dolan_cohort'" t-call="DOLAN_views.GenericCohort"/>
+                    </div>
+                </t>
+            </Layout>
+        </div>
+    </t>
+
+    <t t-name="DOLAN_views.GenericToolbar">
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+            <div class="btn-group">
+                <button class="btn btn-sm btn-secondary" title="Anterior" t-on-click="() => this.move(-1)"><span aria-hidden="true">‹</span></button>
+                <button class="btn btn-sm btn-secondary" t-on-click="() => this.move(0)">Hoy</button>
+                <button class="btn btn-sm btn-secondary" title="Siguiente" t-on-click="() => this.move(1)"><span aria-hidden="true">›</span></button>
+            </div>
+            <span class="fw-semibold" t-out="this.rangeLabel"/>
+            <div t-if="this.info.type === 'dolan_gantt'" class="btn-group ms-auto">
+                <t t-foreach="[['week', 'Semana'], ['month', 'Mes'], ['quarter', 'Trimestre'], ['year', 'Año']]" t-as="scale" t-key="scale[0]">
+                    <button t-attf-class="btn btn-sm {{ this.state.scale === scale[0] ? 'btn-primary' : 'btn-secondary' }}"
+                            t-on-click="() => this.setScale(scale[0])" t-out="scale[1]"/>
+                </t>
+            </div>
+            <span t-if="this.state.loading" class="spinner-border spinner-border-sm text-muted" role="status"/>
+        </div>
+    </t>
+
+    <t t-name="DOLAN_views.GenericGantt">
+        <t t-call="DOLAN_views.GenericToolbar"/>
+        <div class="o_dolan_gantt border rounded">
+            <div class="o_dolan_gantt_row o_dolan_gantt_header">
+                <div class="o_dolan_gantt_label fw-semibold">
+                    <t t-out="this.fieldLabel(this.props.groupBy[0]?.split(':')[0] || this.info.default_group_by) || ''"/>
+                </div>
+                <div class="o_dolan_gantt_track">
+                    <t t-foreach="this.state.ganttColumns" t-as="column" t-key="column.key">
+                        <div t-attf-class="o_dolan_gantt_col {{ column.today ? 'o_today' : '' }} {{ column.weekend ? 'o_weekend' : '' }}" t-out="column.label"/>
+                    </t>
+                </div>
+            </div>
+            <div t-if="!this.state.ganttGroups.length and !this.state.loading" class="text-muted p-3">
+                No hay registros con fechas en este período.
+            </div>
+            <t t-foreach="this.state.ganttGroups" t-as="group" t-key="group.key">
+                <div class="o_dolan_gantt_row">
+                    <div class="o_dolan_gantt_label text-truncate" t-att-title="group.label" t-out="group.label"/>
+                    <div class="o_dolan_gantt_track">
+                        <div class="o_dolan_gantt_grid">
+                            <t t-foreach="this.state.ganttColumns" t-as="column" t-key="column.key">
+                                <div t-attf-class="o_dolan_gantt_col {{ column.today ? 'o_today' : '' }} {{ column.weekend ? 'o_weekend' : '' }}"/>
+                            </t>
+                        </div>
+                        <div class="o_dolan_gantt_bars">
+                            <t t-foreach="group.bars" t-as="bar" t-key="bar.id">
+                                <div t-attf-class="o_dolan_gantt_bar o_dolan_color_{{ bar.color }} {{ bar.movable ? 'o_movable' : '' }}"
+                                     t-attf-style="left: {{ bar.left }}%; width: {{ bar.width }}%;"
+                                     t-att-title="bar.name + ' · ' + bar.startLabel + ' → ' + bar.stopLabel"
+                                     t-on-pointerdown="(ev) => this.onBarPointerDown(ev, bar)">
+                                    <div t-if="bar.progress !== null" class="o_dolan_gantt_progress" t-attf-style="width: {{ bar.progress }}%;"/>
+                                    <span class="o_dolan_gantt_bar_label" t-out="bar.name"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+        <div class="small text-muted mt-1">Arrastrá una barra para moverla de fecha; tocala para abrir el registro.</div>
+    </t>
+
+    <t t-name="DOLAN_views.GenericMap">
+        <div class="row g-3">
+            <div class="col-lg-4">
+                <div class="list-group o_dolan_map_list">
+                    <t t-foreach="this.state.mapItems" t-as="item" t-key="item.id">
+                        <div t-attf-class="list-group-item list-group-item-action {{ this.state.mapSelected and this.state.mapSelected.id === item.id ? 'active' : '' }}"
+                             t-on-click="() => this.selectMapItem(item)">
+                            <div class="d-flex justify-content-between align-items-start gap-2">
+                                <div class="text-truncate">
+                                    <div class="fw-semibold text-truncate" t-out="item.name"/>
+                                    <div class="small text-truncate opacity-75" t-out="item.address or item.partnerName"/>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <span t-if="!item.located" class="badge text-bg-light" title="El contacto no tiene latitud y longitud">sin ubicación</span>
+                                    <button class="btn btn-sm btn-link p-0" title="Abrir" t-on-click.stop="() => this.openRecord(item.id)">
+                                        <span aria-hidden="true">↗</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <div t-if="!this.state.mapItems.length and !this.state.loading" class="text-muted p-3">No hay registros.</div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div t-if="this.state.mapSelected" class="border rounded overflow-hidden">
+                    <iframe class="o_dolan_map_frame" t-att-src="this.mapUrl" title="Mapa"/>
+                </div>
+                <div t-else="" class="alert alert-info">
+                    Ningún registro tiene coordenadas. Completá la latitud y longitud del contacto (o geolocalizalo) para verlo en el mapa.
+                </div>
+                <div t-if="this.mapPoints.length > 1" class="o_dolan_map_overview border rounded mt-2 position-relative">
+                    <t t-foreach="this.mapPoints" t-as="point" t-key="point.id">
+                        <span t-attf-class="o_dolan_map_pin {{ this.state.mapSelected and this.state.mapSelected.id === point.id ? 'o_selected' : '' }}"
+                           t-attf-style="left: {{ point.x }}%; top: {{ point.y }}%;" t-att-title="point.name"
+                           t-on-click="() => this.selectMapItem(point)"/>
+                    </t>
+                </div>
+                <div class="d-flex gap-3 mt-2 small">
+                    <a t-if="this.state.mapSelected" target="_blank" rel="noopener"
+                       t-attf-href="https://www.openstreetmap.org/?mlat={{ this.state.mapSelected.lat }}&amp;mlon={{ this.state.mapSelected.lon }}#map=16/{{ this.state.mapSelected.lat }}/{{ this.state.mapSelected.lon }}">
+                        Abrir en OpenStreetMap
+                    </a>
+                    <a t-if="this.routeUrl()" target="_blank" rel="noopener" t-att-href="this.routeUrl()">Ruta por los primeros 10 puntos</a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="DOLAN_views.GenericGrid">
+        <t t-call="DOLAN_views.GenericToolbar"/>
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered align-middle o_dolan_grid_table">
+                <thead>
+                    <tr>
+                        <th class="text-nowrap" t-out="this.fieldLabel(this.state.gridRowField)"/>
+                        <t t-foreach="this.state.gridColumns" t-as="column" t-key="column.key">
+                            <th t-attf-class="text-end text-nowrap {{ column.weekend ? 'o_weekend' : '' }}" t-out="column.label"/>
+                        </t>
+                        <th class="text-end">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-if="!this.state.gridRows.length and !this.state.loading">
+                        <td t-att-colspan="this.state.gridColumns.length + 2" class="text-muted">Sin datos en este período.</td>
+                    </tr>
+                    <t t-foreach="this.state.gridRows" t-as="row" t-key="row.key">
+                        <tr>
+                            <td class="text-nowrap" t-out="row.label"/>
+                            <t t-foreach="this.state.gridColumns" t-as="column" t-key="column.key">
+                                <td t-attf-class="text-end {{ column.weekend ? 'o_weekend' : '' }}">
+                                    <input t-if="this.gridEditable and row.key" type="text" inputmode="decimal"
+                                           class="form-control form-control-sm text-end o_dolan_grid_input"
+                                           t-att-value="this.gridCell(row, column).value ? this.formatAmount(this.gridCell(row, column).value) : ''"
+                                           t-on-change="(ev) => this.onGridCellChange(row, column, ev)"/>
+                                    <span t-else="" t-out="this.gridCell(row, column).value ? this.formatAmount(this.gridCell(row, column).value) : ''"/>
+                                </td>
+                            </t>
+                            <td class="text-end fw-semibold" t-out="this.formatAmount(row.total)"/>
+                        </tr>
+                    </t>
+                </tbody>
+                <tfoot t-if="this.state.gridRows.length">
+                    <tr class="fw-semibold">
+                        <td>Total</td>
+                        <t t-foreach="this.state.gridColumns" t-as="column" t-key="column.key">
+                            <td class="text-end" t-out="this.formatAmount(this.state.gridTotals[column.key])"/>
+                        </t>
+                        <td class="text-end" t-out="this.formatAmount(this.gridGrandTotal)"/>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="DOLAN_views.GenericCohort">
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="fw-semibold">
+                Porcentaje que sigue activo por período desde
+                <t t-out="this.fieldLabel(this.info.date_start)"/>
+                <t t-if="this.info.date_stop"> hasta <t t-out="this.fieldLabel(this.info.date_stop)"/></t>
+            </span>
+            <span t-if="this.state.loading" class="spinner-border spinner-border-sm text-muted" role="status"/>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered align-middle o_dolan_cohort_table">
+                <thead>
+                    <tr>
+                        <th>Período</th>
+                        <th class="text-end" t-out="this.cohortMeasureLabel"/>
+                        <t t-foreach="this.state.cohortColumns" t-as="offset" t-key="offset">
+                            <th class="text-end" t-out="'+' + offset"/>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="this.state.cohortRows" t-as="row" t-key="row.key">
+                        <tr>
+                            <td class="text-nowrap" t-out="row.label"/>
+                            <td class="text-end" t-out="this.formatAmount(row.total)"/>
+                            <t t-foreach="row.cells" t-as="cell" t-key="cell_index">
+                                <td t-if="cell and row.total" t-attf-class="text-end o_dolan_cohort_{{ cell.level }}" t-out="cell.pct + '%'"/>
+                                <td t-else=""/>
+                            </t>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+</templates>

@@ -8,10 +8,10 @@ class IrUiView(models.Model):
 
     type = fields.Selection(
         selection_add=[
-            ('dolan_gantt', 'DOLAN Gantt'),
-            ('dolan_cohort', 'DOLAN Cohort'),
-            ('dolan_grid', 'DOLAN Grid'),
-            ('dolan_map', 'DOLAN Map'),
+            ('dolan_gantt', 'Gantt'),
+            ('dolan_cohort', 'Cohorte'),
+            ('dolan_grid', 'Grilla'),
+            ('dolan_map', 'Mapa'),
         ],
         ondelete={
             'dolan_gantt': 'cascade',
@@ -27,10 +27,10 @@ class IrActionsActWindowView(models.Model):
 
     view_mode = fields.Selection(
         selection_add=[
-            ('dolan_gantt', 'DOLAN Gantt'),
-            ('dolan_cohort', 'DOLAN Cohort'),
-            ('dolan_grid', 'DOLAN Grid'),
-            ('dolan_map', 'DOLAN Map'),
+            ('dolan_gantt', 'Gantt'),
+            ('dolan_cohort', 'Cohorte'),
+            ('dolan_grid', 'Grilla'),
+            ('dolan_map', 'Mapa'),
         ],
         ondelete={
             'dolan_gantt': 'cascade',
