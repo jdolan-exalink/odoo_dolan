@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_dolan_foreign_currency" model="ir.ui.view">
+        <field name="name">account.move.form.dolan.foreign.currency</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_dolan_exchange_difference_note"
+                        type="object"
+                        string="Nota por diferencia de cambio"
+                        class="btn-secondary"
+                        invisible="state != 'posted' or move_type != 'out_invoice' or currency_id == company_currency_id"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_date']" position="after">
+                <field name="l10n_ar_payment_in_same_currency"
+                       invisible="move_type not in ('out_invoice', 'out_refund') or currency_id == company_currency_id"
+                       readonly="state != 'draft'"/>
+                <field name="dolan_exchange_diff_origin_id" invisible="not dolan_exchange_diff_origin_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_currency_rate_tree_dolan_source" model="ir.ui.view">
+        <field name="name">res.currency.rate.list.dolan.source</field>
+        <field name="model">res.currency.rate</field>
+        <field name="inherit_id" ref="base.view_currency_rate_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="dolan_ars_per_unit" optional="show"/>
+                <field name="dolan_rate_source" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_dolan_ar_rate_backfill_wizard_form" model="ir.ui.view">
+        <field name="name">dolan.ar.rate.backfill.wizard.form</field>
+        <field name="model">dolan.ar.rate.backfill.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Completar cotizaciones históricas">
+                <p class="text-muted">Trae del BCRA las cotizaciones de las fechas elegidas. No pisa las cargadas a mano ni las de ARCA.</p>
+                <group>
+                    <field name="currency_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <footer>
+                    <button name="action_backfill" string="Traer cotizaciones" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_ar_rate_backfill_wizard" model="ir.actions.act_window">
+        <field name="name">Completar cotizaciones (BCRA)</field>
+        <field name="res_model">dolan.ar.rate.backfill.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_dolan_ar_revaluation_wizard_form" model="ir.ui.view">
+        <field name="name">dolan.ar.revaluation.wizard.form</field>
+        <field name="model">dolan.ar.revaluation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Revaluación de saldos en moneda extranjera">
+                <p class="text-muted">Lleva los saldos abiertos de clientes y proveedores en moneda extranjera a la
+                    cotización de la fecha de cierre, contra las cuentas de diferencia de cambio.</p>
+                <group>
+                    <field name="date"/>
+                    <field name="journal_id"/>
+                    <field name="reverse"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <footer>
+                    <button name="action_revalue" string="Revaluar" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_ar_revaluation_wizard" model="ir.actions.act_window">
+        <field name="name">Revaluación moneda extranjera</field>
+        <field name="res_model">dolan.ar.revaluation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_dolan_ar_rate_backfill"
+              name="Completar cotizaciones (BCRA)"
+              parent="menu_l10n_ar_afip_root"
+              action="action_dolan_ar_rate_backfill_wizard"
+              sequence="40"/>
+    <menuitem id="menu_dolan_ar_revaluation"
+              name="Revaluación moneda extranjera"
+              parent="account.menu_finance_entries"
+              action="action_dolan_ar_revaluation_wizard"
+              sequence="97"/>
+
+    <record id="ir_cron_dolan_currency_rates" model="ir.cron">
+        <field name="name">ARCA/BCRA: actualizar cotizaciones</field>
+        <field name="model_id" ref="base.model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_dolan_sync_currency_rates()</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

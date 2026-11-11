@@ -361,6 +361,7 @@ class L10nArAfipwsConnection(models.Model):
             'FECompUltimoAutorizado': 'FECompUltimoAutorizado',
             'FECompConsultar': 'FECompConsultar',
             'FEParamGetTiposTributos': 'FEParamGetTiposTributos',
+            'FEParamGetCotizacion': 'FEParamGetCotizacion',
             # The official WSFEv1 SOAP body element includes "Frente" while
             # SOAPAction and the response result use "CondicionIvaReceptor".
             'FEParamGetCondicionIvaReceptor': 'FEParamGetCondicionFrenteIvaReceptor',
