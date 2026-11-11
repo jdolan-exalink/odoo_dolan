@@ -4,7 +4,7 @@
 
 {
     'name': 'DOLAN - Contabilidad Pro, Conciliación, Activos, Préstamos, Follow-up y Reportes',
-    'version': '20.0.1.8.0',
+    'version': '20.0.1.9.0',
     'category': 'Accounting/Accounting',
     'sequence': 60,
     'summary': 'Suite Contable Completa para Odoo CE 20: Conciliación Bancaria (CSV/XLSX/OFX/CAMT), Activos Fijos, Préstamos, Seguimiento de Deudores y Estados Contables',
@@ -17,6 +17,8 @@ Reemplazo clean-room bajo licencia LGPL-3 de ``accountant``, ``account_accountan
 
 Características principales:
 ----------------------------
+* **Ajuste por inflación (RT 6)**: índices FACPCE por mes (carga manual o CSV), cuentas no monetarias
+  marcadas, reexpresión por mes de origen y asiento contra RECPAM.
 * **Menú Raíz Contabilidad (secuencia 60)**:
   Acceso completo a Asientos Contables, Apuntes Contables, Plan de Cuentas, Conciliación,
   Activos Fijos, Préstamos Financieros, Seguimiento de Deudores y Reportes Financieros.
@@ -52,6 +54,7 @@ Características principales:
         'wizard/bank_payment_export_views.xml',
         'wizard/mercadopago_settlement_views.xml',
         'wizard/fiscal_year_close_views.xml',
+        'views/inflation_adjustment_views.xml',
         'views/accounting_menus.xml',
         'views/account_dashboard_actions.xml',
     ],
