@@ -31,6 +31,7 @@ EXPECTED_MODULES = [
     "DOLAN_discount_engine",
     "DOLAN_exchange",
     "DOLAN_payment_terminal",
+    "DOLAN_payroll_ar",
     "ePOS_print",
     "pos_scale_management",
 ]

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Convenios -->
+    <record id="view_dolan_payroll_agreement_list" model="ir.ui.view">
+        <field name="name">dolan.payroll.agreement.list</field>
+        <field name="model">dolan.payroll.agreement</field>
+        <field name="arch" type="xml">
+            <list string="Convenios">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="union_partner_id"/>
+                <field name="seniority_rate"/>
+                <field name="attendance_rate"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_payroll_agreement_form" model="ir.ui.view">
+        <field name="name">dolan.payroll.agreement.form</field>
+        <field name="model">dolan.payroll.agreement</field>
+        <field name="arch" type="xml">
+            <form string="Convenio">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Empleados de Comercio"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="is_agreement"/>
+                            <field name="union_partner_id"/>
+                            <field name="monthly_hours"/>
+                        </group>
+                        <group>
+                            <field name="seniority_rate"/>
+                            <field name="attendance_rate"/>
+                            <field name="union_rate"/>
+                            <field name="solidarity_rate"/>
+                            <field name="employer_fund_rate"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Categorías y escalas" name="categories">
+                            <field name="category_ids">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="current_basic"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                    </group>
+                                    <field name="scale_ids">
+                                        <list editable="bottom">
+                                            <field name="date_from"/>
+                                            <field name="amount"/>
+                                            <field name="note"/>
+                                        </list>
+                                    </field>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notes">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_payroll_agreement" model="ir.actions.act_window">
+        <field name="name">Convenios</field>
+        <field name="res_model">dolan.payroll.agreement</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Conceptos -->
+    <record id="view_dolan_payroll_concept_list" model="ir.ui.view">
+        <field name="name">dolan.payroll.concept.list</field>
+        <field name="model">dolan.payroll.concept</field>
+        <field name="arch" type="xml">
+            <list string="Conceptos">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="kind" widget="badge"/>
+                <field name="in_monthly"/>
+                <field name="in_sac"/>
+                <field name="in_final"/>
+                <field name="afip_code" optional="show"/>
+                <field name="sicoss_bucket" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_payroll_concept_form" model="ir.ui.view">
+        <field name="name">dolan.payroll.concept.form</field>
+        <field name="model">dolan.payroll.concept</field>
+        <field name="arch" type="xml">
+            <form string="Concepto">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="kind"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Se liquida en">
+                            <field name="in_monthly"/>
+                            <field name="in_sac"/>
+                            <field name="in_final"/>
+                            <field name="agreement_ids" widget="many2many_tags"/>
+                        </group>
+                        <group string="Tratamiento">
+                            <field name="sac_base"/>
+                            <field name="gan_deductible"/>
+                            <field name="gan_withholding"/>
+                            <field name="account_id"/>
+                        </group>
+                        <group string="ARCA">
+                            <field name="afip_code"/>
+                            <field name="sicoss_bucket"/>
+                        </group>
+                    </group>
+                    <group string="Fórmulas">
+                        <field name="formula" widget="code" options="{'mode': 'python'}"/>
+                        <field name="quantity_formula"/>
+                        <field name="condition"/>
+                    </group>
+                    <field name="note" placeholder="Notas internas"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_payroll_concept" model="ir.actions.act_window">
+        <field name="name">Conceptos</field>
+        <field name="res_model">dolan.payroll.concept</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <!-- Parámetros -->
+    <record id="view_dolan_payroll_parameter_list" model="ir.ui.view">
+        <field name="name">dolan.payroll.parameter.list</field>
+        <field name="model">dolan.payroll.parameter</field>
+        <field name="arch" type="xml">
+            <list string="Parámetros legales" editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="date_from"/>
+                <field name="value"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="note" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_payroll_parameter" model="ir.actions.act_window">
+        <field name="name">Parámetros legales</field>
+        <field name="res_model">dolan.payroll.parameter</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="view_dolan_payroll_tax_bracket_list" model="ir.ui.view">
+        <field name="name">dolan.payroll.tax.bracket.list</field>
+        <field name="model">dolan.payroll.tax.bracket</field>
+        <field name="arch" type="xml">
+            <list string="Escala de Ganancias" editable="bottom">
+                <field name="date_from"/>
+                <field name="amount_from"/>
+                <field name="amount_to"/>
+                <field name="fixed_amount"/>
+                <field name="rate"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_payroll_tax_bracket" model="ir.actions.act_window">
+        <field name="name">Escala de Ganancias</field>
+        <field name="res_model">dolan.payroll.tax.bracket</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- Parámetros contables de la compañía -->
+    <record id="view_company_form_dolan_payroll" model="ir.ui.view">
+        <field name="name">res.company.form.dolan.payroll</field>
+        <field name="model">res.company</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <form string="Parámetros de sueldos" create="0" delete="0">
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group string="Contabilidad">
+                            <field name="dolan_payroll_journal_id"/>
+                            <field name="dolan_payroll_expense_account_id"/>
+                            <field name="dolan_payroll_contrib_account_id"/>
+                            <field name="dolan_payroll_payable_account_id"/>
+                            <field name="dolan_payroll_withholding_account_id"/>
+                            <field name="dolan_payroll_tax_account_id"/>
+                        </group>
+                        <group string="Empleador">
+                            <field name="dolan_payroll_employer_type"/>
+                            <field name="dolan_payroll_art_rate"/>
+                            <field name="dolan_payroll_art_fixed"/>
+                            <field name="dolan_payroll_life_insurance"/>
+                            <field name="dolan_payroll_place"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_payroll_company_settings" model="ir.actions.server">
+        <field name="name">Parámetros de la compañía</field>
+        <field name="model_id" ref="base.model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">action = {
+    'type': 'ir.actions.act_window',
+    'name': 'Parámetros de sueldos',
+    'res_model': 'res.company',
+    'res_id': env.company.id,
+    'view_mode': 'form',
+    'views': [(env.ref('DOLAN_payroll_ar.view_company_form_dolan_payroll').id, 'form')],
+    'target': 'current',
+}</field>
+    </record>
+</odoo>

@@ -140,7 +140,7 @@ jobs:
 
               printf "%s\n" "[options]" "admin_passwd = ci" "db_host = 127.0.0.1" "db_port = 5432" "db_user = odoo" "db_password = odoo" "addons_path = ${ADDONS_PATH}" "data_dir = /var/lib/odoo" "workers = 0" "max_cron_threads = 0" "without_demo = True" "log_level = warn" "log_handler = odoo.addons:INFO" > /tmp/odoo.conf
 
-              MODULES="base,web,l10n_ar,l10n_ar_withholding,l10n_ar_pos,l10n_ar_stock,project,project_todo,purchase,purchase_stock,fleet,point_of_sale,pos_restaurant,stock,account,DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_views,DOLAN_pos,DOLAN_stock_mrp,DOLAN_subscription,DOLAN_renting,DOLAN_knowledge_bi,DOLAN_exchange,DOLAN_discount_engine,DOLAN_payment_terminal,ePOS_print,pos_scale_management"
+              MODULES="base,web,l10n_ar,l10n_ar_withholding,l10n_ar_pos,l10n_ar_stock,project,project_todo,purchase,purchase_stock,fleet,point_of_sale,pos_restaurant,stock,account,DOLAN_base,DOLAN_theme,DOLAN_l10n_ar_afip,DOLAN_accounting,DOLAN_ai,DOLAN_ocr,DOLAN_whatsapp,DOLAN_views,DOLAN_pos,DOLAN_stock_mrp,DOLAN_subscription,DOLAN_renting,DOLAN_knowledge_bi,DOLAN_exchange,DOLAN_discount_engine,DOLAN_payment_terminal,ePOS_print,pos_scale_management,hr,DOLAN_payroll_ar"
 
               # Instalación + tests en una sola pasada; odoo-bin sale con
               # código != 0 si algún test falla. Limitar la batería a los
@@ -151,7 +151,7 @@ jobs:
                 --without-demo=True \
                 -i "${MODULES}" \
                 --test-enable \
-                --test-tags "/DOLAN_base,/DOLAN_theme,/DOLAN_l10n_ar_afip,/DOLAN_accounting,/DOLAN_ai,/DOLAN_ocr,/DOLAN_whatsapp,/DOLAN_views,/DOLAN_pos,/DOLAN_stock_mrp,/DOLAN_subscription,/DOLAN_renting,/DOLAN_knowledge_bi,/DOLAN_exchange,/DOLAN_discount_engine,/DOLAN_payment_terminal,/ePOS_print,/pos_scale_management" \
+                --test-tags "/DOLAN_base,/DOLAN_theme,/DOLAN_l10n_ar_afip,/DOLAN_accounting,/DOLAN_ai,/DOLAN_ocr,/DOLAN_whatsapp,/DOLAN_views,/DOLAN_pos,/DOLAN_stock_mrp,/DOLAN_subscription,/DOLAN_renting,/DOLAN_knowledge_bi,/DOLAN_exchange,/DOLAN_discount_engine,/DOLAN_payment_terminal,/ePOS_print,/pos_scale_management,/DOLAN_payroll_ar" \
                 --stop-after-init
 
               # Smoke de upgrade sobre la DB ya instalada: detecta errores de

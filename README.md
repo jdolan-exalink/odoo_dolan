@@ -39,6 +39,7 @@ Distribución modular **Open Source (`LGPL-3`)** para **Odoo Community Edition 2
 | **`DOLAN_knowledge_bi`** | Base de Conocimiento colaborativa tipo Notion (conectada como fuente RAG a `DOLAN_ai`) y **Tableros BI** ejecutivos. |
 | **`DOLAN_whatsapp`** | Integración **WhatsApp** vía [WAHA](https://waha.devlike.pro/) autohospedado: cuentas por compañía, webhook con verificación HMAC, bandeja interna de mensajes vinculada a contactos y envío manual desde la ficha del cliente. Detalle en `docs/WHATSAPP_WAHA.md`. |
 | **`DOLAN_exchange`** | Cotizaciones de venta en USD y conversión a pesos con fuente BNA Venta. |
+| **`DOLAN_payroll_ar`** | Sueldos y jornales argentinos: convenios con escalas, conceptos con fórmulas, liquidación mensual, SAC y final, Ganancias 4ta por método acumulado, exportación F.931 (SICOSS) y Libro de Sueldos Digital, asiento contable y recibo con huella SHA-256 y firma del empleado. Los parámetros legales cargados son de referencia y deben actualizarse; los diseños de archivo deben validarse en los aplicativos de ARCA antes de presentar. No se instala por defecto. |
 
 ---
 
