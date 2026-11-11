@@ -14,3 +14,4 @@ access_l10n_ar_caea_user,l10n_ar.caea.user,l10n_ar.caea,account.group_account_in
 access_l10n_ar_caea_manager,l10n_ar.caea.manager,l10n_ar.caea,account.group_account_manager,crud,
 access_dolan_ar_tax_jurisdiction_user,dolan.ar.tax.jurisdiction.user,dolan.ar.tax.jurisdiction,account.group_account_invoice,r,
 access_dolan_ar_tax_jurisdiction_manager,dolan.ar.tax.jurisdiction.manager,dolan.ar.tax.jurisdiction,account.group_account_manager,crud,
+access_dolan_ar_provincial_ddjj_wizard_user,dolan.ar.provincial.ddjj.wizard.user,dolan.ar.provincial.ddjj.wizard,account.group_account_invoice,crud,

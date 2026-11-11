@@ -5,3 +5,4 @@ from . import test_iibb_padron_and_retention
 from . import test_caea_contingency
 from . import test_export_invoices
 from . import test_padron_perceptions
+from . import test_provincial_ddjj

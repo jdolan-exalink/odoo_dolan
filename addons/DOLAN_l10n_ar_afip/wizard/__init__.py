@@ -6,3 +6,4 @@ from . import afip_ws_consult
 from . import libro_iva_digital_wizard
 from . import fiscal_report
 from . import iibb_padron_import_wizard
+from . import provincial_ddjj_wizard

@@ -4,7 +4,7 @@
 
 {
     'name': 'DOLAN - Facturación Electrónica ARCA/AFIP, Padrón, QR y Libro IVA',
-    'version': '20.0.1.42.0',
+    'version': '20.0.1.43.0',
     'category': 'Accounting/Localizations/EDI',
     'summary': 'Integración ARCA en desarrollo; Libro IVA limitado a casos validados localmente',
     'description': """
@@ -31,6 +31,8 @@ Características principales:
   Tucumán, Mendoza, SIRCAR, SIRCREB) donde la compañía es agente. Percepción automática en facturas
   de cliente con la alícuota del padrón (tributo ARCA 07) y alta de proveedores en los regímenes de
   retención de ``l10n_ar_withholding``. Importador con formatos oficiales ARBA y AGIP.
+* **DDJJ provinciales de IIBB**: archivos de ARBA (percepciones y retenciones practicadas),
+  AGIP e-ARCIBA y SIFERE (percepciones y retenciones sufridas, Convenio Multilateral).
 * **Recuperación WSFE**: consulta comprobantes autorizados y permite sincronizar el CAE con un único comprobante local publicado si coinciden tipo, PV, número, fecha, cliente e importe; no crea movimientos contables.
 * **QR y Transparencia Fiscal**: requieren completar y contrastar sus datos de origen antes de uso fiscal.
 * **Consulta manual de Padrón ARCA por CUIT**:
@@ -65,6 +67,7 @@ Características principales:
         'views/iibb_padron_views.xml',
         'views/l10n_ar_caea_views.xml',
         'views/ar_tax_jurisdiction_views.xml',
+        'wizard/provincial_ddjj_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
