@@ -234,3 +234,10 @@ class TestAiConnectionWizard(TransactionCase):
         other.action_set_default()
         defaults = self.Provider.search([('is_default', '=', True), ('company_id', '=', self.env.company.id)])
         self.assertEqual(defaults, other)
+
+    def test_other_company_uses_existing_connection_instead_of_creating_one(self):
+        other_company = self.env['res.company'].create({'name': 'Otra compañía DOLAN AI'})
+        before = self.Provider.with_context(active_test=False).search_count([])
+        provider = self.Provider.get_active_provider(company_id=other_company.id)
+        self.assertEqual(provider, self.previous)
+        self.assertEqual(self.Provider.with_context(active_test=False).search_count([]), before)

@@ -1169,6 +1169,13 @@ class DolanAiProvider(models.Model):
             ('company_id', 'in', [company, False]),
         ], order='is_default desc, sequence asc, id asc', limit=1)
         if not provider:
+            # Con varias compañías la conexión suele estar cargada en una sola.
+            # Antes se creaba un proveedor ChatGPT vacío para cada compañía
+            # nueva y el chat dejaba de responder; se usa la conexión existente.
+            provider = self.sudo().search(
+                [('active', '=', True)], order='is_default desc, sequence asc, id asc', limit=1,
+            )
+        if not provider:
             provider = self.sudo().create({
                 'name': 'ChatGPT plan (Sign in with ChatGPT)',
                 'provider_mode': 'chatgpt_oauth',

@@ -399,14 +399,6 @@ class AiSkill(models.Model):
             'companies': company_results,
         }
 
-    @staticmethod
-    def _group_value_name(value):
-        if hasattr(value, 'display_name'):
-            return value.display_name if value else False
-        if isinstance(value, (list, tuple)) and len(value) > 1:
-            return value[1]
-        return value or False
-
     @api.model
     def _exec_receivables_by_partner(self, params=None):
         """Saldo a cobrar abierto por cliente (apuntes de cuentas a cobrar sin conciliar).
@@ -426,36 +418,30 @@ class AiSkill(models.Model):
         ]
         groupby = ['company_id', 'partner_id']
         aggregates = ['amount_residual:sum']
-        rows = self._format_group_rows(groupby, aggregates, AccountMoveLine.read_group(
-            base_domain, groupby, aggregates, limit=2000,
-        ))
-        overdue_rows = self._format_group_rows(groupby, aggregates, AccountMoveLine.read_group(
-            base_domain + [('date_maturity', '<', today)], groupby, aggregates, limit=2000,
-        ))
-
-        def key(row):
-            company, partner = row.get('company_id'), row.get('partner_id')
-            company_id = company.id if hasattr(company, 'id') else (company[0] if isinstance(company, (list, tuple)) else company)
-            partner_id = partner.id if hasattr(partner, 'id') else (partner[0] if isinstance(partner, (list, tuple)) else partner)
-            return company_id or False, partner_id or False
-
-        overdue = {key(row): float(row.get('amount_residual:sum') or 0.0) for row in overdue_rows}
+        # _read_group devuelve registros (no ids sueltos), así salen los nombres.
+        rows = AccountMoveLine._read_group(base_domain, groupby, aggregates)
+        overdue = {
+            (company.id, partner.id or False): float(amount or 0.0)
+            for company, partner, amount in AccountMoveLine._read_group(
+                base_domain + [('date_maturity', '<', today)], groupby, aggregates,
+            )
+        }
 
         def money(value, currency):
             localized = f'{value:,.2f}'.replace(',', '\x00').replace('.', ',').replace('\x00', '.')
             return f'{currency} {localized}'
 
         by_company = {}
-        for row in rows:
-            amount = float(row.get('amount_residual:sum') or 0.0)
+        for company, partner, amount in rows:
+            amount = float(amount or 0.0)
             if abs(amount) < 0.005:
                 continue
-            company_id, partner_id = key(row)
-            by_company.setdefault(company_id, []).append({
+            partner_id = partner.id or False
+            by_company.setdefault(company.id, []).append({
                 'partner_id': partner_id,
-                'partner': self._group_value_name(row.get('partner_id')) or _('Sin cliente asignado'),
+                'partner': partner.display_name if partner else _('Sin cliente asignado'),
                 'balance': amount,
-                'overdue': overdue.get((company_id, partner_id), 0.0),
+                'overdue': overdue.get((company.id, partner_id), 0.0),
             })
 
         lines = [_('Saldos a cobrar por cliente al %s (comprobantes contabilizados sin cobrar):') % fields.Date.to_string(today)]
