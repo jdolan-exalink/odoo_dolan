@@ -20,6 +20,7 @@ EXPECTED_MODULES = [
     "DOLAN_l10n_ar_afip",
     "DOLAN_l10n_ar_cot",
     "DOLAN_accounting",
+    "DOLAN_collections",
     "DOLAN_bank_ar",
     "DOLAN_ai",
     "DOLAN_ocr",

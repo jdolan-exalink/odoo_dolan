@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_dolan_collections" model="ir.ui.view">
+        <field name="name">res.company.form.dolan.collections</field>
+        <field name="model">res.company</field>
+        <field name="priority">96</field>
+        <field name="arch" type="xml">
+            <form string="Cobranza digital" create="0" delete="0">
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group string="Link de pago">
+                            <field name="dolan_payment_link_mode"/>
+                            <field name="dolan_payment_qr_on_invoice"/>
+                        </group>
+                        <group string="Mercado Pago" invisible="dolan_payment_link_mode != 'mercadopago'">
+                            <field name="dolan_mp_access_token" password="True"/>
+                            <field name="dolan_mp_journal_id"/>
+                            <field name="dolan_mp_webhook_secret" password="True"/>
+                        </group>
+                    </group>
+                    <group string="Recordatorio por WhatsApp">
+                        <field name="dolan_whatsapp_reminder_template" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_collections_company_settings" model="ir.actions.server">
+        <field name="name">Cobranza digital</field>
+        <field name="model_id" ref="base.model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">action = {
+    'type': 'ir.actions.act_window',
+    'name': 'Cobranza digital',
+    'res_model': 'res.company',
+    'res_id': env.company.id,
+    'view_mode': 'form',
+    'views': [(env.ref('DOLAN_collections.view_company_form_dolan_collections').id, 'form')],
+    'target': 'current',
+}</field>
+    </record>
+
+    <menuitem id="menu_dolan_collections_settings" name="Cobranza digital"
+              parent="account.account_account_menu" action="action_dolan_collections_company_settings"
+              sequence="95" groups="base.group_system"/>
+</odoo>

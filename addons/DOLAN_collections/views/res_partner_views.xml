@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_dolan_collections" model="ir.ui.view">
+        <field name="name">res.partner.form.dolan.collections</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Cobranza" name="dolan_collections" invisible="not is_company and parent_id">
+                    <group>
+                        <group string="Débito automático por CBU">
+                            <field name="dolan_direct_debit"/>
+                            <field name="dolan_direct_debit_bank_id" invisible="not dolan_direct_debit"
+                                   required="dolan_direct_debit" context="{'default_partner_id': id}"/>
+                            <field name="dolan_direct_debit_ref" invisible="not dolan_direct_debit"/>
+                            <field name="dolan_direct_debit_date" invisible="not dolan_direct_debit"/>
+                        </group>
+                        <group string="Recordatorio">
+                            <button name="action_dolan_whatsapp_reminder" type="object" class="btn-secondary"
+                                    string="Enviar recordatorio de deuda por WhatsApp"
+                                    groups="account.group_account_invoice"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_server_dolan_whatsapp_reminder" model="ir.actions.server">
+        <field name="name">Recordatorio de deuda por WhatsApp</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="group_ids" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_dolan_whatsapp_reminder()</field>
+    </record>
+</odoo>

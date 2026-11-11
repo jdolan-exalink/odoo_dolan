@@ -107,6 +107,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_collections",
+		Title:       "Cobranza Digital (link de pago, QR, débito por CBU, WhatsApp)",
+		Version:     "20.0.1.0.0",
+		Category:    "Contabilidad",
+		Application: false,
+		Depends:     []string{"account", "DOLAN_accounting", "DOLAN_whatsapp"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_exchange",
 		Title:       "Cotizaciones USD y Tipo de Cambio BNA",
 		Version:     "20.0.1.0.0",
