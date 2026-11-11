@@ -141,3 +141,10 @@ class TestDolanPriceUpdate(TransactionCase):
         count = self.env['dolan.price.update'].search_count([])
         self.env['product.template']._cron_dolan_update_usd_prices()
         self.assertEqual(self.env['dolan.price.update'].search_count([]), count)
+
+    def test_variant_form_and_history_button(self):
+        variant = self.p_cola.product_variant_id
+        action = variant.action_dolan_view_price_history()
+        self.assertEqual(action['domain'], [('product_tmpl_id', '=', self.p_cola.id)])
+        # La vista de variante (hereda la de plantilla) tiene que validar con el botón agregado.
+        self.env['product.product'].get_views([[False, 'form']])

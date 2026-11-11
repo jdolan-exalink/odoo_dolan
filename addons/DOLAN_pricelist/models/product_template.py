@@ -137,3 +137,12 @@ class ProductTemplate(models.Model):
             'domain': [('product_tmpl_id', '=', self.id)],
             'context': {'default_product_tmpl_id': self.id},
         }
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    def action_dolan_view_price_history(self):
+        """La ficha de variante hereda la de plantilla: el botón abre el historial de su plantilla."""
+        self.ensure_one()
+        return self.product_tmpl_id.action_dolan_view_price_history()
