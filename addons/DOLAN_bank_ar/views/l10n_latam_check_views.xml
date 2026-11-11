@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_latam_check_view_form_dolan" model="ir.ui.view">
+        <field name="name">l10n_latam.check.form.dolan</field>
+        <field name="model">l10n_latam.check</field>
+        <field name="inherit_id" ref="l10n_latam_check.l10n_latam_check_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_dolan_reject_wizard" type="object" string="Registrar rechazo"
+                        invisible="payment_method_code != 'new_third_party_checks' or dolan_rejected"
+                        groups="account.group_account_invoice"/>
+                <button name="action_dolan_toggle_echeq" type="object" string="Marcar como echeq"
+                        invisible="dolan_is_echeq"/>
+            </xpath>
+            <xpath expr="//sheet/group" position="after">
+                <group>
+                    <group>
+                        <field name="dolan_is_echeq"/>
+                        <field name="dolan_rejected"/>
+                    </group>
+                    <group invisible="not dolan_rejected">
+                        <field name="dolan_rejection_date"/>
+                        <field name="dolan_rejection_reason"/>
+                        <field name="dolan_rejection_move_id"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_server_dolan_check_reject" model="ir.actions.server">
+        <field name="name">Registrar rechazo</field>
+        <field name="model_id" ref="l10n_latam_check.model_l10n_latam_check"/>
+        <field name="binding_model_id" ref="l10n_latam_check.model_l10n_latam_check"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_dolan_reject_wizard()</field>
+    </record>
+</odoo>

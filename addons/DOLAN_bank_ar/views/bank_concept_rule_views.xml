@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_bank_concept_rule_list" model="ir.ui.view">
+        <field name="name">dolan.bank.concept.rule.list</field>
+        <field name="model">dolan.bank.concept.rule</field>
+        <field name="arch" type="xml">
+            <list string="Reglas bancarias" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="kind"/>
+                <field name="pattern"/>
+                <field name="account_id"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_bank_concept_rule" model="ir.actions.act_window">
+        <field name="name">Reglas bancarias</field>
+        <field name="res_model">dolan.bank.concept.rule</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p>Las reglas reconocen conceptos del extracto (impuesto a los débitos y créditos, comisiones, IVA,
+               SIRCREB) y los imputan a su cuenta.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_dolan_bank_concept_rule" name="Reglas bancarias"
+              parent="account.account_account_menu" action="action_dolan_bank_concept_rule" sequence="90"
+              groups="account.group_account_manager"/>
+</odoo>

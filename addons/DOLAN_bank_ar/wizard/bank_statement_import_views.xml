@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_bank_statement_import_wizard_form_bank_ar" model="ir.ui.view">
+        <field name="name">dolan.bank.statement.import.wizard.form.bank.ar</field>
+        <field name="model">dolan.bank.statement.import.wizard</field>
+        <field name="inherit_id" ref="DOLAN_accounting.view_dolan_bank_statement_import_wizard_form"/>
+        <field name="arch" type="xml">
+            <field name="journal_id" position="after">
+                <field name="dolan_bank_profile"/>
+            </field>
+        </field>
+    </record>
+</odoo>

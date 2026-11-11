@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_bank_concept_rule_user,dolan.bank.concept.rule.user,dolan.bank.concept.rule,account.group_account_invoice,r,
+access_dolan_bank_concept_rule_manager,dolan.bank.concept.rule.manager,dolan.bank.concept.rule,account.group_account_manager,crud,
+access_dolan_check_reject_wizard_user,dolan.check.reject.wizard.user,dolan.check.reject.wizard,account.group_account_invoice,crud,

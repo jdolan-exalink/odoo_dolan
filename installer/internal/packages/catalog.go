@@ -98,6 +98,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_bank_ar",
+		Title:       "Bancos Argentinos (extractos, impuesto débitos/créditos, echeq)",
+		Version:     "20.0.1.0.0",
+		Category:    "Contabilidad",
+		Application: false,
+		Depends:     []string{"DOLAN_accounting", "l10n_latam_check"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_exchange",
 		Title:       "Cotizaciones USD y Tipo de Cambio BNA",
 		Version:     "20.0.1.0.0",
