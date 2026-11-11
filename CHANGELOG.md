@@ -20,6 +20,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 - `DOLAN_ai 20.0.1.34.0`: dictado Whisper con servicio local `faster-whisper` en Docker, endpoint interno compatible con multipart, modelo CPU `small`/`int8` y alternativa opcional OpenAI API. El audio queda dentro de la red local.
 
 ### Corregido
+- `DOLAN_ai 20.0.1.35.0`: el chat ya no inventa consultas cuando ChatGPT falla (antes listaba contactos o ventas genéricos y devolvía JSON crudo); informa el motivo y, si se agotó el cupo del plan, cuándo se renueva, sin volver a llamar al proveedor hasta entonces. Los atajos de contactos y caja ya no capturan pedidos de facturación, cobranzas o saldos de un cliente. Solo un administrador puede cambiar el modelo de la compañía desde el chat. Cada respuesta tiene un presupuesto de tiempo (80 s por defecto, parámetro `dolan_ai.response_budget_seconds`) para no superar el corte de proxies y túneles; si la conexión se corta (502/520/524) el chat espera y recupera la respuesta guardada en lugar de pedir reintentar, y un reintento no duplica la conversación. Las herramientas se pueden encadenar hasta tres rondas, el catálogo de modelos se guarda una hora y la renovación del token no bloquea a otros usuarios durante la respuesta.
 - `DOLAN_ai 20.0.1.33.0`: la sidebar del historial se cierra al elegir una conversación (incluida la que ya está abierta) o al tocar fuera; el historial identifica de forma visible el chat actual.
 
 ### Cambiado

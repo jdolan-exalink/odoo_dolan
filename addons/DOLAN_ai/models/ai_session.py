@@ -5,6 +5,7 @@
 import json
 import logging
 import re
+import time
 import unicodedata
 import calendar
 from datetime import datetime, timedelta
@@ -14,6 +15,17 @@ from odoo.exceptions import AccessError, UserError
 from odoo.tools import html2plaintext
 
 _logger = logging.getLogger(__name__)
+
+# Tiempo máximo de una respuesta del chat. Cloudflare corta a los 100 s
+# (error 524) y otros proxies suelen usar 60-120 s; dejamos margen.
+DEFAULT_RESPONSE_BUDGET = 80
+MIN_PROVIDER_CALL_SECONDS = 10
+MAX_TOOL_ROUNDS = 3
+
+
+def _now():
+    """Reloj monotónico del presupuesto de respuesta (separado para las pruebas)."""
+    return time.monotonic()
 
 
 class AiSession(models.Model):
@@ -126,10 +138,69 @@ class AiSession(models.Model):
             actions.append('draft_collection')
         return actions
 
-    def send_user_message(self, user_message, res_model=None, res_id=None, smart_action=None):
+    @api.model
+    def _get_response_budget(self):
+        try:
+            budget = int(self.env['ir.config_parameter'].sudo().get_param(
+                'dolan_ai.response_budget_seconds', DEFAULT_RESPONSE_BUDGET,
+            ))
+        except (TypeError, ValueError):
+            budget = DEFAULT_RESPONSE_BUDGET
+        return min(max(budget, 20), 600)
+
+    @api.model
+    def find_reply_for_request(self, client_request_id):
+        """Busca la respuesta ya guardada para un pedido del usuario actual.
+
+        Sirve para no duplicar un mensaje reenviado y para recuperar una
+        respuesta cuando el proxy o túnel cortó la conexión pero Odoo terminó.
+        Devuelve False si el pedido no existe y {'status': 'pending'} si todavía
+        no tiene respuesta."""
+        if not client_request_id or not isinstance(client_request_id, str):
+            return False
+        Event = self.env['ai.session.event']
+        user_event = Event.search([
+            ('client_request_id', '=', client_request_id[:64]),
+            ('role', '=', 'user'),
+            ('ai_session_id.request_user_id', '=', self.env.uid),
+        ], order='id desc', limit=1)
+        if not user_event:
+            return False
+        reply_event = Event.search([
+            ('ai_session_id', '=', user_event.ai_session_id.id),
+            ('role', '=', 'assistant'),
+            ('id', '>', user_event.id),
+        ], order='id asc', limit=1)
+        session = user_event.ai_session_id
+        if not reply_event:
+            return {'status': 'pending', 'session_id': session.id}
+        try:
+            metadata = json.loads(reply_event.metadata or '{}')
+        except (TypeError, ValueError):
+            metadata = {}
+        if not isinstance(metadata, dict):
+            metadata = {}
+        return {
+            'status': 'done',
+            'session_id': session.id,
+            'session_name': session.name,
+            'event_id': reply_event.id,
+            'reply': reply_event.content or '',
+            'provider': metadata.get('provider'),
+            'model': metadata.get('model'),
+            'used_fallback': bool(metadata.get('fallback')),
+            'fallback_reason': metadata.get('fallback_reason') or False,
+            'recovered': True,
+        }
+
+    def send_user_message(self, user_message, res_model=None, res_id=None, smart_action=None, client_request_id=None):
         """Procesa un mensaje del usuario en la sesión, ejecuta herramientas ORM multi-turno
         si el modelo lo solicita y registra los eventos en `ai.session.event`."""
         self.ensure_one()
+        if client_request_id:
+            previous = self.find_reply_for_request(client_request_id)
+            if previous and previous.get('status') == 'done':
+                return previous
         if res_model:
             self.res_model = res_model
         if res_id:
@@ -143,6 +214,7 @@ class AiSession(models.Model):
             'ai_session_id': self.id,
             'role': 'user',
             'content': user_message,
+            'client_request_id': (client_request_id or '')[:64] or False,
         })
 
         dashboard_request = self._parse_ai_dashboard_request(user_message)
@@ -247,13 +319,21 @@ class AiSession(models.Model):
                 ),
             })
 
-        completion = provider.generate_completion(messages=messages, tools=tools)
+        deadline = _now() + self._get_response_budget()
+
+        def remaining_seconds():
+            return deadline - _now()
+
+        completion = provider.generate_completion(
+            messages=messages, tools=tools, timeout=max(remaining_seconds() - 5, MIN_PROVIDER_CALL_SECONDS),
+        )
         tool_calls = completion.get('tool_calls') or []
 
-        # Hasta 3 rondas de ejecución de herramientas ORM (Function Calling)
-        max_rounds = 3
+        # Hasta MAX_TOOL_ROUNDS rondas de herramientas ORM (Function Calling).
+        # Las herramientas siguen disponibles salvo en la última ronda, para que
+        # el modelo pueda encadenar consultas y siempre termine con una respuesta.
         current_round = 0
-        while tool_calls and current_round < max_rounds:
+        while tool_calls and current_round < MAX_TOOL_ROUNDS:
             current_round += 1
             self.loop_state = 'executing_tool'
             messages.append({
@@ -286,16 +366,36 @@ class AiSession(models.Model):
                     'name': t_name,
                     'content': result_json,
                 })
-            completion = provider.generate_completion(messages=messages, tools=None)
+            if remaining_seconds() < MIN_PROVIDER_CALL_SECONDS:
+                # Sin tiempo para otra llamada: mostramos lo que leyó Odoo en
+                # lugar de arriesgar un corte del túnel (HTTP 524).
+                completion = {
+                    'content': '', 'tool_calls': [],
+                    'provider': completion.get('provider'), 'model': completion.get('model'),
+                    'raw': {'time_budget_exhausted': True},
+                }
+                break
+            last_round = current_round >= MAX_TOOL_ROUNDS
+            completion = provider.generate_completion(
+                messages=messages,
+                tools=None if last_round else tools,
+                timeout=max(remaining_seconds() - 5, MIN_PROVIDER_CALL_SECONDS),
+            )
             tool_calls = completion.get('tool_calls') or []
+            if (completion.get('raw') or {}).get('fallback'):
+                break
 
         assistant_reply = (completion.get('content') or '').strip()
-        if not assistant_reply or self._is_generic_completion(assistant_reply):
-            assistant_reply = self._format_tool_results_for_user(executed_tool_results)
-        if not assistant_reply:
-            assistant_reply = _('No recibí una respuesta del modelo. No puedo confirmar que la consulta se haya completado.')
         completion_raw = completion.get('raw') or {}
         used_fallback = bool(completion_raw.get('fallback'))
+        if not assistant_reply or self._is_generic_completion(assistant_reply):
+            assistant_reply = self._format_tool_results_for_user(executed_tool_results)
+            if assistant_reply and used_fallback and completion_raw.get('reason'):
+                assistant_reply = _('%(data)s\n\nNota: el modelo de IA no pudo redactar la respuesta (%(reason)s), así que te muestro los datos leídos de Odoo.') % {
+                    'data': assistant_reply, 'reason': completion_raw['reason'].rstrip('.'),
+                }
+        if not assistant_reply:
+            assistant_reply = _('No recibí una respuesta del modelo. No puedo confirmar que la consulta se haya completado.')
         assistant_event = Event.create({
             'ai_session_id': self.id,
             'role': 'assistant',
@@ -305,6 +405,7 @@ class AiSession(models.Model):
                 'model': completion.get('model'),
                 'fallback': used_fallback,
                 'fallback_reason': completion_raw.get('reason') if used_fallback else False,
+                'error_kind': completion_raw.get('error_kind') if used_fallback else False,
             }, ensure_ascii=False),
         })
         self.loop_state = 'completed'
@@ -316,6 +417,7 @@ class AiSession(models.Model):
             'model': completion.get('model'),
             'used_fallback': used_fallback,
             'fallback_reason': completion_raw.get('reason') if used_fallback else False,
+            'error_kind': completion_raw.get('error_kind') if used_fallback else False,
         }
 
     @api.model
@@ -343,7 +445,13 @@ class AiSession(models.Model):
             re.search(r'\b(saldos?|balances?)\b', normalized)
             and re.search(r'\b(actual|actuales|hoy|estado|situacion)\b', normalized)
         )
-        return asks_cash or asks_current_balances
+        # "Saldo actual del cliente X" o "de la factura Y" pide el saldo de un
+        # tercero o comprobante, no la posición de caja de toda la empresa.
+        about_third_party = bool(re.search(
+            r'\b(clientes?|proveedores?|contactos?|partner|facturas?|comprobantes?|pedidos?|cuenta corriente|deudores?)\b',
+            normalized,
+        ))
+        return asks_cash or (asks_current_balances and not about_third_party)
 
     @api.model
     def _build_ai_vat_comparison_reply(self, period):
@@ -841,5 +949,11 @@ class AiSessionEvent(models.Model):
     )
     content = fields.Text(string='Contenido')
     tool_name = fields.Char(string='Herramienta Ejecutada')
+    client_request_id = fields.Char(
+        string='ID del pedido del navegador',
+        index='btree_not_null',
+        copy=False,
+        help='Identificador que envía el chat para evitar duplicados y recuperar respuestas cortadas por el proxy.',
+    )
     metadata = fields.Text(string='Metadatos JSON')
     create_date = fields.Datetime(string='Fecha de Creación', readonly=True)

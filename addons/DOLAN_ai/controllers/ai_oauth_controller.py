@@ -158,11 +158,21 @@ class DolanAiOAuthController(http.Controller):
         events = []
         if session:
             for ev in session.event_ids.filtered(lambda e: e.role in ('user', 'assistant'))[-30:]:
+                metadata = {}
+                if ev.role == 'assistant' and ev.metadata:
+                    try:
+                        metadata = json.loads(ev.metadata) or {}
+                    except (TypeError, ValueError):
+                        metadata = {}
+                    if not isinstance(metadata, dict):
+                        metadata = {}
                 events.append({
                     'id': ev.id,
                     'role': ev.role,
                     'content': ev.content or '',
                     'create_date': ev.create_date and ev.create_date.strftime('%H:%M') or '',
+                    'used_fallback': bool(metadata.get('fallback')),
+                    'fallback_reason': metadata.get('fallback_reason') or '',
                 })
 
         available_models = provider.get_available_models() if provider else []
@@ -179,7 +189,9 @@ class DolanAiOAuthController(http.Controller):
                 'mode': provider.provider_mode,
                 'model': provider.default_model,
                 'oauth_status': provider.oauth_status,
+                'usage_limit': provider._active_usage_limit() or '',
                 'available_models': available_models,
+                'can_change_model': env.user.has_group('base.group_system'),
             },
             'session_id': session.id if session else False,
             'events': events,
@@ -200,20 +212,43 @@ class DolanAiOAuthController(http.Controller):
 
     @http.route('/dolan_ai/chat/set_model', type='jsonrpc', auth='user')
     def dolan_ai_chat_set_model(self, model):
-        """Permite cambiar dinámicamente el modelo de IA activo desde el chat drawer."""
+        """Cambia el modelo por defecto del proveedor de la compañía.
+
+        Afecta a todos los usuarios, así que solo lo puede hacer un
+        administrador y solo con un modelo del catálogo de la cuenta."""
         env = request.env
+        if not env.user.has_group('base.group_system'):
+            return {'status': 'forbidden', 'error': _('Solo un administrador puede cambiar el modelo de IA de la compañía.')}
         provider = env['dolan.ai.provider'].get_active_provider()
-        if provider and model:
-            provider.sudo().write({'default_model': model})
-            return {'status': 'ok', 'model': model}
-        return {'status': 'error'}
+        if not provider or not model or not isinstance(model, str):
+            return {'status': 'error', 'error': _('No se indicó un modelo válido.')}
+        allowed = {item['id'] for item in provider.get_available_models()}
+        if model not in allowed:
+            return {'status': 'error', 'error': _('El modelo "%s" no está disponible para esta cuenta.') % model}
+        provider.sudo().write({'default_model': model})
+        return {'status': 'ok', 'model': model}
+
+    @http.route('/dolan_ai/chat/recover', type='jsonrpc', auth='user')
+    def dolan_ai_chat_recover(self, client_request_id=None):
+        """Devuelve la respuesta de un pedido si Odoo ya la guardó.
+
+        El chat lo consulta cuando el proxy o túnel cortó la conexión
+        (502/520/524) para mostrar la respuesta sin volver a preguntar."""
+        result = request.env['ai.session'].find_reply_for_request(client_request_id)
+        return result or {'status': 'not_found'}
 
     @http.route('/dolan_ai/chat/send', type='jsonrpc', auth='user')
-    def dolan_ai_chat_send(self, message, session_id=None, agent_id=None, res_model=None, res_id=None, new_session=False, smart_action=None):
+    def dolan_ai_chat_send(self, message, session_id=None, agent_id=None, res_model=None, res_id=None,
+                           new_session=False, smart_action=None, client_request_id=None):
         """Recibe un mensaje desde el componente OWL 3 Ask AI, ejecuta la sesión agéntica
         (incluyendo llamadas a herramientas ORM de `ai.skill`) y devuelve la respuesta."""
         env = request.env
         Session = env['ai.session']
+        if client_request_id:
+            # Un reintento del mismo pedido no crea otra conversación ni repite la consulta.
+            previous = Session.find_reply_for_request(client_request_id)
+            if previous and previous.get('status') == 'done':
+                return previous
         session = Session.get_owned_session(session_id) if (session_id and not new_session) else Session.browse()
 
         if not session:
@@ -241,6 +276,7 @@ class DolanAiOAuthController(http.Controller):
             res_model=res_model,
             res_id=res_id,
             smart_action=smart_action,
+            client_request_id=client_request_id,
         )
         result['session_name'] = session.name
         return result

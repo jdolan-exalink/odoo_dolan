@@ -4,7 +4,7 @@
 
 {
     'name': 'AI',
-    'version': '20.0.1.34.0',
+    'version': '20.0.1.35.0',
     'category': 'Productivity/AI',
     'sequence': 50,
     'summary': 'IA agéntica Odoo 20 con Sign in with ChatGPT, Responses API, Skills ORM y chat OWL',

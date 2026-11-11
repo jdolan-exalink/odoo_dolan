@@ -161,7 +161,9 @@
                                 </div>
                                 <div class="o_dolan_ai_model_row">
                                     <span class="o_dolan_ai_led" t-att-class="this.state.provider.oauth_status === 'connected' ? 'is-connected' : 'is-disconnected'" title="Modelo conectado activo"/>
-                                    <select class="o_dolan_ai_model_select" t-on-change="(ev) => this.onModelSelect(ev)" title="Seleccionar modelo de ChatGPT">
+                                    <select class="o_dolan_ai_model_select" t-on-change="(ev) => this.onModelSelect(ev)"
+                                            t-att-disabled="!this.state.provider.can_change_model"
+                                            t-att-title="this.state.provider.can_change_model ? 'Seleccionar modelo de ChatGPT' : 'Solo un administrador puede cambiar el modelo de la compañía'">
                                         <t t-foreach="this.state.availableModels || []" t-as="m" t-key="m.id">
                                             <option t-att-value="m.id" t-att-selected="this.state.provider.model === m.id">
                                                 <t t-out="m.name || m.id"/>
@@ -175,6 +177,9 @@
                             </div>
                         </header>
 
+                        <div t-if="this.state.provider.usage_limit" class="alert alert-warning mx-3 mt-2 mb-0 o_dolan_ai_usage_limit" role="status">
+                            <t t-out="this.state.provider.usage_limit"/>
+                        </div>
                         <div t-if="this.state.uiError" class="alert alert-warning mx-3 mt-2 mb-0" role="alert">
                             <t t-out="this.state.uiError"/>
                         </div>
@@ -239,7 +244,7 @@
                                                 </t>
                                             </div>
                                             <div t-if="msg.usedFallback" class="o_dolan_ai_fallback_notice">
-                                                Respuesta de respaldo. <t t-if="msg.fallbackReason"><span t-out="msg.fallbackReason"/></t>
+                                                Sin respuesta del modelo de IA. <t t-if="msg.fallbackReason"><span t-out="msg.fallbackReason"/></t>
                                             </div>
                                         </div>
                                     </article>

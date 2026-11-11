@@ -33,6 +33,14 @@ OPENAI_LEGACY_CLIENT_ID = "app_EMoamEEZ73f0CkXaXp7hrann"
 OPENAI_LEGACY_AUTHORIZE_URL = "https://auth.openai.com/oauth/authorize"
 OPENAI_LEGACY_TOKEN_URL = "https://auth.openai.com/oauth/token"
 
+# Catálogo de modelos por proveedor: {clave: (vence_monotonic, [modelos])}.
+MODEL_CATALOG_TTL = 3600
+_MODEL_CATALOG_CACHE = {}
+# Cupo agotado informado por el proveedor: {(db, provider_id): (vence_epoch, motivo)}.
+# Evita repetir llamadas que van a fallar hasta que el plan se renueve.
+_USAGE_LIMIT_UNTIL = {}
+USAGE_LIMIT_ERROR_TYPES = ('usage_limit_reached', 'insufficient_quota', 'usage_not_included')
+
 
 class DolanAiProvider(models.Model):
     _name = 'dolan.ai.provider'
@@ -440,6 +448,8 @@ class DolanAiProvider(models.Model):
 
         token_data['issued_client_id'] = expected_client_id
         self._store_token_response(token_data)
+        # Una cuenta recién vinculada puede tener cupo propio.
+        self._clear_usage_limit()
         return True
 
     def _store_token_response(self, token_data):
@@ -580,10 +590,26 @@ class DolanAiProvider(models.Model):
         now = fields.Datetime.now()
         if self.token_expires_at and self.refresh_token:
             if self.token_expires_at <= (now + timedelta(minutes=5)):
-                self.refresh_access_token()
+                self._refresh_access_token_in_own_transaction()
                 if self.token_expires_at and self.token_expires_at <= now:
                     return False
         return self.access_token
+
+    def _refresh_access_token_in_own_transaction(self):
+        """Renueva el token en una transacción corta y propia.
+
+        El lock de `refresh_access_token` dura hasta el fin de la transacción;
+        si se tomara en la del chat, quedaría tomado durante toda la llamada al
+        modelo y los demás usuarios esperarían en fila. En modo test se usa la
+        misma transacción para no romper el aislamiento de las pruebas."""
+        self.ensure_one()
+        if getattr(self.env.registry, 'in_test_mode', lambda: False)():
+            self.refresh_access_token()
+            return
+        refresh_fields = ['access_token', 'refresh_token', 'id_token', 'token_expires_at', 'oauth_granted_scopes']
+        with self.env.registry.cursor() as cr:
+            self.with_env(self.env(cr=cr)).sudo().refresh_access_token()
+        self.invalidate_recordset(refresh_fields)
 
     @api.model
     def _cron_refresh_oauth_tokens(self):
@@ -601,6 +627,7 @@ class DolanAiProvider(models.Model):
 
     def action_disconnect_oauth(self):
         self.ensure_one()
+        self._clear_usage_limit()
         self.sudo().write({
             'access_token': False,
             'refresh_token': False,
@@ -657,9 +684,34 @@ class DolanAiProvider(models.Model):
             },
         }
 
-    def get_available_models(self):
+    def get_available_models(self, use_cache=True):
         """Devuelve los modelos reales disponibles para la cuenta conectada.
-        Si la cuenta ChatGPT OAuth está activa, consulta https://api.openai.com/v1/models."""
+        Si la cuenta ChatGPT OAuth está activa, consulta https://api.openai.com/v1/models.
+        El catálogo se guarda en memoria una hora para que abrir el chat no
+        dependa de una llamada externa cada vez."""
+        self.ensure_one()
+        cache_key = (self.env.cr.dbname, self.id, self.provider_mode, self.access_token or '')
+        cached = _MODEL_CATALOG_CACHE.get(cache_key)
+        if use_cache and cached and cached[0] > time.monotonic():
+            models = [dict(item) for item in cached[1]]
+        else:
+            models = self._fetch_available_models()
+            if models:
+                if len(_MODEL_CATALOG_CACHE) > 64:
+                    _MODEL_CATALOG_CACHE.clear()
+                _MODEL_CATALOG_CACHE[cache_key] = (time.monotonic() + MODEL_CATALOG_TTL, [dict(item) for item in models])
+        if not models:
+            models = [
+                {'id': 'gpt-4o', 'name': 'GPT-4o (Omni)'},
+                {'id': 'gpt-4o-mini', 'name': 'GPT-4o mini'},
+                {'id': 'o1', 'name': 'OpenAI o1'},
+                {'id': 'o3-mini', 'name': 'OpenAI o3-mini'},
+            ]
+        if self.default_model and not any(m['id'] == self.default_model for m in models):
+            models.insert(0, {'id': self.default_model, 'name': self.default_model})
+        return models
+
+    def _fetch_available_models(self):
         self.ensure_one()
         models = []
         if self.provider_mode == 'chatgpt_oauth':
@@ -690,52 +742,139 @@ class DolanAiProvider(models.Model):
                                 models.append({'id': m_id, 'name': m_id})
                 except Exception as e:
                     _logger.info('No se pudo obtener catálogo remoto de modelos: %s', e)
-
-        if not models:
-            models = [
-                {'id': 'gpt-4o', 'name': 'GPT-4o (Omni)'},
-                {'id': 'gpt-4o-mini', 'name': 'GPT-4o mini'},
-                {'id': 'o1', 'name': 'OpenAI o1'},
-                {'id': 'o3-mini', 'name': 'OpenAI o3-mini'},
-            ]
-        if self.default_model and not any(m['id'] == self.default_model for m in models):
-            models.insert(0, {'id': self.default_model, 'name': self.default_model})
         return models
+
+    @staticmethod
+    def _format_wait(seconds):
+        """Texto corto en español para una espera: '45 segundos', '12 min', '3 h 20 min'."""
+        seconds = max(int(seconds or 0), 0)
+        if seconds < 60:
+            return _('%s segundos') % seconds
+        minutes = (seconds + 59) // 60
+        if minutes < 60:
+            return _('%s min') % minutes
+        hours, minutes = divmod(minutes, 60)
+        if hours < 48:
+            return _('%(h)s h %(m)s min') % {'h': hours, 'm': minutes} if minutes else _('%s h') % hours
+        return _('%s días') % ((hours + 23) // 24)
+
+    @staticmethod
+    def _read_http_error_body(exc):
+        """Lee el JSON de error del proveedor una sola vez, sin fallar si no hay cuerpo."""
+        cached = getattr(exc, '_dolan_error_body', None)
+        if cached is not None:
+            return cached
+        body = {}
+        try:
+            raw = exc.read()
+            if raw:
+                body = json.loads(raw.decode('utf-8', errors='replace'))
+        except Exception:
+            body = {}
+        if not isinstance(body, dict):
+            body = {}
+        try:
+            exc._dolan_error_body = body
+        except Exception:
+            pass
+        return body
+
+    def _http_error_info(self, exc):
+        """Clasifica un error HTTP del proveedor.
+
+        Devuelve {'kind', 'reason', 'retry_seconds'} con kind en usage_limit,
+        rate_limit, auth, forbidden, not_found, server, http o network."""
+        status = getattr(exc, 'code', None)
+        provider_name = _('ChatGPT') if self.provider_mode == 'chatgpt_oauth' else (self.name or _('el proveedor'))
+        headers = getattr(exc, 'headers', None)
+        retry_after = headers.get('Retry-After') if headers else None
+        retry_seconds = int(retry_after) if retry_after and str(retry_after).isdigit() else None
+        error = (self._read_http_error_body(exc).get('error') or {}) if status else {}
+        if not isinstance(error, dict):
+            error = {'message': str(error)}
+        error_type = error.get('type') or error.get('code') or ''
+        if status == 429 and error_type in USAGE_LIMIT_ERROR_TYPES:
+            resets_in = error.get('resets_in_seconds')
+            if not resets_in and error.get('resets_at'):
+                try:
+                    resets_in = float(error['resets_at']) - time.time()
+                except (TypeError, ValueError):
+                    resets_in = None
+            try:
+                resets_in = int(float(resets_in)) if resets_in else retry_seconds
+            except (TypeError, ValueError):
+                resets_in = retry_seconds
+            if resets_in and resets_in > 0:
+                reason = _('Se agotó el cupo de uso de %(provider)s. Se renueva en %(wait)s.') % {
+                    'provider': provider_name, 'wait': self._format_wait(resets_in),
+                }
+            else:
+                reason = _('Se agotó el cupo de uso de %(provider)s. Revisá el plan o la facturación de la cuenta vinculada.') % {
+                    'provider': provider_name,
+                }
+            return {'kind': 'usage_limit', 'reason': reason, 'retry_seconds': resets_in}
+        if status == 429:
+            retry_hint = _(' Reintentá en %s.') % self._format_wait(retry_seconds) if retry_seconds else ''
+            return {
+                'kind': 'rate_limit',
+                'reason': _('%(provider)s limitó temporalmente las solicitudes (HTTP 429). No es un rechazo de OAuth.%(retry)s') % {
+                    'provider': provider_name, 'retry': retry_hint,
+                },
+                'retry_seconds': retry_seconds,
+            }
+        if status == 401:
+            return {'kind': 'auth', 'retry_seconds': None, 'reason': _(
+                '%(provider)s rechazó la credencial (HTTP 401). Revisá el token o volvé a vincular la cuenta.'
+            ) % {'provider': provider_name}}
+        if status == 403:
+            return {'kind': 'forbidden', 'retry_seconds': None, 'reason': _(
+                '%(provider)s rechazó el acceso (HTTP 403). Revisá los permisos, el plan y los alcances autorizados.'
+            ) % {'provider': provider_name}}
+        if status == 404:
+            return {'kind': 'not_found', 'retry_seconds': None, 'reason': _(
+                '%(provider)s no encontró el endpoint o modelo solicitado (HTTP 404). Revisá la configuración del modelo.'
+            ) % {'provider': provider_name}}
+        if status and status >= 500:
+            return {'kind': 'server', 'retry_seconds': retry_seconds, 'reason': _(
+                '%(provider)s informó un error temporal del servicio (HTTP %(status)s). Reintentá más tarde.'
+            ) % {'provider': provider_name, 'status': status}}
+        if status:
+            return {'kind': 'http', 'retry_seconds': None, 'reason': _(
+                '%(provider)s rechazó la solicitud (HTTP %(status)s). Revisá la configuración del proveedor.'
+            ) % {'provider': provider_name, 'status': status}}
+        return {'kind': 'network', 'retry_seconds': None, 'reason': _(
+            'No se pudo conectar con el proveedor. Revisá la red e intentá de nuevo.'
+        )}
 
     def _http_error_reason(self, exc):
         """Explain provider HTTP failures without mislabeling rate limits as OAuth errors."""
-        status = getattr(exc, 'code', None)
+        return self._http_error_info(exc)['reason']
+
+    def _usage_limit_key(self):
+        return (self.env.cr.dbname, self.id)
+
+    def _active_usage_limit(self):
+        """Motivo vigente si el proveedor informó cupo agotado y todavía no se renovó."""
+        entry = _USAGE_LIMIT_UNTIL.get(self._usage_limit_key())
+        if not entry:
+            return False
+        until, _reason = entry
+        remaining = until - time.time()
+        if remaining <= 0:
+            _USAGE_LIMIT_UNTIL.pop(self._usage_limit_key(), None)
+            return False
         provider_name = _('ChatGPT') if self.provider_mode == 'chatgpt_oauth' else (self.name or _('el proveedor'))
-        retry_after = getattr(exc, 'headers', None) and exc.headers.get('Retry-After')
-        retry_hint = _(' Reintentá en %s segundos.') % retry_after if retry_after and retry_after.isdigit() else ''
-        if status == 429:
-            return _('%(provider)s limitó temporalmente las solicitudes (HTTP 429). No es un rechazo de OAuth.%(retry)s') % {
-                'provider': provider_name,
-                'retry': retry_hint,
-            }
-        if status == 401:
-            return _('%(provider)s rechazó la credencial (HTTP 401). Revisá el token o volvé a vincular la cuenta.') % {
-                'provider': provider_name,
-            }
-        if status == 403:
-            return _('%(provider)s rechazó el acceso (HTTP 403). Revisá los permisos, el plan y los alcances autorizados.') % {
-                'provider': provider_name,
-            }
-        if status == 404:
-            return _('%(provider)s no encontró el endpoint o modelo solicitado (HTTP 404). Revisá la configuración del modelo.') % {
-                'provider': provider_name,
-            }
-        if status and status >= 500:
-            return _('%(provider)s informó un error temporal del servicio (HTTP %(status)s). Reintentá más tarde.') % {
-                'provider': provider_name,
-                'status': status,
-            }
-        if status:
-            return _('%(provider)s rechazó la solicitud (HTTP %(status)s). Revisá la configuración del proveedor.') % {
-                'provider': provider_name,
-                'status': status,
-            }
-        return _('No se pudo conectar con el proveedor. Revisá la red e intentá de nuevo.')
+        return _('Se agotó el cupo de uso de %(provider)s. Se renueva en %(wait)s.') % {
+            'provider': provider_name, 'wait': self._format_wait(remaining),
+        }
+
+    def _remember_usage_limit(self, retry_seconds, reason):
+        if retry_seconds and retry_seconds > 0:
+            # Nunca bloqueamos más de 7 días por un dato raro del proveedor.
+            _USAGE_LIMIT_UNTIL[self._usage_limit_key()] = (time.time() + min(retry_seconds, 7 * 86400), reason)
+
+    def _clear_usage_limit(self):
+        _USAGE_LIMIT_UNTIL.pop(self._usage_limit_key(), None)
 
     # -------------------------------------------------------------------------
     # Invocación de Completions y Function Calling (Tools)
@@ -778,7 +917,7 @@ class DolanAiProvider(models.Model):
                 provider.sudo().write(updates)
         return provider
 
-    def generate_completion(self, messages, tools=None, model=None, temperature=0.2):
+    def generate_completion(self, messages, tools=None, model=None, temperature=0.2, timeout=None):
         """Invoca el modelo de IA configurado usando el token OAuth activo de ChatGPT,
         OpenAI API u Ollama, soportando Function Calling (`tools`).
 
@@ -790,9 +929,22 @@ class DolanAiProvider(models.Model):
             'model': str,
             'raw': dict,
         }
+
+        `timeout` (segundos) acota la llamada completa, incluido el streaming,
+        para que una respuesta del chat no supere el corte del proxy o túnel.
+        Si falla, `raw` trae `fallback`, `reason` y `error_kind`.
         """
         self.ensure_one()
         target_model = model or self.default_model or 'gpt-6.1-sol'
+        blocked_reason = self._active_usage_limit()
+        if blocked_reason:
+            return self._local_fallback_completion(
+                messages, tools=tools, reason=blocked_reason, error_kind='usage_limit',
+            )
+        request_timeout = self.request_timeout or 60
+        if timeout is not None:
+            request_timeout = max(min(request_timeout, timeout), 1)
+        deadline = time.monotonic() + request_timeout
 
         if self.provider_mode == 'chatgpt_oauth':
             token = self._ensure_valid_access_token()
@@ -802,6 +954,7 @@ class DolanAiProvider(models.Model):
                     tools=tools,
                     reason=_('El proveedor ChatGPT OAuth aún no tiene un token activo. '
                              'Configuralo en IA -> Configuración -> Proveedores OAuth.'),
+                    error_kind='not_configured',
                 )
             headers = {
                 'Content-Type': 'application/json',
@@ -818,6 +971,7 @@ class DolanAiProvider(models.Model):
                     messages,
                     tools=tools,
                     reason=_('No se configuró una API Key en el proveedor OpenAI API.'),
+                    error_kind='not_configured',
                 )
             headers = {
                 'Content-Type': 'application/json',
@@ -858,18 +1012,31 @@ class DolanAiProvider(models.Model):
             method='POST',
         )
         try:
-            with urllib.request.urlopen(req, timeout=self.request_timeout or 60) as resp:
-                data = self._consume_responses_stream(resp) if self.provider_mode == 'chatgpt_oauth' else json.loads(resp.read().decode('utf-8'))
+            with urllib.request.urlopen(req, timeout=request_timeout) as resp:
+                data = (
+                    self._consume_responses_stream(resp, deadline=deadline)
+                    if self.provider_mode == 'chatgpt_oauth'
+                    else json.loads(resp.read().decode('utf-8'))
+                )
+            self._clear_usage_limit()
             return self._parse_openai_response(data, target_model)
         except Exception as exc:
+            error_kind = 'network'
             if isinstance(exc, urllib.error.HTTPError):
-                reason = self._http_error_reason(exc)
+                info = self._http_error_info(exc)
+                reason, error_kind = info['reason'], info['kind']
+                if error_kind == 'usage_limit':
+                    self._remember_usage_limit(info.get('retry_seconds'), reason)
+            elif isinstance(exc, TimeoutError) or 'timed out' in str(exc).lower():
+                error_kind = 'timeout'
+                reason = _('El proveedor tardó más de %s segundos en responder. Probá con una pregunta más acotada o reintentá en un momento.') % request_timeout
             elif self.provider_mode == 'chatgpt_oauth' and isinstance(exc, ValueError):
+                error_kind = 'incomplete'
                 reason = _('ChatGPT no completó la respuesta: %s') % str(exc)
             else:
                 reason = _('No se pudo conectar con el proveedor. Revisá la red e intentá de nuevo.')
-            _logger.warning("Fallo al invocar endpoint IA %s (%s)", endpoint, type(exc).__name__)
-            return self._local_fallback_completion(messages, tools=tools, reason=reason)
+            _logger.warning("Fallo al invocar endpoint IA %s (%s, %s)", endpoint, type(exc).__name__, error_kind)
+            return self._local_fallback_completion(messages, tools=tools, reason=reason, error_kind=error_kind)
 
     def transcribe_audio(self, audio_bytes, filename='dictado.webm', content_type='audio/webm'):
         """Transcribe a recording locally by default, with optional OpenAI API fallback."""
@@ -974,12 +1141,14 @@ class DolanAiProvider(models.Model):
         return items
 
     @staticmethod
-    def _consume_responses_stream(response):
+    def _consume_responses_stream(response, deadline=None):
         """Lee SSE Responses hasta response.completed y no acepta streams incompletos."""
         output_text = []
         response_data = {}
         completed = False
         for raw_line in response:
+            if deadline is not None and time.monotonic() > deadline:
+                raise TimeoutError('timed out reading the ChatGPT stream')
             line = raw_line.decode('utf-8', errors='replace').strip()
             if not line.startswith('data:'):
                 continue
@@ -1071,78 +1240,26 @@ class DolanAiProvider(models.Model):
             'raw': data,
         }
 
-    def _local_fallback_completion(self, messages, tools=None, reason=None):
-        """Motor determinístico de respaldo cuando aún no se vinculó el token OAuth o no hay red.
-        Permite que las herramientas ORM de Odoo AI respondan consultas de base de datos sin romperse."""
-        last_user_msg = ''
-        for m in reversed(messages or []):
-            if m.get('role') == 'user':
-                last_user_msg = m.get('content') or ''
-                break
-        if any(m.get('role') == 'tool' for m in (messages or [])):
-            last_tool = [m for m in messages if m.get('role') == 'tool'][-1]
-            return {
-                'content': (
-                    f"**Resultado procesado por Odoo AI ({self.name}):**\n\n"
-                    f"```json\n{last_tool.get('content', '')}\n```"
-                ),
-                'tool_calls': [],
-                'provider': self.name,
-                'model': self.default_model,
-                'raw': {'fallback': True, 'reason': reason},
-            }
+    def _local_fallback_completion(self, messages, tools=None, reason=None, error_kind=None):
+        """Respuesta honesta cuando el proveedor no está disponible.
 
-        lower_msg = last_user_msg.lower()
-        tool_calls = []
-        if tools:
-            if any(k in lower_msg for k in ('cliente', 'contacto', 'partner', 'customer', 'proveedor', 'vendor')):
-                tool_calls.append({
-                    'id': 'call_local_partner',
-                    'name': 'search_read',
-                    'arguments': {
-                        'model': 'res.partner',
-                        'domain': [],
-                        'fields': ['name', 'email', 'phone', 'vat'],
-                        'limit': 10,
-                    },
-                })
-            elif any(k in lower_msg for k in ('venta', 'pedido', 'sale.order', 'presupuesto', 'revenue')):
-                tool_calls.append({
-                    'id': 'call_local_sale',
-                    'name': 'read_group',
-                    'arguments': {
-                        'model': 'sale.order',
-                        'domain': [],
-                        'fields': ['amount_total:sum'],
-                        'groupby': ['user_id'],
-                        'limit': 5,
-                    },
-                })
-            elif any(k in lower_msg for k in ('factura', 'contab', 'balance', 'cash flow', 'flujo', 'account.move')):
-                tool_calls.append({
-                    'id': 'call_local_accounting',
-                    'name': 'accounting_report_analysis',
-                    'arguments': {'report_type': 'summary'},
-                })
-            elif any(k in lower_msg for k in ('agenda', 'calendario', 'evento', 'calendar.event', 'hoy')):
-                tool_calls.append({
-                    'id': 'call_local_calendar',
-                    'name': 'search_read',
-                    'arguments': {
-                        'model': 'calendar.event',
-                        'domain': [],
-                        'fields': ['name', 'start', 'stop'],
-                        'limit': 10,
-                    },
-                })
-
-        note = f"\n\n*(Nota: {reason})*" if reason else ""
+        No inventa consultas: antes se disparaban búsquedas genéricas por
+        palabra clave (por ejemplo, diez contactos cualquiera ante la palabra
+        "cliente"), que parecían una respuesta real. Ahora se informa el motivo
+        y, si ya hay resultados de herramientas, `ai.session` los presenta."""
+        has_tool_results = any(m.get('role') == 'tool' for m in (messages or []))
+        if has_tool_results:
+            content = ''
+        else:
+            content = _(
+                'No pude consultar al modelo de IA: %(reason)s\n\n'
+                'Mientras tanto puedo responder directamente desde Odoo pedidos como: resumen de facturación '
+                'de un período, IVA ventas vs compras, saldos de caja y bancos, agenda, contactos o CRM.'
+            ) % {'reason': reason or _('el proveedor no respondió.')}
         return {
-            'content': (
-                f"Hola, soy **Odoo AI**. Procesé tu consulta: *\"{last_user_msg[:120]}\"*.{note}"
-            ) if not tool_calls else '',
-            'tool_calls': tool_calls,
+            'content': content,
+            'tool_calls': [],
             'provider': self.name,
             'model': self.default_model,
-            'raw': {'fallback': True, 'reason': reason},
+            'raw': {'fallback': True, 'reason': reason, 'error_kind': error_kind or 'unavailable'},
         }

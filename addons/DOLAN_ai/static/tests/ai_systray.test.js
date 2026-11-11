@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 
-import { DolanAiSystray, normalizeStructuredReply } from "@DOLAN_ai/js/ai_systray";
+import { DolanAiSystray, classifyRpcError, normalizeStructuredReply } from "@DOLAN_ai/js/ai_systray";
 
 test("structured JSON replies render as readable Spanish bullets", () => {
     const result = normalizeStructuredReply('{"records":[{"display_name":"Cliente Demo","amount_total":1250,"invoice_date":"2026-11-01"}]}');
@@ -66,4 +66,17 @@ test("Shift+Enter keeps the newline path and does not send", () => {
     expect(result.reachedWindow).toBe(false);
     expect(result.event.defaultPrevented).toBe(false);
     expect(result.sendCount).toBe(0);
+});
+
+test("RPC errors distinguish Odoo validation errors from proxy or tunnel cuts", () => {
+    const serverError = Object.assign(new Error("RPC_ERROR"), {
+        name: "RPC_ERROR",
+        data: { message: "La aplicación Tableros Gerenciales BI no está instalada." },
+    });
+    expect(classifyRpcError(serverError)).toEqual({
+        kind: "server",
+        message: "La aplicación Tableros Gerenciales BI no está instalada.",
+    });
+    const tunnelCut = new Error('Connection to "/dolan_ai/chat/send" couldn\'t be established or was interrupted');
+    expect(classifyRpcError(tunnelCut).kind).toBe("connection");
 });
