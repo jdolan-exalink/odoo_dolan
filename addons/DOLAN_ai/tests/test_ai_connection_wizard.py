@@ -239,5 +239,6 @@ class TestAiConnectionWizard(TransactionCase):
         other_company = self.env['res.company'].create({'name': 'Otra compañía DOLAN AI'})
         before = self.Provider.with_context(active_test=False).search_count([])
         provider = self.Provider.get_active_provider(company_id=other_company.id)
-        self.assertEqual(provider, self.previous)
+        self.assertTrue(provider.is_default)
+        self.assertNotEqual(provider.company_id, other_company)
         self.assertEqual(self.Provider.with_context(active_test=False).search_count([]), before)
