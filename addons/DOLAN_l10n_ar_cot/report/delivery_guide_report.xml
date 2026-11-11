@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_delivery_document_dolan_cot" inherit_id="l10n_ar_stock.report_delivery_document">
+        <xpath expr="//div[@id='informations']" position="inside">
+            <t t-if="o.dolan_cot_number">
+                <br/>
+                <strong>COT ARBA: </strong><span t-out="o.dolan_cot_number"/>
+            </t>
+            <t t-if="o.dolan_cot_carrier_id or o.dolan_cot_vehicle_plate">
+                <br/>
+                <strong>Transporte: </strong>
+                <span t-out="o.dolan_cot_carrier_id.name"/>
+                <span t-if="o.dolan_cot_carrier_id.vat"> (CUIT <t t-out="o.dolan_cot_carrier_id.vat"/>)</span>
+                <span t-if="o.dolan_cot_vehicle_plate"> - Patente <t t-out="o.dolan_cot_vehicle_plate"/></span>
+            </t>
+        </xpath>
+    </template>
+</odoo>

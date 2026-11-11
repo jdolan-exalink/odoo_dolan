@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Equivalencias con la tabla de unidades de ARBA para el COT -->
+    <record id="uom.product_uom_kgm" model="uom.uom"><field name="dolan_cot_uom_code">1</field></record>
+    <record id="uom.product_uom_meter" model="uom.uom"><field name="dolan_cot_uom_code">2</field></record>
+    <record id="uom.product_uom_square_meter" model="uom.uom"><field name="dolan_cot_uom_code">3</field></record>
+    <record id="uom.product_uom_cubic_meter" model="uom.uom"><field name="dolan_cot_uom_code">4</field></record>
+    <record id="uom.product_uom_litre" model="uom.uom"><field name="dolan_cot_uom_code">5</field></record>
+    <record id="uom.product_uom_unit" model="uom.uom"><field name="dolan_cot_uom_code">7</field></record>
+    <record id="uom.product_uom_dozen" model="uom.uom"><field name="dolan_cot_uom_code">9</field></record>
+</odoo>

@@ -18,6 +18,7 @@ EXPECTED_MODULES = [
     "DOLAN_base",
     "DOLAN_theme",
     "DOLAN_l10n_ar_afip",
+    "DOLAN_l10n_ar_cot",
     "DOLAN_accounting",
     "DOLAN_ai",
     "DOLAN_ocr",
