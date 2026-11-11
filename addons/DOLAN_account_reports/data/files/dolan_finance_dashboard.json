@@ -1,0 +1,217 @@
+{
+ "version": "19.3.10",
+ "sheets": [
+  {
+   "id": "dolan_finance",
+   "name": "Finanzas",
+   "colNumber": 10,
+   "rowNumber": 30,
+   "rows": {},
+   "cols": {
+    "0": {
+     "size": 130
+    },
+    "1": {
+     "size": 120
+    },
+    "2": {
+     "size": 120
+    },
+    "3": {
+     "size": 120
+    },
+    "4": {
+     "size": 120
+    },
+    "5": {
+     "size": 100
+    },
+    "6": {
+     "size": 30
+    },
+    "7": {
+     "size": 230
+    },
+    "8": {
+     "size": 130
+    }
+   },
+   "merges": [],
+   "cells": {
+    "A1": "Finanzas DOLAN",
+    "A2": "Ejercicio",
+    "B2": "=YEAR(TODAY())",
+    "A4": "Mes",
+    "B4": "Ingresos",
+    "C4": "Costo de ventas",
+    "D4": "Gastos",
+    "E4": "Resultado",
+    "F4": "Margen bruto",
+    "A5": "Enero",
+    "B5": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),CONCATENATE(TEXT(1,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income_other\"),CONCATENATE(TEXT(1,\"00\"),\"/\",$B$2)),0))",
+    "C5": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),CONCATENATE(TEXT(1,\"00\"),\"/\",$B$2)),0)",
+    "D5": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense\"),CONCATENATE(TEXT(1,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_depreciation\"),CONCATENATE(TEXT(1,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_other\"),CONCATENATE(TEXT(1,\"00\"),\"/\",$B$2)),0)",
+    "E5": "=B5-C5-D5",
+    "F5": "=IF(B5=0,\"\",(B5-C5)/B5)",
+    "A6": "Febrero",
+    "B6": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),CONCATENATE(TEXT(2,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income_other\"),CONCATENATE(TEXT(2,\"00\"),\"/\",$B$2)),0))",
+    "C6": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),CONCATENATE(TEXT(2,\"00\"),\"/\",$B$2)),0)",
+    "D6": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense\"),CONCATENATE(TEXT(2,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_depreciation\"),CONCATENATE(TEXT(2,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_other\"),CONCATENATE(TEXT(2,\"00\"),\"/\",$B$2)),0)",
+    "E6": "=B6-C6-D6",
+    "F6": "=IF(B6=0,\"\",(B6-C6)/B6)",
+    "A7": "Marzo",
+    "B7": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),CONCATENATE(TEXT(3,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income_other\"),CONCATENATE(TEXT(3,\"00\"),\"/\",$B$2)),0))",
+    "C7": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),CONCATENATE(TEXT(3,\"00\"),\"/\",$B$2)),0)",
+    "D7": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense\"),CONCATENATE(TEXT(3,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_depreciation\"),CONCATENATE(TEXT(3,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_other\"),CONCATENATE(TEXT(3,\"00\"),\"/\",$B$2)),0)",
+    "E7": "=B7-C7-D7",
+    "F7": "=IF(B7=0,\"\",(B7-C7)/B7)",
+    "A8": "Abril",
+    "B8": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),CONCATENATE(TEXT(4,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income_other\"),CONCATENATE(TEXT(4,\"00\"),\"/\",$B$2)),0))",
+    "C8": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),CONCATENATE(TEXT(4,\"00\"),\"/\",$B$2)),0)",
+    "D8": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense\"),CONCATENATE(TEXT(4,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_depreciation\"),CONCATENATE(TEXT(4,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_other\"),CONCATENATE(TEXT(4,\"00\"),\"/\",$B$2)),0)",
+    "E8": "=B8-C8-D8",
+    "F8": "=IF(B8=0,\"\",(B8-C8)/B8)",
+    "A9": "Mayo",
+    "B9": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),CONCATENATE(TEXT(5,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income_other\"),CONCATENATE(TEXT(5,\"00\"),\"/\",$B$2)),0))",
+    "C9": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),CONCATENATE(TEXT(5,\"00\"),\"/\",$B$2)),0)",
+    "D9": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense\"),CONCATENATE(TEXT(5,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_depreciation\"),CONCATENATE(TEXT(5,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_other\"),CONCATENATE(TEXT(5,\"00\"),\"/\",$B$2)),0)",
+    "E9": "=B9-C9-D9",
+    "F9": "=IF(B9=0,\"\",(B9-C9)/B9)",
+    "A10": "Junio",
+    "B10": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),CONCATENATE(TEXT(6,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income_other\"),CONCATENATE(TEXT(6,\"00\"),\"/\",$B$2)),0))",
+    "C10": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),CONCATENATE(TEXT(6,\"00\"),\"/\",$B$2)),0)",
+    "D10": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense\"),CONCATENATE(TEXT(6,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_depreciation\"),CONCATENATE(TEXT(6,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_other\"),CONCATENATE(TEXT(6,\"00\"),\"/\",$B$2)),0)",
+    "E10": "=B10-C10-D10",
+    "F10": "=IF(B10=0,\"\",(B10-C10)/B10)",
+    "A11": "Julio",
+    "B11": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),CONCATENATE(TEXT(7,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income_other\"),CONCATENATE(TEXT(7,\"00\"),\"/\",$B$2)),0))",
+    "C11": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),CONCATENATE(TEXT(7,\"00\"),\"/\",$B$2)),0)",
+    "D11": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense\"),CONCATENATE(TEXT(7,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_depreciation\"),CONCATENATE(TEXT(7,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_other\"),CONCATENATE(TEXT(7,\"00\"),\"/\",$B$2)),0)",
+    "E11": "=B11-C11-D11",
+    "F11": "=IF(B11=0,\"\",(B11-C11)/B11)",
+    "A12": "Agosto",
+    "B12": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),CONCATENATE(TEXT(8,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income_other\"),CONCATENATE(TEXT(8,\"00\"),\"/\",$B$2)),0))",
+    "C12": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),CONCATENATE(TEXT(8,\"00\"),\"/\",$B$2)),0)",
+    "D12": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense\"),CONCATENATE(TEXT(8,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_depreciation\"),CONCATENATE(TEXT(8,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_other\"),CONCATENATE(TEXT(8,\"00\"),\"/\",$B$2)),0)",
+    "E12": "=B12-C12-D12",
+    "F12": "=IF(B12=0,\"\",(B12-C12)/B12)",
+    "A13": "Septiembre",
+    "B13": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),CONCATENATE(TEXT(9,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income_other\"),CONCATENATE(TEXT(9,\"00\"),\"/\",$B$2)),0))",
+    "C13": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),CONCATENATE(TEXT(9,\"00\"),\"/\",$B$2)),0)",
+    "D13": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense\"),CONCATENATE(TEXT(9,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_depreciation\"),CONCATENATE(TEXT(9,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_other\"),CONCATENATE(TEXT(9,\"00\"),\"/\",$B$2)),0)",
+    "E13": "=B13-C13-D13",
+    "F13": "=IF(B13=0,\"\",(B13-C13)/B13)",
+    "A14": "Octubre",
+    "B14": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),CONCATENATE(TEXT(10,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income_other\"),CONCATENATE(TEXT(10,\"00\"),\"/\",$B$2)),0))",
+    "C14": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),CONCATENATE(TEXT(10,\"00\"),\"/\",$B$2)),0)",
+    "D14": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense\"),CONCATENATE(TEXT(10,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_depreciation\"),CONCATENATE(TEXT(10,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_other\"),CONCATENATE(TEXT(10,\"00\"),\"/\",$B$2)),0)",
+    "E14": "=B14-C14-D14",
+    "F14": "=IF(B14=0,\"\",(B14-C14)/B14)",
+    "A15": "Noviembre",
+    "B15": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),CONCATENATE(TEXT(11,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income_other\"),CONCATENATE(TEXT(11,\"00\"),\"/\",$B$2)),0))",
+    "C15": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),CONCATENATE(TEXT(11,\"00\"),\"/\",$B$2)),0)",
+    "D15": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense\"),CONCATENATE(TEXT(11,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_depreciation\"),CONCATENATE(TEXT(11,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_other\"),CONCATENATE(TEXT(11,\"00\"),\"/\",$B$2)),0)",
+    "E15": "=B15-C15-D15",
+    "F15": "=IF(B15=0,\"\",(B15-C15)/B15)",
+    "A16": "Diciembre",
+    "B16": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),CONCATENATE(TEXT(12,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income_other\"),CONCATENATE(TEXT(12,\"00\"),\"/\",$B$2)),0))",
+    "C16": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),CONCATENATE(TEXT(12,\"00\"),\"/\",$B$2)),0)",
+    "D16": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense\"),CONCATENATE(TEXT(12,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_depreciation\"),CONCATENATE(TEXT(12,\"00\"),\"/\",$B$2)),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_other\"),CONCATENATE(TEXT(12,\"00\"),\"/\",$B$2)),0)",
+    "E16": "=B16-C16-D16",
+    "F16": "=IF(B16=0,\"\",(B16-C16)/B16)",
+    "A17": "Total",
+    "B17": "=SUM(B5:B16)",
+    "C17": "=SUM(C5:C16)",
+    "D17": "=SUM(D5:D16)",
+    "E17": "=SUM(E5:E16)",
+    "F17": "=IF(B17=0,\"\",(B17-C17)/B17)",
+    "H4": "Situación patrimonial",
+    "I4": "Saldo",
+    "H5": "Activo corriente",
+    "I5": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"asset_cash\"),TEXT($B$2,\"0\")),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"asset_receivable\"),TEXT($B$2,\"0\")),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"asset_current\"),TEXT($B$2,\"0\")),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"asset_prepayments\"),TEXT($B$2,\"0\")),0)",
+    "H6": "Activo no corriente",
+    "I6": "=IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"asset_non_current\"),TEXT($B$2,\"0\")),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"asset_fixed\"),TEXT($B$2,\"0\")),0)",
+    "H7": "Total activo",
+    "I7": "=I5+I6",
+    "H8": "Pasivo corriente",
+    "I8": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"liability_payable\"),TEXT($B$2,\"0\")),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"liability_credit_card\"),TEXT($B$2,\"0\")),0)+IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"liability_current\"),TEXT($B$2,\"0\")),0))",
+    "H9": "Pasivo no corriente",
+    "I9": "=-(IFERROR(ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"liability_non_current\"),TEXT($B$2,\"0\")),0))",
+    "H10": "Total pasivo",
+    "I10": "=I8+I9",
+    "H11": "Patrimonio neto (activo − pasivo)",
+    "I11": "=I7-I10",
+    "H13": "Liquidez corriente",
+    "I13": "=IF(I8=0,\"\",I5/I8)",
+    "H14": "Endeudamiento",
+    "I14": "=IF(I11=0,\"\",I10/I11)"
+   },
+   "styles": {
+    "A1": 1,
+    "A4:F4": 2,
+    "H4:I4": 2,
+    "A17:F17": 2,
+    "H7:I7": 2,
+    "H10:I11": 2
+   },
+   "formats": {
+    "B5:E17": 1,
+    "I5:I11": 1,
+    "F5:F17": 2,
+    "I13:I14": 3
+   },
+   "borders": {},
+   "conditionalFormats": [],
+   "dataValidationRules": [],
+   "figures": [],
+   "tables": [],
+   "areGridLinesVisible": false,
+   "isVisible": true,
+   "headerGroups": {
+    "ROW": [],
+    "COL": []
+   },
+   "comments": {},
+   "backgroundColor": "#FFFFFF"
+  }
+ ],
+ "styles": {
+  "1": {
+   "textColor": "#01666b",
+   "bold": true,
+   "fontSize": 16
+  },
+  "2": {
+   "bold": true,
+   "textColor": "#434343"
+  }
+ },
+ "formats": {
+  "1": "#,##0.00",
+  "2": "0.0%",
+  "3": "0.00"
+ },
+ "borders": {},
+ "revisionId": "START_REVISION",
+ "uniqueFigureIds": true,
+ "settings": {
+  "locale": {
+   "name": "Spanish (AR)",
+   "code": "es_AR",
+   "thousandsSeparator": ".",
+   "decimalSeparator": ",",
+   "dateFormat": "dd/mm/yyyy",
+   "timeFormat": "hh:mm:ss",
+   "formulaArgSeparator": ";",
+   "weekStart": 1
+  }
+ },
+ "pivots": {},
+ "pivotNextId": 1,
+ "customTableStyles": {},
+ "namedRanges": [],
+ "globalFilters": [],
+ "lists": {},
+ "listNextId": 1,
+ "odooLinkReferences": {}
+}

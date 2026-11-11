@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="DOLAN_account_reports.Report">
+        <div class="o_dolan_account_report o_action h-100 overflow-auto">
+            <div class="o_dolan_report_toolbar d-print-none border-bottom p-3 d-flex flex-wrap gap-2 align-items-center">
+                <div class="btn-group">
+                    <t t-foreach="[['balance_sheet', 'Situación patrimonial'], ['profit_loss', 'Resultados'], ['trial_balance', 'Sumas y saldos']]" t-as="rep" t-key="rep[0]">
+                        <button t-attf-class="btn btn-sm {{ this.state.options.report === rep[0] ? 'btn-primary' : 'btn-secondary' }}"
+                                t-on-click="() => this.setReport(rep[0])" t-out="rep[1]"/>
+                    </t>
+                </div>
+                <select class="form-select form-select-sm w-auto" t-on-change="(ev) => this.setPreset(ev.target.value)">
+                    <t t-foreach="[['month', 'Este mes'], ['last_month', 'Mes anterior'], ['quarter', 'Este trimestre'], ['year', 'Este año'], ['last_year', 'Año anterior'], ['custom', 'A medida']]" t-as="preset" t-key="preset[0]">
+                        <option t-att-value="preset[0]" t-att-selected="this.state.preset === preset[0]" t-out="preset[1]"/>
+                    </t>
+                </select>
+                <input t-if="this.state.options.report !== 'balance_sheet'" type="date" class="form-control form-control-sm w-auto"
+                       t-att-value="this.state.options.date_from" t-on-change="(ev) => this.setOption('date_from', ev.target.value)"/>
+                <span t-if="this.state.options.report !== 'balance_sheet'">a</span>
+                <span t-else="">Al</span>
+                <input type="date" class="form-control form-control-sm w-auto"
+                       t-att-value="this.state.options.date_to" t-on-change="(ev) => this.setOption('date_to', ev.target.value)"/>
+                <t t-if="this.state.options.report !== 'trial_balance'">
+                    <select class="form-select form-select-sm w-auto" t-on-change="(ev) => this.setOption('comparison', ev.target.value)">
+                        <option value="none" t-att-selected="this.state.options.comparison === 'none'">Sin comparar</option>
+                        <option value="previous_period" t-att-selected="this.state.options.comparison === 'previous_period'">Comparar con período anterior</option>
+                        <option value="previous_year" t-att-selected="this.state.options.comparison === 'previous_year'">Comparar con año anterior</option>
+                    </select>
+                    <select t-if="this.state.options.comparison !== 'none'" class="form-select form-select-sm w-auto"
+                            t-on-change="(ev) => this.setOption('periods', Number(ev.target.value))">
+                        <t t-foreach="[1, 2, 3]" t-as="n" t-key="n">
+                            <option t-att-value="n" t-att-selected="this.state.options.periods === n" t-out="n + (n === 1 ? ' período' : ' períodos')"/>
+                        </t>
+                    </select>
+                </t>
+                <div class="form-check form-switch ms-1">
+                    <input class="form-check-input" type="checkbox" id="dolan_posted" t-att-checked="this.state.options.posted_only"
+                           t-on-change="(ev) => this.setOption('posted_only', ev.target.checked)"/>
+                    <label class="form-check-label small" for="dolan_posted">Sólo publicados</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="dolan_hide_zero" t-att-checked="this.state.options.hide_zero"
+                           t-on-change="(ev) => this.setOption('hide_zero', ev.target.checked)"/>
+                    <label class="form-check-label small" for="dolan_hide_zero">Ocultar en cero</label>
+                </div>
+                <div class="ms-auto d-flex gap-2">
+                    <span t-if="this.state.loading" class="spinner-border spinner-border-sm text-muted align-self-center" role="status"/>
+                    <button class="btn btn-sm btn-secondary" t-on-click="() => this.exportXlsx()">Exportar a Excel</button>
+                    <button class="btn btn-sm btn-secondary" t-on-click="() => this.print()">Imprimir</button>
+                </div>
+            </div>
+
+            <div t-if="this.state.report" class="p-3">
+                <h2 class="mb-0" t-out="this.state.report.title"/>
+                <div class="text-muted mb-3" t-out="this.state.report.company"/>
+                <table class="table table-sm o_dolan_report_table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Cuenta</th>
+                            <t t-foreach="this.state.report.columns" t-as="column" t-key="column_index">
+                                <th class="text-end text-nowrap" t-out="column.label"/>
+                            </t>
+                            <th t-if="this.state.report.variation" class="text-end">Variación</th>
+                            <th class="d-print-none o_dolan_note_col"/>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="this.state.report.lines" t-as="line" t-key="line.id">
+                            <tr t-att-class="this.lineClass(line)">
+                                <td t-on-click="() => this.toggleLine(line)" t-att-class="line.foldable ? 'o_foldable' : ''">
+                                    <span t-if="line.foldable" class="o_dolan_caret" t-out="this.state.unfolded[line.account_id] ? '▾' : '▸'"/>
+                                    <t t-out="line.name"/>
+                                    <div t-if="line.note and this.state.editingNote !== line.account_id" class="o_dolan_note small text-muted" t-out="line.note"/>
+                                </td>
+                                <t t-foreach="line.values" t-as="value" t-key="value_index">
+                                    <td t-attf-class="text-end text-nowrap {{ value &lt; 0 ? 'text-danger' : '' }}" t-out="this.formatAmount(value)"/>
+                                </t>
+                                <td t-if="this.state.report.variation" t-attf-class="text-end text-nowrap {{ line.variation &gt; 0 ? 'text-success' : line.variation &lt; 0 ? 'text-danger' : '' }}"
+                                    t-out="this.formatVariation(line.variation)"/>
+                                <td class="d-print-none text-end">
+                                    <button t-if="line.account_id" class="btn btn-link btn-sm p-0 o_dolan_note_btn"
+                                            t-att-title="line.note ? 'Editar nota' : 'Agregar nota'" t-on-click="() => this.editNote(line)">
+                                        <t t-if="line.note">✎</t><t t-else="">+ nota</t>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr t-if="this.state.editingNote === line.account_id" class="d-print-none">
+                                <td t-att-colspan="line.values.length + 3">
+                                    <textarea class="form-control form-control-sm mb-1" rows="2" t-att-value="this.state.noteDraft"
+                                              t-on-input="(ev) => this.onNoteInput(ev)" placeholder="Nota para el equipo contable (vacía la borra)"/>
+                                    <button class="btn btn-primary btn-sm me-1" t-on-click="() => this.saveNote(line)">Guardar</button>
+                                    <button class="btn btn-secondary btn-sm" t-on-click="() => this.cancelNote()">Cancelar</button>
+                                </td>
+                            </tr>
+                            <t t-if="line.account_id and this.state.drill[line.account_id]">
+                                <t t-set="drill" t-value="this.state.drill[line.account_id]"/>
+                                <tr class="o_dolan_drill_row">
+                                    <td t-att-colspan="line.values.length + 3">
+                                        <table class="table table-sm mb-0 o_dolan_drill_table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Fecha</th><th>Asiento</th><th>Contacto</th><th>Etiqueta</th>
+                                                    <th class="text-end">Debe</th><th class="text-end">Haber</th><th class="text-end">Saldo</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr t-if="this.state.options.report !== 'profit_loss'" class="text-muted">
+                                                    <td t-out="this.formatDate(drill.opening_date)"/>
+                                                    <td colspan="5">Saldo inicial</td>
+                                                    <td class="text-end" t-out="this.formatAmount(drill.opening)"/>
+                                                </tr>
+                                                <t t-foreach="drill.lines" t-as="ml" t-key="ml.id">
+                                                    <tr>
+                                                        <td class="text-nowrap" t-out="this.formatDate(ml.date)"/>
+                                                        <td><a href="#" t-on-click.prevent="() => this.openMove(ml.move_id)" t-out="ml.move_name"/></td>
+                                                        <td t-out="ml.partner"/>
+                                                        <td class="text-truncate o_dolan_label" t-out="ml.label"/>
+                                                        <td class="text-end text-nowrap" t-out="ml.debit ? this.formatAmount(ml.debit) : ''"/>
+                                                        <td class="text-end text-nowrap" t-out="ml.credit ? this.formatAmount(ml.credit) : ''"/>
+                                                        <td class="text-end text-nowrap" t-out="this.formatAmount(ml.balance)"/>
+                                                    </tr>
+                                                </t>
+                                                <tr t-if="!drill.lines.length"><td colspan="7" class="text-muted">Sin movimientos en el período.</td></tr>
+                                            </tbody>
+                                        </table>
+                                        <a href="#" class="small d-print-none" t-on-click.prevent="() => this.openAllLines(line.account_id)">
+                                            <t t-if="drill.truncated">Se muestran 200 de <t t-out="drill.total_count"/> apuntes. Ver todos</t>
+                                            <t t-else="">Abrir en la lista de apuntes</t>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </t>
+</templates>

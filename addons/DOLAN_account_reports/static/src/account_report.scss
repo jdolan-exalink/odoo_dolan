@@ -1,0 +1,63 @@
+.o_dolan_account_report {
+    background: var(--o-view-background-color, #fff);
+
+    .o_dolan_report_table {
+        max-width: 1200px;
+        .o_type_section td {
+            font-weight: 700;
+            font-size: 1.02rem;
+            border-top: 2px solid var(--border-color, #dee2e6);
+        }
+        .o_type_group td {
+            font-weight: 600;
+        }
+        .o_type_total td {
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.03);
+        }
+        .o_level_1 > td:first-child {
+            padding-left: 1.5rem;
+        }
+        .o_level_2 > td:first-child {
+            padding-left: 2.75rem;
+        }
+        .o_foldable {
+            cursor: pointer;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+        .o_dolan_caret {
+            display: inline-block;
+            width: 1rem;
+        }
+        .o_dolan_note_col {
+            width: 5rem;
+        }
+        .o_dolan_note {
+            white-space: pre-wrap;
+            font-style: italic;
+            padding-left: 1rem;
+        }
+    }
+    .o_dolan_drill_row > td {
+        background: rgba(0, 0, 0, 0.015);
+        padding-left: 3rem;
+    }
+    .o_dolan_drill_table {
+        font-size: 0.85rem;
+        .o_dolan_label {
+            max-width: 320px;
+        }
+    }
+}
+
+@media print {
+    .o_main_navbar,
+    .o_control_panel {
+        display: none !important;
+    }
+    .o_dolan_account_report {
+        overflow: visible !important;
+    }
+}

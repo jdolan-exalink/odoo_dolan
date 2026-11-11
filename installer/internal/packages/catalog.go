@@ -197,6 +197,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_account_reports",
+		Title:       "Informes contables interactivos y tablero financiero",
+		Version:     "20.0.1.0.0",
+		Category:    "Contabilidad",
+		Application: false,
+		Depends:     []string{"account", "spreadsheet_dashboard_account"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_discount_engine",
 		Title:       "Promociones y Control de Descuentos POS",
 		Version:     "20.0.1.2.0",

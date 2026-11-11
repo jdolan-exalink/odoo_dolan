@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="dashboard_dolan_finance" model="spreadsheet.dashboard">
+        <field name="name">Finanzas DOLAN</field>
+        <field name="spreadsheet_binary_data" type="bytes" file="DOLAN_account_reports/data/files/dolan_finance_dashboard.json"/>
+        <field name="main_data_model_ids" eval="[(4, ref('account.model_account_move_line'))]"/>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_finance"/>
+        <field name="group_ids" eval="[Command.link(ref('account.group_account_readonly'))]"/>
+        <field name="sequence">5</field>
+        <field name="is_published">True</field>
+    </record>
+</odoo>

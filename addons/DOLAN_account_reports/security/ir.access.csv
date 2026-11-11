@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_account_report_note_readonly,Notas de informes: lectura,dolan.account.report.note,account.group_account_readonly,r,"[('company_id', 'in', company_ids)]"
+access_dolan_account_report_note_user,Notas de informes: contador,dolan.account.report.note,account.group_account_user,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_account_report_note_manager,Notas de informes: administrador,dolan.account.report.note,account.group_account_manager,crud,"[('company_id', 'in', company_ids)]"
