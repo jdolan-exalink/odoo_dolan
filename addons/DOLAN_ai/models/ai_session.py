@@ -272,8 +272,13 @@ class AiSession(models.Model):
                 'model': _('Consulta de solo lectura'),
             }
 
-        if self._parse_ai_cash_position_request(user_message):
-            result = self.env['ai.skill'].execute_skill_tool('cash_position_summary', {})
+        shortcut_tool = (
+            'receivables_by_partner' if self._parse_ai_receivables_request(user_message)
+            else 'cash_position_summary' if self._parse_ai_cash_position_request(user_message)
+            else None
+        )
+        if shortcut_tool:
+            result = self.env['ai.skill'].execute_skill_tool(shortcut_tool, {})
             assistant_reply = result.get('summary') or _('No pude obtener los saldos contables actuales de Odoo.')
             assistant_event = Event.create({
                 'ai_session_id': self.id,
@@ -436,6 +441,18 @@ class AiSession(models.Model):
             return None
         parsed_period = self._parse_sales_billing_summary_request((user_message or '') + ' ventas resumen')
         return parsed_period[1] if parsed_period else {}
+
+    @api.model
+    def _parse_ai_receivables_request(self, user_message):
+        """'Quién me debe', 'clientes que deben', 'deudores': saldo por cliente."""
+        normalized = unicodedata.normalize('NFKD', (user_message or '').lower())
+        normalized = ''.join(char for char in normalized if not unicodedata.combining(char))
+        if re.search(r'\b(proveedores?|les debo|debemos|por pagar)\b', normalized):
+            return False
+        return bool(
+            re.search(r'\b(quien(es)? (me|nos) deben?|me deben|nos deben|deudores|clientes? (que )?(deben|adeudan|morosos?))\b', normalized)
+            or re.search(r'\b(cuentas? (a|por) cobrar|saldos? (a|por) cobrar)\b.*\b(por cliente|clientes?)\b', normalized)
+        )
 
     @api.model
     def _parse_ai_cash_position_request(self, user_message):
@@ -641,7 +658,8 @@ class AiSession(models.Model):
         elif re.search(r'\b(ano pasado|ano anterior)\b', message):
             start = start.replace(year=today.year - 1, month=1, day=1)
             end = end.replace(year=today.year - 1, month=12, day=31)
-        elif re.search(r'\b(este ano|ano en curso|ano actual|anual)\b', message):
+        elif (re.search(r'\b(este ano|ano en curso|ano actual|anual|del ano|en el ano|en lo que va del ano)\b', message)
+              and not re.search(r'\b20\d{2}\b', message)):
             start = today.replace(month=1, day=1)
             end = today
         else:
