@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'DOLAN - Límite de crédito con bloqueo',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'category': 'Accounting/Accounting',
     'summary': 'Bloqueo de ventas al exceder el límite de crédito, cheques en cartera como riesgo y autorización de excepciones',
     'description': """

@@ -6,8 +6,11 @@ from odoo.tools.misc import formatLang
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    # DOLAN_accounting también define este campo como Boolean común (bloqueo por
+    # mora). No puede ser company_dependent: en una base que ya tiene esa columna
+    # booleana, Postgres no la puede convertir a jsonb y la instalación falla.
     dolan_credit_blocked = fields.Boolean(
-        string='Crédito bloqueado', company_dependent=True,
+        string='Crédito bloqueado',
         help='Bloquea las ventas en cuenta corriente a este cliente aunque no haya superado el límite.',
     )
     dolan_checks_in_portfolio = fields.Monetary(
