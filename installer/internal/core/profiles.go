@@ -70,7 +70,7 @@ var ProfileCatalog = []ProfileInfo{
 			"DOLAN_base", "DOLAN_theme", "DOLAN_l10n_ar_afip", "DOLAN_accounting",
 			"DOLAN_ai", "DOLAN_ocr", "DOLAN_whatsapp", "DOLAN_pos",
 			"DOLAN_discount_engine", "DOLAN_payment_terminal", "DOLAN_pricelist", "DOLAN_knowledge_bi",
-			"ePOS_print", "pos_scale_management", "DOLAN_credit_limit", "DOLAN_credit_limit_pos",
+			"ePOS_print", "pos_scale_management", "DOLAN_credit_limit", "DOLAN_credit_limit_pos", "DOLAN_marketplace",
 		},
 	},
 	{
@@ -93,7 +93,7 @@ var ProfileCatalog = []ProfileInfo{
 			"DOLAN_base", "DOLAN_theme", "DOLAN_l10n_ar_afip", "DOLAN_accounting",
 			"DOLAN_ai", "DOLAN_ocr", "DOLAN_whatsapp", "DOLAN_views",
 			"DOLAN_pos", "DOLAN_stock_mrp", "DOLAN_subscription", "DOLAN_renting",
-			"DOLAN_knowledge_bi", "DOLAN_exchange", "DOLAN_credit_limit_pos", "DOLAN_credit_limit", "DOLAN_pricelist", "DOLAN_discount_engine",
+			"DOLAN_knowledge_bi", "DOLAN_exchange", "DOLAN_marketplace", "DOLAN_credit_limit_pos", "DOLAN_credit_limit", "DOLAN_pricelist", "DOLAN_discount_engine",
 			"DOLAN_payment_terminal", "ePOS_print", "pos_scale_management",
 		},
 	},
