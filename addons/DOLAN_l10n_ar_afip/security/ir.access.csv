@@ -12,3 +12,5 @@ access_dolan_retention_certificate_user,dolan.retention.certificate.user,dolan.r
 access_dolan_retention_certificate_manager,dolan.retention.certificate.manager,dolan.retention.certificate,account.group_account_manager,crud,
 access_l10n_ar_caea_user,l10n_ar.caea.user,l10n_ar.caea,account.group_account_invoice,ru,
 access_l10n_ar_caea_manager,l10n_ar.caea.manager,l10n_ar.caea,account.group_account_manager,crud,
+access_dolan_ar_tax_jurisdiction_user,dolan.ar.tax.jurisdiction.user,dolan.ar.tax.jurisdiction,account.group_account_invoice,r,
+access_dolan_ar_tax_jurisdiction_manager,dolan.ar.tax.jurisdiction.manager,dolan.ar.tax.jurisdiction,account.group_account_manager,crud,

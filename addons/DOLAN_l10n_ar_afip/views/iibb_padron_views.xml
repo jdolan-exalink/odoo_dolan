@@ -81,6 +81,8 @@
                 <group invisible="state != 'draft'">
                     <group>
                         <field name="jurisdiction"/>
+                        <field name="file_format"/>
+                        <field name="only_known_partners"/>
                         <field name="attachment_filename" invisible="1"/>
                         <field name="attachment_file" filename="attachment_filename"/>
                     </group>

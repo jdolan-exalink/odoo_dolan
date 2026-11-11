@@ -4,7 +4,7 @@
 
 {
     'name': 'DOLAN - Facturación Electrónica ARCA/AFIP, Padrón, QR y Libro IVA',
-    'version': '20.0.1.41.0',
+    'version': '20.0.1.42.0',
     'category': 'Accounting/Localizations/EDI',
     'summary': 'Integración ARCA en desarrollo; Libro IVA limitado a casos validados localmente',
     'description': """
@@ -27,6 +27,10 @@ Características principales:
   ``DOLAN_WSMTXCA`` con pedido de CAE propio: permiso de embarque, Incoterm, país y moneda de
   destino, idioma y CUIT país para exportación; ítems con GTIN, unidad ARCA e IVA por línea
   para WSMTXCA.
+* **Percepciones y retenciones IIBB por padrón**: jurisdicciones (ARBA, AGIP, Córdoba, Santa Fe,
+  Tucumán, Mendoza, SIRCAR, SIRCREB) donde la compañía es agente. Percepción automática en facturas
+  de cliente con la alícuota del padrón (tributo ARCA 07) y alta de proveedores en los regímenes de
+  retención de ``l10n_ar_withholding``. Importador con formatos oficiales ARBA y AGIP.
 * **Recuperación WSFE**: consulta comprobantes autorizados y permite sincronizar el CAE con un único comprobante local publicado si coinciden tipo, PV, número, fecha, cliente e importe; no crea movimientos contables.
 * **QR y Transparencia Fiscal**: requieren completar y contrastar sus datos de origen antes de uso fiscal.
 * **Consulta manual de Padrón ARCA por CUIT**:
@@ -45,6 +49,7 @@ Características principales:
         'l10n_ar',
         'l10n_latam_invoice_document',
         'certificate',
+        'l10n_ar_withholding',
         'DOLAN_accounting',
     ],
     'data': [
@@ -59,6 +64,7 @@ Características principales:
         'wizard/fiscal_report_views.xml',
         'views/iibb_padron_views.xml',
         'views/l10n_ar_caea_views.xml',
+        'views/ar_tax_jurisdiction_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
