@@ -32,6 +32,10 @@ OPENAI_API_CHAT_URL = "https://api.openai.com/v1/chat/completions"
 OPENAI_LEGACY_CLIENT_ID = "app_EMoamEEZ73f0CkXaXp7hrann"
 OPENAI_LEGACY_AUTHORIZE_URL = "https://auth.openai.com/oauth/authorize"
 OPENAI_LEGACY_TOKEN_URL = "https://auth.openai.com/oauth/token"
+OPENROUTER_CHAT_URL = "https://openrouter.ai/api/v1/chat/completions"
+OPENROUTER_MODELS_URL = "https://openrouter.ai/api/v1/models"
+# Enrutador automático de OpenRouter: elige un modelo según el pedido.
+OPENROUTER_DEFAULT_MODEL = "openrouter/auto"
 
 # Catálogo de modelos por proveedor: {clave: (vence_monotonic, [modelos])}.
 MODEL_CATALOG_TTL = 3600
@@ -42,6 +46,14 @@ _USAGE_LIMIT_UNTIL = {}
 USAGE_LIMIT_ERROR_TYPES = ('usage_limit_reached', 'insufficient_quota', 'usage_not_included')
 # Sin hora de renovación informada, se espera este tiempo antes de reintentar.
 USAGE_LIMIT_UNKNOWN_RESET_SECONDS = 600
+
+
+class ProviderResponseError(ValueError):
+    """Respuesta 200 que trae un objeto `error` en lugar de `choices`."""
+
+    def __init__(self, error):
+        super().__init__(str(error))
+        self.error = error
 
 
 class ProviderUsageLimitError(ValueError):
@@ -88,6 +100,7 @@ class DolanAiProvider(models.Model):
         selection=[
             ('chatgpt_oauth', 'ChatGPT plan (Sign in with ChatGPT)'),
             ('openai_api', 'OpenAI Compatible API (/v1/chat/completions o /v1/responses)'),
+            ('openrouter', 'OpenRouter (API key, cientos de modelos)'),
             ('ollama', 'Ollama Local (http://localhost:11434/v1/chat/completions)'),
         ],
         string='Modo de Conexión',
@@ -252,6 +265,18 @@ class DolanAiProvider(models.Model):
         string='Timeout HTTP (segundos)',
         default=60,
     )
+
+    @api.onchange('provider_mode')
+    def _onchange_provider_mode_openrouter(self):
+        """Completa endpoint y modelo al elegir OpenRouter."""
+        for rec in self:
+            if rec.provider_mode == 'openrouter':
+                if not rec.api_base_url or 'openrouter.ai' not in rec.api_base_url:
+                    rec.api_base_url = OPENROUTER_CHAT_URL
+                if not rec.default_model or '/' not in rec.default_model:
+                    rec.default_model = OPENROUTER_DEFAULT_MODEL
+                if rec.name in (False, '', 'ChatGPT plan (Sign in with ChatGPT)'):
+                    rec.name = 'OpenRouter'
 
     @api.depends('redirect_mode')
     def _compute_redirect_uri(self):
@@ -661,6 +686,8 @@ class DolanAiProvider(models.Model):
     def action_test_connection(self):
         """Hace una solicitud breve a Responses API y falla en lugar de usar fallback local."""
         self.ensure_one()
+        if self.provider_mode != 'chatgpt_oauth':
+            return self._action_test_api_connection()
         token = self._ensure_valid_access_token()
         if not token:
             raise UserError(_('La cuenta ChatGPT no está vinculada. Vinculala antes de probar la conexión.'))
@@ -702,13 +729,42 @@ class DolanAiProvider(models.Model):
             },
         }
 
+    def _action_test_api_connection(self):
+        """Prueba un proveedor por API key (OpenRouter, OpenAI compatible u Ollama)."""
+        self.ensure_one()
+        self._clear_usage_limit()
+        result = self.generate_completion(
+            messages=[{'role': 'user', 'content': 'Respondé únicamente: AI conectado'}],
+            tools=None,
+            temperature=0,
+        )
+        if result.get('raw', {}).get('fallback') or not result.get('content'):
+            raise UserError(_('La prueba de conexión con %(provider)s falló: %(reason)s') % {
+                'provider': self.name,
+                'reason': result.get('raw', {}).get('reason') or _('respuesta vacía'),
+            })
+        _MODEL_CATALOG_CACHE.clear()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Conexión con %s verificada') % self.name,
+                'message': _('Modelo %(model)s: %(reply)s') % {
+                    'model': result.get('model') or self.default_model,
+                    'reply': result['content'][:200],
+                },
+                'type': 'success',
+                'sticky': False,
+            },
+        }
+
     def get_available_models(self, use_cache=True):
         """Devuelve los modelos reales disponibles para la cuenta conectada.
         Si la cuenta ChatGPT OAuth está activa, consulta https://api.openai.com/v1/models.
         El catálogo se guarda en memoria una hora para que abrir el chat no
         dependa de una llamada externa cada vez."""
         self.ensure_one()
-        cache_key = (self.env.cr.dbname, self.id, self.provider_mode, self.access_token or '')
+        cache_key = (self.env.cr.dbname, self.id, self.provider_mode, self.access_token or '', self.api_base_url or '')
         cached = _MODEL_CATALOG_CACHE.get(cache_key)
         if use_cache and cached and cached[0] > time.monotonic():
             models = [dict(item) for item in cached[1]]
@@ -718,6 +774,8 @@ class DolanAiProvider(models.Model):
                 if len(_MODEL_CATALOG_CACHE) > 64:
                     _MODEL_CATALOG_CACHE.clear()
                 _MODEL_CATALOG_CACHE[cache_key] = (time.monotonic() + MODEL_CATALOG_TTL, [dict(item) for item in models])
+        if not models and self.provider_mode == 'openrouter':
+            models = [{'id': OPENROUTER_DEFAULT_MODEL, 'name': 'OpenRouter Auto'}]
         if not models:
             models = [
                 {'id': 'gpt-4o', 'name': 'GPT-4o (Omni)'},
@@ -760,6 +818,51 @@ class DolanAiProvider(models.Model):
                                 models.append({'id': m_id, 'name': m_id})
                 except Exception as e:
                     _logger.info('No se pudo obtener catálogo remoto de modelos: %s', e)
+        elif self.provider_mode == 'openrouter':
+            models = self._fetch_openrouter_models()
+        return models
+
+    def _openrouter_headers(self):
+        """Encabezados de OpenRouter; Referer y título identifican la app en su panel."""
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {self.api_key}',
+            'X-Title': 'Odoo AI',
+        }
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        if base_url:
+            headers['HTTP-Referer'] = base_url
+        return headers
+
+    def _fetch_openrouter_models(self):
+        """Modelos de OpenRouter que aceptan herramientas (function calling).
+
+        El chat usa herramientas para leer Odoo; un modelo sin soporte
+        respondería sin datos, así que no se ofrece en el selector."""
+        self.ensure_one()
+        base = (self.api_base_url or OPENROUTER_CHAT_URL).split('/chat/completions')[0].rstrip('/')
+        url = base + '/models' if base.startswith('https://openrouter.ai') else OPENROUTER_MODELS_URL
+        try:
+            headers = {'Accept': 'application/json'}
+            if self.api_key:
+                headers['Authorization'] = f'Bearer {self.api_key}'
+            req = urllib.request.Request(url, headers=headers, method='GET')
+            with urllib.request.urlopen(req, timeout=8) as response:
+                catalog = json.loads(response.read().decode('utf-8'))
+        except Exception as exc:
+            _logger.info('No se pudo obtener el catálogo de OpenRouter: %s', exc)
+            return []
+        models = [{'id': OPENROUTER_DEFAULT_MODEL, 'name': 'OpenRouter Auto (elige el modelo)'}]
+        for item in catalog.get('data') or []:
+            model_id = item.get('id')
+            params = item.get('supported_parameters') or []
+            if not model_id or model_id == OPENROUTER_DEFAULT_MODEL:
+                continue
+            if params and 'tools' not in params:
+                continue
+            models.append({'id': model_id, 'name': item.get('name') or model_id})
+        models[1:] = sorted(models[1:], key=lambda item: item['name'].lower())
         return models
 
     @staticmethod
@@ -840,6 +943,15 @@ class DolanAiProvider(models.Model):
                 },
                 'retry_seconds': retry_seconds,
             }
+        if status == 402:
+            return {'kind': 'usage_limit', 'retry_seconds': None, 'reason': _(
+                '%(provider)s no tiene créditos suficientes (HTTP 402). Cargá saldo en la cuenta o elegí un modelo más económico.'
+            ) % {'provider': provider_name}}
+        detail = str(error.get('message') or '')[:200] if self.provider_mode == 'openrouter' else ''
+        if detail and status in (400, 404):
+            return {'kind': 'http' if status == 400 else 'not_found', 'retry_seconds': None, 'reason': _(
+                '%(provider)s rechazó la solicitud (HTTP %(status)s): %(detail)s'
+            ) % {'provider': provider_name, 'status': status, 'detail': detail}}
         if status == 401:
             return {'kind': 'auth', 'retry_seconds': None, 'reason': _(
                 '%(provider)s rechazó la credencial (HTTP 401). Revisá el token o volvé a vincular la cuenta.'
@@ -863,6 +975,14 @@ class DolanAiProvider(models.Model):
         return {'kind': 'network', 'retry_seconds': None, 'reason': _(
             'No se pudo conectar con el proveedor. Revisá la red e intentá de nuevo.'
         )}
+
+    def _is_tools_unsupported_error(self, exc):
+        """OpenRouter responde 404/400 cuando el modelo no admite function calling."""
+        if getattr(exc, 'code', None) not in (400, 404):
+            return False
+        error = self._read_http_error_body(exc).get('error') or {}
+        message = str(error.get('message') if isinstance(error, dict) else error).lower()
+        return 'tool' in message and ('support' in message or 'endpoint' in message)
 
     def _http_error_reason(self, exc):
         """Explain provider HTTP failures without mislabeling rate limits as OAuth errors."""
@@ -989,6 +1109,16 @@ class DolanAiProvider(models.Model):
         elif self.provider_mode == 'ollama':
             headers = {'Content-Type': 'application/json'}
             endpoint = self.api_base_url or 'http://localhost:11434/v1/chat/completions'
+        elif self.provider_mode == 'openrouter':
+            if not self.api_key:
+                return self._local_fallback_completion(
+                    messages,
+                    tools=tools,
+                    reason=_('No se configuró la API key de OpenRouter en el proveedor.'),
+                    error_kind='not_configured',
+                )
+            headers = self._openrouter_headers()
+            endpoint = self.api_base_url or OPENROUTER_CHAT_URL
         else:
             if not self.api_key:
                 return self._local_fallback_completion(
@@ -1042,11 +1172,29 @@ class DolanAiProvider(models.Model):
                     if self.provider_mode == 'chatgpt_oauth'
                     else json.loads(resp.read().decode('utf-8'))
                 )
+            if isinstance(data, dict) and data.get('error') and not data.get('choices'):
+                # OpenRouter puede responder 200 con un error del proveedor de origen.
+                raise ProviderResponseError(data['error'])
             self._clear_usage_limit()
             return self._parse_openai_response(data, target_model)
         except Exception as exc:
             error_kind = 'network'
-            if isinstance(exc, urllib.error.HTTPError):
+            if isinstance(exc, urllib.error.HTTPError) and tools and self._is_tools_unsupported_error(exc):
+                # El modelo elegido no admite herramientas: se reintenta sin
+                # ellas para que al menos responda, y se avisa en el log.
+                _logger.info('El modelo %s no admite herramientas; se reintenta sin ellas.', target_model)
+                return self.generate_completion(
+                    messages=messages, tools=None, model=model, temperature=temperature,
+                    timeout=max(deadline - time.monotonic(), 1),
+                )
+            if isinstance(exc, ProviderResponseError):
+                error = exc.error if isinstance(exc.error, dict) else {'message': str(exc.error)}
+                error_kind = 'upstream'
+                reason = _('%(provider)s devolvió un error del modelo: %(message)s') % {
+                    'provider': self.name or _('El proveedor'),
+                    'message': str(error.get('message') or error.get('code') or '')[:300],
+                }
+            elif isinstance(exc, urllib.error.HTTPError):
                 info = self._http_error_info(exc)
                 reason, error_kind = info['reason'], info['kind']
                 if error_kind == 'usage_limit':

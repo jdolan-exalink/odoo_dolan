@@ -49,6 +49,12 @@
                             class="btn-secondary"
                             groups="base.group_system"
                             invisible="provider_mode != 'chatgpt_oauth' or oauth_status != 'connected'"/>
+                    <button name="action_test_connection"
+                            string="Probar conexión"
+                            type="object"
+                            class="btn-secondary"
+                            groups="base.group_system"
+                            invisible="provider_mode == 'chatgpt_oauth'"/>
                     <button name="refresh_access_token"
                             string="Renovar Token (Refresh)"
                             type="object"
@@ -119,9 +125,17 @@
                         <page string="Endpoint API / Ollama" invisible="provider_mode == 'chatgpt_oauth' and not api_base_url">
                             <group>
                                 <field name="api_base_url"/>
-                                <field name="api_key" password="True" invisible="provider_mode != 'openai_api'"/>
+                                <field name="api_key" password="True" invisible="provider_mode not in ('openai_api', 'openrouter')"/>
                                 <field name="request_timeout"/>
                             </group>
+                            <div class="alert alert-info mb-0" role="status" invisible="provider_mode != 'openrouter'">
+                                <strong>OpenRouter:</strong> creá una API key en
+                                <a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer">openrouter.ai/settings/keys</a>
+                                y pegala arriba. El consumo se descuenta de los créditos de esa cuenta.
+                                En <strong>Modelo por Defecto</strong> usá un id de OpenRouter, por ejemplo
+                                <code>openrouter/auto</code> (elige solo) u otro con formato <code>proveedor/modelo</code>.
+                                El selector del chat muestra solo modelos que admiten herramientas, necesarias para leer datos de Odoo.
+                            </div>
                         </page>
                         <page string="Dictado Whisper">
                             <group>
