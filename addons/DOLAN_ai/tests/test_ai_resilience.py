@@ -91,6 +91,41 @@ class TestAiResilience(TransactionCase):
         self.assertEqual(second['raw']['error_kind'], 'usage_limit')
         self.assertTrue(self.provider._active_usage_limit())
 
+    def test_usage_limit_inside_chatgpt_stream_is_reported_as_quota(self):
+        provider = self.env['dolan.ai.provider'].create({
+            'name': 'Stream quota provider',
+            'provider_mode': 'chatgpt_oauth',
+            'company_id': self.env.company.id,
+            'access_token': 'stream-token',
+        })
+        failed_event = {'type': 'response.failed', 'response': {'error': {
+            'code': 'rate_limit_exceeded',
+            'message': 'The ChatGPT user has reached their Subscription Sharing usage limit. '
+                       'Ask the user to try again after their usage limit resets or use an API key instead.',
+        }}}
+
+        class StreamResponse:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+            def __iter__(self):
+                return iter([('data: ' + json.dumps(failed_event) + '\n').encode()])
+
+        with patch('odoo.addons.DOLAN_ai.models.ai_oauth_provider.urllib.request.urlopen',
+                   return_value=StreamResponse()):
+            result = provider.generate_completion([{'role': 'user', 'content': 'hola'}])
+        self.assertEqual(result['raw']['error_kind'], 'usage_limit')
+        self.assertIn('Se agotó el cupo de uso de ChatGPT', result['raw']['reason'])
+        self.assertNotIn('Hola, soy Odoo AI', result['content'])
+
+        with patch('odoo.addons.DOLAN_ai.models.ai_oauth_provider.urllib.request.urlopen') as urlopen:
+            again = provider.generate_completion([{'role': 'user', 'content': 'hola'}])
+        urlopen.assert_not_called()
+        self.assertIn('Vuelvo a intentar en', again['raw']['reason'])
+
     def test_plain_rate_limit_is_temporary_and_not_remembered(self):
         error = http_error(429, {'error': {'type': 'rate_limit_exceeded'}}, {'Retry-After': '30'})
         info = self.provider._http_error_info(error)

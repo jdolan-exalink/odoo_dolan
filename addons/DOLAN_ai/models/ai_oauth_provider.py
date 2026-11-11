@@ -40,6 +40,24 @@ _MODEL_CATALOG_CACHE = {}
 # Evita repetir llamadas que van a fallar hasta que el plan se renueve.
 _USAGE_LIMIT_UNTIL = {}
 USAGE_LIMIT_ERROR_TYPES = ('usage_limit_reached', 'insufficient_quota', 'usage_not_included')
+# Sin hora de renovación informada, se espera este tiempo antes de reintentar.
+USAGE_LIMIT_UNKNOWN_RESET_SECONDS = 600
+
+
+class ProviderUsageLimitError(ValueError):
+    """El proveedor informó dentro del streaming que se agotó el cupo del plan."""
+
+    def __init__(self, message, resets_in_seconds=None):
+        super().__init__(message)
+        self.resets_in_seconds = resets_in_seconds
+
+
+def _is_usage_limit_error(error):
+    if not isinstance(error, dict):
+        return False
+    code = error.get('type') or error.get('code') or ''
+    message = str(error.get('message') or '').lower()
+    return code in USAGE_LIMIT_ERROR_TYPES or 'usage limit' in message or 'exceeded your current quota' in message
 
 
 class DolanAiProvider(models.Model):
@@ -858,20 +876,26 @@ class DolanAiProvider(models.Model):
         entry = _USAGE_LIMIT_UNTIL.get(self._usage_limit_key())
         if not entry:
             return False
-        until, _reason = entry
+        until, reason, reset_known = (tuple(entry) + (True,))[:3]
         remaining = until - time.time()
         if remaining <= 0:
             _USAGE_LIMIT_UNTIL.pop(self._usage_limit_key(), None)
             return False
+        if not reset_known:
+            return _('%(reason)s Vuelvo a intentar en %(wait)s.') % {
+                'reason': reason, 'wait': self._format_wait(remaining),
+            }
         provider_name = _('ChatGPT') if self.provider_mode == 'chatgpt_oauth' else (self.name or _('el proveedor'))
         return _('Se agotó el cupo de uso de %(provider)s. Se renueva en %(wait)s.') % {
             'provider': provider_name, 'wait': self._format_wait(remaining),
         }
 
-    def _remember_usage_limit(self, retry_seconds, reason):
+    def _remember_usage_limit(self, retry_seconds, reason, reset_known=True):
         if retry_seconds and retry_seconds > 0:
             # Nunca bloqueamos más de 7 días por un dato raro del proveedor.
-            _USAGE_LIMIT_UNTIL[self._usage_limit_key()] = (time.time() + min(retry_seconds, 7 * 86400), reason)
+            _USAGE_LIMIT_UNTIL[self._usage_limit_key()] = (
+                time.time() + min(retry_seconds, 7 * 86400), reason, reset_known,
+            )
 
     def _clear_usage_limit(self):
         _USAGE_LIMIT_UNTIL.pop(self._usage_limit_key(), None)
@@ -1030,6 +1054,22 @@ class DolanAiProvider(models.Model):
             elif isinstance(exc, TimeoutError) or 'timed out' in str(exc).lower():
                 error_kind = 'timeout'
                 reason = _('El proveedor tardó más de %s segundos en responder. Probá con una pregunta más acotada o reintentá en un momento.') % request_timeout
+            elif isinstance(exc, ProviderUsageLimitError):
+                error_kind = 'usage_limit'
+                provider_name = _('ChatGPT') if self.provider_mode == 'chatgpt_oauth' else (self.name or _('el proveedor'))
+                if exc.resets_in_seconds:
+                    reason = _('Se agotó el cupo de uso de %(provider)s. Se renueva en %(wait)s.') % {
+                        'provider': provider_name, 'wait': self._format_wait(exc.resets_in_seconds),
+                    }
+                else:
+                    reason = _(
+                        'Se agotó el cupo de uso de %(provider)s y no informó cuándo se renueva. '
+                        'Probá más tarde, vinculá otra cuenta o configurá una API key.'
+                    ) % {'provider': provider_name}
+                self._remember_usage_limit(
+                    exc.resets_in_seconds or USAGE_LIMIT_UNKNOWN_RESET_SECONDS, reason,
+                    reset_known=bool(exc.resets_in_seconds),
+                )
             elif self.provider_mode == 'chatgpt_oauth' and isinstance(exc, ValueError):
                 error_kind = 'incomplete'
                 reason = _('ChatGPT no completó la respuesta: %s') % str(exc)
@@ -1162,9 +1202,19 @@ class DolanAiProvider(models.Model):
             event_type = event.get('type')
             if event_type == 'response.output_text.delta':
                 output_text.append(event.get('delta') or '')
-            elif event_type in ('response.failed', 'response.incomplete'):
-                error = (event.get('response') or {}).get('error') or {}
-                raise ValueError(error.get('message') or error.get('code') or event_type)
+            elif event_type in ('response.failed', 'response.incomplete', 'error'):
+                error = (event.get('response') or {}).get('error') or event.get('error') or {}
+                if event_type == 'error' and not error:
+                    error = {'message': event.get('message'), 'code': event.get('code')}
+                message = error.get('message') or error.get('code') or event_type
+                if _is_usage_limit_error(error):
+                    resets_in = error.get('resets_in_seconds')
+                    try:
+                        resets_in = int(float(resets_in)) if resets_in else None
+                    except (TypeError, ValueError):
+                        resets_in = None
+                    raise ProviderUsageLimitError(message, resets_in)
+                raise ValueError(message)
             elif event_type == 'response.completed':
                 response_data = event.get('response') or {}
                 completed = True
