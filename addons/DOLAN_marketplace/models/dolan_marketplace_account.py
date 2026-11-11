@@ -261,6 +261,10 @@ class DolanMarketplaceAccount(models.Model):
         try:
             with self.env.cr.savepoint():
                 return self.env['sale.order']._dolan_marketplace_import(self, data)
+        except UserError as error:
+            _logger.warning('DOLAN marketplace: no se importó %s: %s', data.get('name'), error)
+            self._log('orders', str(error), state='error', reference=data.get('name'))
+            return False
         except Exception as error:  # noqa: BLE001 - se registra y sigue con la próxima venta
             _logger.exception('DOLAN marketplace: error importando %s', data.get('name'))
             self._log('orders', str(error), state='error', reference=data.get('name'))
