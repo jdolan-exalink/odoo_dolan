@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_dolan_balance_sheet" model="ir.actions.client">
+        <field name="name">Estado de situación patrimonial</field>
+        <field name="tag">dolan_account_report</field>
+        <field name="context">{'dolan_report': 'balance_sheet'}</field>
+    </record>
+    <record id="action_dolan_profit_loss" model="ir.actions.client">
+        <field name="name">Estado de resultados</field>
+        <field name="tag">dolan_account_report</field>
+        <field name="context">{'dolan_report': 'profit_loss'}</field>
+    </record>
+    <record id="action_dolan_trial_balance" model="ir.actions.client">
+        <field name="name">Balance de sumas y saldos</field>
+        <field name="tag">dolan_account_report</field>
+        <field name="context">{'dolan_report': 'trial_balance'}</field>
+    </record>
+
+    <menuitem id="menu_dolan_account_reports" name="Informes interactivos"
+              parent="account.menu_finance_reports" sequence="0"
+              groups="account.group_account_readonly"/>
+    <menuitem id="menu_dolan_balance_sheet" name="Estado de situación patrimonial"
+              parent="menu_dolan_account_reports" action="action_dolan_balance_sheet" sequence="10"/>
+    <menuitem id="menu_dolan_profit_loss" name="Estado de resultados"
+              parent="menu_dolan_account_reports" action="action_dolan_profit_loss" sequence="20"/>
+    <menuitem id="menu_dolan_trial_balance" name="Balance de sumas y saldos"
+              parent="menu_dolan_account_reports" action="action_dolan_trial_balance" sequence="30"/>
+</odoo>
