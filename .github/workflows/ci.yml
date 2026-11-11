@@ -27,6 +27,9 @@ jobs:
       - name: Verificar addons incluidos por perfil de despliegue
         run: python scripts/test_install_profile_addons.py
 
+      - name: Verificar que el actualizador instale los módulos nuevos del perfil
+        run: python scripts/test_update_installation.py
+
       - name: Verificar idioma único es_AR del instalador
         run: python scripts/test_installer_locale_es_ar.py
 

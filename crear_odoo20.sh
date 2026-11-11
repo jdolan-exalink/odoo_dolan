@@ -45,6 +45,7 @@ Uso: crear_odoo20.sh [opciones]
                           para el perfil instalado (por defecto se omiten)
       --apps "A,B,C"      Lista personalizada de apps CE base a instalar en --init-db
       --check             Solo validar conectividad a los repos de IngAdhoc y salir
+      --list-modules      Imprimir los modulos DOLAN del perfil (separados por coma) y salir
       --non-interactive   No preguntar nada; usa argumentos o valores por defecto
   -h, --help              Mostrar esta ayuda
 USAGE
@@ -70,6 +71,7 @@ INITIAL_ADMIN_PASSWORD="${DOLAN_ADMIN_LOGIN_PASSWORD:-}"
 DEPLOY=""
 INTERACTIVE=1
 CHECK_ONLY=0
+LIST_MODULES=0
 INIT_DB=""
 DEMO_DATA=0
 DEMO_MODE="none"
@@ -105,6 +107,7 @@ while [[ $# -gt 0 ]]; do
     --demo-mode) DEMO_MODE="$2"; [[ "$DEMO_MODE" == "demo" ]] && DEMO_MODE="dolan"; [[ "$DEMO_MODE" != "none" ]] && DEMO_DATA=1; shift 2 ;;
     --apps) SYSTEM_APPS="$2"; SYSTEM_APPS_CUSTOM=1; shift 2 ;;
     --check) CHECK_ONLY=1; shift ;;
+    --list-modules) LIST_MODULES=1; INTERACTIVE=0; shift ;;
     --non-interactive) INTERACTIVE=0; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Opcion desconocida: $1" >&2; usage >&2; exit 1 ;;
@@ -181,6 +184,14 @@ esac
 # incluido custom. Su base de conocimiento y el motor BI viven en el mismo addon.
 if [[ ",$DOLAN_ADDONS," != *",DOLAN_knowledge_bi,"* ]]; then
   DOLAN_ADDONS+=",DOLAN_knowledge_bi"
+fi
+
+# El actualizador usa esta salida para instalar los modulos que un perfil
+# incorpora en versiones nuevas sin duplicar las listas de cada perfil.
+if [[ $LIST_MODULES -eq 1 ]]; then
+  printf '%s
+' "$DOLAN_ADDONS"
+  exit 0
 fi
 
 if [[ $SYSTEM_APPS_CUSTOM -eq 0 ]]; then
