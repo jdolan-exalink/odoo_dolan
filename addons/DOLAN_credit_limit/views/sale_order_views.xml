@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_dolan_credit_limit" model="ir.ui.view">
+        <field name="name">sale.order.form.dolan.credit.limit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <field name="dolan_credit_blocking" invisible="1"/>
+                <div class="alert alert-danger mb-0" role="alert" invisible="not dolan_credit_blocking">
+                    El cliente supera su límite de crédito o lo tiene bloqueado: sólo un usuario autorizado puede confirmar esta venta.
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="dolan_credit_override_user_id" invisible="not dolan_credit_override_user_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -32,6 +32,8 @@ EXPECTED_MODULES = [
     "DOLAN_whatsapp",
     "DOLAN_discount_engine",
     "DOLAN_exchange",
+    "DOLAN_credit_limit_pos",
+    "DOLAN_credit_limit",
     "DOLAN_pricelist",
     "DOLAN_payment_terminal",
     "DOLAN_payroll_ar",

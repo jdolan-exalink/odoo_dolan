@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_property_form_dolan_credit_limit" model="ir.ui.view">
+        <field name="name">res.partner.form.dolan.credit.limit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='credit_limits']" position="inside">
+                <field name="currency_id" invisible="1"/>
+                <field name="dolan_checks_in_portfolio" widget="monetary" invisible="not dolan_checks_in_portfolio"/>
+                <field name="dolan_credit_exposure" widget="monetary"/>
+                <field name="dolan_credit_available" widget="monetary" invisible="not use_partner_credit_limit"
+                       decoration-danger="dolan_credit_available &lt; 0"/>
+                <field name="dolan_credit_blocked" widget="boolean_toggle"
+                       groups="DOLAN_credit_limit.group_credit_limit_override"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
