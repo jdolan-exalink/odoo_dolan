@@ -107,12 +107,21 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_hr_scheduling",
+		Title:       "Personal: Horarios, turnos y cuadrillas",
+		Version:     "20.0.1.0.0",
+		Category:    "Recursos Humanos",
+		Application: false,
+		Depends:     []string{"resource", "mail", "hr_holidays", "DOLAN_hr_core"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_personal_operativo",
 		Title:       "Personal Operativo (sin nómina)",
 		Version:     "20.0.1.0.0",
 		Category:    "Recursos Humanos",
 		Application: false,
-		Depends:     []string{"DOLAN_hr_core", "hr_holidays", "hr_attendance", "DOLAN_hr_leave"},
+		Depends:     []string{"DOLAN_hr_core", "hr_holidays", "hr_attendance", "DOLAN_hr_leave", "DOLAN_hr_scheduling"},
 		HasData:     false,
 	},
 	{

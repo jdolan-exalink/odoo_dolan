@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_hr_crew_list" model="ir.ui.view">
+        <field name="name">dolan.hr.crew.list</field>
+        <field name="model">dolan.hr.crew</field>
+        <field name="arch" type="xml">
+            <list string="Cuadrillas">
+                <field name="name"/>
+                <field name="establishment_id"/>
+                <field name="department_id"/>
+                <field name="pattern_id"/>
+                <field name="anchor_date"/>
+                <field name="min_staff"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_crew_form" model="ir.ui.view">
+        <field name="name">dolan.hr.crew.form</field>
+        <field name="model">dolan.hr.crew</field>
+        <field name="arch" type="xml">
+            <form string="Cuadrilla">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="establishment_id"/>
+                            <field name="department_id"/>
+                            <field name="supervisor_id"/>
+                        </group>
+                        <group>
+                            <field name="pattern_id"/>
+                            <field name="anchor_date"/>
+                            <field name="min_staff"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="employee_ids" widget="many2many_tags_avatar"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_crew" model="ir.actions.act_window">
+        <field name="name">Cuadrillas</field>
+        <field name="res_model">dolan.hr.crew</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

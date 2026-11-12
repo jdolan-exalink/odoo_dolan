@@ -1,0 +1,19 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_hr_shift_user,dolan.hr.shift.user,dolan.hr.shift,base.group_user,r,
+access_dolan_hr_shift_manager,dolan.hr.shift.manager,dolan.hr.shift,hr.group_hr_user,crud,
+dolan_hr_shift_company_rule,dolan.hr.shift.company.rule,dolan.hr.shift,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+access_dolan_hr_shift_pattern_user,dolan.hr.shift.pattern.user,dolan.hr.shift.pattern,DOLAN_hr_core.group_dolan_hr_supervisor,r,
+access_dolan_hr_shift_pattern_manager,dolan.hr.shift.pattern.manager,dolan.hr.shift.pattern,hr.group_hr_user,crud,
+dolan_hr_shift_pattern_company_rule,dolan.hr.shift.pattern.company.rule,dolan.hr.shift.pattern,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+access_dolan_hr_shift_pattern_line_user,dolan.hr.shift.pattern.line.user,dolan.hr.shift.pattern.line,DOLAN_hr_core.group_dolan_hr_supervisor,r,
+access_dolan_hr_shift_pattern_line_manager,dolan.hr.shift.pattern.line.manager,dolan.hr.shift.pattern.line,hr.group_hr_user,crud,
+access_dolan_hr_crew_user,dolan.hr.crew.user,dolan.hr.crew,DOLAN_hr_core.group_dolan_hr_supervisor,r,
+access_dolan_hr_crew_manager,dolan.hr.crew.manager,dolan.hr.crew,hr.group_hr_user,crud,
+dolan_hr_crew_company_rule,dolan.hr.crew.company.rule,dolan.hr.crew,,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_hr_schedule_supervisor,dolan.hr.schedule.supervisor,dolan.hr.schedule,DOLAN_hr_core.group_dolan_hr_supervisor,r,
+access_dolan_hr_schedule_manager,dolan.hr.schedule.manager,dolan.hr.schedule,hr.group_hr_user,crud,
+dolan_hr_schedule_company_rule,dolan.hr.schedule.company.rule,dolan.hr.schedule,,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_hr_shift_assignment_own,dolan.hr.shift.assignment.own,dolan.hr.shift.assignment,base.group_user,r,"[('employee_id.user_id', '=', user.id), ('state', '=', 'published')]"
+access_dolan_hr_shift_assignment_supervisor,dolan.hr.shift.assignment.supervisor,dolan.hr.shift.assignment,DOLAN_hr_core.group_dolan_hr_supervisor,r,"['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]"
+access_dolan_hr_shift_assignment_manager,dolan.hr.shift.assignment.manager,dolan.hr.shift.assignment,hr.group_hr_user,crud,
+dolan_hr_shift_assignment_company_rule,dolan.hr.shift.assignment.company.rule,dolan.hr.shift.assignment,,crud,"[('company_id', 'in', company_ids)]"
