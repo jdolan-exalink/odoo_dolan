@@ -118,7 +118,7 @@ class TestAiResilience(TransactionCase):
                    return_value=StreamResponse()):
             result = provider.generate_completion([{'role': 'user', 'content': 'hola'}])
         self.assertEqual(result['raw']['error_kind'], 'usage_limit')
-        self.assertIn('Se agotó el cupo de uso de ChatGPT', result['raw']['reason'])
+        self.assertIn('Se agotó el cupo de uso de OpenAI', result['raw']['reason'])
         self.assertNotIn('Hola, soy Odoo AI', result['content'])
 
         with patch('odoo.addons.DOLAN_ai.models.ai_oauth_provider.urllib.request.urlopen') as urlopen:

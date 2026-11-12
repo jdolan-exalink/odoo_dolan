@@ -23,10 +23,10 @@ from odoo.addons.DOLAN_ai.models.ai_oauth_provider import (
 URLOPEN = 'odoo.addons.DOLAN_ai.models.ai_oauth_provider.urllib.request.urlopen'
 
 OPENROUTER_CATALOG = {'data': [
-    {'id': 'openai/gpt-4o-mini', 'name': 'OpenAI: GPT-4o mini', 'supported_parameters': ['tools'],
+    {'id': 'openai/gpt-4o-mini', 'name': 'OpenAI: GPT-4o mini', 'supported_parameters': ['tools'], 'created': 1700000000,
      'pricing': {'prompt': '0.00000015', 'completion': '0.0000006'}},
     {'id': 'meta-llama/llama-3.3-70b-instruct:free', 'name': 'Meta: Llama 3.3 70B',
-     'supported_parameters': ['tools'], 'pricing': {'prompt': '0', 'completion': '0'}},
+     'supported_parameters': ['tools'], 'created': 1710000000, 'pricing': {'prompt': '0', 'completion': '0'}},
     {'id': 'some/text-only', 'name': 'Text only', 'supported_parameters': ['temperature']},
 ]}
 
@@ -111,7 +111,7 @@ class TestAiConnectionWizard(TransactionCase):
         self.assertIn('USD 5.00', wizard.account_summary)
         ids = wizard.model_line_ids.mapped('model_id')
         self.assertEqual(ids[0], OPENROUTER_DEFAULT_MODEL)
-        self.assertEqual(ids[1], 'meta-llama/llama-3.3-70b-instruct:free', 'Los gratis van primero.')
+        self.assertEqual(ids[1], 'meta-llama/llama-3.3-70b-instruct:free', 'Los más nuevos van primero.')
         self.assertNotIn('some/text-only', ids)
         self.assertFalse(any(req.data for req in fake.requests), 'Validar la clave no genera texto ni gasta saldo.')
 

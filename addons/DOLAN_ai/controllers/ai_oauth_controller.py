@@ -187,6 +187,7 @@ class DolanAiOAuthController(http.Controller):
                 'id': provider.id,
                 'name': provider.name,
                 'mode': provider.provider_mode,
+                'label': provider._provider_label(),
                 'model': provider.default_model,
                 'oauth_status': provider.oauth_status,
                 'usage_limit': provider._active_usage_limit() or '',

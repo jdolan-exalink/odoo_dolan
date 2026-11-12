@@ -111,6 +111,31 @@ function newClientRequestId() {
  * - "connection": no hubo respuesta JSON válida: corte de red, proxy o túnel
  *   (502, 520, 524 de Cloudflare). Odoo pudo haber terminado igual.
  */
+/**
+ * Filtra el catálogo de modelos para el selector del chat.
+ * Sin búsqueda devuelve los primeros (el backend ya los ordena del más nuevo
+ * al más viejo); con búsqueda compara cada palabra contra id y nombre.
+ */
+export function filterModels(models, query = "", limit = 60) {
+    const list = Array.isArray(models) ? models : [];
+    const words = String(query || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .split(/\s+/)
+        .filter(Boolean);
+    const matches = words.length
+        ? list.filter((model) => {
+              const haystack = `${model.id || ""} ${model.name || ""}`
+                  .toLowerCase()
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "");
+              return words.every((word) => haystack.includes(word));
+          })
+        : list;
+    return matches.slice(0, limit);
+}
+
 export function classifyRpcError(err) {
     const serverMessage = err?.data?.message || (err?.name === "RPC_ERROR" ? err?.message : "");
     if (serverMessage) {
@@ -154,12 +179,14 @@ export class DolanAiSystray extends Component {
                 subtitle: "Tu copiloto empresarial para el día a día en Odoo 20.",
             },
             provider: {
-                name: "ChatGPT plan (Sign in with ChatGPT)",
+                name: "",
+                label: "",
                 mode: "chatgpt_oauth",
                 model: "gpt-6.1-sol",
                 oauth_status: "disconnected",
             },
             availableModels: [],
+            modelPicker: { open: false, query: "" },
             messages: [],
             sessions: [],
             promptButtons: [],
@@ -546,23 +573,66 @@ export class DolanAiSystray extends Component {
         });
     }
 
-    async onModelSelect(ev) {
-        const newModel = ev.target.value;
+    get currentModelName() {
+        const model = this.state.provider.model;
+        const found = (this.state.availableModels || []).find((item) => item.id === model);
+        return (found && found.name) || model || "";
+    }
+
+    get pickerModels() {
+        return filterModels(this.state.availableModels, this.state.modelPicker.query, 60);
+    }
+
+    get pickerMatchCount() {
+        return filterModels(this.state.availableModels, this.state.modelPicker.query, Infinity).length;
+    }
+
+    toggleModelPicker() {
+        if (!this.state.provider.can_change_model) {
+            return;
+        }
+        this.state.modelPicker.open = !this.state.modelPicker.open;
+        this.state.modelPicker.query = "";
+    }
+
+    closeModelPicker() {
+        this.state.modelPicker.open = false;
+        this.state.modelPicker.query = "";
+    }
+
+    onModelPickerKeydown(ev) {
+        if (ev.key === "Escape") {
+            this.closeModelPicker();
+        } else if (ev.key === "Enter") {
+            const first = this.pickerModels[0];
+            if (first) {
+                this.selectModel(first.id);
+            }
+        }
+    }
+
+    async selectModel(newModel) {
+        this.closeModelPicker();
         const previousModel = this.state.provider.model;
+        if (!newModel || newModel === previousModel) {
+            return;
+        }
         this.state.provider.model = newModel;
         try {
             const result = await rpc("/dolan_ai/chat/set_model", { model: newModel });
             if (result?.status !== "ok") {
                 this.state.provider.model = previousModel;
-                ev.target.value = previousModel;
                 this.state.uiError = result?.error || "No se pudo cambiar el modelo de IA.";
             }
         } catch (err) {
             console.error("Error actualizando modelo de IA:", err);
             this.state.provider.model = previousModel;
-            ev.target.value = previousModel;
             this.state.uiError = "No se pudo cambiar el modelo de IA.";
         }
+    }
+
+    async onModelSelect(ev) {
+        await this.selectModel(ev.target.value);
     }
 
     /**

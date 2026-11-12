@@ -7,7 +7,7 @@
                     title="Abrir Odoo AI"
                     t-on-click="() => this.toggleDrawer()">
                 <img src="/DOLAN_ai/static/description/icon.svg" class="o_dolan_ai_systray_icon" alt="IA" width="20" height="20"/>
-                <span class="d-none d-md-inline fw-semibold">Odoo AI</span>
+                <span class="d-none d-md-inline fw-semibold" t-out="this.state.agent.name || 'Odoo AI'"/>
             </button>
 
             <!-- Floating Minimized Pill Widget (Clean circle without text) -->
@@ -101,7 +101,7 @@
 
                     <main class="o_dolan_ai_main">
                         <header class="o_dolan_ai_header">
-                            <!-- Left: Hamburger + Logo + Title (ChatGPT) + Small Model Subtitle -->
+                            <!-- Left: Hamburger + Logo + nombre del asistente + proveedor · modelo -->
                             <div class="o_dolan_ai_header_left">
                                 <button type="button" class="o_dolan_ai_icon_button"
                                         title="Historial de chats" aria-label="Historial de chats"
@@ -114,8 +114,10 @@
                                 </button>
                                 <img src="/DOLAN_ai/static/description/icon.svg" alt="IA" width="28" height="28" class="o_dolan_ai_header_logo"/>
                                 <div class="o_dolan_ai_title_col">
-                                    <span class="o_dolan_ai_title_main" t-out="this.state.provider.name || 'Odoo AI'"/>
-                                    <span class="o_dolan_ai_title_sub" t-out="this.state.provider.model || ''"/>
+                                    <span class="o_dolan_ai_title_main" t-out="this.state.agent.name || 'Odoo AI'"/>
+                                    <span class="o_dolan_ai_title_sub">
+                                        <t t-if="this.state.provider.label"><t t-out="this.state.provider.label"/> · </t><t t-out="this.currentModelName"/>
+                                    </span>
                                 </div>
                             </div>
 
@@ -161,18 +163,51 @@
                                 </div>
                                 <div class="o_dolan_ai_model_row">
                                     <span class="o_dolan_ai_led" t-att-class="this.state.provider.oauth_status === 'connected' ? 'is-connected' : 'is-disconnected'" title="Modelo conectado activo"/>
-                                    <select class="o_dolan_ai_model_select" t-on-change="(ev) => this.onModelSelect(ev)"
-                                            t-att-disabled="!this.state.provider.can_change_model"
-                                            t-att-title="this.state.provider.can_change_model ? 'Seleccionar modelo' : 'Solo un administrador puede cambiar el modelo de la compañía'">
-                                        <t t-foreach="this.state.availableModels || []" t-as="m" t-key="m.id">
-                                            <option t-att-value="m.id" t-att-selected="this.state.provider.model === m.id">
-                                                <t t-out="m.name || m.id"/>
-                                            </option>
+                                    <div class="o_dolan_ai_model_picker">
+                                        <button type="button" class="o_dolan_ai_model_button"
+                                                t-on-click="() => this.toggleModelPicker()"
+                                                t-att-disabled="!this.state.provider.can_change_model"
+                                                t-att-title="this.state.provider.can_change_model ? 'Elegir modelo' : 'Solo un administrador puede cambiar el modelo de la compañía'"
+                                                aria-haspopup="listbox"
+                                                t-att-aria-expanded="this.state.modelPicker.open ? 'true' : 'false'">
+                                            <span class="o_dolan_ai_model_button_label" t-out="this.currentModelName"/>
+                                            <i class="fa fa-caret-down" t-if="this.state.provider.can_change_model"/>
+                                        </button>
+                                        <t t-if="this.state.modelPicker.open">
+                                            <div class="o_dolan_ai_model_backdrop" t-on-click="() => this.closeModelPicker()"/>
+                                            <div class="o_dolan_ai_model_menu" role="listbox">
+                                                <input type="search" class="form-control form-control-sm o_dolan_ai_model_search"
+                                                       placeholder="Buscar modelo (ej.: gpt-6, claude, gemini)"
+                                                       t-att-value="this.state.modelPicker.query"
+                                                       t-on-input="(ev) => { this.state.modelPicker.query = ev.target.value; }"
+                                                       t-on-keydown="(ev) => this.onModelPickerKeydown(ev)"
+                                                       autofocus="autofocus"/>
+                                                <div class="o_dolan_ai_model_menu_hint">
+                                                    <t t-if="this.state.modelPicker.query">
+                                                        <t t-out="this.pickerMatchCount"/> resultados
+                                                    </t>
+                                                    <t t-else="">
+                                                        Más nuevos de <t t-out="this.state.provider.label || 'el proveedor'"/> · <t t-out="(this.state.availableModels || []).length"/> modelos en total
+                                                    </t>
+                                                </div>
+                                                <div class="o_dolan_ai_model_list">
+                                                    <t t-foreach="this.pickerModels" t-as="m" t-key="m.id">
+                                                        <button type="button" class="o_dolan_ai_model_option"
+                                                                t-att-class="{'is-selected': m.id === this.state.provider.model}"
+                                                                role="option"
+                                                                t-att-aria-selected="m.id === this.state.provider.model ? 'true' : 'false'"
+                                                                t-on-click="() => this.selectModel(m.id)">
+                                                            <span class="o_dolan_ai_model_option_name" t-out="m.name || m.id"/>
+                                                            <span class="o_dolan_ai_model_option_id" t-out="m.id"/>
+                                                        </button>
+                                                    </t>
+                                                    <div t-if="!this.pickerModels.length" class="o_dolan_ai_model_empty">
+                                                        No hay modelos que coincidan.
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </t>
-                                        <t t-if="!this.state.availableModels or !this.state.availableModels.length">
-                                            <option t-att-value="this.state.provider.model" selected="selected"><t t-out="this.state.provider.model"/></option>
-                                        </t>
-                                    </select>
+                                    </div>
                                 </div>
                             </div>
                         </header>

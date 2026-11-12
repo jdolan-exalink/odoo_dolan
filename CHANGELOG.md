@@ -27,6 +27,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 - `DOLAN_ai 20.0.1.33.0`: la sidebar del historial se cierra al elegir una conversación (incluida la que ya está abierta) o al tocar fuera; el historial identifica de forma visible el chat actual.
 
 ### Cambiado
+- `DOLAN_ai 20.0.1.38.0`: el selector de modelos del chat es un buscador (por ejemplo "gpt-6 luna" o "claude") y lista primero los modelos más nuevos del proveedor; antes era una lista desplegable de cientos de modelos en orden alfabético. La cabecera del chat muestra el nombre del asistente y debajo el proveedor y el modelo en uso ("OpenRouter · OpenAI: GPT-6 Luna", "OpenAI · …"). Los avisos del chat ya no dicen "ChatGPT": nombran al proveedor (OpenAI, OpenRouter u Ollama).
 - `DOLAN_theme 20.0.2.71.0`: el escritorio de usuarios nuevos arranca en orden «Personalizado» con Facturación, Ventas, Contabilidad, Compras, Inventario y POS primero; luego carpetas y el resto. En instalaciones con perfil Comercio, POS queda como favorito. No modifica escritorios ya personalizados.
 - `DOLAN_l10n_ar_afip 20.0.1.35.0`: el listado sustituye **Impuestos no incluidos** por **IVA** (solo muestra IVA ARCA para compañías Responsable Inscripto), y elimina **Cantidad por pagar**.
 - `DOLAN_l10n_ar_afip 20.0.1.34.0`: listado de facturas más compacto: oculta **Estado ARCA**, conserva **CAE**, muestra fecha y vencimiento en formato `dd/MM/yyyy` y ordena por fecha y número descendentes.

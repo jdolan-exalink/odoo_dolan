@@ -336,6 +336,8 @@
 }
 
 .o_dolan_ai_header {
+    position: relative;
+    z-index: 5; // el selector de modelos se despliega sobre el cuerpo del chat
     display: flex;
     flex: 0 0 66px;
     min-height: 66px;
@@ -1230,4 +1232,127 @@ body.o_dolan_dark_mode .o_dolan_ai_systray .o_dolan_ai_drawer .alert-warning {
     color: #f2d9a6 !important;
     background-color: #3a3022 !important;
     border-color: #6a5638 !important;
+}
+
+// Selector de modelos con búsqueda (reemplaza al <select> de cientos de opciones).
+.o_dolan_ai_model_picker {
+    position: relative;
+}
+
+.o_dolan_ai_model_button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 220px;
+    height: 22px;
+    padding: 1px 8px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #495057;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        border-color: #714b67;
+        background-color: #ffffff;
+    }
+
+    &:disabled {
+        cursor: default;
+        opacity: 0.85;
+    }
+}
+
+.o_dolan_ai_model_button_label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.o_dolan_ai_model_backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+}
+
+.o_dolan_ai_model_menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    z-index: 2;
+    width: 320px;
+    max-width: calc(100vw - 32px);
+    padding: 8px;
+    background: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.o_dolan_ai_model_menu_hint {
+    margin: 6px 2px 4px;
+    font-size: 0.7rem;
+    color: #6c757d;
+}
+
+.o_dolan_ai_model_list {
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.o_dolan_ai_model_option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    padding: 5px 8px;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+        background: #f3eef2;
+    }
+
+    &.is-selected {
+        background: #ece3ea;
+        font-weight: 600;
+    }
+}
+
+.o_dolan_ai_model_option_name {
+    font-size: 0.8rem;
+    color: #212529;
+}
+
+.o_dolan_ai_model_option_id {
+    font-size: 0.68rem;
+    color: #6c757d;
+}
+
+.o_dolan_ai_model_empty {
+    padding: 8px;
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_model_button,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_model_menu {
+    color: #e4e6eb;
+    background: #20232b;
+    border-color: #454c59;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_model_option_name {
+    color: #e4e6eb;
+}
+
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_model_option:hover,
+body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_model_option.is-selected {
+    background: #343946;
 }

@@ -698,6 +698,17 @@ class DolanAiProvider(models.Model):
             'oauth_state': False,
         })
 
+    def _provider_label(self):
+        """Nombre corto del servicio que responde, para mostrar en el chat."""
+        self.ensure_one()
+        if self.provider_mode == 'openrouter':
+            return 'OpenRouter'
+        if self.provider_mode == 'ollama':
+            return 'Ollama'
+        if self.provider_mode == 'chatgpt_oauth' or 'api.openai.com' in (self.api_base_url or OPENAI_API_CHAT_URL):
+            return 'OpenAI'
+        return self.name or _('el proveedor')
+
     def action_set_default(self):
         """Marca esta conexión como la activa de su compañía y desmarca las demás."""
         self.ensure_one()
@@ -910,8 +921,10 @@ class DolanAiProvider(models.Model):
                 )):
                     continue
             seen.add(model_id)
-            models.append({'id': model_id, 'name': name})
-        return sorted(models, key=lambda item: item['name'].lower())
+            created = item.get('created') if isinstance(item, dict) else 0
+            models.append({'id': model_id, 'name': name, 'created': int(created or 0)})
+        # Más nuevos primero cuando el endpoint informa la fecha (OpenAI la da).
+        return sorted(models, key=lambda item: (-item['created'], item['name'].lower()))
 
     def _openrouter_headers(self):
         """Encabezados de OpenRouter; Referer y título identifican la app en su panel."""
@@ -960,9 +973,15 @@ class DolanAiProvider(models.Model):
             name = item.get('name') or model_id
             if free and 'free' not in name.lower() and 'gratis' not in name.lower():
                 name = _('%s (gratis)') % name
-            models.append({'id': model_id, 'name': name, 'free': free})
-        # Gratis primero: con la cuenta sin saldo son los únicos que responden.
-        models[1:] = sorted(models[1:], key=lambda item: (not item.get('free'), item['name'].lower()))
+            models.append({
+                'id': model_id,
+                'name': name,
+                'free': free,
+                'vendor': model_id.split('/', 1)[0] if '/' in model_id else '',
+                'created': int(item.get('created') or 0),
+            })
+        # Los más nuevos primero, como los publica OpenRouter.
+        models[1:] = sorted(models[1:], key=lambda item: (-item['created'], item['name'].lower()))
         return models
 
     def _openrouter_key_info(self):
@@ -1044,7 +1063,7 @@ class DolanAiProvider(models.Model):
         Devuelve {'kind', 'reason', 'retry_seconds'} con kind en usage_limit,
         rate_limit, auth, forbidden, not_found, server, http o network."""
         status = getattr(exc, 'code', None)
-        provider_name = _('ChatGPT') if self.provider_mode == 'chatgpt_oauth' else (self.name or _('el proveedor'))
+        provider_name = self._provider_label()
         headers = getattr(exc, 'headers', None)
         retry_after = headers.get('Retry-After') if headers else None
         retry_seconds = int(retry_after) if retry_after and str(retry_after).isdigit() else None
@@ -1143,7 +1162,7 @@ class DolanAiProvider(models.Model):
             return _('%(reason)s Vuelvo a intentar en %(wait)s.') % {
                 'reason': reason, 'wait': self._format_wait(remaining),
             }
-        provider_name = _('ChatGPT') if self.provider_mode == 'chatgpt_oauth' else (self.name or _('el proveedor'))
+        provider_name = self._provider_label()
         return _('Se agotó el cupo de uso de %(provider)s. Se renueva en %(wait)s.') % {
             'provider': provider_name, 'wait': self._format_wait(remaining),
         }
@@ -1244,7 +1263,7 @@ class DolanAiProvider(models.Model):
                 return self._local_fallback_completion(
                     messages,
                     tools=tools,
-                    reason=_('El proveedor ChatGPT OAuth aún no tiene un token activo. '
+                    reason=_('La cuenta de OpenAI aún no está vinculada. '
                              'Configuralo en IA -> Configuración -> Nueva conexión.'),
                     error_kind='not_configured',
                 )
@@ -1356,7 +1375,7 @@ class DolanAiProvider(models.Model):
                 reason = _('El proveedor tardó más de %s segundos en responder. Probá con una pregunta más acotada o reintentá en un momento.') % request_timeout
             elif isinstance(exc, ProviderUsageLimitError):
                 error_kind = 'usage_limit'
-                provider_name = _('ChatGPT') if self.provider_mode == 'chatgpt_oauth' else (self.name or _('el proveedor'))
+                provider_name = self._provider_label()
                 if exc.resets_in_seconds:
                     reason = _('Se agotó el cupo de uso de %(provider)s. Se renueva en %(wait)s.') % {
                         'provider': provider_name, 'wait': self._format_wait(exc.resets_in_seconds),
@@ -1372,7 +1391,7 @@ class DolanAiProvider(models.Model):
                 )
             elif self.provider_mode == 'chatgpt_oauth' and isinstance(exc, ValueError):
                 error_kind = 'incomplete'
-                reason = _('ChatGPT no completó la respuesta: %s') % str(exc)
+                reason = _('OpenAI no completó la respuesta: %s') % str(exc)
             else:
                 reason = _('No se pudo conectar con el proveedor. Revisá la red e intentá de nuevo.')
             _logger.warning("Fallo al invocar endpoint IA %s (%s, %s)", endpoint, type(exc).__name__, error_kind)
