@@ -1,0 +1,19 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_hr_overtime_rule_user,dolan.hr.overtime.rule.user,dolan.hr.overtime.rule,base.group_user,r,
+access_dolan_hr_overtime_rule_manager,dolan.hr.overtime.rule.manager,dolan.hr.overtime.rule,hr.group_hr_manager,crud,
+access_dolan_hr_overtime_request_own,dolan.hr.overtime.request.own,dolan.hr.overtime.request,base.group_user,r,"[('employee_id.user_id', '=', user.id)]"
+access_dolan_hr_overtime_request_supervisor,dolan.hr.overtime.request.supervisor,dolan.hr.overtime.request,DOLAN_hr_core.group_dolan_hr_supervisor,cru,"['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]"
+access_dolan_hr_overtime_request_admin,dolan.hr.overtime.request.admin,dolan.hr.overtime.request,hr_attendance.group_hr_attendance_user,crud,
+dolan_hr_overtime_request_company_rule,dolan.hr.overtime.request.company.rule,dolan.hr.overtime.request,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+access_dolan_hr_overtime_own,dolan.hr.overtime.own,dolan.hr.overtime,base.group_user,r,"[('employee_id.user_id', '=', user.id)]"
+access_dolan_hr_overtime_supervisor,dolan.hr.overtime.supervisor,dolan.hr.overtime,DOLAN_hr_core.group_dolan_hr_supervisor,ru,"['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]"
+access_dolan_hr_overtime_admin,dolan.hr.overtime.admin,dolan.hr.overtime,hr_attendance.group_hr_attendance_user,cru,
+dolan_hr_overtime_company_rule,dolan.hr.overtime.company.rule,dolan.hr.overtime,,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_hr_novelty_own,dolan.hr.novelty.own,dolan.hr.novelty,base.group_user,r,"[('employee_id.user_id', '=', user.id)]"
+access_dolan_hr_novelty_supervisor,dolan.hr.novelty.supervisor,dolan.hr.novelty,DOLAN_hr_core.group_dolan_hr_supervisor,r,"['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]"
+access_dolan_hr_novelty_hr,dolan.hr.novelty.hr,dolan.hr.novelty,hr.group_hr_user,cru,
+access_dolan_hr_novelty_manager,dolan.hr.novelty.manager,dolan.hr.novelty,hr.group_hr_manager,crud,
+dolan_hr_novelty_company_rule,dolan.hr.novelty.company.rule,dolan.hr.novelty,,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_hr_novelty_period_supervisor,dolan.hr.novelty.period.supervisor,dolan.hr.novelty.period,DOLAN_hr_core.group_dolan_hr_supervisor,r,
+access_dolan_hr_novelty_period_hr,dolan.hr.novelty.period.hr,dolan.hr.novelty.period,hr.group_hr_user,cru,
+dolan_hr_novelty_period_company_rule,dolan.hr.novelty.period.company.rule,dolan.hr.novelty.period,,crud,"[('company_id', 'in', company_ids)]"

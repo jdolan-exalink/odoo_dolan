@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_dolan_overtime" model="ir.ui.view">
+        <field name="name">res.company.form.dolan.overtime</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="DOLAN_hr_attendance.view_company_form_dolan_attendance"/>
+        <field name="arch" type="xml">
+            <field name="dolan_attendance_match_margin_hours" position="after">
+                <separator string="Horas extra" colspan="2"/>
+                <field name="dolan_overtime_requires_authorization"/>
+                <field name="dolan_overtime_min_minutes"/>
+                <field name="dolan_overtime_daily_cap_hours" widget="float_time"/>
+                <field name="dolan_overtime_monthly_cap_hours"/>
+                <field name="dolan_overtime_yearly_cap_hours"/>
+                <field name="dolan_saturday_cutoff_hour" widget="float_time"/>
+            </field>
+        </field>
+    </record>
+</odoo>

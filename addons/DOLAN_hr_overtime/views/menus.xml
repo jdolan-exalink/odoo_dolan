@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dolan_overtime" name="Horas extra" parent="DOLAN_hr_attendance.menu_dolan_presence"
+              action="action_dolan_hr_overtime" sequence="15"/>
+    <menuitem id="menu_dolan_overtime_requests" name="Autorizaciones de horas extra"
+              parent="DOLAN_hr_attendance.menu_dolan_presence" action="action_dolan_hr_overtime_request"
+              sequence="16" groups="DOLAN_hr_core.group_dolan_hr_supervisor"/>
+
+    <menuitem id="menu_dolan_novelty_root" name="Novedades" parent="DOLAN_hr_scheduling.menu_dolan_scheduling_root"
+              sequence="30" groups="DOLAN_hr_core.group_dolan_hr_supervisor"/>
+    <menuitem id="menu_dolan_novelty" name="Novedades" parent="menu_dolan_novelty_root"
+              action="action_dolan_hr_novelty" sequence="10"/>
+    <menuitem id="menu_dolan_novelty_period" name="Períodos" parent="menu_dolan_novelty_root"
+              action="action_dolan_hr_novelty_period" sequence="20"/>
+    <menuitem id="menu_dolan_overtime_rules" name="Reglas de horas extra"
+              parent="DOLAN_hr_scheduling.menu_dolan_scheduling_config" action="action_dolan_hr_overtime_rule"
+              sequence="40" groups="hr.group_hr_manager"/>
+</odoo>

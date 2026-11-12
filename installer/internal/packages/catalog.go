@@ -125,12 +125,21 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_hr_overtime",
+		Title:       "Personal: Horas extra y novedades",
+		Version:     "20.0.1.0.0",
+		Category:    "Recursos Humanos",
+		Application: false,
+		Depends:     []string{"DOLAN_hr_attendance", "DOLAN_hr_leave"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_personal_operativo",
 		Title:       "Personal Operativo (sin nómina)",
 		Version:     "20.0.1.0.0",
 		Category:    "Recursos Humanos",
 		Application: false,
-		Depends:     []string{"DOLAN_hr_core", "hr_holidays", "hr_attendance", "DOLAN_hr_leave", "DOLAN_hr_scheduling", "DOLAN_hr_attendance"},
+		Depends:     []string{"DOLAN_hr_core", "hr_holidays", "hr_attendance", "DOLAN_hr_leave", "DOLAN_hr_scheduling", "DOLAN_hr_attendance", "DOLAN_hr_overtime"},
 		HasData:     false,
 	},
 	{
