@@ -111,7 +111,7 @@ var Catalog = []ModuleSpec{
 		Title:       "Personal: Horarios, turnos y cuadrillas",
 		Version:     "20.0.1.0.0",
 		Category:    "Recursos Humanos",
-		Application: false,
+		Application: true,
 		Depends:     []string{"resource", "mail", "hr_holidays", "DOLAN_hr_core"},
 		HasData:     true,
 	},
