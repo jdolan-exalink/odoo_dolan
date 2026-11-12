@@ -36,6 +36,7 @@ DOLAN Personal — Fichadas e incidencias
     ],
     'data': [
         'security/ir.access.csv',
+        'security/dolan_hr_attendance_access.xml',
         'data/ir_cron_data.xml',
         'views/clock_views.xml',
         'views/incident_views.xml',

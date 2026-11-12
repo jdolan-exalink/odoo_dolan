@@ -6,7 +6,6 @@ access_dolan_hr_clock_event_own,dolan.hr.clock.event.own,dolan.hr.clock.event,ba
 access_dolan_hr_clock_event_supervisor,dolan.hr.clock.event.supervisor,dolan.hr.clock.event,DOLAN_hr_core.group_dolan_hr_supervisor,r,"['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]"
 access_dolan_hr_clock_event_admin,dolan.hr.clock.event.admin,dolan.hr.clock.event,hr_attendance.group_hr_attendance_user,cr,
 dolan_hr_clock_event_company_rule,dolan.hr.clock.event.company.rule,dolan.hr.clock.event,,crud,"[('company_id', 'in', company_ids)]"
-access_dolan_hr_attendance_supervisor,hr.attendance.dolan.supervisor,hr.attendance,DOLAN_hr_core.group_dolan_hr_supervisor,r,"['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]"
 access_dolan_hr_attendance_incident_own,dolan.hr.attendance.incident.own,dolan.hr.attendance.incident,base.group_user,ru,"[('employee_id.user_id', '=', user.id)]"
 access_dolan_hr_attendance_incident_supervisor,dolan.hr.attendance.incident.supervisor,dolan.hr.attendance.incident,DOLAN_hr_core.group_dolan_hr_supervisor,ru,"['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]"
 access_dolan_hr_attendance_incident_admin,dolan.hr.attendance.incident.admin,dolan.hr.attendance.incident,hr_attendance.group_hr_attendance_user,crud,

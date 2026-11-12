@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Supervisores leen las asistencias estándar de su equipo (modelo heredado de hr_attendance). -->
+    <record id="access_dolan_hr_attendance_supervisor" model="ir.access">
+        <field name="name">hr.attendance.dolan.supervisor</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="group_id" ref="DOLAN_hr_core.group_dolan_hr_supervisor"/>
+        <field name="operation">r</field>
+        <field name="domain">['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]</field>
+    </record>
+</odoo>
