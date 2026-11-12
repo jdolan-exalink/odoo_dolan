@@ -89,6 +89,11 @@ class DolanPayrollSlip(models.Model):
     employee_sign_date = fields.Datetime('Fecha de firma', readonly=True, copy=False)
     employee_sign_note = fields.Text('Observación del empleado', readonly=True, copy=False)
 
+    rectifies_id = fields.Many2one('dolan.payroll.slip', string='Rectifica a', readonly=True, copy=False,
+                                   index=True, help='Recibo confirmado que este recibo reemplaza.')
+    rectified_by_id = fields.Many2one('dolan.payroll.slip', string='Rectificado por', readonly=True, copy=False)
+    rectification_reason = fields.Text('Motivo de la rectificación', readonly=True, copy=False, tracking=True)
+
     @api.depends('line_ids.amount', 'line_ids.kind')
     def _compute_totals(self):
         for slip in self:
@@ -404,7 +409,8 @@ class DolanPayrollSlip(models.Model):
             if slip.name in (False, '/'):
                 slip.name = self.env['ir.sequence'].with_company(slip.company_id).next_by_code(
                     'dolan.payroll.slip') or '/'
-            slip.write({'state': 'done', 'employer_hash': slip._compute_employer_hash()})
+            slip.with_context(dolan_payroll_internal=True).write(
+                {'state': 'done', 'employer_hash': slip._compute_employer_hash()})
         return True
 
     def action_verify_signature(self):
@@ -424,14 +430,65 @@ class DolanPayrollSlip(models.Model):
 
     def action_draft(self):
         for slip in self:
+            if slip.employer_hash or slip.state == 'done':
+                raise UserError(_('El recibo %s ya fue confirmado: no vuelve a borrador. Usá "Rectificar", que '
+                                  'lo anula con motivo y crea el recibo que lo reemplaza.', slip.display_name))
             if slip.employee_sign_state != 'pending':
                 raise UserError(_('El recibo %s ya fue firmado por el empleado.', slip.display_name))
-        self.write({'state': 'draft', 'employer_hash': False})
+        self.with_context(dolan_payroll_internal=True).write({'state': 'draft', 'employer_hash': False})
         return True
 
     def action_cancel(self):
-        self.write({'state': 'cancel'})
+        self.with_context(dolan_payroll_internal=True).write({'state': 'cancel'})
         return True
+
+    def action_rectify(self, reason):
+        """Procedimiento formal: el confirmado queda anulado con su huella y motivo, y nace un borrador
+        que lo reemplaza con las mismas novedades. Solo Responsable de sueldos."""
+        if not self.env.user.has_group('DOLAN_payroll_ar.group_dolan_payroll_manager'):
+            raise AccessError(_('Solo un Responsable de sueldos rectifica recibos confirmados.'))
+        if not (reason or '').strip():
+            raise UserError(_('Indicá el motivo de la rectificación.'))
+        new_slips = self.browse()
+        for slip in self:
+            if slip.state != 'done':
+                raise UserError(_('Solo se rectifica un recibo confirmado (%s).', slip.display_name))
+            new = slip.copy({
+                'run_id': slip.run_id.id,
+                'rectifies_id': slip.id,
+                'input_ids': [fields.Command.create({'code': i.code, 'amount': i.amount, 'note': i.note})
+                              for i in slip.input_ids],
+            })
+            slip.with_context(dolan_payroll_internal=True).write({
+                'state': 'cancel', 'rectified_by_id': new.id, 'rectification_reason': reason})
+            slip.message_post(body=_('Recibo rectificado por %(user)s. Motivo: %(reason)s. Lo reemplaza un nuevo '
+                                     'borrador.', user=self.env.user.name, reason=reason))
+            new.message_post(body=_('Rectifica el recibo %(slip)s. Motivo: %(reason)s',
+                                    slip=slip.display_name, reason=reason))
+            new_slips |= new
+        return new_slips
+
+    def _dolan_check_editable(self):
+        if self.env.context.get('dolan_payroll_internal'):
+            return
+        locked = self.filtered(lambda s: s.state == 'done' or (s.state == 'cancel' and s.employer_hash))
+        if locked:
+            raise UserError(_('El recibo %s está confirmado: sus novedades y conceptos no cambian.',
+                              locked[0].display_name))
+
+    LOCKED_FIELDS = frozenset({
+        'employee_id', 'company_id', 'kind', 'date_from', 'date_to', 'payment_date', 'agreement_id',
+        'category_id', 'basic', 'seniority_years', 'worked_days', 'input_ids', 'line_ids', 'termination_date',
+        'termination_reason', 'notice_given', 'name', 'employer_hash', 'run_id',
+    })
+
+    def write(self, vals):
+        if not self.env.context.get('dolan_payroll_internal'):
+            locked = self.filtered(lambda s: s.state == 'done' or (s.state == 'cancel' and s.employer_hash))
+            if locked and (self.LOCKED_FIELDS & set(vals) or vals.get('state') not in (None, 'done')):
+                raise UserError(_('El recibo %s está confirmado y no se modifica. Para corregirlo usá '
+                                  '"Rectificar".', locked[0].display_name))
+        return super().write(vals)
 
     # ------------------------------------------------------------------
     # Firma del empleado (art. 140 LCT, recibo con firma electrónica)
@@ -449,7 +506,7 @@ class DolanPayrollSlip(models.Model):
     def _employee_sign(self, state, note=False):
         for slip in self:
             slip._check_can_sign()
-            slip.sudo().write({
+            slip.sudo().with_context(dolan_payroll_internal=True).write({
                 'employee_sign_state': state,
                 'employee_sign_date': fields.Datetime.now(),
                 'employee_sign_note': note,
@@ -465,8 +522,8 @@ class DolanPayrollSlip(models.Model):
         return self._employee_sign('disagreement', _('Firmado en disconformidad.'))
 
     def unlink(self):
-        if any(slip.state == 'done' for slip in self):
-            raise UserError(_('No se puede borrar un recibo confirmado; anulalo.'))
+        if any(slip.state == 'done' or slip.employer_hash for slip in self):
+            raise UserError(_('No se puede borrar un recibo que fue confirmado: queda como registro.'))
         return super().unlink()
 
     def payment_method_label(self):
@@ -502,6 +559,20 @@ class DolanPayrollSlipInput(models.Model):
     amount = fields.Float('Cantidad / importe', required=True)
     note = fields.Char('Detalle')
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records.mapped('slip_id')._dolan_check_editable()
+        return records
+
+    def write(self, vals):
+        self.mapped('slip_id')._dolan_check_editable()
+        return super().write(vals)
+
+    def unlink(self):
+        self.mapped('slip_id')._dolan_check_editable()
+        return super().unlink()
+
 
 class DolanPayrollSlipLine(models.Model):
     _name = 'dolan.payroll.slip.line'
@@ -519,3 +590,17 @@ class DolanPayrollSlipLine(models.Model):
     currency_id = fields.Many2one(related='slip_id.currency_id')
     sicoss_bucket = fields.Selection(related='concept_id.sicoss_bucket')
     afip_code = fields.Char(related='concept_id.afip_code')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records.mapped('slip_id')._dolan_check_editable()
+        return records
+
+    def write(self, vals):
+        self.mapped('slip_id')._dolan_check_editable()
+        return super().write(vals)
+
+    def unlink(self):
+        self.mapped('slip_id')._dolan_check_editable()
+        return super().unlink()

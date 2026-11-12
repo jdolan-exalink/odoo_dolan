@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="view_dolan_payroll_slip_rectify_form" model="ir.ui.view">
+        <field name="name">dolan.payroll.slip.rectify.form</field>
+        <field name="model">dolan.payroll.slip.rectify</field>
+        <field name="arch" type="xml">
+            <form string="Rectificar recibo">
+                <p>El recibo confirmado queda anulado con su huella y este motivo, y se crea un borrador que lo
+                    reemplaza con las mismas novedades. El recibo original no se borra ni se modifica.</p>
+                <field name="slip_ids" invisible="1"/>
+                <group>
+                    <field name="reason" placeholder="Por ejemplo: faltaron 4 horas extra al 50 % aprobadas"/>
+                </group>
+                <footer>
+                    <button name="action_rectify" type="object" string="Rectificar" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_payroll_slip_rectify" model="ir.actions.act_window">
+        <field name="name">Rectificar recibo</field>
+        <field name="res_model">dolan.payroll.slip.rectify</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
     <record id="view_dolan_payroll_slip_search" model="ir.ui.view">
         <field name="name">dolan.payroll.slip.search</field>
         <field name="model">dolan.payroll.slip</field>
@@ -63,7 +89,10 @@
                     <button name="action_verify_signature" type="object" string="Verificar huella"
                             invisible="state != 'done'"/>
                     <button name="action_draft" type="object" string="Volver a borrador"
-                            invisible="state not in ('computed', 'done', 'cancel')" groups="DOLAN_payroll_ar.group_dolan_payroll_manager"/>
+                            invisible="state != 'computed' and not (state == 'cancel' and not employer_hash)"
+                            groups="DOLAN_payroll_ar.group_dolan_payroll_manager"/>
+                    <button name="%(action_dolan_payroll_slip_rectify)d" type="action" string="Rectificar"
+                            invisible="state != 'done'" groups="DOLAN_payroll_ar.group_dolan_payroll_manager"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,computed,done"/>
                 </header>
                 <sheet>
@@ -131,6 +160,11 @@
                                 <field name="employee_sign_state"/>
                                 <field name="employee_sign_date"/>
                                 <field name="employee_sign_note"/>
+                            </group>
+                            <group string="Rectificación" invisible="not rectifies_id and not rectified_by_id">
+                                <field name="rectifies_id"/>
+                                <field name="rectified_by_id"/>
+                                <field name="rectification_reason"/>
                             </group>
                         </page>
                     </notebook>

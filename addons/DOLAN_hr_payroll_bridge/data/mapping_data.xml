@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mapping_he50" model="dolan.hr.payroll.mapping">
+            <field name="novelty_code">HE50</field>
+            <field name="input_code">HE50</field>
+        </record>
+        <record id="mapping_he100" model="dolan.hr.payroll.mapping">
+            <field name="novelty_code">HE100</field>
+            <field name="input_code">HE100</field>
+        </record>
+        <record id="mapping_vacdias" model="dolan.hr.payroll.mapping">
+            <field name="novelty_code">VACDIAS</field>
+            <field name="input_code">VACDIAS</field>
+        </record>
+        <record id="mapping_ausinj" model="dolan.hr.payroll.mapping">
+            <field name="novelty_code">AUSINJ</field>
+            <field name="input_code">AUSINJ</field>
+        </record>
+    </data>
+</odoo>

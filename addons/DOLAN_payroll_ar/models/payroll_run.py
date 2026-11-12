@@ -129,8 +129,10 @@ class DolanPayrollRun(models.Model):
                 if run.move_id.state == 'posted':
                     run.move_id.button_draft()
                 run.move_id.button_cancel()
-            run.slip_ids.filtered(lambda s: s.employee_sign_state == 'pending').write({'state': 'cancel'})
+            run.slip_ids.filtered(lambda s: s.employee_sign_state == 'pending').with_context(
+                dolan_payroll_internal=True).write({'state': 'cancel'})
             run.state = 'cancel'
+            run.message_post(body=_('Liquidación anulada por %s; se anuló su asiento.', self.env.user.name))
         return True
 
     def action_draft(self):

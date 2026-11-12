@@ -228,7 +228,12 @@ class TestDolanPayroll(TransactionCase):
         run.action_confirm()
         slip = run.slip_ids
         self.assertEqual(slip.action_verify_signature()['params']['type'], 'success')
-        slip.line_ids[:1].sudo().amount += 1
+        with self.assertRaises(UserError):
+            slip.line_ids[:1].sudo().amount += 1
+        # Una alteración por fuera del sistema (directo en la base) la detecta la huella.
+        line = slip.line_ids[:1]
+        self.env.cr.execute('UPDATE dolan_payroll_slip_line SET amount = amount + 1 WHERE id = %s', (line.id,))
+        line.invalidate_recordset(['amount'])
         self.assertEqual(slip.action_verify_signature()['params']['type'], 'danger')
 
     def test_09_exports(self):
@@ -293,3 +298,45 @@ class TestDolanPayroll(TransactionCase):
         self.assertTrue(payroll_user.has_group('hr.group_hr_user'))
         self.assertEqual(self.env['dolan.payroll.slip'].with_user(payroll_user).search([]), run.slip_ids)
         self.employee.with_user(payroll_user).read(['dolan_payroll_basic'])
+
+    def test_12_confirmed_slip_is_immutable_and_rectified_formally(self):
+        """Caso 12: un cambio de escala posterior no altera el recibo confirmado; se corrige rectificando."""
+        run = self._run('Nov 2026', date(2026, 11, 1), date(2026, 11, 30))
+        run.action_compute()
+        run.action_confirm()
+        slip = run.slip_ids
+        net, digest = slip.net, slip.employer_hash
+        self.admin_a.write({'scale_ids': [(0, 0, {'date_from': date(2026, 11, 1), 'amount': 1200000.0})]})
+        self.assertEqual(slip.net, net)
+        self.assertEqual(slip.action_verify_signature()['params']['type'], 'success')
+        with self.assertRaises(UserError):
+            slip.action_draft()
+        with self.assertRaises(UserError):
+            run.action_draft()
+        with self.assertRaises(UserError):
+            slip.write({'worked_days': 20})
+        with self.assertRaises(UserError):
+            self.env['dolan.payroll.slip.input'].create({'slip_id': slip.id, 'code': 'HE50', 'amount': 2})
+        with self.assertRaises(UserError):
+            slip.action_compute()
+        with self.assertRaises(UserError):
+            slip.action_rectify('')
+        new = slip.action_rectify('Escala de noviembre homologada tarde')
+        self.assertEqual(slip.state, 'cancel')
+        self.assertEqual(slip.employer_hash, digest, 'El original conserva su huella')
+        self.assertEqual(slip.rectified_by_id, new)
+        self.assertEqual(new.rectifies_id, slip)
+        self.assertEqual(new.state, 'draft')
+        new.action_compute()
+        self.assertAlmostEqual(self._amounts(new)['BASICO'], 1200000.0)
+        new.action_confirm()
+        self.assertNotEqual(new.name, slip.name)
+        with self.assertRaises(UserError):
+            slip.unlink()
+        # Un usuario de Sueldos sin rol de responsable no rectifica.
+        payroll_user = self.env['res.users'].create({
+            'name': 'Liquidador', 'login': 'liquidador.rect@example.com',
+            'group_ids': [(6, 0, [self.env.ref('DOLAN_payroll_ar.group_dolan_payroll_user').id])],
+        })
+        with self.assertRaises(AccessError):
+            new.with_user(payroll_user).action_rectify('Prueba')

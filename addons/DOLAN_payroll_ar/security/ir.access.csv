@@ -19,3 +19,4 @@ dolan_payroll_slip_company_rule,dolan.payroll.slip.company.rule,dolan.payroll.sl
 access_dolan_payroll_slip_line_user,dolan.payroll.slip.line.user,dolan.payroll.slip.line,DOLAN_payroll_ar.group_dolan_payroll_user,crud,
 access_dolan_payroll_slip_line_own,dolan.payroll.slip.line.own,dolan.payroll.slip.line,base.group_user,r,"[('slip_id.employee_id.user_id', '=', user.id), ('slip_id.state', '=', 'done')]"
 access_dolan_payroll_slip_input_user,dolan.payroll.slip.input.user,dolan.payroll.slip.input,DOLAN_payroll_ar.group_dolan_payroll_user,crud,
+access_dolan_payroll_slip_rectify_manager,dolan.payroll.slip.rectify.manager,dolan.payroll.slip.rectify,DOLAN_payroll_ar.group_dolan_payroll_manager,crud,

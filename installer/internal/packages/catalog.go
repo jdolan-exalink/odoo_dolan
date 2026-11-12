@@ -91,7 +91,7 @@ var Catalog = []ModuleSpec{
 	{
 		ID:          "DOLAN_payroll_ar",
 		Title:       "Sueldos y Jornales Argentina",
-		Version:     "20.0.1.1.0",
+		Version:     "20.0.1.2.0",
 		Category:    "Recursos Humanos",
 		Application: true,
 		Depends:     []string{"hr", "DOLAN_hr_core", "account", "l10n_ar", "mail"},
@@ -134,6 +134,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_hr_payroll_bridge",
+		Title:       "Personal: Puente de novedades a Sueldos",
+		Version:     "20.0.1.0.0",
+		Category:    "Recursos Humanos",
+		Application: false,
+		Depends:     []string{"DOLAN_hr_overtime", "DOLAN_payroll_ar"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_personal_operativo",
 		Title:       "Personal Operativo (sin nómina)",
 		Version:     "20.0.1.0.0",
@@ -148,7 +157,7 @@ var Catalog = []ModuleSpec{
 		Version:     "20.0.1.0.0",
 		Category:    "Recursos Humanos",
 		Application: false,
-		Depends:     []string{"DOLAN_personal_operativo", "DOLAN_payroll_ar"},
+		Depends:     []string{"DOLAN_personal_operativo", "DOLAN_payroll_ar", "DOLAN_hr_payroll_bridge"},
 		HasData:     false,
 	},
 	{
