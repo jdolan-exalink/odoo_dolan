@@ -179,6 +179,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_hr_talent",
+		Title:       "Personal: Gestión RRHH",
+		Version:     "20.0.1.0.0",
+		Category:    "Recursos Humanos",
+		Application: true,
+		Depends:     []string{"mail", "hr_skills", "hr_recruitment", "DOLAN_hr_core"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_personal_operativo",
 		Title:       "Personal Operativo (sin nómina)",
 		Version:     "20.0.1.0.0",
@@ -193,7 +202,7 @@ var Catalog = []ModuleSpec{
 		Version:     "20.0.1.0.0",
 		Category:    "Recursos Humanos",
 		Application: false,
-		Depends:     []string{"DOLAN_personal_operativo", "DOLAN_payroll_ar", "DOLAN_hr_payroll_bridge", "DOLAN_hr_portal_payroll", "DOLAN_hr_documents"},
+		Depends:     []string{"DOLAN_personal_operativo", "DOLAN_payroll_ar", "DOLAN_hr_payroll_bridge", "DOLAN_hr_portal_payroll", "DOLAN_hr_documents", "DOLAN_hr_talent"},
 		HasData:     false,
 	},
 	{

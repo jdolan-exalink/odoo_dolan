@@ -20,6 +20,7 @@ en producción.
     'website': 'https://github.com/dolan-ce/odoo20-rea',
     'license': 'LGPL-3',
     'depends': [
+        'DOLAN_hr_talent',
         'DOLAN_hr_documents',
         'DOLAN_hr_portal_payroll',
         'DOLAN_hr_payroll_bridge',
