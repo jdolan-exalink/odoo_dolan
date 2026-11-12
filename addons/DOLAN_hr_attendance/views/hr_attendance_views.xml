@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_attendance_view_form_dolan" model="ir.ui.view">
+        <field name="name">hr.attendance.form.dolan</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Reloj y correcciones" name="dolan_clock">
+                    <group>
+                        <group>
+                            <field name="dolan_source"/>
+                            <field name="dolan_missing_in" invisible="not dolan_missing_in"/>
+                            <field name="dolan_missing_out" invisible="not dolan_missing_out"/>
+                        </group>
+                        <group invisible="not dolan_corrected">
+                            <field name="dolan_corrected"/>
+                            <field name="dolan_original_check_in"/>
+                            <field name="dolan_original_check_out"/>
+                        </group>
+                    </group>
+                    <field name="dolan_event_ids" readonly="1">
+                        <list>
+                            <field name="timestamp"/>
+                            <field name="kind"/>
+                            <field name="device_id"/>
+                            <field name="state"/>
+                        </list>
+                    </field>
+                    <field name="dolan_correction_ids" readonly="1">
+                        <list>
+                            <field name="new_check_in"/>
+                            <field name="new_check_out"/>
+                            <field name="reason"/>
+                            <field name="approved_by"/>
+                            <field name="state"/>
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_filter_dolan" model="ir.ui.view">
+        <field name="name">hr.attendance.search.dolan</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter name="dolan_missing" string="Fichada faltante"
+                        domain="['|', ('dolan_missing_in', '=', True), ('dolan_missing_out', '=', True)]"/>
+                <filter name="dolan_corrected" string="Corregidas" domain="[('dolan_corrected', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_department_form_dolan_attendance" model="ir.ui.view">
+        <field name="name">hr.department.form.dolan.attendance</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form"/>
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name="dolan_tolerance_minutes"/>
+            </field>
+        </field>
+    </record>
+</odoo>

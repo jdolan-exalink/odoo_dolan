@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_hr_attendance_incident_list" model="ir.ui.view">
+        <field name="name">dolan.hr.attendance.incident.list</field>
+        <field name="model">dolan.hr.attendance.incident</field>
+        <field name="arch" type="xml">
+            <list string="Incidencias" create="0" delete="0"
+                  decoration-muted="state == 'cancelled'" decoration-warning="state == 'pending'"
+                  decoration-danger="state == 'rejected'" decoration-success="state == 'approved'">
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="department_id" optional="show"/>
+                <field name="kind"/>
+                <field name="minutes" sum="Total"/>
+                <field name="expected_start" optional="hide"/>
+                <field name="actual_start" optional="show"/>
+                <field name="expected_end" optional="hide"/>
+                <field name="actual_end" optional="show"/>
+                <field name="decided_by" optional="hide"/>
+                <field name="state" widget="badge"/>
+                <button name="action_approve" type="object" string="Aprobar" icon="fa-check"
+                        invisible="state not in ('detected', 'pending')"
+                        groups="DOLAN_hr_core.group_dolan_hr_supervisor"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_attendance_incident_form" model="ir.ui.view">
+        <field name="name">dolan.hr.attendance.incident.form</field>
+        <field name="model">dolan.hr.attendance.incident</field>
+        <field name="arch" type="xml">
+            <form string="Incidencia" create="0" delete="0">
+                <header>
+                    <button name="action_submit" type="object" string="Enviar justificación" class="btn-primary"
+                            invisible="state != 'detected'"/>
+                    <button name="action_approve" type="object" string="Aprobar" class="btn-primary"
+                            invisible="state not in ('detected', 'pending')"
+                            groups="DOLAN_hr_core.group_dolan_hr_supervisor"/>
+                    <button name="action_reject" type="object" string="Rechazar"
+                            invisible="state not in ('detected', 'pending')"
+                            groups="DOLAN_hr_core.group_dolan_hr_supervisor"/>
+                    <button name="action_reset" type="object" string="Volver a revisar"
+                            invisible="state not in ('approved', 'rejected')"
+                            groups="DOLAN_hr_core.group_dolan_hr_supervisor"/>
+                    <field name="state" widget="statusbar" statusbar_visible="detected,pending,approved"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="date"/>
+                            <field name="kind"/>
+                            <field name="minutes"/>
+                            <field name="tolerance_minutes"/>
+                        </group>
+                        <group>
+                            <field name="assignment_id"/>
+                            <field name="attendance_id"/>
+                            <field name="expected_start"/>
+                            <field name="actual_start"/>
+                            <field name="expected_end"/>
+                            <field name="actual_end"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="justification" readonly="state not in ('detected', 'pending')"/>
+                        <field name="decision_note" readonly="state not in ('detected', 'pending')"
+                               groups="DOLAN_hr_core.group_dolan_hr_supervisor"/>
+                        <field name="decided_by" invisible="not decided_by"/>
+                        <field name="decided_on" invisible="not decided_on"/>
+                        <field name="correction_id" invisible="not correction_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_attendance_incident_search" model="ir.ui.view">
+        <field name="name">dolan.hr.attendance.incident.search</field>
+        <field name="model">dolan.hr.attendance.incident</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <filter name="to_review" string="Para revisar" domain="[('state', 'in', ('detected', 'pending'))]"/>
+                <filter name="active_ones" string="Vigentes" domain="[('state', '!=', 'cancelled')]"/>
+                <separator/>
+                <filter name="late" string="Tardanzas" domain="[('kind', '=', 'late')]"/>
+                <filter name="absent" string="Ausencias" domain="[('kind', '=', 'absent')]"/>
+                <filter name="missing" string="Fichadas faltantes" domain="[('kind', 'in', ('missing_in', 'missing_out'))]"/>
+                <filter name="excess" string="Excesos" domain="[('kind', 'in', ('excess', 'unscheduled'))]"/>
+                <separator/>
+                <filter name="date" string="Fecha" date="date"/>
+                <group>
+                    <filter name="group_employee" string="Empleado" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_department" string="Sector" context="{'group_by': 'department_id'}"/>
+                    <filter name="group_kind" string="Tipo" context="{'group_by': 'kind'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_attendance_incident" model="ir.actions.act_window">
+        <field name="name">Incidencias</field>
+        <field name="res_model">dolan.hr.attendance.incident</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_to_review': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Sin incidencias para revisar</p>
+            <p>Se calculan solas cada día comparando los turnos publicados con las fichadas.</p>
+        </field>
+    </record>
+
+    <record id="action_dolan_attendance_reconcile_now" model="ir.actions.server">
+        <field name="name">Conciliar los últimos 7 días</field>
+        <field name="model_id" ref="model_dolan_hr_attendance_incident"/>
+        <field name="group_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_dolan_reconcile()
+action = env['ir.actions.act_window']._for_xml_id('DOLAN_hr_attendance.action_dolan_hr_attendance_incident')</field>
+    </record>
+</odoo>
