@@ -2,6 +2,7 @@
 # Part of DOLAN Suite for Odoo 20 CE. See LICENSE file for full copyright and licensing details.
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0).
 
+import base64
 from unittest.mock import patch
 
 from odoo import fields
@@ -76,10 +77,10 @@ class TestAiReportFiles(TransactionCase):
         xlsx = self.Report.generate_file('sales_by_customer', 'xlsx', session=session)
         attachment = self.env['ir.attachment'].browse(xlsx['file']['attachment_id'])
         self.assertEqual((attachment.res_model, attachment.res_id), ('ai.session', session.id))
-        self.assertTrue(attachment.raw.startswith(b'PK'), 'Un xlsx es un zip.')
+        self.assertTrue(base64.b64decode(attachment.datas).startswith(b'PK'), 'Un xlsx es un zip.')
         self.assertEqual(xlsx['file']['url'], '/web/content/%s?download=true' % attachment.id)
         pdf = self.Report.generate_file('vat_sales_vs_purchases', 'pdf', session=session)
-        content = self.env['ir.attachment'].browse(pdf['file']['attachment_id']).raw
+        content = base64.b64decode(self.env['ir.attachment'].browse(pdf['file']['attachment_id']).datas)
         # Sin wkhtmltopdf (modo test) Odoo devuelve el HTML del reporte.
         self.assertTrue(content.startswith(b'%PDF') or b'IVA ventas vs compras' in content)
 
