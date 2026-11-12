@@ -21,6 +21,8 @@ PERSONAL_FOLDER_XMLIDS = (
     'hr_attendance.menu_hr_attendance_root',
     'DOLAN_hr_scheduling.menu_dolan_scheduling_root',
     'DOLAN_payroll_ar.menu_dolan_payroll_root',
+    'DOLAN_hr_reports.menu_dolan_hr_reports_root',
+    'DOLAN_hr_talent.menu_dolan_hr_talent_root',
     'hr_recruitment.menu_hr_recruitment_root',
 )
 

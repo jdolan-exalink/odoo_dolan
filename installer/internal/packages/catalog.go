@@ -161,12 +161,21 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_hr_reports",
+		Title:       "Personal: Tablero e informes",
+		Version:     "20.0.1.0.0",
+		Category:    "Recursos Humanos",
+		Application: true,
+		Depends:     []string{"DOLAN_hr_overtime"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_personal_operativo",
 		Title:       "Personal Operativo (sin nómina)",
 		Version:     "20.0.1.0.0",
 		Category:    "Recursos Humanos",
 		Application: false,
-		Depends:     []string{"DOLAN_hr_core", "hr_holidays", "hr_attendance", "DOLAN_hr_leave", "DOLAN_hr_scheduling", "DOLAN_hr_attendance", "DOLAN_hr_overtime", "DOLAN_hr_portal"},
+		Depends:     []string{"DOLAN_hr_core", "hr_holidays", "hr_attendance", "DOLAN_hr_leave", "DOLAN_hr_scheduling", "DOLAN_hr_attendance", "DOLAN_hr_overtime", "DOLAN_hr_portal", "DOLAN_hr_reports"},
 		HasData:     false,
 	},
 	{
