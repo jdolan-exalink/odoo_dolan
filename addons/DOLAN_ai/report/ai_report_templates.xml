@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_ai_report" model="report.paperformat">
+        <field name="name">DOLAN AI - A4 apaisado</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">12</field>
+        <field name="margin_bottom">12</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_ai_table" model="ir.actions.report">
+        <field name="name">Reporte del chat de IA</field>
+        <field name="model">ai.session</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">DOLAN_ai.report_ai_table</field>
+        <field name="paperformat_id" ref="paperformat_ai_report"/>
+    </record>
+
+    <template id="report_ai_table">
+        <t t-call="web.html_container">
+            <t t-set="r" t-value="ai_report"/>
+            <t t-call="web.basic_layout">
+                <div class="page" style="font-size: 10px;">
+                    <h3 class="mb-1" t-out="r['title']"/>
+                    <p class="mb-1">
+                        <strong t-out="r['period_text']"/>
+                        <span> · </span><span t-out="r['companies']"/>
+                    </p>
+                    <p class="text-muted mb-2">
+                        Moneda: <span t-out="r['currency']"/> · Generado: <span t-out="r['generated']"/>
+                    </p>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <t t-foreach="r['columns']" t-as="column">
+                                    <th t-att-class="'text-end' if r['numeric'][column_index] else ''" t-out="column['label']"/>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="r['text_rows']" t-as="row">
+                                <t t-foreach="row" t-as="value">
+                                    <td t-att-class="'text-end text-nowrap' if r['numeric'][value_index] else ''" t-out="value"/>
+                                </t>
+                            </tr>
+                            <tr t-if="not r['text_rows']">
+                                <td t-att-colspan="len(r['columns'])" class="text-center text-muted">Sin movimientos en el período.</td>
+                            </tr>
+                        </tbody>
+                        <tfoot t-if="r['text_totals']">
+                            <tr class="fw-bold">
+                                <t t-foreach="r['text_totals']" t-as="value">
+                                    <td t-att-class="'text-end text-nowrap' if r['numeric'][value_index] else ''" t-out="value"/>
+                                </t>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <p class="text-muted" t-if="r['note']" t-out="r['note']"/>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

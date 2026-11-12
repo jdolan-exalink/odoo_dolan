@@ -294,7 +294,14 @@ export class DolanAiSystray extends Component {
             if (match[0].startsWith("[")) {
                 const link = match[0].match(/^\[([^\]]+)\]\(([^)]+)\)$/);
                 if (link && (link[2].startsWith("/") || link[2].startsWith("https://"))) {
-                    parts.push({ type: "link", content: link[1], href: link[2] });
+                    const download = /^\/web\/content\/\d+\?download=true$/.test(link[2]);
+                    parts.push({
+                        type: "link",
+                        content: link[1],
+                        href: link[2],
+                        download,
+                        icon: /pdf/i.test(link[1]) ? "fa-file-pdf-o" : "fa-file-excel-o",
+                    });
                 } else {
                     parts.push({ type: "text", content: match[0] });
                 }

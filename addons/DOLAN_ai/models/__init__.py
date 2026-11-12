@@ -5,6 +5,7 @@
 from . import ai_oauth_provider
 from . import ai_connection_wizard
 from . import ai_skill
+from . import ai_report
 from . import ai_agent
 from . import ai_composer
 from . import ai_session

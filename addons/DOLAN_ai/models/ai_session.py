@@ -8,7 +8,7 @@ import re
 import time
 import unicodedata
 import calendar
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
@@ -218,6 +218,10 @@ class AiSession(models.Model):
             'client_request_id': (client_request_id or '')[:64] or False,
         })
 
+        report_file_request = self._parse_ai_report_file_request(user_message)
+        if report_file_request:
+            return self._reply_with_report_files(report_file_request)
+
         dashboard_request = self._parse_ai_dashboard_request(user_message)
         if dashboard_request:
             if dashboard_request.get('unsupported'):
@@ -356,7 +360,9 @@ class AiSession(models.Model):
             for tc in tool_calls:
                 t_name = tc.get('name')
                 t_args = tc.get('arguments') or {}
-                tool_result = self.env['ai.skill'].execute_skill_tool(t_name, t_args)
+                tool_result = self.env['ai.skill'].with_context(
+                    dolan_ai_session_id=self.id,
+                ).execute_skill_tool(t_name, t_args)
                 executed_tool_results.append((t_name, tool_result))
                 result_json = json.dumps(tool_result, ensure_ascii=False, default=str)
                 Event.create({
@@ -402,6 +408,16 @@ class AiSession(models.Model):
                 }
         if not assistant_reply:
             assistant_reply = _('No recibí una respuesta del modelo. No puedo confirmar que la consulta se haya completado.')
+        files = [
+            result['file'] for name, result in executed_tool_results
+            if name == 'generate_report_file' and isinstance(result, dict) and result.get('file')
+        ]
+        missing_links = [
+            self._report_file_link(file_info) for file_info in files
+            if file_info['url'] not in assistant_reply
+        ]
+        if missing_links:
+            assistant_reply = '%s\n\n%s' % (assistant_reply, ' '.join(missing_links))
         assistant_event = Event.create({
             'ai_session_id': self.id,
             'role': 'assistant',
@@ -424,6 +440,92 @@ class AiSession(models.Model):
             'used_fallback': used_fallback,
             'fallback_reason': completion_raw.get('reason') if used_fallback else False,
             'error_kind': completion_raw.get('error_kind') if used_fallback else False,
+        }
+
+    @api.model
+    def _parse_ai_report_file_request(self, user_message):
+        """Pedido de un reporte descargable: qué reporte, qué formatos y qué período.
+
+        Se activa si piden un archivo (Excel, PDF, planilla, descargar, exportar)
+        o un reporte con un corte concreto (por cliente, por factura, por
+        artículo, IVA compras vs ventas, cobranzas por medio de pago)."""
+        normalized = unicodedata.normalize('NFKD', (user_message or '').lower())
+        normalized = ''.join(char for char in normalized if not unicodedata.combining(char))
+        if re.search(r'\b(tablero|dashboard|presupuestos?|cotizacion(es)?|pedidos?|ordenes? de venta)\b', normalized):
+            return None
+        wants_pdf = bool(re.search(r'\bpdf\b', normalized))
+        wants_xlsx = bool(re.search(r'\b(excel|xlsx|xls|planillas?|hojas? de calculo)\b', normalized))
+        wants_file = wants_pdf or wants_xlsx or bool(re.search(r'\b(descarg\w*|export\w*|archivo)\b', normalized))
+        asks_report = bool(re.search(r'\b(reportes?|informes?|listados?|detalles?)\b', normalized))
+
+        if re.search(r'\biva\b', normalized) and re.search(r'\bcompras?\b', normalized) and re.search(r'\bventas?\b', normalized):
+            code, specific = 'vat_sales_vs_purchases', True
+        elif re.search(r'\b(cobranzas?|cobros?|cobrado|medios? de pago|formas? de pago)\b', normalized):
+            code, specific = 'collections_by_payment_method', bool(re.search(r'\b(medios?|formas?) de pago\b', normalized))
+        elif re.search(r'\b(articulos?|productos?)\b', normalized):
+            code, specific = 'sales_by_product', True
+        elif re.search(r'\b(facturas?|comprobantes?)\b', normalized) and not re.search(r'\bpor clientes?\b', normalized):
+            code, specific = 'sales_by_invoice', bool(re.search(r'\bpor (facturas?|comprobantes?)\b', normalized))
+        elif re.search(r'\b(clientes?|ventas?|facturacion)\b', normalized):
+            code, specific = 'sales_by_customer', bool(re.search(r'\bpor clientes?\b', normalized))
+        else:
+            return None
+        if not (wants_file or (asks_report and specific)):
+            return None
+
+        formats = [fmt for fmt, wanted in (('xlsx', wants_xlsx), ('pdf', wants_pdf)) if wanted] or ['xlsx', 'pdf']
+        parsed_period = self._parse_sales_billing_summary_request((user_message or '') + ' ventas resumen')
+        period = dict(parsed_period[1]) if parsed_period else {}
+        today = fields.Date.context_today(self)
+        # Para un reporte, el mes en curso llega hasta hoy.
+        if period.get('date_to') and fields.Date.to_date(period['date_to']) > today >= fields.Date.to_date(period['date_from']):
+            period['date_to'] = today.isoformat()
+        return {'report': code, 'formats': formats, **period}
+
+    @api.model
+    def _report_file_link(self, file_info):
+        label = _('Descargar PDF') if file_info.get('format') == 'pdf' else _('Descargar Excel')
+        return '[%s](%s)' % (label, file_info['url'])
+
+    def _reply_with_report_files(self, request):
+        """Arma los archivos pedidos sin pasar por el modelo de IA."""
+        Event = self.env['ai.session.event']
+        Report = self.env['dolan.ai.report']
+        results = []
+        error = False
+        for file_format in request['formats']:
+            try:
+                results.append(Report.generate_file(
+                    request['report'], file_format=file_format,
+                    date_from=request.get('date_from'), date_to=request.get('date_to'), session=self,
+                ))
+            except UserError as exc:
+                error = str(exc)
+                break
+        if results:
+            first = results[0]
+            assistant_reply = _('Listo, armé el reporte: %(summary)s.') % {'summary': first['summary']}
+            assistant_reply += '\n\n' + ' '.join(self._report_file_link(result['file']) for result in results)
+        else:
+            assistant_reply = _('No pude armar el reporte: %s') % error
+        assistant_event = Event.create({
+            'ai_session_id': self.id,
+            'role': 'assistant',
+            'content': assistant_reply,
+            'metadata': json.dumps({
+                'provider': 'Odoo',
+                'model': _('Reporte de solo lectura'),
+                'files': [result['file'] for result in results],
+            }, ensure_ascii=False),
+        })
+        self.loop_state = 'completed'
+        return {
+            'session_id': self.id,
+            'event_id': assistant_event.id,
+            'reply': assistant_reply,
+            'provider': 'Odoo',
+            'model': _('Reporte de solo lectura'),
+            'files': [result['file'] for result in results],
         }
 
     @api.model
@@ -628,20 +730,26 @@ class AiSession(models.Model):
         params = {}
 
         # Exact dates in ISO or Argentine day/month/year format take priority.
-        date_tokens = re.findall(r'\b(?:\d{4}-\d{2}-\d{2}|\d{1,2}[/-]\d{1,2}[/-]\d{4})\b', message)
+        # El año es opcional (se asume el actual) y puede venir con dos dígitos.
+        date_tokens = re.findall(r'\b(?:\d{4}-\d{2}-\d{2}|\d{1,2}[/-]\d{1,2}(?:[/-]\d{4}|[/-]\d{2})?)\b', message)
         parsed_dates = []
         for token in date_tokens[:2]:
             try:
-                parsed_dates.append(
-                    datetime.strptime(token, '%Y-%m-%d').date()
-                    if '-' in token and token[4:5] == '-'
-                    else datetime.strptime(token.replace('-', '/'), '%d/%m/%Y').date()
-                )
+                if '-' in token and token[4:5] == '-':
+                    parsed_dates.append(datetime.strptime(token, '%Y-%m-%d').date())
+                    continue
+                parts = [int(part) for part in re.split(r'[/-]', token)]
+                year = parts[2] if len(parts) == 3 else today.year
+                if year < 100:
+                    year += 2000
+                parsed_dates.append(date(year, parts[1], parts[0]))
             except ValueError:
                 return None
         if parsed_dates:
             params['date_from'] = parsed_dates[0].isoformat()
-            params['date_to'] = parsed_dates[-1].isoformat()
+            # "Desde el 1/10" sin fecha final llega hasta hoy.
+            only_start = len(parsed_dates) == 1 and re.search(r'\bdesde\b', message)
+            params['date_to'] = today.isoformat() if only_start and today >= parsed_dates[0] else parsed_dates[-1].isoformat()
             return 'sales_billing_summary', params
 
         if re.search(r'\b(ultimos?\s+\d+\s+dias?|ultima\s+semana|ultimos?\s+7\s+dias?)\b', message):

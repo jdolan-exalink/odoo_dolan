@@ -6,3 +6,4 @@ from . import test_ai_resilience
 from . import test_ai_openrouter
 from . import test_ai_connection_wizard
 from . import test_ai_receivables_and_periods
+from . import test_ai_report_files
