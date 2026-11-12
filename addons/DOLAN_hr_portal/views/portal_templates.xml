@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_breadcrumbs_personal" inherit_id="portal.portal_breadcrumbs" name="Personal breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name and page_name.startswith('dolan_personal')" class="breadcrumb-item active">Mi legajo</li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_personal_missing" name="Mi legajo: sin ficha">
+        <t t-call="portal.portal_layout">
+            <div class="alert alert-info mt-3" role="status">
+                Tu usuario todavía no está vinculado a una ficha de empleado. Pedile a Personal que lo vincule
+                desde Usuarios &gt; Vincular empleado.
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_my_personal" name="Mi legajo">
+        <t t-call="portal.portal_layout">
+            <t t-set="dt_opts" t-value="{'tz_name': tz, 'format': 'dd/MM/yyyy HH:mm'}"/>
+            <div class="o_dolan_personal mt-3">
+                <div t-if="message" class="alert alert-success" role="status" t-out="message"/>
+                <div t-if="error" class="alert alert-danger" role="alert" t-out="error"/>
+
+                <section class="mb-4" id="profile">
+                    <h2 class="h4">Mi legajo</h2>
+                    <div class="row g-2">
+                        <div class="col-12 col-md-6"><strong>Nombre:</strong> <span t-out="employee.name"/></div>
+                        <div class="col-12 col-md-6" t-if="employee.dolan_file_number"><strong>Legajo:</strong> <span t-out="employee.dolan_file_number"/></div>
+                        <div class="col-12 col-md-6" t-if="employee.dolan_cuil"><strong>CUIL:</strong> <span t-out="employee.dolan_cuil"/></div>
+                        <div class="col-12 col-md-6" t-if="employee.job_title"><strong>Puesto:</strong> <span t-out="employee.job_title"/></div>
+                        <div class="col-12 col-md-6" t-if="employee.department_id"><strong>Sector:</strong> <span t-out="employee.department_id.name"/></div>
+                        <div class="col-12 col-md-6" t-if="employee.dolan_establishment_id"><strong>Establecimiento:</strong> <span t-out="employee.dolan_establishment_id.name"/></div>
+                        <div class="col-12 col-md-6" t-if="employee.dolan_seniority_date"><strong>Antigüedad:</strong>
+                            <span t-out="employee.dolan_seniority_years"/> años (desde <span t-out="employee.dolan_seniority_date" t-options="{'widget': 'date'}"/>)</div>
+                        <div class="col-12 col-md-6"><strong>Vacaciones que corresponden:</strong> <span t-out="employee.dolan_vacation_days"/> días corridos</div>
+                    </div>
+                </section>
+
+                <section class="mb-4" id="shifts">
+                    <h2 class="h4">Próximos turnos</h2>
+                    <p t-if="not assignments" class="text-muted">No tenés turnos publicados para las próximas semanas.</p>
+                    <t t-if="assignments" t-call="portal.portal_table">
+                        <thead><tr><th>Día</th><th>Turno</th><th>Desde</th><th>Hasta</th><th class="text-end">Cambio</th></tr></thead>
+                        <tbody>
+                            <tr t-foreach="assignments" t-as="a">
+                                <td t-out="a.date" t-options="{'widget': 'date'}"/>
+                                <td t-out="a.shift_id.name"/>
+                                <td><span t-field="a.start_datetime" t-options="dt_opts"/></td>
+                                <td><span t-field="a.end_datetime" t-options="dt_opts"/></td>
+                                <td class="text-end">
+                                    <details>
+                                        <summary class="btn btn-sm btn-link p-0">Pedir cambio</summary>
+                                        <form t-attf-action="/my/personal/shift/#{a.id}/swap" method="post" class="mt-2 text-start">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <label class="form-label small" t-attf-for="swap_rep_#{a.id}">Lo cubre (opcional)</label>
+                                            <select class="form-select form-select-sm mb-2" name="replacement_id" t-attf-id="swap_rep_#{a.id}">
+                                                <option value="">A elección del responsable</option>
+                                                <t t-foreach="mates" t-as="m"><option t-att-value="m.id" t-out="m.name"/></t>
+                                            </select>
+                                            <label class="form-label small" t-attf-for="swap_reason_#{a.id}">Motivo</label>
+                                            <textarea class="form-control form-control-sm mb-2" name="reason" required="required" t-attf-id="swap_reason_#{a.id}"/>
+                                            <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
+                                        </form>
+                                    </details>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </t>
+                    <t t-if="swaps">
+                        <h3 class="h6 mt-3">Mis pedidos de cambio</h3>
+                        <ul class="list-unstyled small">
+                            <li t-foreach="swaps" t-as="s"><span t-out="s.date" t-options="{'widget': 'date'}"/>: <span t-field="s.state"/>
+                                <span t-if="s.decision_note" class="text-muted"> (<t t-out="s.decision_note"/>)</span></li>
+                        </ul>
+                    </t>
+                </section>
+
+                <section class="mb-4" id="attendances">
+                    <h2 class="h4">Mis fichadas</h2>
+                    <p t-if="not attendances" class="text-muted">No hay fichadas en el último mes.</p>
+                    <t t-if="attendances" t-call="portal.portal_table">
+                        <thead><tr><th>Entrada</th><th>Salida</th><th class="text-end">Horas</th><th/></tr></thead>
+                        <tbody>
+                            <tr t-foreach="attendances" t-as="att">
+                                <td><span t-field="att.check_in" t-options="dt_opts"/></td>
+                                <td><span t-if="att.check_out" t-field="att.check_out" t-options="dt_opts"/>
+                                    <span t-if="att.dolan_missing_out or att.dolan_missing_in" class="badge text-bg-warning">Fichada faltante</span></td>
+                                <td class="text-end"><span t-field="att.worked_hours" t-options="{'widget': 'float_time'}"/></td>
+                                <td><span t-if="att.dolan_corrected" class="badge text-bg-info">Corregida</span></td>
+                            </tr>
+                        </tbody>
+                    </t>
+                    <details class="mt-2">
+                        <summary class="btn btn-sm btn-outline-primary">Pedir una corrección</summary>
+                        <form action="/my/personal/correction" method="post" class="row g-2 mt-2">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label small" for="corr_att">Fichada a corregir</label>
+                                <select class="form-select form-select-sm" name="attendance_id" id="corr_att">
+                                    <option value="">No fiché ese día</option>
+                                    <t t-foreach="attendances" t-as="att"><option t-att-value="att.id"><t t-out="att.check_in" t-options="dt_opts"/></option></t>
+                                </select>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label class="form-label small" for="corr_in">Entrada correcta</label>
+                                <input class="form-control form-control-sm" type="datetime-local" name="check_in" id="corr_in" required="required"/>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label class="form-label small" for="corr_out">Salida correcta</label>
+                                <input class="form-control form-control-sm" type="datetime-local" name="check_out" id="corr_out"/>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small" for="corr_reason">Motivo</label>
+                                <textarea class="form-control form-control-sm" name="reason" id="corr_reason" required="required"/>
+                            </div>
+                            <div class="col-12"><button type="submit" class="btn btn-sm btn-primary">Enviar a aprobación</button></div>
+                        </form>
+                    </details>
+                    <ul t-if="corrections" class="list-unstyled small mt-2">
+                        <li t-foreach="corrections" t-as="c">Corrección del <span t-field="c.new_check_in" t-options="dt_opts"/>: <span t-field="c.state"/></li>
+                    </ul>
+                </section>
+
+                <section class="mb-4" id="incidents">
+                    <h2 class="h4">Incidencias</h2>
+                    <p t-if="not incidents" class="text-muted">No tenés incidencias para revisar.</p>
+                    <div t-foreach="incidents" t-as="inc" class="border rounded p-2 mb-2">
+                        <div><strong t-field="inc.kind"/> el <span t-out="inc.date" t-options="{'widget': 'date'}"/>
+                            <span t-if="inc.minutes"> (<t t-out="int(inc.minutes)"/> min)</span> · <span t-field="inc.state"/></div>
+                        <form t-if="inc.state == 'detected'" t-attf-action="/my/personal/incident/#{inc.id}/justify" method="post" class="mt-2">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <label class="form-label small" t-attf-for="just_#{inc.id}">Justificación</label>
+                            <textarea class="form-control form-control-sm mb-2" name="justification" required="required" t-attf-id="just_#{inc.id}"/>
+                            <button type="submit" class="btn btn-sm btn-primary">Enviar</button>
+                        </form>
+                        <div t-elif="inc.justification" class="small text-muted" t-out="inc.justification"/>
+                    </div>
+                </section>
+
+                <section class="mb-4" id="leaves">
+                    <h2 class="h4">Licencias</h2>
+                    <t t-if="allocations" t-call="portal.portal_table">
+                        <thead><tr><th>Tipo</th><th class="text-end">Asignados</th><th class="text-end">Tomados</th><th class="text-end">Disponibles</th><th>Vence</th></tr></thead>
+                        <tbody>
+                            <tr t-foreach="allocations" t-as="al">
+                                <td t-out="al.work_entry_type_id.name"/>
+                                <td class="text-end" t-out="round(al.max_leaves, 2)"/>
+                                <td class="text-end" t-out="round(al.leaves_taken, 2)"/>
+                                <td class="text-end" t-out="round(al.virtual_remaining_leaves, 2)"/>
+                                <td><span t-if="al.date_to" t-out="al.date_to" t-options="{'widget': 'date'}"/></td>
+                            </tr>
+                        </tbody>
+                    </t>
+                    <form action="/my/personal/leave" method="post" class="row g-2 mt-2">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="col-12 col-md-4">
+                            <label class="form-label small" for="leave_type">Tipo</label>
+                            <select class="form-select form-select-sm" name="work_entry_type_id" id="leave_type" required="required">
+                                <t t-foreach="leave_types" t-as="lt"><option t-att-value="lt.id" t-out="lt.name"/></t>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <label class="form-label small" for="leave_from">Desde</label>
+                            <input class="form-control form-control-sm" type="date" name="date_from" id="leave_from" required="required"/>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <label class="form-label small" for="leave_to">Hasta</label>
+                            <input class="form-control form-control-sm" type="date" name="date_to" id="leave_to"/>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small" for="leave_note">Comentario</label>
+                            <input class="form-control form-control-sm" type="text" name="note" id="leave_note" maxlength="250"/>
+                        </div>
+                        <div class="col-12"><button type="submit" class="btn btn-sm btn-primary">Pedir licencia</button></div>
+                    </form>
+                    <t t-if="leaves" t-call="portal.portal_table">
+                        <thead><tr><th>Tipo</th><th>Desde</th><th>Hasta</th><th class="text-end">Días</th><th>Estado</th></tr></thead>
+                        <tbody>
+                            <tr t-foreach="leaves" t-as="lv">
+                                <td t-out="lv.work_entry_type_id.name"/>
+                                <td t-out="lv.request_date_from" t-options="{'widget': 'date'}"/>
+                                <td t-out="lv.request_date_to" t-options="{'widget': 'date'}"/>
+                                <td class="text-end" t-out="round(lv.number_of_days, 2)"/>
+                                <td><span t-field="lv.state"/></td>
+                            </tr>
+                        </tbody>
+                    </t>
+                </section>
+
+                <section class="mb-4" id="novelties">
+                    <h2 class="h4">Mis novedades</h2>
+                    <p t-if="not novelties" class="text-muted">Sin novedades en los últimos meses.</p>
+                    <t t-if="novelties" t-call="portal.portal_table">
+                        <thead><tr><th>Fecha</th><th>Código</th><th class="text-end">Cantidad</th><th>Detalle</th><th>Estado</th></tr></thead>
+                        <tbody>
+                            <tr t-foreach="novelties" t-as="n">
+                                <td t-out="n.date" t-options="{'widget': 'date'}"/>
+                                <td t-out="n.code"/>
+                                <td class="text-end"><t t-out="round(n.quantity, 2)"/> <span t-field="n.unit"/></td>
+                                <td t-out="n.origin_ref or n.note or ''"/>
+                                <td><span t-field="n.state"/></td>
+                            </tr>
+                        </tbody>
+                    </t>
+                </section>
+                <div id="dolan_personal_extra"/>
+            </div>
+        </t>
+    </template>
+</odoo>

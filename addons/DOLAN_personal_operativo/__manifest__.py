@@ -21,6 +21,7 @@ instalador de DOLAN se instalan solos. Nunca depende de ``DOLAN_payroll_ar``.
     'website': 'https://github.com/dolan-ce/odoo20-rea',
     'license': 'LGPL-3',
     'depends': [
+        'DOLAN_hr_portal',
         'DOLAN_hr_overtime',
         'DOLAN_hr_attendance',
         'DOLAN_hr_scheduling',

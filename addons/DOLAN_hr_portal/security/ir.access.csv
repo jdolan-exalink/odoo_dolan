@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_hr_shift_swap_own,dolan.hr.shift.swap.own,dolan.hr.shift.swap,base.group_user,r,"[('employee_id.user_id', '=', user.id)]"
+access_dolan_hr_shift_swap_supervisor,dolan.hr.shift.swap.supervisor,dolan.hr.shift.swap,DOLAN_hr_core.group_dolan_hr_supervisor,ru,"['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]"
+access_dolan_hr_shift_swap_hr,dolan.hr.shift.swap.hr,dolan.hr.shift.swap,hr.group_hr_user,crud,
+dolan_hr_shift_swap_company_rule,dolan.hr.shift.swap.company.rule,dolan.hr.shift.swap,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"

@@ -46,6 +46,8 @@ EXPECTED_MODULES = [
     "DOLAN_hr_attendance",
     "DOLAN_hr_overtime",
     "DOLAN_hr_payroll_bridge",
+    "DOLAN_hr_portal",
+    "DOLAN_hr_portal_payroll",
     "DOLAN_personal_operativo",
     "DOLAN_personal",
     "ePOS_print",
