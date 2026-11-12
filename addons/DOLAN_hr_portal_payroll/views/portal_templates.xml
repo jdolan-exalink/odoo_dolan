@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_personal_slips" inherit_id="DOLAN_hr_portal.portal_my_personal" name="Mi legajo: recibos">
+        <xpath expr="//div[@id='dolan_personal_extra']" position="before">
+            <section class="mb-4" id="slips">
+                <h2 class="h4">Mis recibos</h2>
+                <p t-if="not slips" class="text-muted">Todavía no hay recibos confirmados.</p>
+                <t t-if="slips" t-call="portal.portal_table">
+                    <thead><tr><th>Período</th><th>Recibo</th><th class="text-end">Neto</th><th>Firma</th><th/></tr></thead>
+                    <tbody>
+                        <tr t-foreach="slips" t-as="slip">
+                            <td t-out="slip.date_to.strftime('%m/%Y')"/>
+                            <td t-out="slip.name"/>
+                            <td class="text-end"><span t-field="slip.net"/></td>
+                            <td><span t-field="slip.employee_sign_state"/></td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-link" t-attf-href="/my/personal/slip/#{slip.id}/pdf">PDF</a>
+                                <form t-if="slip.employee_sign_state == 'pending'" t-attf-action="/my/personal/slip/#{slip.id}/sign"
+                                      method="post" class="d-inline">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <button type="submit" class="btn btn-sm btn-primary">Firmar en conformidad</button>
+                                </form>
+                                <details t-if="slip.employee_sign_state == 'pending'" class="d-inline-block">
+                                    <summary class="btn btn-sm btn-link">En disconformidad</summary>
+                                    <form t-attf-action="/my/personal/slip/#{slip.id}/sign" method="post" class="mt-1 text-start">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" name="disagreement" value="1"/>
+                                        <label class="form-label small" t-attf-for="sign_note_#{slip.id}">Observación</label>
+                                        <textarea class="form-control form-control-sm mb-1" name="note" t-attf-id="sign_note_#{slip.id}"/>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Firmar en disconformidad</button>
+                                    </form>
+                                </details>
+                            </td>
+                        </tr>
+                    </tbody>
+                </t>
+            </section>
+        </xpath>
+    </template>
+</odoo>

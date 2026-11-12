@@ -2,7 +2,7 @@
 # Part of DOLAN Suite for Odoo 20 CE. See LICENSE file for full copyright and licensing details.
 {
     'name': 'DOLAN - Sueldos y Jornales Argentina',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.2.0',
     'category': 'Human Resources/Payroll',
     'summary': 'Liquidación de sueldos por convenio, SAC, vacaciones, Ganancias 4ta, F.931/SICOSS, Libro de Sueldos Digital y recibos firmados',
     'description': """
@@ -28,11 +28,13 @@ Módulo clean-room (LGPL-3). Odoo Enterprise no trae nómina argentina.
     'license': 'LGPL-3',
     'depends': [
         'hr',
+        'DOLAN_hr_core',
         'account',
         'l10n_ar',
         'mail',
     ],
     'data': [
+        'security/payroll_security.xml',
         'security/ir.access.csv',
         'data/payroll_data.xml',
         'views/payroll_config_views.xml',

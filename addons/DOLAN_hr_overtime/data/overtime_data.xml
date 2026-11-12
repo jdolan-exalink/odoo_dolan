@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="overtime_rule_regular" model="dolan.hr.overtime.rule">
+            <field name="name">Horas extra en día hábil</field>
+            <field name="category">regular</field>
+            <field name="rate_percent">50</field>
+            <field name="input_code">HE50</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="overtime_rule_rest" model="dolan.hr.overtime.rule">
+            <field name="name">Horas extra en sábado tarde, domingo, franco o feriado</field>
+            <field name="category">rest</field>
+            <field name="rate_percent">100</field>
+            <field name="input_code">HE100</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="ir_cron_dolan_novelty_collect" model="ir.cron">
+            <field name="name">Personal: juntar novedades de los períodos abiertos</field>
+            <field name="model_id" ref="model_dolan_hr_novelty_period"/>
+            <field name="state">code</field>
+            <field name="code">model.search([('state', '=', 'open')]).action_collect()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

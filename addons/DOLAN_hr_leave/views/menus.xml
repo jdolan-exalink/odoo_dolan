@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dolan_hr_vacation_generate" name="Generar vacaciones del año"
+              parent="hr_holidays.menu_hr_holidays_management" action="action_dolan_hr_vacation_generate"
+              sequence="90" groups="hr_holidays.group_hr_holidays_manager"/>
+</odoo>

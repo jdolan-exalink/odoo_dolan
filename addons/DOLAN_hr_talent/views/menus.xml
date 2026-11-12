@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dolan_hr_talent_root" name="Gestión RRHH" sequence="98"
+              web_icon="DOLAN_hr_talent,static/description/icon.svg" groups="base.group_user"/>
+    <menuitem id="menu_dolan_hr_training" name="Capacitación" parent="menu_dolan_hr_talent_root" sequence="10"/>
+    <menuitem id="menu_dolan_hr_training_sessions" name="Sesiones" parent="menu_dolan_hr_training"
+              action="action_dolan_hr_training_session" sequence="10"/>
+    <menuitem id="menu_dolan_hr_training_courses" name="Cursos" parent="menu_dolan_hr_training"
+              action="action_dolan_hr_training_course" sequence="20"/>
+    <menuitem id="menu_dolan_hr_certifications" name="Certificaciones por vencer" parent="menu_dolan_hr_training"
+              action="action_dolan_hr_certifications_expiring" sequence="30" groups="hr.group_hr_user"/>
+    <menuitem id="menu_dolan_hr_performance" name="Desempeño" parent="menu_dolan_hr_talent_root" sequence="20"/>
+    <menuitem id="menu_dolan_hr_reviews" name="Evaluaciones" parent="menu_dolan_hr_performance"
+              action="action_dolan_hr_review" sequence="10"/>
+    <menuitem id="menu_dolan_hr_review_cycles" name="Ciclos" parent="menu_dolan_hr_performance"
+              action="action_dolan_hr_review_cycle" sequence="20" groups="hr.group_hr_manager"/>
+    <menuitem id="menu_dolan_hr_recruitment_link" name="Selección" parent="menu_dolan_hr_talent_root"
+              action="hr_recruitment.crm_case_categ0_act_job" sequence="30" groups="hr_recruitment.group_hr_recruitment_user"/>
+</odoo>

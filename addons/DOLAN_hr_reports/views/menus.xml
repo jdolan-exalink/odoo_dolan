@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dolan_hr_reports_root" name="Reportes de Personal" sequence="97"
+              web_icon="DOLAN_hr_reports,static/description/icon.svg" groups="DOLAN_hr_core.group_dolan_hr_supervisor"/>
+    <menuitem id="menu_dolan_hr_dashboard" name="Tablero" parent="menu_dolan_hr_reports_root"
+              action="action_dolan_hr_dashboard" sequence="10"/>
+    <menuitem id="menu_dolan_hr_report_incidents" name="Presentismo" parent="menu_dolan_hr_reports_root"
+              action="action_dolan_hr_report_incidents" sequence="20"/>
+    <menuitem id="menu_dolan_hr_report_overtime" name="Horas extra" parent="menu_dolan_hr_reports_root"
+              action="action_dolan_hr_report_overtime" sequence="30"/>
+    <menuitem id="menu_dolan_hr_report_novelties" name="Novedades" parent="menu_dolan_hr_reports_root"
+              action="action_dolan_hr_report_novelties" sequence="40"/>
+</odoo>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_hr_schedule_list" model="ir.ui.view">
+        <field name="name">dolan.hr.schedule.list</field>
+        <field name="model">dolan.hr.schedule</field>
+        <field name="arch" type="xml">
+            <list string="Cronogramas" decoration-muted="state == 'superseded'" decoration-info="state == 'draft'">
+                <field name="name"/>
+                <field name="version"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="assignment_count" string="Turnos"/>
+                <field name="state" widget="badge"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_schedule_form" model="ir.ui.view">
+        <field name="name">dolan.hr.schedule.form</field>
+        <field name="model">dolan.hr.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Cronograma">
+                <header>
+                    <button name="action_generate" type="object" string="Generar turnos" class="btn-primary"
+                            invisible="state != 'draft'" groups="hr.group_hr_user"/>
+                    <button name="action_publish" type="object" string="Publicar"
+                            invisible="state != 'draft'" groups="hr.group_hr_user"
+                            confirm="Los turnos publicados se notifican y no se pueden editar. ¿Publicar?"/>
+                    <button name="action_new_version" type="object" string="Nueva versión"
+                            invisible="state != 'published'" groups="hr.group_hr_user"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,published"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_assignments" type="object" class="oe_stat_button" icon="fa-calendar">
+                            <field name="assignment_count" widget="statinfo" string="Turnos"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Ej.: Planta noviembre" readonly="state != 'draft'"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_from" readonly="state != 'draft'"/>
+                            <field name="date_to" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="version"/>
+                            <field name="previous_id" invisible="not previous_id"/>
+                            <field name="published_by_id" invisible="not published_by_id"/>
+                            <field name="published_date" invisible="not published_date"/>
+                        </group>
+                    </group>
+                    <field name="crew_ids" widget="many2many_tags" readonly="state != 'draft'"/>
+                    <group invisible="not previous_id">
+                        <field name="change_reason" readonly="state != 'draft'" required="previous_id and state == 'draft'"/>
+                    </group>
+                    <notebook>
+                        <page name="coverage" string="Cobertura">
+                            <field name="coverage_report" nolabel="1"/>
+                        </page>
+                        <page name="skipped" string="Días no asignados" invisible="not skipped_log">
+                            <field name="skipped_log" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_schedule" model="ir.actions.act_window">
+        <field name="name">Cronogramas</field>
+        <field name="res_model">dolan.hr.schedule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

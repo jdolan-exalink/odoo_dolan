@@ -1,0 +1,7 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_hr_document_type_user,dolan.hr.document.type.user,dolan.hr.document.type,base.group_user,r,
+access_dolan_hr_document_type_manager,dolan.hr.document.type.manager,dolan.hr.document.type,hr.group_hr_manager,crud,
+access_dolan_hr_document_own,dolan.hr.document.own,dolan.hr.document,base.group_user,r,"[('employee_id.user_id', '=', user.id), ('confidential', '=', False), ('employee_visible', '=', True)]"
+access_dolan_hr_document_hr,dolan.hr.document.hr,dolan.hr.document,hr.group_hr_user,crud,"[('confidential', '=', False)]"
+access_dolan_hr_document_manager,dolan.hr.document.manager,dolan.hr.document,hr.group_hr_manager,crud,
+dolan_hr_document_company_rule,dolan.hr.document.company.rule,dolan.hr.document,,crud,"[('company_id', 'in', company_ids)]"

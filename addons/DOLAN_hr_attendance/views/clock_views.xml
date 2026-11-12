@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_hr_clock_device_list" model="ir.ui.view">
+        <field name="name">dolan.hr.clock.device.list</field>
+        <field name="model">dolan.hr.clock.device</field>
+        <field name="arch" type="xml">
+            <list string="Relojes">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="protocol"/>
+                <field name="establishment_id" optional="show"/>
+                <field name="clock_offset_seconds" optional="show"/>
+                <field name="last_import"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_clock_device_form" model="ir.ui.view">
+        <field name="name">dolan.hr.clock.device.form</field>
+        <field name="model">dolan.hr.clock.device</field>
+        <field name="arch" type="xml">
+            <form string="Reloj">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_events" type="object" class="oe_stat_button" icon="fa-clock-o">
+                            <field name="event_count" widget="statinfo" string="Eventos"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="protocol"/>
+                            <field name="identifier_field"/>
+                        </group>
+                        <group>
+                            <field name="establishment_id"/>
+                            <field name="tz"/>
+                            <field name="clock_offset_seconds"/>
+                            <field name="last_import"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        El conector CSV de referencia lee: identificador; fecha y hora local del equipo
+                        (AAAA-MM-DD HH:MM[:SS] o DD/MM/AAAA HH:MM[:SS]); tipo (E/S, entrada/salida o vacío
+                        para alternar) e id del evento (opcional). No se guardan huellas ni plantillas biométricas.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_clock_device" model="ir.actions.act_window">
+        <field name="name">Relojes</field>
+        <field name="res_model">dolan.hr.clock.device</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_dolan_hr_clock_event_list" model="ir.ui.view">
+        <field name="name">dolan.hr.clock.event.list</field>
+        <field name="model">dolan.hr.clock.event</field>
+        <field name="arch" type="xml">
+            <list string="Eventos de reloj" create="0" edit="0" delete="0"
+                  decoration-muted="state == 'duplicate'" decoration-danger="state in ('error', 'unmatched')">
+                <field name="timestamp"/>
+                <field name="employee_id"/>
+                <field name="kind"/>
+                <field name="device_id" optional="show"/>
+                <field name="identifier" optional="show"/>
+                <field name="device_time" optional="hide"/>
+                <field name="external_uid" optional="hide"/>
+                <field name="source" optional="hide"/>
+                <field name="batch" optional="hide"/>
+                <field name="attendance_id" optional="hide"/>
+                <field name="note" optional="show"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_clock_event_search" model="ir.ui.view">
+        <field name="name">dolan.hr.clock.event.search</field>
+        <field name="model">dolan.hr.clock.event</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="identifier"/>
+                <field name="device_id"/>
+                <field name="batch"/>
+                <filter name="problems" string="Para revisar" domain="[('state', 'in', ('error', 'unmatched'))]"/>
+                <filter name="duplicates" string="Duplicados" domain="[('state', '=', 'duplicate')]"/>
+                <separator/>
+                <filter name="today" string="Hoy" date="timestamp" default_period="today"/>
+                <group>
+                    <filter name="group_employee" string="Empleado" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_device" string="Reloj" context="{'group_by': 'device_id'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_clock_event" model="ir.actions.act_window">
+        <field name="name">Eventos de reloj</field>
+        <field name="res_model">dolan.hr.clock.event</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay fichadas importadas</p>
+            <p>Importá el archivo de un reloj desde Asistencias. Volver a importar el mismo archivo no duplica nada.</p>
+        </field>
+    </record>
+
+    <record id="action_dolan_clock_event_retry" model="ir.actions.server">
+        <field name="name">Reintentar</field>
+        <field name="model_id" ref="model_dolan_hr_clock_event"/>
+        <field name="binding_model_id" ref="model_dolan_hr_clock_event"/>
+        <field name="group_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
+        <field name="state">code</field>
+        <field name="code">records.action_retry()</field>
+    </record>
+</odoo>

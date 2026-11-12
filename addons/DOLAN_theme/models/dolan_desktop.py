@@ -12,6 +12,19 @@ DEFAULT_DESKTOP_APP_ORDER = (
     'stock.menu_stock_root',
     POS_MENU_XMLID,
 )
+# Carpeta Personal (suite de RRHH): solo muestra las apps instaladas y que el
+# usuario puede abrir; agrupar no da permisos.
+PERSONAL_FOLDER_NAME = 'Personal'
+PERSONAL_FOLDER_XMLIDS = (
+    'hr.menu_hr_root',
+    'hr_holidays.menu_hr_holidays_root',
+    'hr_attendance.menu_hr_attendance_root',
+    'DOLAN_hr_scheduling.menu_dolan_scheduling_root',
+    'DOLAN_payroll_ar.menu_dolan_payroll_root',
+    'DOLAN_hr_reports.menu_dolan_hr_reports_root',
+    'DOLAN_hr_talent.menu_dolan_hr_talent_root',
+    'hr_recruitment.menu_hr_recruitment_root',
+)
 
 
 class DolanDesktopPreference(models.Model):
@@ -56,16 +69,7 @@ class DolanDesktopPreference(models.Model):
         roots = set(self.env['ir.ui.menu'].get_user_roots().ids)
         if not roots:
             return
-        Menu = self.env['ir.ui.menu']
-        Data = self.env['ir.model.data'].sudo()
-
-        def resolve(xmlid):
-            module, name = xmlid.split('.', 1)
-            data = Data.search([
-                ('module', '=', module), ('name', '=', name), ('model', '=', 'ir.ui.menu'),
-            ], limit=1)
-            menu = Menu.browse(data.res_id).exists() if data else Menu.browse()
-            return menu if menu and menu.id in roots and not menu.parent_id else Menu.browse()
+        resolve = self._dolan_root_resolver(roots)
 
         # Main business apps lead the desktop in this order; everything else
         # (folders first, then remaining apps alphabetically) comes after.
@@ -81,6 +85,7 @@ class DolanDesktopPreference(models.Model):
             if pos_menu:
                 self.write({'favorite_menu_keys': [POS_MENU_XMLID]})
         defaults = {
+            PERSONAL_FOLDER_NAME: list(PERSONAL_FOLDER_XMLIDS),
             'Configuraciones': [
                 'ePOS_print.menu_epos_print_root',
                 'DOLAN_discount_engine.menu_dolan_discount_root',
@@ -90,7 +95,6 @@ class DolanDesktopPreference(models.Model):
                 'DOLAN_stock_mrp.menu_dolan_stock_barcode_root',
                 'DOLAN_payment_terminal.menu_terminal_root',
                 'DOLAN_ai.menu_dolan_ai_root',
-                'hr.menu_hr_root',
                 'DOLAN_whatsapp.menu_dolan_whatsapp_root',
             ],
             'Varios': [
@@ -120,6 +124,49 @@ class DolanDesktopPreference(models.Model):
                 'folder_id': folder_ids[folder_name].id,
                 'sequence': sequence * 10,
             })
+
+    def _dolan_root_resolver(self, roots):
+        Menu = self.env['ir.ui.menu']
+        Data = self.env['ir.model.data'].sudo()
+
+        def resolve(xmlid):
+            module, name = xmlid.split('.', 1)
+            data = Data.search([
+                ('module', '=', module), ('name', '=', name), ('model', '=', 'ir.ui.menu'),
+            ], limit=1)
+            menu = Menu.browse(data.res_id).exists() if data else Menu.browse()
+            return menu if menu and menu.id in roots and not menu.parent_id else Menu.browse()
+
+        return resolve
+
+    def dolan_add_personal_folder(self):
+        """Agrega la carpeta Personal a un escritorio ya armado, a pedido del usuario.
+
+        Mueve a la carpeta las apps de Personal que el usuario ve, aunque
+        estuvieran en otra carpeta, y no toca el resto del escritorio.
+        Devuelve la cantidad de apps ubicadas.
+        """
+        self.ensure_one()
+        if self.user_id.id != self.env.uid:
+            raise AccessError(_('Solo podés cambiar tu escritorio.'))
+        resolve = self._dolan_root_resolver(set(self.env['ir.ui.menu'].get_user_roots().ids))
+        menus = [menu for menu in map(resolve, PERSONAL_FOLDER_XMLIDS) if menu]
+        if not menus:
+            return 0
+        Folder = self.env['dolan.desktop.folder']
+        Item = self.env['dolan.desktop.item']
+        folder = Folder.search([('user_id', '=', self.env.uid), ('name', '=', PERSONAL_FOLDER_NAME)], limit=1)
+        if not folder:
+            last = Folder.search([('user_id', '=', self.env.uid)], order='sequence desc', limit=1)
+            folder = Folder.create({'name': PERSONAL_FOLDER_NAME, 'sequence': (last.sequence or 1000) + 10})
+        for sequence, menu in enumerate(menus, start=1):
+            item = Item.search([('user_id', '=', self.env.uid), ('menu_id', '=', menu.id)], limit=1)
+            vals = {'folder_id': folder.id, 'sequence': sequence * 10}
+            if item:
+                item.write(vals)
+            else:
+                Item.create(dict(vals, menu_id=menu.id))
+        return len(menus)
 
     def _write_desktop_internal(self, vals):
         """Restricted to internal controller calls; underscored methods are not RPC-callable."""

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form_dolan_hr_core" model="ir.ui.view">
+        <field name="name">hr.employee.form.dolan.hr.core</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <group name="work" position="after">
+                <group name="dolan_legajo" string="Legajo" groups="hr.group_hr_user">
+                    <field name="dolan_file_number"/>
+                    <field name="dolan_cuil" placeholder="20-12345678-9"/>
+                    <field name="dolan_seniority_date"/>
+                    <field name="dolan_seniority_years"/>
+                    <field name="dolan_vacation_days"/>
+                    <field name="dolan_establishment_id"/>
+                    <field name="dolan_cost_center_id"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_employee_list_dolan_hr_core" model="ir.ui.view">
+        <field name="name">hr.employee.list.dolan.hr.core</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="dolan_file_number" optional="show" groups="hr.group_hr_user"/>
+            </field>
+            <field name="department_id" position="after">
+                <field name="dolan_establishment_id" optional="hide" groups="hr.group_hr_user"/>
+                <field name="dolan_cuil" optional="hide" groups="hr.group_hr_user"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_employee_filter_dolan_hr_core" model="ir.ui.view">
+        <field name="name">hr.employee.search.dolan.hr.core</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="dolan_file_number" groups="hr.group_hr_user"/>
+                <field name="dolan_cuil" groups="hr.group_hr_user"/>
+                <field name="dolan_establishment_id" groups="hr.group_hr_user"/>
+            </field>
+        </field>
+    </record>
+</odoo>

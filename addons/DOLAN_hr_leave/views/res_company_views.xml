@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_dolan_leave" model="ir.ui.view">
+        <field name="name">res.company.form.dolan.leave</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page name="dolan_vacations" string="Vacaciones" groups="hr_holidays.group_hr_holidays_manager">
+                    <group>
+                        <field name="dolan_vacation_start_month"/>
+                        <field name="dolan_vacation_validity_months"/>
+                        <field name="dolan_vacation_auto_validate"/>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

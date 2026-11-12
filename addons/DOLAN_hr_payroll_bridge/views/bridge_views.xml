@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_payroll_run_form_bridge" model="ir.ui.view">
+        <field name="name">dolan.payroll.run.form.bridge</field>
+        <field name="model">dolan.payroll.run</field>
+        <field name="inherit_id" ref="DOLAN_payroll_ar.view_dolan_payroll_run_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_dolan_simulate_novelties" type="object" string="Simular novedades"
+                        invisible="state not in ('draft', 'computed')"
+                        groups="DOLAN_payroll_ar.group_dolan_payroll_user"/>
+                <button name="action_dolan_import_novelties" type="object" string="Traer novedades de Personal"
+                        invisible="state not in ('draft', 'computed')"
+                        groups="DOLAN_payroll_ar.group_dolan_payroll_user"/>
+                <button name="action_dolan_release_novelties" type="object" string="Liberar novedades"
+                        invisible="state not in ('draft', 'computed')"
+                        groups="DOLAN_payroll_ar.group_dolan_payroll_manager"
+                        confirm="Las novedades traídas vuelven a quedar cerradas y se quitan de los recibos no confirmados. ¿Continuar?"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Novedades de Personal" invisible="not dolan_bridge_log">
+                    <field name="dolan_bridge_log" nolabel="1" colspan="2"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_dolan_payroll_slip_form_bridge" model="ir.ui.view">
+        <field name="name">dolan.payroll.slip.form.bridge</field>
+        <field name="model">dolan.payroll.slip</field>
+        <field name="inherit_id" ref="DOLAN_payroll_ar.view_dolan_payroll_slip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_dolan_import_novelties" type="object" string="Traer novedades"
+                        invisible="state not in ('draft', 'computed')"
+                        groups="DOLAN_payroll_ar.group_dolan_payroll_user"/>
+            </xpath>
+            <xpath expr="//page[@name='inputs']" position="inside">
+                <group>
+                    <field name="dolan_reconciled"/>
+                </group>
+                <field name="dolan_novelty_ids" readonly="1">
+                    <list>
+                        <field name="date"/>
+                        <field name="code"/>
+                        <field name="quantity"/>
+                        <field name="origin_ref"/>
+                        <field name="rectifies_id"/>
+                        <field name="period_id"/>
+                    </list>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_payroll_mapping_list" model="ir.ui.view">
+        <field name="name">dolan.hr.payroll.mapping.list</field>
+        <field name="model">dolan.hr.payroll.mapping</field>
+        <field name="arch" type="xml">
+            <list string="Mapeo de novedades" editable="bottom">
+                <field name="novelty_code"/>
+                <field name="input_code"/>
+                <field name="factor"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_payroll_mapping" model="ir.actions.act_window">
+        <field name="name">Novedades de Personal</field>
+        <field name="res_model">dolan.hr.payroll.mapping</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_dolan_hr_payroll_mapping" name="Novedades de Personal"
+              parent="DOLAN_payroll_ar.menu_dolan_payroll_config" action="action_dolan_hr_payroll_mapping"
+              sequence="90" groups="DOLAN_payroll_ar.group_dolan_payroll_manager"/>
+</odoo>

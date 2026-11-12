@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_hr_training_course_list" model="ir.ui.view">
+        <field name="name">dolan.hr.training.course.list</field>
+        <field name="model">dolan.hr.training.course</field>
+        <field name="arch" type="xml">
+            <list string="Cursos">
+                <field name="name"/>
+                <field name="hours" widget="float_time"/>
+                <field name="provider"/>
+                <field name="skill_id"/>
+                <field name="validity_months"/>
+                <field name="job_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_training_course_form" model="ir.ui.view">
+        <field name="name">dolan.hr.training.course.form</field>
+        <field name="model">dolan.hr.training.course</field>
+        <field name="arch" type="xml">
+            <form string="Curso">
+                <header>
+                    <button name="action_view_missing" type="object" string="Quiénes lo deben"
+                            invisible="not job_ids"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="hours" widget="float_time"/>
+                            <field name="provider"/>
+                        </group>
+                        <group>
+                            <field name="skill_id"/>
+                            <field name="validity_months"/>
+                            <field name="job_ids" widget="many2many_tags"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Sesiones" name="sessions">
+                            <field name="session_ids">
+                                <list>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="trainer"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Contenido" name="content">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_training_course" model="ir.actions.act_window">
+        <field name="name">Cursos</field>
+        <field name="res_model">dolan.hr.training.course</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_dolan_hr_training_session_list" model="ir.ui.view">
+        <field name="name">dolan.hr.training.session.list</field>
+        <field name="model">dolan.hr.training.session</field>
+        <field name="arch" type="xml">
+            <list string="Sesiones">
+                <field name="course_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="trainer"/>
+                <field name="location" optional="show"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_training_session_form" model="ir.ui.view">
+        <field name="name">dolan.hr.training.session.form</field>
+        <field name="model">dolan.hr.training.session</field>
+        <field name="arch" type="xml">
+            <form string="Sesión de capacitación">
+                <header>
+                    <button name="action_add_missing" type="object" string="Invitar a quienes lo deben"
+                            invisible="state != 'planned'"/>
+                    <button name="action_done" type="object" string="Cerrar y otorgar certificaciones"
+                            class="btn-primary" invisible="state != 'planned'"/>
+                    <button name="action_cancel" type="object" string="Cancelar" invisible="state != 'planned'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="course_id" readonly="state != 'planned'"/>
+                            <field name="trainer"/>
+                            <field name="location"/>
+                        </group>
+                        <group>
+                            <field name="date_start" readonly="state != 'planned'"/>
+                            <field name="date_end" readonly="state != 'planned'"/>
+                        </group>
+                    </group>
+                    <field name="attendee_ids" readonly="state != 'planned'">
+                        <list editable="bottom">
+                            <field name="employee_id"/>
+                            <field name="result"/>
+                            <field name="score"/>
+                            <field name="certification_id" readonly="1"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_training_session" model="ir.actions.act_window">
+        <field name="name">Sesiones</field>
+        <field name="res_model">dolan.hr.training.session</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_hr_employee_skill_list_dolan_expiry" model="ir.ui.view">
+        <field name="name">hr.employee.skill.list.dolan.expiry</field>
+        <field name="model">hr.employee.skill</field>
+        <field name="arch" type="xml">
+            <list string="Certificaciones" create="0" decoration-danger="dolan_expiring">
+                <field name="employee_id"/>
+                <field name="skill_id"/>
+                <field name="valid_from"/>
+                <field name="valid_to"/>
+                <field name="dolan_expiring" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_certifications_expiring" model="ir.actions.act_window">
+        <field name="name">Certificaciones por vencer</field>
+        <field name="res_model">hr.employee.skill</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_hr_employee_skill_list_dolan_expiry"/>
+        <field name="domain">[('skill_type_id.is_certification', '=', True), ('dolan_expiring', '=', True)]</field>
+    </record>
+</odoo>

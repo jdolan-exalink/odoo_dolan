@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_hr_dashboard_form" model="ir.ui.view">
+        <field name="name">dolan.hr.dashboard.form</field>
+        <field name="model">dolan.hr.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Tablero de Personal" create="0" delete="0">
+                <header>
+                    <button name="action_refresh" type="object" string="Actualizar" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="company_ids" widget="many2many_tags" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="establishment_id"/>
+                            <field name="department_id"/>
+                            <field name="manager_id"/>
+                            <field name="has_documents" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="row g-0">
+                        <div class="col-6 col-md-3 p-1">
+                            <button name="action_open" type="object" context="{'kpi': 'headcount'}" class="btn btn-light border w-100 h-100 py-2">
+                                <div class="fs-3"><i class="fa fa-users me-1"/><field name="headcount"/></div>
+                                <div class="text-muted small">Dotación</div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3 p-1">
+                            <button name="action_open" type="object" context="{'kpi': 'present_today'}" class="btn btn-light border w-100 h-100 py-2">
+                                <div class="fs-3"><i class="fa fa-check me-1"/><field name="present_today"/></div>
+                                <div class="text-muted small">Presentes hoy</div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3 p-1">
+                            <button name="action_open" type="object" context="{'kpi': 'on_leave_today'}" class="btn btn-light border w-100 h-100 py-2">
+                                <div class="fs-3"><i class="fa fa-plane me-1"/><field name="on_leave_today"/></div>
+                                <div class="text-muted small">De licencia hoy</div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3 p-1">
+                            <button name="action_open" type="object" context="{'kpi': 'absent_today'}" class="btn btn-light border w-100 h-100 py-2">
+                                <div class="fs-3"><i class="fa fa-user-times me-1"/><field name="absent_today"/></div>
+                                <div class="text-muted small">Ausentes hoy</div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3 p-1">
+                            <button name="action_open" type="object" context="{'kpi': 'late_count'}" class="btn btn-light border w-100 h-100 py-2">
+                                <div class="fs-3"><i class="fa fa-clock-o me-1"/><field name="late_count"/></div>
+                                <div class="text-muted small">Tardanzas del período</div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3 p-1">
+                            <button name="action_open" type="object" context="{'kpi': 'absence_count'}" class="btn btn-light border w-100 h-100 py-2">
+                                <div class="fs-3"><i class="fa fa-calendar-times-o me-1"/><field name="absence_count"/></div>
+                                <div class="text-muted small">Ausencias del período</div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3 p-1">
+                            <button name="action_open" type="object" context="{'kpi': 'missing_count'}" class="btn btn-light border w-100 h-100 py-2">
+                                <div class="fs-3"><i class="fa fa-question-circle me-1"/><field name="missing_count"/></div>
+                                <div class="text-muted small">Fichadas faltantes</div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3 p-1">
+                            <div class="border rounded p-2 h-100 text-center">
+                                <div class="fs-3"><i class="fa fa-exclamation-triangle me-1" title="Turnos sin cubrir"/><field name="uncovered_count"/></div>
+                                <div class="text-muted small">Turnos sin cubrir</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 p-1">
+                            <button name="action_open" type="object" context="{'kpi': 'overtime_hours'}" class="btn btn-light border w-100 h-100 py-2">
+                                <div class="fs-3"><i class="fa fa-hourglass-half me-1"/><field name="overtime_hours" widget="float_time"/></div>
+                                <div class="text-muted small">Horas extra liquidables</div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3 p-1">
+                            <button name="action_open" type="object" context="{'kpi': 'overtime_pending'}" class="btn btn-light border w-100 h-100 py-2">
+                                <div class="fs-3"><i class="fa fa-hourglass-o me-1"/><field name="overtime_pending"/></div>
+                                <div class="text-muted small">Horas extra para decidir</div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3 p-1">
+                            <button name="action_open" type="object" context="{'kpi': 'leaves_to_approve'}" class="btn btn-light border w-100 h-100 py-2">
+                                <div class="fs-3"><i class="fa fa-inbox me-1"/><field name="leaves_to_approve"/></div>
+                                <div class="text-muted small">Licencias para aprobar</div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3 p-1">
+                            <button name="action_open" type="object" context="{'kpi': 'corrections_pending'}" class="btn btn-light border w-100 h-100 py-2">
+                                <div class="fs-3"><i class="fa fa-pencil me-1"/><field name="corrections_pending"/></div>
+                                <div class="text-muted small">Correcciones pendientes</div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3 p-1">
+                            <button name="action_open" type="object" context="{'kpi': 'novelties_pending'}" class="btn btn-light border w-100 h-100 py-2">
+                                <div class="fs-3"><i class="fa fa-list me-1"/><field name="novelties_pending"/></div>
+                                <div class="text-muted small">Novedades sin decidir</div>
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3 p-1" invisible="not has_documents">
+                            <button name="action_open" type="object" context="{'kpi': 'documents_expiring'}" class="btn btn-light border w-100 h-100 py-2">
+                                <div class="fs-3"><i class="fa fa-file-text-o me-1"/><field name="documents_expiring"/></div>
+                                <div class="text-muted small">Documentos por vencer (30 días)</div>
+                            </button>
+                        </div>
+                    </div>
+                    <group string="Turnos sin cubrir" invisible="not uncovered_detail">
+                        <field name="uncovered_detail" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_dashboard" model="ir.actions.act_window">
+        <field name="name">Tablero de Personal</field>
+        <field name="res_model">dolan.hr.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

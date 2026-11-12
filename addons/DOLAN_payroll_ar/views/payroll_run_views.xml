@@ -40,7 +40,7 @@
                     <button name="action_export_lsd" type="object" string="Exportar Libro de Sueldos Digital"
                             invisible="state != 'done'"/>
                     <button name="action_cancel" type="object" string="Anular"
-                            invisible="state != 'done'" groups="hr.group_hr_manager"
+                            invisible="state != 'done'" groups="DOLAN_payroll_ar.group_dolan_payroll_manager"
                             confirm="Se anula el asiento y los recibos no firmados. ¿Continuar?"/>
                     <button name="action_draft" type="object" string="Volver a borrador"
                             invisible="state not in ('computed', 'cancel')"/>

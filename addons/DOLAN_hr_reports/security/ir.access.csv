@@ -1,0 +1,2 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_hr_dashboard_supervisor,dolan.hr.dashboard.supervisor,dolan.hr.dashboard,DOLAN_hr_core.group_dolan_hr_supervisor,crud,

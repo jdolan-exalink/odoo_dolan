@@ -1,0 +1,17 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_hr_clock_device_supervisor,dolan.hr.clock.device.supervisor,dolan.hr.clock.device,DOLAN_hr_core.group_dolan_hr_supervisor,r,
+access_dolan_hr_clock_device_admin,dolan.hr.clock.device.admin,dolan.hr.clock.device,hr_attendance.group_hr_attendance_user,crud,
+dolan_hr_clock_device_company_rule,dolan.hr.clock.device.company.rule,dolan.hr.clock.device,,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_hr_clock_event_own,dolan.hr.clock.event.own,dolan.hr.clock.event,base.group_user,r,"[('employee_id.user_id', '=', user.id)]"
+access_dolan_hr_clock_event_supervisor,dolan.hr.clock.event.supervisor,dolan.hr.clock.event,DOLAN_hr_core.group_dolan_hr_supervisor,r,"['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]"
+access_dolan_hr_clock_event_admin,dolan.hr.clock.event.admin,dolan.hr.clock.event,hr_attendance.group_hr_attendance_user,cr,
+dolan_hr_clock_event_company_rule,dolan.hr.clock.event.company.rule,dolan.hr.clock.event,,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_hr_attendance_incident_own,dolan.hr.attendance.incident.own,dolan.hr.attendance.incident,base.group_user,ru,"[('employee_id.user_id', '=', user.id)]"
+access_dolan_hr_attendance_incident_supervisor,dolan.hr.attendance.incident.supervisor,dolan.hr.attendance.incident,DOLAN_hr_core.group_dolan_hr_supervisor,ru,"['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]"
+access_dolan_hr_attendance_incident_admin,dolan.hr.attendance.incident.admin,dolan.hr.attendance.incident,hr_attendance.group_hr_attendance_user,crud,
+dolan_hr_attendance_incident_company_rule,dolan.hr.attendance.incident.company.rule,dolan.hr.attendance.incident,,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_hr_attendance_correction_own,dolan.hr.attendance.correction.own,dolan.hr.attendance.correction,base.group_user,cru,"[('employee_id.user_id', '=', user.id)]"
+access_dolan_hr_attendance_correction_supervisor,dolan.hr.attendance.correction.supervisor,dolan.hr.attendance.correction,DOLAN_hr_core.group_dolan_hr_supervisor,cru,"['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]"
+access_dolan_hr_attendance_correction_admin,dolan.hr.attendance.correction.admin,dolan.hr.attendance.correction,hr_attendance.group_hr_attendance_user,crud,
+dolan_hr_attendance_correction_company_rule,dolan.hr.attendance.correction.company.rule,dolan.hr.attendance.correction,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+access_dolan_hr_clock_import_admin,dolan.hr.clock.import.admin,dolan.hr.clock.import,hr_attendance.group_hr_attendance_user,crud,

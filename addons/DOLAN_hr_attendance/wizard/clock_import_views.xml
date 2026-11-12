@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_hr_clock_import_form" model="ir.ui.view">
+        <field name="name">dolan.hr.clock.import.form</field>
+        <field name="model">dolan.hr.clock.import</field>
+        <field name="arch" type="xml">
+            <form string="Importar fichadas">
+                <group invisible="result">
+                    <field name="device_id"/>
+                    <field name="file" filename="filename"/>
+                    <field name="filename" invisible="1"/>
+                    <field name="delimiter"/>
+                </group>
+                <field name="result" invisible="not result" nolabel="1"/>
+                <footer>
+                    <button name="action_import" type="object" string="Importar" class="btn-primary"
+                            invisible="result"/>
+                    <button string="Cerrar" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_clock_import" model="ir.actions.act_window">
+        <field name="name">Importar fichadas</field>
+        <field name="res_model">dolan.hr.clock.import</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

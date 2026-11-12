@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- El botón estándar "Crear empleado" crea una ficha nueva aunque ya exista
+         una sin usuario. Lo reemplazamos por el vínculo guiado. -->
+    <record id="res_users_view_form_dolan_hr_core" model="ir.ui.view">
+        <field name="name">res.users.form.dolan.hr.core</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_create_employee']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_create_employee']" position="after">
+                <button string="Vincular empleado" type="object" name="action_dolan_link_employee"
+                        invisible="not id or share or employee_id" groups="hr.group_hr_user"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Control de personal para supervisores, dentro de la app Turnos. -->
+    <menuitem id="menu_dolan_presence" name="Presentismo" parent="DOLAN_hr_scheduling.menu_dolan_scheduling_root"
+              sequence="20" groups="base.group_user"/>
+    <menuitem id="menu_dolan_presence_incidents" name="Incidencias" parent="menu_dolan_presence"
+              action="action_dolan_hr_attendance_incident" sequence="10"/>
+    <menuitem id="menu_dolan_presence_corrections" name="Correcciones" parent="menu_dolan_presence"
+              action="action_dolan_hr_attendance_correction" sequence="20"/>
+    <menuitem id="menu_dolan_presence_events" name="Eventos de reloj" parent="menu_dolan_presence"
+              action="action_dolan_hr_clock_event" sequence="30" groups="DOLAN_hr_core.group_dolan_hr_supervisor"/>
+
+    <!-- Administración de relojes en Asistencias. -->
+    <menuitem id="menu_dolan_attendance_clock" name="Relojes" parent="hr_attendance.menu_hr_attendance_view_attendances_management"
+              sequence="40" groups="hr_attendance.group_hr_attendance_user"/>
+    <menuitem id="menu_dolan_attendance_import" name="Importar fichadas" parent="menu_dolan_attendance_clock"
+              action="action_dolan_hr_clock_import" sequence="10"/>
+    <menuitem id="menu_dolan_attendance_events" name="Eventos de reloj" parent="menu_dolan_attendance_clock"
+              action="action_dolan_hr_clock_event" sequence="20"/>
+    <menuitem id="menu_dolan_attendance_incidents" name="Incidencias" parent="menu_dolan_attendance_clock"
+              action="action_dolan_hr_attendance_incident" sequence="30"/>
+    <menuitem id="menu_dolan_attendance_reconcile" name="Conciliar ahora" parent="menu_dolan_attendance_clock"
+              action="action_dolan_attendance_reconcile_now" sequence="40"/>
+    <menuitem id="menu_dolan_attendance_devices" name="Relojes" parent="hr_attendance.menu_hr_attendance_configuration"
+              action="action_dolan_hr_clock_device" sequence="30"/>
+</odoo>

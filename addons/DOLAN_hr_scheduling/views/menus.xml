@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dolan_scheduling_root" name="Turnos" sequence="96"
+              web_icon="DOLAN_hr_scheduling,static/description/icon.svg" groups="base.group_user"/>
+    <menuitem id="menu_dolan_scheduling_my" name="Mis turnos" parent="menu_dolan_scheduling_root"
+              action="action_dolan_hr_my_shifts" sequence="5"/>
+    <menuitem id="menu_dolan_scheduling_planning" name="Planificación" parent="menu_dolan_scheduling_root"
+              sequence="10" groups="DOLAN_hr_core.group_dolan_hr_supervisor"/>
+    <menuitem id="menu_dolan_scheduling_assignments" name="Turnos" parent="menu_dolan_scheduling_planning"
+              action="action_dolan_hr_shift_assignment" sequence="10"/>
+    <menuitem id="menu_dolan_scheduling_schedules" name="Cronogramas" parent="menu_dolan_scheduling_planning"
+              action="action_dolan_hr_schedule" sequence="20"/>
+    <menuitem id="menu_dolan_scheduling_crews" name="Cuadrillas" parent="menu_dolan_scheduling_planning"
+              action="action_dolan_hr_crew" sequence="30"/>
+    <menuitem id="menu_dolan_scheduling_config" name="Configuración" parent="menu_dolan_scheduling_root"
+              sequence="90" groups="hr.group_hr_user"/>
+    <menuitem id="menu_dolan_scheduling_shifts" name="Turnos tipo" parent="menu_dolan_scheduling_config"
+              action="action_dolan_hr_shift" sequence="10"/>
+    <menuitem id="menu_dolan_scheduling_patterns" name="Plantillas" parent="menu_dolan_scheduling_config"
+              action="action_dolan_hr_shift_pattern" sequence="20"/>
+</odoo>

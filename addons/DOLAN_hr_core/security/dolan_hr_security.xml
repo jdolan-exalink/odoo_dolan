@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Roles de la suite Personal (PRD §7):
+         Empleado            = base.group_user (ficha propia, recibos propios)
+         Supervisor          = este grupo (su equipo, sin sueldos)
+         RRHH operativo      = hr.group_hr_user
+         Liquidación         = DOLAN_payroll_ar.group_dolan_payroll_user
+         Responsable RRHH    = hr.group_hr_manager
+         Administrador técn. = base.group_system -->
+    <record id="res_groups_privilege_dolan_personal" model="res.groups.privilege">
+        <field name="name">Personal (DOLAN)</field>
+        <field name="sequence">10</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+    </record>
+
+    <record id="group_dolan_hr_supervisor" model="res.groups">
+        <field name="name">Supervisor de Personal</field>
+        <field name="sequence">5</field>
+        <field name="privilege_id" ref="res_groups_privilege_dolan_personal"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Gestiona el presentismo, las ausencias y los turnos del personal a su cargo, sin acceso a sueldos ni recibos.</field>
+    </record>
+
+    <record id="hr.group_hr_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_dolan_hr_supervisor'))]"/>
+    </record>
+</odoo>

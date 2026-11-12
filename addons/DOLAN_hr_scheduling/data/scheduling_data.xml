@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Turnos tipo de referencia, comunes a todas las compañías y editables. -->
+    <data noupdate="1">
+        <record id="shift_office" model="dolan.hr.shift">
+            <field name="name">Oficina 9 a 18</field>
+            <field name="code">OF</field>
+            <field name="company_id" eval="False"/>
+            <field name="start_hour">9</field>
+            <field name="duration_hours">9</field>
+            <field name="break_minutes">60</field>
+            <field name="color">4</field>
+        </record>
+        <record id="shift_morning" model="dolan.hr.shift">
+            <field name="name">Mañana 6 a 14</field>
+            <field name="code">M</field>
+            <field name="company_id" eval="False"/>
+            <field name="start_hour">6</field>
+            <field name="duration_hours">8</field>
+            <field name="break_minutes">30</field>
+            <field name="break_paid" eval="True"/>
+            <field name="color">2</field>
+        </record>
+        <record id="shift_afternoon" model="dolan.hr.shift">
+            <field name="name">Tarde 14 a 22</field>
+            <field name="code">T</field>
+            <field name="company_id" eval="False"/>
+            <field name="start_hour">14</field>
+            <field name="duration_hours">8</field>
+            <field name="break_minutes">30</field>
+            <field name="break_paid" eval="True"/>
+            <field name="color">3</field>
+        </record>
+        <record id="shift_night" model="dolan.hr.shift">
+            <field name="name">Noche 22 a 6</field>
+            <field name="code">N</field>
+            <field name="company_id" eval="False"/>
+            <field name="start_hour">22</field>
+            <field name="duration_hours">8</field>
+            <field name="break_minutes">30</field>
+            <field name="break_paid" eval="True"/>
+            <field name="color">8</field>
+        </record>
+        <record id="shift_split_commerce" model="dolan.hr.shift">
+            <field name="name">Comercio partido 9 a 13 y 17 a 21</field>
+            <field name="code">CP</field>
+            <field name="company_id" eval="False"/>
+            <field name="start_hour">9</field>
+            <field name="duration_hours">4</field>
+            <field name="split_start_hour">17</field>
+            <field name="split_duration_hours">4</field>
+            <field name="color">5</field>
+        </record>
+        <record id="pattern_office" model="dolan.hr.shift.pattern">
+            <field name="name">Oficina lunes a viernes</field>
+            <field name="kind">office</field>
+            <field name="company_id" eval="False"/>
+            <field name="line_ids" eval="[
+                (0, 0, {'day_index': 0, 'shift_id': ref('shift_office')}),
+                (0, 0, {'day_index': 1, 'shift_id': ref('shift_office')}),
+                (0, 0, {'day_index': 2, 'shift_id': ref('shift_office')}),
+                (0, 0, {'day_index': 3, 'shift_id': ref('shift_office')}),
+                (0, 0, {'day_index': 4, 'shift_id': ref('shift_office')}),
+                (0, 0, {'day_index': 5, 'shift_id': False}),
+                (0, 0, {'day_index': 6, 'shift_id': False})]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="skill_type_safety" model="hr.skill.type">
+            <field name="name">Certificaciones de seguridad e higiene</field>
+            <field name="is_certification" eval="True"/>
+        </record>
+        <record id="skill_level_safety_ok" model="hr.skill.level">
+            <field name="name">Aprobado</field>
+            <field name="skill_type_id" ref="skill_type_safety"/>
+            <field name="level_progress">100</field>
+            <field name="default_level" eval="True"/>
+        </record>
+        <record id="skill_forklift" model="hr.skill">
+            <field name="name">Operación de autoelevador</field>
+            <field name="skill_type_id" ref="skill_type_safety"/>
+        </record>
+        <record id="skill_heights" model="hr.skill">
+            <field name="name">Trabajo en altura</field>
+            <field name="skill_type_id" ref="skill_type_safety"/>
+        </record>
+        <record id="skill_first_aid" model="hr.skill">
+            <field name="name">Primeros auxilios y RCP</field>
+            <field name="skill_type_id" ref="skill_type_safety"/>
+        </record>
+        <record id="skill_fire" model="hr.skill">
+            <field name="name">Uso de extintores y evacuación</field>
+            <field name="skill_type_id" ref="skill_type_safety"/>
+        </record>
+    </data>
+</odoo>

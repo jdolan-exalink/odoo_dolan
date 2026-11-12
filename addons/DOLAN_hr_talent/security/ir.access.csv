@@ -1,0 +1,20 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_hr_training_course_user,dolan.hr.training.course.user,dolan.hr.training.course,base.group_user,r,
+access_dolan_hr_training_course_hr,dolan.hr.training.course.hr,dolan.hr.training.course,hr.group_hr_user,crud,
+dolan_hr_training_course_company_rule,dolan.hr.training.course.company.rule,dolan.hr.training.course,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+access_dolan_hr_training_session_user,dolan.hr.training.session.user,dolan.hr.training.session,base.group_user,r,
+access_dolan_hr_training_session_hr,dolan.hr.training.session.hr,dolan.hr.training.session,hr.group_hr_user,crud,
+dolan_hr_training_session_company_rule,dolan.hr.training.session.company.rule,dolan.hr.training.session,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+access_dolan_hr_training_attendee_own,dolan.hr.training.attendee.own,dolan.hr.training.attendee,base.group_user,r,"[('employee_id.user_id', '=', user.id)]"
+access_dolan_hr_training_attendee_supervisor,dolan.hr.training.attendee.supervisor,dolan.hr.training.attendee,DOLAN_hr_core.group_dolan_hr_supervisor,r,"['|', ('employee_id.parent_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]"
+access_dolan_hr_training_attendee_hr,dolan.hr.training.attendee.hr,dolan.hr.training.attendee,hr.group_hr_user,crud,
+access_dolan_hr_review_cycle_user,dolan.hr.review.cycle.user,dolan.hr.review.cycle,base.group_user,r,
+access_dolan_hr_review_cycle_manager,dolan.hr.review.cycle.manager,dolan.hr.review.cycle,hr.group_hr_manager,crud,
+dolan_hr_review_cycle_company_rule,dolan.hr.review.cycle.company.rule,dolan.hr.review.cycle,,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_hr_review_own,dolan.hr.review.own,dolan.hr.review,base.group_user,ru,"[('employee_user_id', '=', user.id), ('state', '!=', 'draft')]"
+access_dolan_hr_review_reviewer,dolan.hr.review.reviewer,dolan.hr.review,base.group_user,ru,"[('reviewer_id', '=', user.id)]"
+access_dolan_hr_review_manager,dolan.hr.review.manager,dolan.hr.review,hr.group_hr_manager,crud,
+dolan_hr_review_company_rule,dolan.hr.review.company.rule,dolan.hr.review,,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_hr_objective_own,dolan.hr.objective.own,dolan.hr.objective,base.group_user,r,"[('review_id.employee_user_id', '=', user.id), ('review_id.state', '!=', 'draft')]"
+access_dolan_hr_objective_reviewer,dolan.hr.objective.reviewer,dolan.hr.objective,base.group_user,crud,"[('review_id.reviewer_id', '=', user.id)]"
+access_dolan_hr_objective_manager,dolan.hr.objective.manager,dolan.hr.objective,hr.group_hr_manager,crud,

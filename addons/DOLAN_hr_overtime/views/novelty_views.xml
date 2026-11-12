@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_hr_novelty_list" model="ir.ui.view">
+        <field name="name">dolan.hr.novelty.list</field>
+        <field name="model">dolan.hr.novelty</field>
+        <field name="arch" type="xml">
+            <list string="Novedades" decoration-muted="state in ('cancelled', 'rejected')"
+                  decoration-warning="state in ('detected', 'pending')" decoration-info="rectifies_id">
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="code"/>
+                <field name="quantity" sum="Total"/>
+                <field name="unit"/>
+                <field name="origin_ref" optional="show"/>
+                <field name="rectifies_id" optional="show"/>
+                <field name="period_id" optional="show"/>
+                <field name="state" widget="badge"/>
+                <button name="action_approve" type="object" string="Aprobar" icon="fa-check"
+                        invisible="state not in ('detected', 'pending')" groups="hr.group_hr_user"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_novelty_form" model="ir.ui.view">
+        <field name="name">dolan.hr.novelty.form</field>
+        <field name="model">dolan.hr.novelty</field>
+        <field name="arch" type="xml">
+            <form string="Novedad">
+                <header>
+                    <button name="action_approve" type="object" string="Aprobar" class="btn-primary"
+                            invisible="state not in ('detected', 'pending')" groups="hr.group_hr_user"/>
+                    <button name="action_reject" type="object" string="Rechazar"
+                            invisible="state not in ('detected', 'pending', 'approved')" groups="hr.group_hr_user"/>
+                    <field name="state" widget="statusbar" statusbar_visible="detected,pending,approved,closed,transferred"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id" readonly="origin_model or state not in ('detected', 'pending')"/>
+                            <field name="date" readonly="origin_model or state not in ('detected', 'pending')"/>
+                            <field name="code" readonly="origin_model or state not in ('detected', 'pending')"/>
+                            <field name="quantity" readonly="origin_model or state not in ('detected', 'pending')"/>
+                            <field name="unit" readonly="origin_model or state not in ('detected', 'pending')"/>
+                        </group>
+                        <group>
+                            <field name="period_id" readonly="1"/>
+                            <field name="origin_ref"/>
+                            <field name="origin_model" groups="base.group_no_one"/>
+                            <field name="dedupe_key" groups="base.group_no_one"/>
+                            <field name="rectifies_id" invisible="not rectifies_id"/>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                    <field name="rectification_ids" invisible="not rectification_ids" readonly="1"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_novelty_search" model="ir.ui.view">
+        <field name="name">dolan.hr.novelty.search</field>
+        <field name="model">dolan.hr.novelty</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="code"/>
+                <field name="period_id"/>
+                <filter name="to_review" string="Para decidir" domain="[('state', 'in', ('detected', 'pending'))]"/>
+                <filter name="rectifications" string="Rectificaciones" domain="[('rectifies_id', '!=', False)]"/>
+                <filter name="valid" string="Vigentes" domain="[('state', 'not in', ('cancelled', 'rejected'))]"/>
+                <group>
+                    <filter name="group_employee" string="Empleado" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_code" string="Código" context="{'group_by': 'code'}"/>
+                    <filter name="group_period" string="Período" context="{'group_by': 'period_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_novelty" model="ir.actions.act_window">
+        <field name="name">Novedades</field>
+        <field name="res_model">dolan.hr.novelty</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_valid': 1}</field>
+    </record>
+
+    <record id="view_dolan_hr_novelty_period_list" model="ir.ui.view">
+        <field name="name">dolan.hr.novelty.period.list</field>
+        <field name="model">dolan.hr.novelty.period</field>
+        <field name="arch" type="xml">
+            <list string="Períodos de novedades">
+                <field name="name"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="novelty_count"/>
+                <field name="pending_count"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_novelty_period_form" model="ir.ui.view">
+        <field name="name">dolan.hr.novelty.period.form</field>
+        <field name="model">dolan.hr.novelty.period</field>
+        <field name="arch" type="xml">
+            <form string="Período de novedades">
+                <header>
+                    <button name="action_collect" type="object" string="Juntar novedades" class="btn-primary"
+                            invisible="state != 'open'"/>
+                    <button name="action_close" type="object" string="Cerrar período" invisible="state != 'open'"
+                            confirm="Las novedades aprobadas quedan cerradas y los cambios posteriores irán como rectificación. ¿Cerrar?"/>
+                    <button name="action_reopen" type="object" string="Reabrir" invisible="state != 'closed'"
+                            groups="hr.group_hr_manager"/>
+                    <button name="action_export_csv" type="object" string="Exportar CSV"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="state != 'open'"/>
+                            <field name="date_from" readonly="state != 'open'"/>
+                            <field name="date_to" readonly="state != 'open'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'open'"/>
+                        </group>
+                        <group>
+                            <field name="novelty_count"/>
+                            <field name="pending_count"/>
+                            <field name="last_collect"/>
+                            <field name="closed_by" invisible="not closed_by"/>
+                            <field name="closed_on" invisible="not closed_on"/>
+                        </group>
+                    </group>
+                    <field name="collect_log" invisible="not collect_log"/>
+                    <field name="novelty_ids" readonly="1"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_novelty_period" model="ir.actions.act_window">
+        <field name="name">Períodos de novedades</field>
+        <field name="res_model">dolan.hr.novelty.period</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

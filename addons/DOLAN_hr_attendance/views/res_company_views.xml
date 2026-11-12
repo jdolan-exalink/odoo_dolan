@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_dolan_attendance" model="ir.ui.view">
+        <field name="name">res.company.form.dolan.attendance</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="DOLAN_hr_scheduling.view_company_form_dolan_scheduling"/>
+        <field name="arch" type="xml">
+            <field name="dolan_night_end" position="after">
+                <separator string="Fichadas" colspan="2"/>
+                <field name="dolan_attendance_tolerance_minutes"/>
+                <field name="dolan_clock_debounce_seconds"/>
+                <field name="dolan_attendance_max_open_hours" widget="float_time"/>
+                <field name="dolan_attendance_match_margin_hours" widget="float_time"/>
+            </field>
+        </field>
+    </record>
+</odoo>

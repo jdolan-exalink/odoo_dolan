@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_hr_attendance_correction_list" model="ir.ui.view">
+        <field name="name">dolan.hr.attendance.correction.list</field>
+        <field name="model">dolan.hr.attendance.correction</field>
+        <field name="arch" type="xml">
+            <list string="Correcciones" decoration-warning="state == 'pending'" decoration-muted="state == 'rejected'">
+                <field name="create_date" string="Pedida el"/>
+                <field name="employee_id"/>
+                <field name="original_check_in" optional="show"/>
+                <field name="new_check_in"/>
+                <field name="original_check_out" optional="show"/>
+                <field name="new_check_out"/>
+                <field name="reason"/>
+                <field name="requested_by" optional="show"/>
+                <field name="approved_by" optional="show"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_attendance_correction_form" model="ir.ui.view">
+        <field name="name">dolan.hr.attendance.correction.form</field>
+        <field name="model">dolan.hr.attendance.correction</field>
+        <field name="arch" type="xml">
+            <form string="Corrección de asistencia">
+                <header>
+                    <button name="action_submit" type="object" string="Enviar a aprobación" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object" string="Aprobar" class="btn-primary"
+                            invisible="state != 'pending'" groups="DOLAN_hr_core.group_dolan_hr_supervisor"/>
+                    <button name="action_reject" type="object" string="Rechazar"
+                            invisible="state != 'pending'" groups="DOLAN_hr_core.group_dolan_hr_supervisor"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,pending,approved"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id" readonly="state != 'draft'"/>
+                            <field name="attendance_id" readonly="state != 'draft'"
+                                   domain="[('employee_id', '=', employee_id)]"/>
+                            <field name="incident_id" readonly="state != 'draft'"
+                                   domain="[('employee_id', '=', employee_id), ('state', 'in', ('detected', 'pending'))]"/>
+                        </group>
+                        <group>
+                            <field name="original_check_in" invisible="not attendance_id"/>
+                            <field name="original_check_out" invisible="not attendance_id"/>
+                            <field name="new_check_in" readonly="state != 'draft'"/>
+                            <field name="new_check_out" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="reason" readonly="state != 'draft'"/>
+                        <field name="rejection_reason" readonly="state != 'pending'"
+                               invisible="state not in ('pending', 'rejected')"/>
+                        <field name="requested_by"/>
+                        <field name="approved_by" invisible="not approved_by"/>
+                        <field name="approved_on" invisible="not approved_on"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_hr_attendance_correction_search" model="ir.ui.view">
+        <field name="name">dolan.hr.attendance.correction.search</field>
+        <field name="model">dolan.hr.attendance.correction</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <filter name="pending" string="Pendientes" domain="[('state', '=', 'pending')]"/>
+                <filter name="mine" string="Mis pedidos" domain="[('requested_by', '=', uid)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_hr_attendance_correction" model="ir.actions.act_window">
+        <field name="name">Correcciones de fichadas</field>
+        <field name="res_model">dolan.hr.attendance.correction</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Pedí la corrección de una fichada</p>
+            <p>Indicá la entrada y la salida correctas y el motivo. La aprueba otra persona y la fichada original queda guardada.</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="portal_entry_personal" model="portal.entry">
+        <field name="name">Mi legajo</field>
+        <field name="description">Turnos, fichadas, licencias y pedidos</field>
+        <field name="url">/my/personal</field>
+        <field name="image" type="bytes" file="DOLAN_hr_portal/static/src/img/personal.svg"/>
+        <field name="category">common_category</field>
+        <field name="sequence" eval="5"/>
+    </record>
+</odoo>

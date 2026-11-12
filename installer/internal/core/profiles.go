@@ -85,7 +85,7 @@ var ProfileCatalog = []ProfileInfo{
 		SystemApps: []string{
 			"contacts", "calendar", "mail", "crm", "sale_management", "purchase", "stock",
 			"mrp", "point_of_sale", "pos_restaurant", "pos_mercado_pago", "project", "project_todo",
-			"hr", "hr_expense", "hr_skills", "fleet", "maintenance",
+			"hr", "hr_expense", "hr_skills", "hr_holidays", "hr_attendance", "fleet", "maintenance",
 			"l10n_ar", "l10n_ar_withholding", "l10n_ar_pos", "l10n_ar_stock",
 			"l10n_latam_check", "l10n_latam_invoice_document",
 		},
@@ -95,6 +95,7 @@ var ProfileCatalog = []ProfileInfo{
 			"DOLAN_pos", "DOLAN_stock_mrp", "DOLAN_subscription", "DOLAN_renting",
 			"DOLAN_knowledge_bi", "DOLAN_exchange", "DOLAN_marketplace", "DOLAN_credit_limit_pos", "DOLAN_credit_limit", "DOLAN_pricelist", "DOLAN_discount_engine",
 			"DOLAN_payment_terminal", "ePOS_print", "pos_scale_management",
+			"DOLAN_hr_core", "DOLAN_payroll_ar", "DOLAN_personal_operativo", "DOLAN_personal",
 		},
 	},
 	{

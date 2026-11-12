@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dolan_hr_establishment" name="Establecimientos"
+              parent="hr.menu_config_employee" action="action_dolan_hr_establishment"
+              sequence="25" groups="hr.group_hr_manager"/>
+</odoo>
