@@ -9,15 +9,19 @@ repositorio y cómo operarlo.
 | Módulo | Estado | Depende de | Qué hace |
 | --- | --- | --- | --- |
 | `DOLAN_hr_core` | Ola 1 | `hr`, `analytic` | Legajo (CUIL, número, ingreso), establecimientos, centro de costos con vigencia, Supervisor de Personal, vínculo usuario-empleado |
-| `DOLAN_payroll_ar` | Existente, 20.0.1.1.0 | `DOLAN_hr_core`, `account`, `l10n_ar` | Sueldos y Jornales; desde 20.0.1.1.0 con grupos propios |
-| `DOLAN_personal_operativo` | Ola 1 (paquete) | `DOLAN_hr_core`, `hr_holidays`, `hr_attendance` | Personal sin nómina |
-| `DOLAN_personal` | Ola 1 (paquete) | `DOLAN_personal_operativo`, `DOLAN_payroll_ar` | Personal completo |
-| `DOLAN_hr_leave` | Ola 2 | `hr_holidays`, `DOLAN_hr_core` | Vacaciones y licencias AR |
-| `DOLAN_hr_scheduling` | Ola 3 | `resource`, `DOLAN_hr_core` | Turnos, ciclos y cuadrillas |
-| `DOLAN_hr_attendance`, `DOLAN_hr_overtime` | Ola 4 | `hr_attendance`, scheduling | Presentismo, incidencias, horas extra y novedades |
-| `DOLAN_hr_payroll_bridge` | Ola 5 | overtime, leave, `DOLAN_payroll_ar` | Novedades aprobadas hacia recibos, una sola vez |
-| `DOLAN_hr_portal`, `DOLAN_hr_reports` | Ola 6 | core y operativos (sin nómina) | Autoservicio y tableros |
-| `DOLAN_hr_documents`, `DOLAN_hr_talent` | Ola 7 | core | Legajo digital, selección, desempeño, capacitación |
+| `DOLAN_payroll_ar` | Existente, 20.0.1.2.0 | `DOLAN_hr_core`, `account`, `l10n_ar` | Sueldos y Jornales; grupos propios (1.1.0), recibos confirmados inmutables con rectificación (1.2.0) |
+| `DOLAN_hr_leave` | Ola 2 | `hr_holidays`, `DOLAN_hr_core` | Licencias LCT, vacaciones por antigüedad y proporcionales, topes, cobertura |
+| `DOLAN_hr_scheduling` | Ola 3 (app Turnos) | `resource`, `hr_holidays`, `DOLAN_hr_core` | Turnos, ciclos, cuadrillas, cronogramas versionados |
+| `DOLAN_hr_attendance` | Ola 4 | `hr_attendance`, scheduling | Relojes, eventos inmutables, conciliación, incidencias, correcciones (Turnos > Presentismo) |
+| `DOLAN_hr_overtime` | Ola 4 | attendance, leave | Horas extra autorizadas, períodos de novedades (Turnos > Novedades) |
+| `DOLAN_hr_payroll_bridge` | Ola 5 (auto) | overtime, `DOLAN_payroll_ar` | Novedades cerradas hacia recibos, una sola vez |
+| `DOLAN_hr_portal` | Ola 6 | operativos | Mi legajo en el portal: turnos, saldos, pedidos, justificaciones, cambios de turno |
+| `DOLAN_hr_portal_payroll` | Ola 6 (auto) | portal, `DOLAN_payroll_ar` | Recibos en el portal, PDF y firma |
+| `DOLAN_hr_reports` | Ola 6 (app) | operativos | Tablero con acceso al origen, pivots y gráficos |
+| `DOLAN_hr_documents` | Ola 7 | core | Legajo digital con vencimientos y conformidad |
+| `DOLAN_hr_talent` | Ola 7 (app Gestión RRHH) | core, `hr_skills`, `hr_recruitment` | Capacitación, desempeño, selección |
+| `DOLAN_personal_operativo` | Paquete | todos los operativos | Personal sin nómina |
+| `DOLAN_personal` | Paquete | operativo, Sueldos, puente, portal de recibos, documentos, talento | Personal completo |
 
 Cada módulo operativo nuevo se agrega a las dependencias de `DOLAN_personal_operativo`;
 `bootstrap.sh --update` instala las dependencias nuevas de un paquete ya instalado.
@@ -57,3 +61,15 @@ que nadie pierda acceso. Revisar y quitar esos grupos a quien no liquida sueldos
 Configuración de pantalla > Agregar carpeta Personal la crea o la completa, sin tocar el
 resto. La carpeta solo muestra apps instaladas que el usuario puede abrir: agrupar no
 da permisos.
+
+## Flujo de presentismo a recibo
+
+1. Turnos > Cronogramas: generar y publicar.
+2. Asistencias > Relojes: importar CSV (o API). Los eventos quedan inmutables.
+3. Turnos > Presentismo > Incidencias: conciliar (cron diario), justificar y aprobar.
+4. Turnos > Novedades > Horas extra: aprobar con autorización previa o nota.
+5. Turnos > Novedades > Períodos: recolectar y cerrar el mes.
+6. Sueldos > Liquidación: Simular y luego Importar novedades; confirmar recibos.
+
+Un recibo confirmado no se edita: Rectificar. Una novedad cerrada que cambia genera
+una rectificación por diferencia en el período siguiente.

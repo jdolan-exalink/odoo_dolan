@@ -4,18 +4,23 @@
     'name': 'DOLAN - Personal Operativo (paquete)',
     'version': '20.0.1.0.0',
     'category': 'Human Resources',
-    'summary': 'Paquete Personal sin nómina: legajos, vacaciones y asistencias. No instala Sueldos.',
+    'summary': 'Paquete Personal sin nómina: legajos, licencias, turnos, presentismo, horas extra, novedades, '
+               'portal y tablero. No instala Sueldos.',
     'description': """
 Personal — Operativo
 ====================
 Metapaquete de la suite Personal sin datos salariales. Instala:
 
-- DOLAN Personal: Legajo y estructura (``DOLAN_hr_core``).
-- Ausencias (``hr_holidays``) y Asistencias (``hr_attendance``) estándar.
+- Legajo y estructura (``DOLAN_hr_core``).
+- Vacaciones y licencias AR (``DOLAN_hr_leave``) sobre Ausencias estándar.
+- Turnos, ciclos y cuadrillas (``DOLAN_hr_scheduling``).
+- Fichadas, incidencias y presentismo (``DOLAN_hr_attendance``) sobre
+  Asistencias estándar.
+- Horas extra y novedades (``DOLAN_hr_overtime``).
+- Portal del empleado (``DOLAN_hr_portal``) y tablero (``DOLAN_hr_reports``).
 
-Los módulos operativos que se agreguen a la suite (turnos, presentismo,
-novedades, portal, reportes) se suman a este paquete; al actualizar con el
-instalador de DOLAN se instalan solos. Nunca depende de ``DOLAN_payroll_ar``.
+Al actualizar con el instalador de DOLAN, los módulos nuevos del paquete se
+instalan solos. Nunca depende de ``DOLAN_payroll_ar``.
     """,
     'author': 'DOLAN Open Source Argentina',
     'website': 'https://github.com/dolan-ce/odoo20-rea',
