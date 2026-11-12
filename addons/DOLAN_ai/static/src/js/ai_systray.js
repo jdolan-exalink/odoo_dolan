@@ -95,6 +95,63 @@ export function normalizeStructuredReply(content) {
     return `**Resultado**\n${readableJsonValue(data)}`;
 }
 
+const RECOVERY_POLL_MS = 4000;
+const RECOVERY_MAX_MS = 120000;
+
+function newClientRequestId() {
+    if (window.crypto?.randomUUID) {
+        return window.crypto.randomUUID();
+    }
+    return `req-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+}
+
+/**
+ * Clasifica un error de rpc() sin depender de imports internos de Odoo.
+ * - "server": Odoo respondió con un error (UserError, AccessError, etc.).
+ * - "connection": no hubo respuesta JSON válida: corte de red, proxy o túnel
+ *   (502, 520, 524 de Cloudflare). Odoo pudo haber terminado igual.
+ */
+/**
+ * Filtra el catálogo de modelos para el selector del chat.
+ * Sin búsqueda devuelve los primeros (el backend ya los ordena del más nuevo
+ * al más viejo); con búsqueda compara cada palabra contra id y nombre.
+ */
+export function filterModels(models, query = "", limit = 60) {
+    const list = Array.isArray(models) ? models : [];
+    const words = String(query || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .split(/\s+/)
+        .filter(Boolean);
+    const matches = words.length
+        ? list.filter((model) => {
+              const haystack = `${model.id || ""} ${model.name || ""}`
+                  .toLowerCase()
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "");
+              return words.every((word) => haystack.includes(word));
+          })
+        : list;
+    return matches.slice(0, limit);
+}
+
+export function classifyRpcError(err) {
+    const serverMessage = err?.data?.message || (err?.name === "RPC_ERROR" ? err?.message : "");
+    if (serverMessage) {
+        return { kind: "server", message: serverMessage };
+    }
+    const text = String(err?.message || "");
+    if (
+        err?.constructor?.name === "ConnectionLostError" ||
+        err?.name === "ConnectionLostError" ||
+        /couldn't be established|interrupted|connection|network|failed to fetch/i.test(text)
+    ) {
+        return { kind: "connection", message: "" };
+    }
+    return { kind: "server", message: text || "error inesperado en el navegador." };
+}
+
 export class DolanAiSystray extends Component {
     static template = "DOLAN_ai.DolanAiSystray";
 
@@ -122,12 +179,14 @@ export class DolanAiSystray extends Component {
                 subtitle: "Tu copiloto empresarial para el día a día en Odoo 20.",
             },
             provider: {
-                name: "ChatGPT plan (Sign in with ChatGPT)",
+                name: "",
+                label: "",
                 mode: "chatgpt_oauth",
                 model: "gpt-6.1-sol",
                 oauth_status: "disconnected",
             },
             availableModels: [],
+            modelPicker: { open: false, query: "" },
             messages: [],
             sessions: [],
             promptButtons: [],
@@ -269,6 +328,10 @@ export class DolanAiSystray extends Component {
             this._focusComposerAfterOpen = true;
             if (!this.state.bootstrapped) {
                 await this.bootstrapChat();
+            } else if (!this.state.isLoading) {
+                // Las acciones rápidas dependen del registro abierto ahora,
+                // no del que estaba abierto la primera vez.
+                await this.bootstrapChat(this.state.sessionId);
             }
         }
     }
@@ -330,7 +393,11 @@ export class DolanAiSystray extends Component {
                 this.state.provider = res.provider || this.state.provider;
                 this.state.availableModels = res.provider?.available_models || [];
                 this.state.sessionId = res.session_id || null;
-                this.state.messages = res.events || [];
+                this.state.messages = (res.events || []).map((event) => ({
+                    ...event,
+                    usedFallback: Boolean(event.used_fallback),
+                    fallbackReason: event.fallback_reason || "",
+                }));
                 this.state.sessions = res.sessions || [];
                 this.state.promptButtons = res.prompt_buttons || [];
                 this.state.smartActions = (res.smart_actions || []).map((code) => ({
@@ -489,25 +556,124 @@ export class DolanAiSystray extends Component {
     }
 
     async openOAuthConfig() {
+        const provider = this.state.provider;
+        const canConfigure = Boolean(provider.can_change_model);
+        if (canConfigure && provider.oauth_status !== "connected") {
+            // Sin conexión lista: el asistente guía proveedor, clave y modelo.
+            await this.openConnectionWizard();
+            return;
+        }
         this.state.isOpen = false;
-        await this.actionService.doAction({
-            type: "ir.actions.act_window",
-            res_model: "dolan.ai.provider",
-            res_id: this.state.provider.id || false,
-            views: [[false, "form"]],
-            view_mode: "form",
-            target: "current",
+        await this.actionService.doAction("DOLAN_ai.action_dolan_ai_provider");
+    }
+
+    async openConnectionWizard() {
+        await this.actionService.doAction("DOLAN_ai.action_dolan_ai_connection_wizard", {
+            onClose: () => this.bootstrapChat(this.state.sessionId),
         });
     }
 
-    async onModelSelect(ev) {
-        const newModel = ev.target.value;
+    get currentModelName() {
+        const model = this.state.provider.model;
+        const found = (this.state.availableModels || []).find((item) => item.id === model);
+        return (found && found.name) || model || "";
+    }
+
+    get pickerModels() {
+        return filterModels(this.state.availableModels, this.state.modelPicker.query, 60);
+    }
+
+    get pickerMatchCount() {
+        return filterModels(this.state.availableModels, this.state.modelPicker.query, Infinity).length;
+    }
+
+    toggleModelPicker() {
+        if (!this.state.provider.can_change_model) {
+            return;
+        }
+        this.state.modelPicker.open = !this.state.modelPicker.open;
+        this.state.modelPicker.query = "";
+    }
+
+    closeModelPicker() {
+        this.state.modelPicker.open = false;
+        this.state.modelPicker.query = "";
+    }
+
+    onModelPickerKeydown(ev) {
+        if (ev.key === "Escape") {
+            this.closeModelPicker();
+        } else if (ev.key === "Enter") {
+            const first = this.pickerModels[0];
+            if (first) {
+                this.selectModel(first.id);
+            }
+        }
+    }
+
+    async selectModel(newModel) {
+        this.closeModelPicker();
+        const previousModel = this.state.provider.model;
+        if (!newModel || newModel === previousModel) {
+            return;
+        }
         this.state.provider.model = newModel;
         try {
-            await rpc("/dolan_ai/chat/set_model", { model: newModel });
+            const result = await rpc("/dolan_ai/chat/set_model", { model: newModel });
+            if (result?.status !== "ok") {
+                this.state.provider.model = previousModel;
+                this.state.uiError = result?.error || "No se pudo cambiar el modelo de IA.";
+            }
         } catch (err) {
             console.error("Error actualizando modelo de IA:", err);
+            this.state.provider.model = previousModel;
+            this.state.uiError = "No se pudo cambiar el modelo de IA.";
         }
+    }
+
+    async onModelSelect(ev) {
+        await this.selectModel(ev.target.value);
+    }
+
+    /**
+     * Después de un corte del proxy o túnel, consulta si Odoo guardó la
+     * respuesta del pedido. Devuelve el resultado o null si no apareció.
+     */
+    async recoverReply(clientRequestId) {
+        const started = Date.now();
+        while (Date.now() - started < RECOVERY_MAX_MS) {
+            await new Promise((resolve) => setTimeout(resolve, RECOVERY_POLL_MS));
+            try {
+                const result = await rpc("/dolan_ai/chat/recover", { client_request_id: clientRequestId });
+                if (result?.status === "done") {
+                    return result;
+                }
+                if (result?.session_id && !this.state.sessionId) {
+                    this.state.sessionId = result.session_id;
+                }
+            } catch (err) {
+                if (classifyRpcError(err).kind === "server") {
+                    return null;
+                }
+                // Sigue sin conexión: se vuelve a intentar hasta el límite.
+            }
+        }
+        return null;
+    }
+
+    pushAssistantResult(result) {
+        this.state.sessionId = result.session_id || this.state.sessionId;
+        if (result.session_id) {
+            const recent = { id: result.session_id, name: result.session_name || this.currentTitle };
+            this.state.sessions = [recent, ...this.state.sessions.filter((session) => session.id !== result.session_id)].slice(0, 30);
+        }
+        this.state.messages.push({
+            id: result.event_id || Date.now() + 1,
+            role: "assistant",
+            content: result.reply || "",
+            usedFallback: Boolean(result.used_fallback),
+            fallbackReason: result.fallback_reason || "",
+        });
     }
 
     async sendMessage(overridePrompt = null, displayLabel = null, smartAction = null) {
@@ -527,6 +693,7 @@ export class DolanAiSystray extends Component {
             content: displayLabel || text,
         });
         this.state.isLoading = true;
+        const clientRequestId = newClientRequestId();
 
         try {
             const ctx = this.currentContext;
@@ -537,20 +704,10 @@ export class DolanAiSystray extends Component {
                 res_model: ctx.resModel,
                 res_id: ctx.resId,
                 smart_action: smartAction,
+                client_request_id: clientRequestId,
             });
             if (result) {
-                this.state.sessionId = result.session_id || this.state.sessionId;
-                if (result.session_id) {
-                    const recent = { id: result.session_id, name: result.session_name || this.currentTitle };
-                    this.state.sessions = [recent, ...this.state.sessions.filter((session) => session.id !== result.session_id)].slice(0, 30);
-                }
-                this.state.messages.push({
-                    id: result.event_id || Date.now() + 1,
-                    role: "assistant",
-                    content: result.reply || "",
-                    usedFallback: Boolean(result.used_fallback),
-                    fallbackReason: result.fallback_reason || "",
-                });
+                this.pushAssistantResult(result);
                 if (result.dashboard_action) {
                     await this.actionService.doAction(result.dashboard_action);
                 }
@@ -559,11 +716,29 @@ export class DolanAiSystray extends Component {
                 }
             }
         } catch (err) {
-            this.state.messages.push({
-                id: Date.now() + 2,
-                role: "assistant",
-                content: "No pude procesar el mensaje. Revisá tu conexión e intentá de nuevo.",
-            });
+            const error = classifyRpcError(err);
+            if (error.kind === "server") {
+                this.state.messages.push({
+                    id: Date.now() + 2,
+                    role: "assistant",
+                    content: `No pude completar el pedido: ${error.message}`,
+                });
+            } else {
+                // El túnel o proxy cortó la conexión (por ejemplo 502, 520 o
+                // 524). Odoo puede seguir trabajando: esperamos su respuesta.
+                this.state.uiError = "Se cortó la conexión con el servidor. Estoy esperando la respuesta…";
+                const recovered = await this.recoverReply(clientRequestId);
+                this.state.uiError = "";
+                if (recovered) {
+                    this.pushAssistantResult(recovered);
+                } else {
+                    this.state.messages.push({
+                        id: Date.now() + 2,
+                        role: "assistant",
+                        content: "Se cortó la conexión con el servidor y no recibí la respuesta. Puede ser un corte del proxy o del túnel; reintentá en un momento.",
+                    });
+                }
+            }
         } finally {
             this.state.isLoading = false;
         }

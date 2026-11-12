@@ -182,6 +182,14 @@ class AiSkill(models.Model):
                 },
             },
         })
+        tools.append({
+            'type': 'function',
+            'function': {
+                'name': 'receivables_by_partner',
+                'description': 'Deudores: saldo pendiente de cobro por cliente en todas las compañías seleccionadas, con lo vencido. Usala para "quién me debe", "clientes que deben", "deudores" o "cuentas por cobrar por cliente".',
+                'parameters': {'type': 'object', 'properties': {}, 'required': []},
+            },
+        })
         return tools
 
     @api.model
@@ -204,6 +212,8 @@ class AiSkill(models.Model):
                 return self._exec_accounting_report_analysis(params)
             elif tool_name == 'cash_position_summary':
                 return self._exec_cash_position_summary(params)
+            elif tool_name == 'receivables_by_partner':
+                return self._exec_receivables_by_partner(params)
             elif tool_name == 'sales_billing_summary':
                 return self._exec_sales_billing_summary(params)
             elif tool_name in ('create', 'ai_tool_create', 'write', 'ai_tool_write'):
@@ -390,6 +400,81 @@ class AiSkill(models.Model):
         }
 
     @api.model
+    def _exec_receivables_by_partner(self, params=None):
+        """Saldo a cobrar abierto por cliente (apuntes de cuentas a cobrar sin conciliar).
+
+        Usa las líneas contables, igual que el informe de antigüedad de saldos:
+        incluye saldos iniciales y anticipos, separa lo vencido y no mezcla
+        cuentas de caja o bancos con clientes."""
+        companies = self.env.companies or self.env.company
+        today = fields.Date.context_today(self)
+        AccountMoveLine = self.env['account.move.line']
+        base_domain = [
+            ('parent_state', '=', 'posted'),
+            ('company_id', 'in', companies.ids),
+            ('account_id.account_type', '=', 'asset_receivable'),
+            ('reconciled', '=', False),
+            ('amount_residual', '!=', 0),
+        ]
+        groupby = ['company_id', 'partner_id']
+        aggregates = ['amount_residual:sum']
+        # _read_group devuelve registros (no ids sueltos), así salen los nombres.
+        rows = AccountMoveLine._read_group(base_domain, groupby, aggregates)
+        overdue = {
+            (company.id, partner.id or False): float(amount or 0.0)
+            for company, partner, amount in AccountMoveLine._read_group(
+                base_domain + [('date_maturity', '<', today)], groupby, aggregates,
+            )
+        }
+
+        def money(value, currency):
+            localized = f'{value:,.2f}'.replace(',', '\x00').replace('.', ',').replace('\x00', '.')
+            return f'{currency} {localized}'
+
+        by_company = {}
+        for company, partner, amount in rows:
+            amount = float(amount or 0.0)
+            if abs(amount) < 0.005:
+                continue
+            partner_id = partner.id or False
+            by_company.setdefault(company.id, []).append({
+                'partner_id': partner_id,
+                'partner': partner.display_name if partner else _('Sin cliente asignado'),
+                'balance': amount,
+                'overdue': overdue.get((company.id, partner_id), 0.0),
+            })
+
+        lines = [_('Saldos a cobrar por cliente al %s (comprobantes contabilizados sin cobrar):') % fields.Date.to_string(today)]
+        result_companies = []
+        for company in companies:
+            entries = sorted(by_company.get(company.id, []), key=lambda item: item['balance'], reverse=True)
+            if not entries:
+                continue
+            currency = company.currency_id.name
+            total = sum(item['balance'] for item in entries)
+            total_overdue = sum(item['overdue'] for item in entries)
+            lines.append('')
+            lines.append(_('- **%(company)s**: total %(total)s, vencido %(overdue)s') % {
+                'company': company.display_name, 'total': money(total, currency), 'overdue': money(total_overdue, currency),
+            })
+            shown = entries[:15]
+            for item in shown:
+                detail = ' (%s %s)' % (_('vencido'), money(item['overdue'], currency)) if item['overdue'] > 0.005 else ''
+                lines.append('  - %s: %s%s' % (item['partner'], money(item['balance'], currency), detail))
+            if len(entries) > len(shown):
+                rest = total - sum(item['balance'] for item in shown)
+                lines.append('  - %s (%s): %s' % (_('Otros clientes'), len(entries) - len(shown), money(rest, currency)))
+            result_companies.append({
+                'company': company.display_name, 'currency': currency, 'total': total,
+                'overdue': total_overdue, 'partners': entries[:50],
+            })
+        if not result_companies:
+            lines.append(_('No hay saldos pendientes de cobro.'))
+        else:
+            lines.extend(['', _('Los saldos negativos son anticipos o notas de crédito a favor del cliente.')])
+        return {'status': 'ok', 'summary': '\n'.join(lines), 'companies': result_companies}
+
+    @api.model
     def _exec_sales_billing_summary(self, params=None):
         """Summarize posted sales invoices and credit notes without changing Odoo data."""
         params = params or {}
@@ -500,14 +585,19 @@ class AiSkill(models.Model):
 
         period = {'date_from': date_from.isoformat(), 'date_to': date_to.isoformat()}
         if currency_totals:
+            # Las traducciones se resuelven fuera del generador: dentro de él
+            # _() no encuentra el idioma y deja un warning por cada fila.
+            company_template = _('%(company)s — ') if multi_company else ''
+            bucket_template = _(
+                '%(invoice_count)s facturas: %(invoices_total).2f %(currency)s '
+                '(base %(invoices_untaxed).2f, IVA %(invoices_tax).2f). '
+                '%(credit_note_count)s notas de crédito: %(credit_notes_total).2f %(currency)s '
+                '(base %(credit_notes_untaxed).2f, IVA %(credit_notes_tax).2f). '
+                'Neto después de NC: base %(net_untaxed).2f, IVA %(net_tax).2f, '
+                'total %(net_billed).2f %(currency)s; pendiente de cobro %(net_receivable).2f %(currency)s.'
+            )
             summary = '\n'.join(
-                (_('%(company)s — ') % bucket if multi_company else '')
-                + _('%(invoice_count)s facturas: %(invoices_total).2f %(currency)s '
-                    '(base %(invoices_untaxed).2f, IVA %(invoices_tax).2f). '
-                    '%(credit_note_count)s notas de crédito: %(credit_notes_total).2f %(currency)s '
-                    '(base %(credit_notes_untaxed).2f, IVA %(credit_notes_tax).2f). '
-                    'Neto después de NC: base %(net_untaxed).2f, IVA %(net_tax).2f, '
-                    'total %(net_billed).2f %(currency)s; pendiente de cobro %(net_receivable).2f %(currency)s.') % bucket
+                (company_template % bucket if company_template else '') + bucket_template % bucket
                 for bucket in currency_totals
             )
         else:

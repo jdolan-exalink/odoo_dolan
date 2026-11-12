@@ -3,6 +3,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0).
 
 from . import ai_oauth_provider
+from . import ai_connection_wizard
 from . import ai_skill
 from . import ai_agent
 from . import ai_composer

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- =================================================================== -->
+    <!-- ASISTENTE: Nueva conexión de IA                                     -->
+    <!-- =================================================================== -->
+    <record id="view_dolan_ai_connection_wizard_form" model="ir.ui.view">
+        <field name="name">dolan.ai.connection.wizard.form</field>
+        <field name="model">dolan.ai.connection.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Nueva conexión de IA">
+                <field name="step" invisible="1"/>
+                <field name="provider_id" invisible="1"/>
+                <field name="has_saved_key" invisible="1"/>
+                <field name="no_credit" invisible="1"/>
+                <field name="model_count" invisible="1"/>
+
+                <!-- Paso 1: proveedor -->
+                <div invisible="step != 'choose'">
+                    <p class="text-muted">Elegí con qué servicio va a responder el chat de IA.</p>
+                    <field name="provider_mode" widget="radio" nolabel="1"/>
+                    <div class="text-muted small mt-3">
+                        <div invisible="provider_mode != 'openrouter'">
+                            <strong>OpenRouter:</strong> una sola API key para cientos de modelos (OpenAI, Anthropic, Google, Meta y otros).
+                            Hay modelos gratis y los pagos se descuentan del saldo que cargues en openrouter.ai.
+                        </div>
+                        <div invisible="provider_mode != 'chatgpt_oauth'">
+                            <strong>ChatGPT:</strong> usa tu suscripción Plus o Pro iniciando sesión con tu cuenta, sin API key.
+                            Requiere una instalación local o propia de Odoo.
+                        </div>
+                        <div invisible="provider_mode != 'openai_api'">
+                            <strong>OpenAI API:</strong> API key de platform.openai.com u otro servicio compatible con la API de OpenAI.
+                        </div>
+                        <div invisible="provider_mode != 'ollama'">
+                            <strong>Ollama:</strong> modelos que corren en un servidor propio, sin enviar datos afuera.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 2: datos de acceso (API key / endpoint) -->
+                <div invisible="step != 'credentials'">
+                    <group>
+                        <field name="name" string="Nombre"/>
+                        <field name="api_key" password="True"
+                               invisible="provider_mode == 'ollama'"
+                               placeholder="Pegá la clave acá"/>
+                        <field name="api_base_url" string="Endpoint"
+                               invisible="provider_mode == 'openrouter'"/>
+                    </group>
+                    <div class="text-muted small" invisible="not has_saved_key or provider_mode == 'ollama'">
+                        Esta conexión ya tiene una clave guardada. Dejá el campo vacío para seguir usándola.
+                    </div>
+                    <div class="alert alert-info mb-0" role="status" invisible="provider_mode != 'openrouter'">
+                        Creá la clave en
+                        <a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer">openrouter.ai/settings/keys</a>.
+                        Al continuar se valida la clave y se muestra el saldo, sin gastar créditos.
+                    </div>
+                    <div class="alert alert-info mb-0" role="status" invisible="provider_mode != 'openai_api'">
+                        Para OpenAI, la clave se crea en
+                        <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">platform.openai.com/api-keys</a>.
+                        Para otro servicio compatible, cambiá el endpoint.
+                    </div>
+                    <div class="alert alert-info mb-0" role="status" invisible="provider_mode != 'ollama'">
+                        La dirección tiene que ser accesible desde el servidor de Odoo. Si Odoo corre en Docker,
+                        <code>localhost</code> es el propio contenedor: usá el nombre del servicio o la IP del equipo donde corre Ollama.
+                    </div>
+                </div>
+
+                <!-- Paso 2 (ChatGPT): vincular cuenta -->
+                <div invisible="step != 'chatgpt'">
+                    <ol>
+                        <li class="mb-2">Tocá <strong>Abrir ChatGPT</strong>, iniciá sesión y autorizá a <strong>DOLAN AI</strong>.</li>
+                        <li class="mb-2">Si la pestaña nueva dice <em>Cuenta de ChatGPT vinculada con éxito</em>, cerrala y tocá <strong>Ya autoricé</strong>.</li>
+                        <li>Si en cambio muestra un error de conexión (por ejemplo <em>no se puede acceder a 127.0.0.1</em>),
+                            copiá la dirección completa de esa pestaña, pegala acá abajo y tocá <strong>Ya autoricé</strong>.</li>
+                    </ol>
+                    <group>
+                        <field name="callback_input"
+                               placeholder="http://127.0.0.1:1455/auth/callback?code=...&amp;state=..."/>
+                    </group>
+                </div>
+
+                <!-- Paso 3: modelo -->
+                <div invisible="step != 'model'">
+                    <field name="account_summary" nolabel="1" invisible="not account_summary"/>
+                    <group class="mt-3">
+                        <field name="model_line_id"
+                               invisible="not model_count"
+                               options="{'no_create': True, 'no_open': True}"
+                               placeholder="Buscá un modelo"/>
+                        <field name="custom_model"
+                               placeholder="proveedor/modelo"/>
+                        <field name="make_active"/>
+                    </group>
+                    <div class="text-muted small">
+                        La lista es la que ofrece el proveedor para esta cuenta<span invisible="provider_mode != 'openrouter'">,
+                        solo con modelos que pueden consultar datos de Odoo</span>. La prueba pide una respuesta de pocas palabras.
+                    </div>
+                </div>
+
+                <footer>
+                    <!-- choose -->
+                    <button name="action_choose" string="Siguiente" type="object" class="btn-primary"
+                            invisible="step != 'choose'"/>
+                    <!-- credentials -->
+                    <button name="action_validate_credentials" string="Validar y ver modelos" type="object" class="btn-primary"
+                            invisible="step != 'credentials'"/>
+                    <!-- chatgpt -->
+                    <button name="action_open_chatgpt" string="Abrir ChatGPT" type="object" class="btn-primary"
+                            invisible="step != 'chatgpt'"/>
+                    <button name="action_check_chatgpt" string="Ya autoricé" type="object" class="btn-secondary"
+                            invisible="step != 'chatgpt'"/>
+                    <!-- model -->
+                    <button name="action_finish" string="Probar y guardar" type="object" class="btn-primary"
+                            invisible="step != 'model'"/>
+                    <button name="action_finish_without_test" string="Guardar sin probar" type="object" class="btn-secondary"
+                            invisible="step != 'model'"/>
+                    <button name="action_back" string="Volver" type="object" class="btn-link"
+                            invisible="step == 'choose'"/>
+                    <button string="Cancelar" class="btn-link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_ai_connection_wizard" model="ir.actions.act_window">
+        <field name="name">Nueva conexión de IA</field>
+        <field name="res_model">dolan.ai.connection.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

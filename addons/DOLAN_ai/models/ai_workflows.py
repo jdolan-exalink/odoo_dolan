@@ -335,7 +335,12 @@ class AiSessionWorkflows(models.Model):
             return self._process_sales_draft_request(source_text, self._normalize_ai_request(source_text))
         if not product_ids:
             return None
-        choice = re.search(r'\b(?:opcion|opcion numero)?\s*(\d)\b', normalized)
+        # Solo una elección explícita ("2", "la 2", "opción 2"), no cualquier
+        # número suelto dentro de otro pedido.
+        choice = re.fullmatch(
+            r'\s*(?:(?:la|el|usa|usá|quiero|elijo)\s+)?(?:(?:opcion|opcion numero|numero|nro\.?)\s*)?(\d)\s*[.!]?\s*',
+            normalized,
+        )
         if choice:
             index = int(choice.group(1)) - 1
             if 0 <= index < len(product_ids):
@@ -344,7 +349,7 @@ class AiSessionWorkflows(models.Model):
                     source_text = metadata.get('source_text') or ''
                     replacement = re.sub(re.escape(pending.get('product_query') or ''), product.name, source_text, flags=re.IGNORECASE)
                     return self._process_sales_draft_request(replacement, self._normalize_ai_request(replacement))
-        if re.search(r'\b(?:primera|primero|segunda|segundo|tercera|tercero)\b', normalized):
+        if len(normalized.split()) <= 4 and re.search(r'\b(?:primera|primero|segunda|segundo|tercera|tercero)\b', normalized):
             words = {'primera': 0, 'primero': 0, 'segunda': 1, 'segundo': 1, 'tercera': 2, 'tercero': 2}
             index = next((value for key, value in words.items() if key in normalized), -1)
             if 0 <= index < len(product_ids):
@@ -488,13 +493,21 @@ class AiSessionWorkflows(models.Model):
             rows.append('- %s · %s · %s' % (local_start.strftime('%d/%m %H:%M'), event.name, event.location or _('sin ubicación')))
         return '\n'.join(rows)
 
+    # Temas que no son una ficha de contacto aunque mencionen "cliente" o
+    # "proveedor": se dejan para los reportes y el modelo con herramientas.
+    _AI_NON_CONTACT_TOPICS = (
+        r'\b(facturaci[oó]n|facturas?|facturad[oa]s?|factur[eé]|ventas?|vend\w*|compras?|cobranzas?|cobr\w*|'
+        r'deudas?|deben?|adeud\w*|saldos?|pagos?|pagar|pendientes?|vencid[oa]s?|iva|impuestos?|'
+        r'pedidos?|presupuestos?|ranking|top|totales?|importes?|montos?|stock|productos?)\b'
+    )
+
     def _process_contact_crm_read(self, text, normalized):
         asks_crm = bool(re.search(r'\b(crm|oportunidades?|pipeline|leads?|prospectos?)\b', normalized))
         asks_contact = bool(re.search(r'\b(contactos?|clientes?|proveedores?|cuit|cuil|telefono|correo|email)\b', normalized))
         asks_read = bool(re.search(r'\b(busca|buscar|consulta|consultar|mostra|mostrame|mostrar|lista|listar|datos|estado|resumen|quien|quienes|informacion)\b', normalized))
         if asks_crm and (asks_read or re.search(r'\b(oportunidades?|pipeline|leads?)\b', normalized)):
             return {'reply': self._read_crm_for_request(normalized)}
-        if asks_contact and asks_read:
+        if asks_contact and asks_read and not re.search(self._AI_NON_CONTACT_TOPICS, normalized):
             return {'reply': self._read_contacts_for_request(text, normalized)}
         return None
 

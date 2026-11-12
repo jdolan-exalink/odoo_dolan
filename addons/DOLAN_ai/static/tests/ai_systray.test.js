@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 
-import { DolanAiSystray, normalizeStructuredReply } from "@DOLAN_ai/js/ai_systray";
+import { DolanAiSystray, classifyRpcError, filterModels, normalizeStructuredReply } from "@DOLAN_ai/js/ai_systray";
 
 test("structured JSON replies render as readable Spanish bullets", () => {
     const result = normalizeStructuredReply('{"records":[{"display_name":"Cliente Demo","amount_total":1250,"invoice_date":"2026-11-01"}]}');
@@ -66,4 +66,30 @@ test("Shift+Enter keeps the newline path and does not send", () => {
     expect(result.reachedWindow).toBe(false);
     expect(result.event.defaultPrevented).toBe(false);
     expect(result.sendCount).toBe(0);
+});
+
+test("RPC errors distinguish Odoo validation errors from proxy or tunnel cuts", () => {
+    const serverError = Object.assign(new Error("RPC_ERROR"), {
+        name: "RPC_ERROR",
+        data: { message: "La aplicación Tableros Gerenciales BI no está instalada." },
+    });
+    expect(classifyRpcError(serverError)).toEqual({
+        kind: "server",
+        message: "La aplicación Tableros Gerenciales BI no está instalada.",
+    });
+    const tunnelCut = new Error('Connection to "/dolan_ai/chat/send" couldn\'t be established or was interrupted');
+    expect(classifyRpcError(tunnelCut).kind).toBe("connection");
+});
+
+test("filterModels busca por palabras en id y nombre y respeta el orden", () => {
+    const models = [
+        { id: "openrouter/auto", name: "OpenRouter Auto" },
+        { id: "google/gemini-4-carbon", name: "Google: Gemini 4 Carbon" },
+        { id: "openai/gpt-6-luna", name: "OpenAI: GPT-6 Luna" },
+        { id: "openai/gpt-6-luna-pro", name: "OpenAI: GPT-6 Luna Pro" },
+    ];
+    expect(filterModels(models, "", 2).map((m) => m.id)).toEqual(["openrouter/auto", "google/gemini-4-carbon"]);
+    expect(filterModels(models, "gpt-6 luna").map((m) => m.id)).toEqual(["openai/gpt-6-luna", "openai/gpt-6-luna-pro"]);
+    expect(filterModels(models, "LUNA pro").map((m) => m.id)).toEqual(["openai/gpt-6-luna-pro"]);
+    expect(filterModels(models, "inexistente")).toEqual([]);
 });
