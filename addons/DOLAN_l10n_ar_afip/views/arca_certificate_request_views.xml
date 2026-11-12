@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_ar_arca_certificate_request_list" model="ir.ui.view">
+        <field name="name">l10n_ar.arca.certificate.request.list</field>
+        <field name="model">l10n_ar.arca.certificate.request</field>
+        <field name="arch" type="xml">
+            <list string="Pedidos de certificado ARCA">
+                <field name="company_id"/>
+                <field name="alias"/>
+                <field name="environment"/>
+                <field name="requested_date"/>
+                <field name="certificate_date_end"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'waiting'"
+                       decoration-success="state == 'done'"
+                       decoration-muted="state == 'cancel'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_ar_arca_certificate_request_form" model="ir.ui.view">
+        <field name="name">l10n_ar.arca.certificate.request.form</field>
+        <field name="model">l10n_ar.arca.certificate.request</field>
+        <field name="arch" type="xml">
+            <form string="Pedido de certificado ARCA">
+                <header>
+                    <button name="action_generate_csr" type="object" string="1. Generar pedido (CSR)"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_download_csr" type="object" string="Descargar pedido (.csr)"
+                            class="btn-primary" invisible="state != 'waiting'"/>
+                    <button name="action_open_upload" type="object" string="2. Cargar certificado de ARCA"
+                            class="btn-primary" invisible="state != 'waiting'"/>
+                    <button name="action_cancel" type="object" string="Cancelar pedido"
+                            invisible="state not in ('draft', 'waiting')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,waiting,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="cuit"/>
+                            <field name="alias" readonly="state != 'draft'"/>
+                            <field name="environment" readonly="state != 'draft'" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="requested_date" invisible="not requested_date"/>
+                            <field name="csr_file" filename="csr_filename" invisible="not csr_file"/>
+                            <field name="csr_filename" invisible="1"/>
+                            <field name="certificate_id" invisible="not certificate_id"/>
+                            <field name="certificate_date_end" invisible="not certificate_id"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-info" role="alert" invisible="state != 'draft'">
+                        <strong>Cómo funciona.</strong>
+                        Odoo genera una clave privada (queda guardada acá y nunca sale de Odoo) y un pedido de
+                        certificado (.csr). Ese pedido se sube a ARCA, ARCA devuelve un certificado (.crt) y
+                        lo cargás con el botón "Cargar certificado de ARCA". Elegí el ambiente y un alias sin
+                        espacios, y tocá "Generar pedido".
+                    </div>
+
+                    <div invisible="state != 'waiting'">
+                        <div class="alert alert-warning" role="alert" invisible="environment != 'production'">
+                            <h5>Qué hacer en ARCA (producción)</h5>
+                            <ol class="mb-0">
+                                <li>Entrá a arca.gob.ar con la clave fiscal de la empresa (nivel 3 o superior) y abrí
+                                    <strong>Administración de Certificados Digitales</strong>. Si no aparece, sumalo
+                                    desde "Administrador de Relaciones de Clave Fiscal" &gt; "Adherir servicio".</li>
+                                <li>Tocá <strong>Agregar alias</strong>, escribí el alias <strong><field name="alias" readonly="1" class="d-inline"/></strong>,
+                                    subí el archivo .csr de este pedido y confirmá.</li>
+                                <li>Entrá al alias, descargá el certificado (.crt) y subilo acá con
+                                    <strong>2. Cargar certificado de ARCA</strong>.</li>
+                                <li>Autorizá los servicios en <strong>Administrador de Relaciones de Clave Fiscal</strong> &gt;
+                                    "Nueva relación" &gt; ARCA &gt; WebServices: <em>Facturación Electrónica</em> (wsfe) y,
+                                    para consultar clientes, <em>Consulta de constancia de inscripción</em>
+                                    (ws_sr_constancia_inscripcion). Como representante elegí el computador fiscal con este alias.</li>
+                            </ol>
+                        </div>
+                        <div class="alert alert-warning" role="alert" invisible="environment != 'testing'">
+                            <h5>Qué hacer en ARCA (homologación)</h5>
+                            <ol class="mb-0">
+                                <li>Entrá con clave fiscal a <strong>WSASS - Autogestión Certificados Homologación</strong>
+                                    (si no aparece, sumalo desde "Administrador de Relaciones de Clave Fiscal").</li>
+                                <li>Tocá <strong>Nuevo Certificado</strong>, usá el alias <strong><field name="alias" readonly="1" class="d-inline"/></strong>
+                                    como nombre simbólico, pegá el texto del pedido que está abajo y tocá
+                                    "Crear DN y obtener certificado".</li>
+                                <li>Copiá el certificado que muestra ARCA y pegalo en <strong>2. Cargar certificado de ARCA</strong>.</li>
+                                <li>En <strong>Crear autorización a servicio</strong> elegí el alias, tu CUIT y los servicios
+                                    wsfe y ws_sr_constancia_inscripcion.</li>
+                            </ol>
+                        </div>
+                        <group string="Texto del pedido (para copiar y pegar en ARCA)">
+                            <field name="csr_text" nolabel="1" colspan="2" readonly="1" class="font-monospace small"/>
+                        </group>
+                    </div>
+
+                    <div class="alert alert-success" role="alert" invisible="state != 'done'">
+                        Certificado instalado. Probá la conexión desde Ajustes &gt; ARCA con
+                        "Probar facturación" y "Probar padrón".
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_l10n_ar_arca_certificate_upload_form" model="ir.ui.view">
+        <field name="name">l10n_ar.arca.certificate.upload.form</field>
+        <field name="model">l10n_ar.arca.certificate.upload</field>
+        <field name="arch" type="xml">
+            <form string="Cargar certificado de ARCA">
+                <p class="text-muted">
+                    Subí el archivo .crt que descargaste de ARCA (o pegá su texto). Odoo busca la clave privada
+                    del pedido que le corresponde, controla que el CUIT sea el de la empresa y que no esté vencido.
+                </p>
+                <group>
+                    <field name="company_id" options="{'no_create': True}"/>
+                    <field name="request_id" options="{'no_create': True}"/>
+                    <field name="certificate_file" filename="certificate_filename"/>
+                    <field name="certificate_filename" invisible="1"/>
+                    <field name="certificate_text" invisible="certificate_file" placeholder="-----BEGIN CERTIFICATE-----"/>
+                    <field name="set_as_company"/>
+                    <field name="use_for_padron"/>
+                    <field name="show_key_upload"/>
+                    <field name="key_file" filename="key_filename" invisible="not show_key_upload"/>
+                    <field name="key_filename" invisible="1"/>
+                    <field name="password" password="True" invisible="not show_key_upload"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Cargar certificado" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ar_arca_certificate_request" model="ir.actions.act_window">
+        <field name="name">Certificados ARCA</field>
+        <field name="res_model">l10n_ar.arca.certificate.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Pedí tu certificado ARCA</p>
+            <p>Creá un pedido, subilo a ARCA y cargá el certificado que te devuelven.</p>
+        </field>
+    </record>
+
+    <record id="action_l10n_ar_arca_settings" model="ir.actions.act_window">
+        <field name="name">Ajustes ARCA</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'DOLAN_l10n_ar_afip'}</field>
+    </record>
+
+    <menuitem id="menu_l10n_ar_arca_settings"
+              name="Ajustes ARCA"
+              parent="menu_l10n_ar_afip_root"
+              action="action_l10n_ar_arca_settings"
+              groups="base.group_system"
+              sequence="1"/>
+
+    <menuitem id="menu_l10n_ar_arca_certificate_request"
+              name="Certificados ARCA"
+              parent="menu_l10n_ar_afip_root"
+              action="action_l10n_ar_arca_certificate_request"
+              groups="base.group_system"
+              sequence="5"/>
+</odoo>

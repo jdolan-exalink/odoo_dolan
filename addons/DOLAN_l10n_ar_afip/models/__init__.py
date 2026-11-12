@@ -4,6 +4,7 @@
 
 from . import afipws_connection
 from . import res_company
+from . import arca_certificate_request
 from . import res_config_settings
 from . import account_journal
 from . import account_move

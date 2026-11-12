@@ -4,7 +4,7 @@
 
 {
     'name': 'DOLAN - Facturación Electrónica ARCA/AFIP, Padrón, QR y Libro IVA',
-    'version': '20.0.1.44.0',
+    'version': '20.0.1.45.0',
     'category': 'Accounting/Localizations/EDI',
     'summary': 'Integración ARCA en desarrollo; Libro IVA limitado a casos validados localmente',
     'description': """
@@ -38,6 +38,9 @@ Características principales:
   ``CanMisMonExt``, nota de débito o crédito por diferencia de cambio y revaluación de saldos al cierre.
 * **Recuperación WSFE**: consulta comprobantes autorizados y permite sincronizar el CAE con un único comprobante local publicado si coinciden tipo, PV, número, fecha, cliente e importe; no crea movimientos contables.
 * **QR y Transparencia Fiscal**: requieren completar y contrastar sus datos de origen antes de uso fiscal.
+* **Certificados ARCA guiados (Ajustes > ARCA)**: pedido de certificado con clave privada y CSR
+  generados en Odoo, carga del ``.crt`` que devuelve ARCA con emparejamiento automático de la clave,
+  control de CUIT y vencimiento, y botones para probar facturación y padrón con errores explicados.
 * **Consulta manual de Padrón ARCA por CUIT**:
   Acción explícita para cargar razón social, domicilio fiscal, provincia, responsabilidad ARCA y actividad económica, con certificado compartido opcional entre compañías y errores persistidos en el contacto.
 * **Asistentes de Consulta y Exportación Fiscal**:
@@ -60,6 +63,7 @@ Características principales:
     'data': [
         'security/ir.access.csv',
         'views/afipws_connection_views.xml',
+        'views/arca_certificate_request_views.xml',
         'views/account_move_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',

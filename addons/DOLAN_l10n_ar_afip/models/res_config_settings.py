@@ -61,6 +61,111 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
 
+    l10n_ar_arca_cert_state = fields.Selection(
+        [
+            ('none', 'Sin certificado'),
+            ('valid', 'Vigente'),
+            ('expiring', 'Vence pronto'),
+            ('expired', 'Vencido'),
+        ],
+        string='Estado del certificado ARCA',
+        compute='_compute_l10n_ar_arca_status',
+    )
+    l10n_ar_arca_cert_summary = fields.Char(compute='_compute_l10n_ar_arca_status')
+    l10n_ar_arca_waiting_request_id = fields.Many2one(
+        'l10n_ar.arca.certificate.request',
+        string='Pedido pendiente',
+        compute='_compute_l10n_ar_arca_status',
+    )
+    l10n_ar_arca_padron_summary = fields.Char(compute='_compute_l10n_ar_arca_status')
+
+    @api.depends('company_id')
+    def _compute_l10n_ar_arca_status(self):
+        Request = self.env['l10n_ar.arca.certificate.request'].sudo()
+        now = fields.Datetime.now()
+        for settings in self:
+            company = settings.company_id.sudo()
+            cert = company.l10n_ar_afip_ws_crt_id
+            env_label = dict(company._fields['l10n_ar_afip_ws_environment'].selection).get(
+                company.l10n_ar_afip_ws_environment, '')
+            if not cert or not company.l10n_ar_afip_ws_key_id:
+                settings.l10n_ar_arca_cert_state = 'none'
+                settings.l10n_ar_arca_cert_summary = _('%s todavía no tiene certificado ARCA cargado.') % company.name
+            else:
+                date_end = cert.date_end
+                if date_end and date_end < now:
+                    state = 'expired'
+                elif date_end and (date_end - now).days < 30:
+                    state = 'expiring'
+                else:
+                    state = 'valid'
+                settings.l10n_ar_arca_cert_state = state
+                settings.l10n_ar_arca_cert_summary = _(
+                    '%(name)s · %(env)s · vence el %(date)s',
+                    name=cert.name or cert.subject_common_name or '',
+                    env=env_label,
+                    date=date_end.strftime('%d/%m/%Y') if date_end else '-',
+                )
+            settings.l10n_ar_arca_waiting_request_id = Request.search([
+                ('company_id', '=', company.id), ('state', '=', 'waiting'),
+            ], limit=1)
+            try:
+                shared = settings._get_dolan_padron_configuration()
+            except UserError as error:
+                settings.l10n_ar_arca_padron_summary = str(error)
+            else:
+                settings.l10n_ar_arca_padron_summary = (
+                    _('Las consultas de CUIT usan el certificado de %s.') % shared['representative_company'].name
+                    if shared else _('No hay ninguna empresa con certificado para consultar el padrón.')
+                )
+
+    def action_l10n_ar_arca_new_request(self):
+        return self._l10n_ar_arca_open_new_request(self.company_id or self.env.company)
+
+    @api.model
+    def _l10n_ar_arca_open_new_request(self, company):
+        Request = self.env['l10n_ar.arca.certificate.request']
+        request = Request.search([('company_id', '=', company.id), ('state', '=', 'draft')], limit=1)
+        if not request:
+            request = Request.create({
+                'company_id': company.id,
+                'environment': company.l10n_ar_afip_ws_environment or 'production',
+            })
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Pedido de certificado ARCA'),
+            'res_model': 'l10n_ar.arca.certificate.request',
+            'res_id': request.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def action_l10n_ar_arca_upload_certificate(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Cargar certificado de ARCA'),
+            'res_model': 'l10n_ar.arca.certificate.upload',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_company_id': self.company_id.id,
+                'default_request_id': self.l10n_ar_arca_waiting_request_id.id,
+            },
+        }
+
+    def action_l10n_ar_arca_requests(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Pedidos de certificado ARCA'),
+            'res_model': 'l10n_ar.arca.certificate.request',
+            'view_mode': 'list,form',
+            'target': 'current',
+        }
+
+    def action_l10n_ar_test_padron_connection(self):
+        return self.company_id.action_l10n_ar_test_padron_connection()
+
     @api.model
     def _padron_parameter_ids(self):
         params = self.env['ir.config_parameter'].sudo()
@@ -71,7 +176,7 @@ class ResConfigSettings(models.TransientModel):
             ('l10n_ar_padron_key_id', 'dolan_l10n_ar_afip.padron_key_id'),
         ):
             try:
-                result[field_name] = int(params.get_param(key) or 0) or False
+                result[field_name] = int(params.get_str(key) or 0) or False
             except (TypeError, ValueError):
                 result[field_name] = False
         return result
@@ -151,7 +256,7 @@ class ResConfigSettings(models.TransientModel):
             ('l10n_ar_padron_key_id', 'dolan_l10n_ar_afip.padron_key_id'),
         )
         for field_name, key in mapping:
-            params.set_param(key, str(self[field_name].id or '') if self[field_name] else '')
+            params.set_str(key, str(self[field_name].id or '') if self[field_name] else '')
         if any(previous_ids[field] != (self[field].id or False) for field, _key in mapping):
             # Do not keep a still-valid WSAA ticket signed by the previous
             # shared identity after an administrator changes the Padrón pair.
@@ -167,4 +272,4 @@ class ResConfigSettings(models.TransientModel):
         return self.company_id.action_l10n_ar_test_afip_connection()
 
     def action_l10n_ar_generate_csr(self):
-        return self.company_id.action_l10n_ar_generate_csr()
+        return self._l10n_ar_arca_open_new_request(self.company_id)

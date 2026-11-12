@@ -3,82 +3,114 @@
     <record id="res_config_settings_view_form_inherit_dolan_l10n_ar_afip" model="ir.ui.view">
         <field name="name">res.config.settings.form.dolan.l10n_ar.afip</field>
         <field name="model">res.config.settings</field>
-        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="priority">40</field>
         <field name="arch" type="xml">
-            <xpath expr="//app[@name='account']" position="inside">
-                <block title="ARCA / AFIP Facturación Electrónica Argentina" name="dolan_l10n_ar_afip_setting_container">
-                    <setting string="Ambiente y Certificados X.509 ARCA/AFIP"
-                             help="Configure el ambiente Homologación/Producción y el certificado digital para WSAA.">
-                        <div class="content-group mt16">
-                            <div class="row mt8">
-                                <label for="l10n_ar_afip_ws_environment" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_ar_afip_ws_environment"/>
-                            </div>
-                            <div class="row mt8">
-                                <label for="l10n_ar_afip_ws_crt_id" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_ar_afip_ws_crt_id"/>
-                            </div>
-                            <div class="row mt8">
-                                <label for="l10n_ar_afip_ws_key_id" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_ar_afip_ws_key_id"/>
+            <xpath expr="//form" position="inside">
+                <app data-string="ARCA" string="ARCA" name="DOLAN_l10n_ar_afip" groups="base.group_system">
+                    <block title="Certificado de la empresa" name="dolan_l10n_ar_arca_certificate">
+                        <setting string="Certificado ARCA" id="dolan_arca_certificate_status"
+                                 help="ARCA identifica a la empresa con un certificado digital. Sin certificado vigente no se puede facturar electrónicamente ni consultar el padrón.">
+                            <div class="mt8">
+                                <span class="badge text-bg-secondary" invisible="l10n_ar_arca_cert_state != 'none'">Sin certificado</span>
+                                <span class="badge text-bg-success" invisible="l10n_ar_arca_cert_state != 'valid'">Vigente</span>
+                                <span class="badge text-bg-warning" invisible="l10n_ar_arca_cert_state != 'expiring'">Vence en menos de 30 días</span>
+                                <span class="badge text-bg-danger" invisible="l10n_ar_arca_cert_state != 'expired'">Vencido</span>
+                                <field name="l10n_ar_arca_cert_state" invisible="1"/>
+                                <div class="text-muted mt4"><field name="l10n_ar_arca_cert_summary" readonly="1"/></div>
+                                <div class="mt4" invisible="not l10n_ar_arca_waiting_request_id">
+                                    Pedido esperando respuesta de ARCA:
+                                    <field name="l10n_ar_arca_waiting_request_id" readonly="1" class="d-inline"/>
+                                </div>
                             </div>
                             <div class="mt16">
-                                <button name="action_l10n_ar_test_afip_connection"
-                                        type="object"
-                                        string="Probar Conexión ARCA/AFIP"
-                                        icon="fa-plug"
+                                <button name="action_l10n_ar_arca_new_request" type="object"
+                                        string="1. Pedir certificado nuevo"
                                         class="btn-primary me-2"/>
-                                <button name="action_l10n_ar_generate_csr"
-                                        type="object"
-                                        string="Generar Solicitud CSR (X.509)"
-                                        icon="fa-key"
-                                        class="btn-secondary"/>
+                                <button name="action_l10n_ar_arca_upload_certificate" type="object"
+                                        string="2. Cargar certificado de ARCA"
+                                        class="btn-primary me-2"/>
+                                <button name="action_l10n_ar_arca_requests" type="object"
+                                        string="Ver pedidos" class="btn-link"/>
                             </div>
-                        </div>
-                    </setting>
-                    <setting string="Certificado compartido para consultas de Padrón ARCA"
-                             help="Configure una sola identidad de firma para consultar CUIT desde todas las compañías. Esto solo aplica a consultas de lectura del Padrón; la emisión WSFE conserva los certificados propios de cada compañía.">
-                        <div class="content-group mt16">
-                            <div class="row mt8">
-                                <label for="l10n_ar_padron_representative_company_id" class="col-lg-5 o_light_label"/>
-                                <field name="l10n_ar_padron_representative_company_id" options="{'no_create': True}"/>
+                        </setting>
+                        <setting string="Probar la conexión" id="dolan_arca_test"
+                                 help="Pide un ticket a ARCA con el certificado cargado. Si falla, el mensaje explica qué corregir en ARCA.">
+                            <div class="mt16">
+                                <button name="action_l10n_ar_test_afip_connection" type="object"
+                                        string="Probar facturación" class="btn-secondary me-2"/>
+                                <button name="action_l10n_ar_test_padron_connection" type="object"
+                                        string="Probar padrón" class="btn-secondary"/>
                             </div>
-                            <div class="row mt8">
-                                <label for="l10n_ar_padron_certificate_id" class="col-lg-5 o_light_label"/>
-                                <field name="l10n_ar_padron_certificate_id" options="{'no_create': True}"/>
+                        </setting>
+                        <setting string="Ambiente" id="dolan_arca_environment"
+                                 help="Homologación es el ambiente de pruebas de ARCA. Se ajusta solo al cargar un certificado.">
+                            <field name="l10n_ar_afip_ws_environment" widget="radio"/>
+                        </setting>
+                        <setting string="Certificado y clave en uso" id="dolan_arca_certificate_fields"
+                                 help="Normalmente se completan solos al cargar el certificado. Cambialos solo si sabés qué par usar.">
+                            <div class="content-group">
+                                <div class="row mt8">
+                                    <label for="l10n_ar_afip_ws_crt_id" string="Certificado" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_ar_afip_ws_crt_id" options="{'no_create': True}"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="l10n_ar_afip_ws_key_id" string="Clave privada" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_ar_afip_ws_key_id" options="{'no_create': True}"/>
+                                </div>
                             </div>
-                            <div class="row mt8">
-                                <label for="l10n_ar_padron_key_id" class="col-lg-5 o_light_label"/>
-                                <field name="l10n_ar_padron_key_id" options="{'no_create': True}"/>
+                        </setting>
+                    </block>
+
+                    <block title="Consulta de padrón (clientes nuevos)" name="dolan_l10n_ar_arca_padron">
+                        <setting string="Certificado para consultar CUIT" id="dolan_arca_padron"
+                                 help="Un solo certificado sirve para consultar CUIT desde todas las empresas. Necesita el servicio ws_sr_constancia_inscripcion autorizado en ARCA. Si lo dejás vacío se usa la primera empresa con certificado.">
+                            <div class="text-muted mt8"><field name="l10n_ar_arca_padron_summary" readonly="1"/></div>
+                            <div class="content-group mt8">
+                                <div class="row mt8">
+                                    <label for="l10n_ar_padron_representative_company_id" string="Empresa" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_ar_padron_representative_company_id" options="{'no_create': True}"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="l10n_ar_padron_certificate_id" string="Certificado" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_ar_padron_certificate_id" options="{'no_create': True}"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="l10n_ar_padron_key_id" string="Clave privada" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_ar_padron_key_id" options="{'no_create': True}"/>
+                                </div>
                             </div>
-                        </div>
-                    </setting>
-                    <setting string="Envío real de comprobantes WSFE"
-                             help="El envío permanece bloqueado por defecto. Habilítelo solo después de aprobar homologación ARCA y revisar certificados, CUIT, punto de venta y reglas fiscales.">
-                        <field name="l10n_ar_afip_wsfe_submission_enabled"/>
-                    </setting>
-                    <setting string="Opciones Fiscales ARCA, FCE MiPyME y Libro IVA Digital"
-                             help="Parámetros de transmisión de Factura de Crédito Electrónica y prorrateo de crédito fiscal.">
-                        <div class="content-group mt16">
-                            <div class="row mt8">
-                                <label for="l10n_ar_afip_verification_type" class="col-lg-5 o_light_label"/>
-                                <field name="l10n_ar_afip_verification_type"/>
+                        </setting>
+                    </block>
+
+                    <block title="Facturación electrónica" name="dolan_l10n_ar_afip_setting_container">
+                        <setting string="Envío real de comprobantes WSFE"
+                                 help="El envío permanece bloqueado por defecto. Habilítelo solo después de aprobar homologación ARCA y revisar certificados, CUIT, punto de venta y reglas fiscales.">
+                            <field name="l10n_ar_afip_wsfe_submission_enabled"/>
+                        </setting>
+                        <setting string="Opciones Fiscales ARCA, FCE MiPyME y Libro IVA Digital"
+                                 help="Parámetros de transmisión de Factura de Crédito Electrónica y prorrateo de crédito fiscal.">
+                            <div class="content-group mt16">
+                                <div class="row mt8">
+                                    <label for="l10n_ar_afip_verification_type" class="col-lg-5 o_light_label"/>
+                                    <field name="l10n_ar_afip_verification_type"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="l10n_ar_fce_transmission_type" class="col-lg-5 o_light_label"/>
+                                    <field name="l10n_ar_fce_transmission_type"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="l10n_ar_computable_tax_credit" class="col-lg-5 o_light_label"/>
+                                    <field name="l10n_ar_computable_tax_credit"/>
+                                </div>
+                                <div class="row mt8">
+                                    <label for="l10n_ar_daily_book_start_entry_number" class="col-lg-5 o_light_label"/>
+                                    <field name="l10n_ar_daily_book_start_entry_number"/>
+                                </div>
                             </div>
-                            <div class="row mt8">
-                                <label for="l10n_ar_fce_transmission_type" class="col-lg-5 o_light_label"/>
-                                <field name="l10n_ar_fce_transmission_type"/>
-                            </div>
-                            <div class="row mt8">
-                                <label for="l10n_ar_computable_tax_credit" class="col-lg-5 o_light_label"/>
-                                <field name="l10n_ar_computable_tax_credit"/>
-                            </div>
-                            <div class="row mt8">
-                                <label for="l10n_ar_daily_book_start_entry_number" class="col-lg-5 o_light_label"/>
-                                <field name="l10n_ar_daily_book_start_entry_number"/>
-                            </div>
-                        </div>
-                    </setting>
-                </block>
+                        </setting>
+                    </block>
+                </app>
             </xpath>
         </field>
     </record>

@@ -929,8 +929,8 @@ class TestAuthorizationSafety(AccountTestInvoicingCommon):
 
     def test_shared_padron_configuration_rejects_partial_credentials(self):
         params = self.env['ir.config_parameter'].sudo()
-        params.set_param('dolan_l10n_ar_afip.padron_certificate_id', '1')
-        params.set_param('dolan_l10n_ar_afip.padron_key_id', '')
+        params.set_str('dolan_l10n_ar_afip.padron_certificate_id', '1')
+        params.set_str('dolan_l10n_ar_afip.padron_key_id', '')
         with self.assertRaisesRegex(UserError, 'Configure tanto el certificado como la clave'):
             self.env['res.config.settings']._get_dolan_padron_configuration()
 
@@ -1137,7 +1137,7 @@ class TestAuthorizationSafety(AccountTestInvoicingCommon):
                 result = connection._call_padron_get_person('20-12345678-6', represented_cuit='30-52722598-8')
             self.assertEqual(next(node.text for node in result.iter() if node.tag.endswith('idPersona')), '20123456786')
             request = urlopen.call_args.args[0]
-            self.assertEqual(request.full_url, 'https://aws.arca.gob.ar/sr-padron/webservices/personaServiceA5')
+            self.assertEqual(request.full_url, 'https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5')
             request_xml = ET.fromstring(request.data)
             names = [node.tag.rsplit('}', 1)[-1] for node in request_xml.iter()]
             self.assertIn('getPersona_v2', names)

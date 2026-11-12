@@ -2,7 +2,6 @@
 # Part of DOLAN Suite for Odoo 20 CE. See LICENSE file for full copyright and licensing details.
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0).
 
-import base64
 from datetime import timedelta
 
 from odoo import _, fields, models
@@ -71,84 +70,54 @@ class ResCompany(models.Model):
         string='Conexiones Webservice ARCA/AFIP',
     )
 
-    def action_l10n_ar_test_afip_connection(self):
-        """Prueba la conexión WSAA para la compañía actual."""
-        self.ensure_one()
-        conn = self.env['l10n_ar.afipws.connection'].get_active_connection(self, 'wsfe')
-        mode_msg = (
-            _("Modo Simulación de Homologación activo (sin certificado X.509 cargado)")
-            if conn.is_simulated
-            else _("Certificado X.509 validado contra WSAA")
-        )
+    def _l10n_ar_notification(self, title, message, kind='success', sticky=False):
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
-            'params': {
-                'title': _('Conexión ARCA/AFIP Exitosa'),
-                'message': _(
-                    'Ambiente: %(env)s | Servicio: %(ws)s | Vence: %(exp)s (%(mode)s)',
-                    env=conn.type,
-                    ws=conn.l10n_ar_afip_ws,
-                    exp=conn.expiration_time,
-                    mode=mode_msg,
-                ),
-                'type': 'success',
-                'sticky': False,
-            },
+            'params': {'title': title, 'message': message, 'type': kind, 'sticky': sticky},
         }
+
+    def action_l10n_ar_test_afip_connection(self):
+        """Pide (o reutiliza) el ticket WSAA de facturación y consulta el último comprobante."""
+        self.ensure_one()
+        env_label = _('Producción') if self.l10n_ar_afip_ws_environment == 'production' else _('Homologación')
+        try:
+            conn = self.env['l10n_ar.afipws.connection'].get_active_connection(self, 'wsfe')
+        except UserError as error:
+            return self._l10n_ar_notification(
+                _('Facturación ARCA: no se pudo conectar'), str(error), 'danger', sticky=True)
+        expiration = fields.Datetime.context_timestamp(self, conn.expiration_time) if conn.expiration_time else False
+        return self._l10n_ar_notification(
+            _('Facturación ARCA: conexión correcta'),
+            _('%(company)s (%(env)s): ARCA aceptó el certificado para facturación electrónica. Ticket vigente hasta %(exp)s.',
+              company=self.name, env=env_label,
+              exp=expiration.strftime('%d/%m/%Y %H:%M') if expiration else '-'),
+        )
+
+    def action_l10n_ar_test_padron_connection(self):
+        """Consulta en el padrón el propio CUIT de la empresa representada."""
+        self.ensure_one()
+        partner_model = self.env['res.partner']
+        try:
+            shared = self.env['res.config.settings']._get_dolan_padron_configuration()
+            company = shared['representative_company'] if shared else self
+            cuit = shared['represented_cuit'] if shared else ''.join(c for c in (self.vat or '') if c.isdigit())
+            if not partner_model._l10n_ar_validate_cuit_checksum(cuit):
+                raise UserError(_('Configurá un CUIT válido en la empresa "%s".') % company.name)
+            data = partner_model.new({'vat': cuit})._l10n_ar_fetch_padron_data(cuit)
+        except UserError as error:
+            return self._l10n_ar_notification(
+                _('Padrón ARCA: no se pudo consultar'), str(error), 'danger', sticky=True)
+        return self._l10n_ar_notification(
+            _('Padrón ARCA: conexión correcta'),
+            _('Consulta de prueba con el certificado de %(company)s: CUIT %(cuit)s = %(name)s.',
+              company=company.name, cuit=cuit, name=data.get('name') or '-'),
+        )
 
     def action_l10n_ar_generate_csr(self):
-        """Genera una solicitud de certificado (CSR) y clave privada RSA 2048 para subir al portal de ARCA."""
+        """Compatibilidad: abre un pedido de certificado nuevo para la empresa."""
         self.ensure_one()
-        cuit = (self.vat or '').replace('-', '').replace(' ', '') or '20000000001'
-        try:
-            from cryptography import x509
-            from cryptography.hazmat.primitives import hashes, serialization
-            from cryptography.hazmat.primitives.asymmetric import rsa
-            from cryptography.x509.oid import NameOID
-
-            private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
-            key_pem = private_key.private_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PrivateFormat.TraditionalOpenSSL,
-                encryption_algorithm=serialization.NoEncryption(),
-            )
-            subject = x509.Name([
-                x509.NameAttribute(NameOID.COUNTRY_NAME, "AR"),
-                x509.NameAttribute(NameOID.ORGANIZATION_NAME, self.name or "Empresa Argentina"),
-                x509.NameAttribute(NameOID.COMMON_NAME, f"DOLAN_Odoo20_{cuit}"),
-                x509.NameAttribute(NameOID.SERIAL_NUMBER, f"CUIT {cuit}"),
-            ])
-            csr = (
-                x509.CertificateSigningRequestBuilder()
-                .subject_name(subject)
-                .sign(private_key, hashes.SHA256())
-            )
-            csr_pem = csr.public_bytes(serialization.Encoding.PEM)
-        except Exception as exc:
-            raise UserError(_("No se pudo generar el CSR X.509: %s") % exc)
-
-        if not self.l10n_ar_afip_ws_key_id:
-            key_rec = self.env['certificate.key'].create({
-                'name': f"Clave Privada ARCA {self.name} ({cuit})",
-                'content': base64.b64encode(key_pem),
-                'company_id': self.id,
-            })
-            self.l10n_ar_afip_ws_key_id = key_rec.id
-
-        attachment = self.env['ir.attachment'].create({
-            'name': f"ARCA_CSR_{cuit}.csr",
-            'type': 'binary',
-            'datas': base64.b64encode(csr_pem),
-            'mimetype': 'application/pkcs10',
-            'res_model': 'res.company',
-            'res_id': self.id,
-        })
-        return {
-            'type': 'ir.actions.act_url',
-            'url': f'/web/content/{attachment.id}?download=true',
-            'target': 'self',
-        }
+        return self.env['res.config.settings']._l10n_ar_arca_open_new_request(self)
 
     CAEA_CONTINGENCY_MINUTES = 5
 
