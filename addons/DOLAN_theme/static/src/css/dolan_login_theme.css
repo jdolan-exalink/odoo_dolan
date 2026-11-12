@@ -130,6 +130,57 @@ body.o_web_login.o_dolan_dark_mode .o_database_list .passkey_login_link:focus-vi
     background-color: #373d49 !important;
 }
 
+/* Selector "Elija un usuario": las filas son .list-group-item de Bootstrap
+   con fondo blanco fijo; en oscuro las pasamos a superficie oscura. */
+body.o_web_login.o_dolan_dark_mode .o_user_switch .list-group {
+    --bs-list-group-bg: #1d2028;
+    --bs-list-group-color: #f1f3f7;
+    --bs-list-group-border-color: #3a3f4b;
+    --bs-list-group-action-color: #f1f3f7;
+    --bs-list-group-action-hover-color: #fff;
+    --bs-list-group-action-hover-bg: #2b303a;
+    --bs-list-group-action-active-color: #fff;
+    --bs-list-group-action-active-bg: #373d49;
+}
+
+body.o_web_login.o_dolan_dark_mode .o_user_switch .list-group-item {
+    border-color: #3a3f4b !important;
+    color: #f1f3f7 !important;
+    background-color: #1d2028 !important;
+}
+
+body.o_web_login.o_dolan_dark_mode .o_user_switch .list-group-item:hover,
+body.o_web_login.o_dolan_dark_mode .o_user_switch .list-group-item:focus-visible {
+    border-color: #c69ab9 !important;
+    color: #fff !important;
+    background-color: #2b303a !important;
+}
+
+body.o_web_login.o_dolan_dark_mode .o_user_switch .list-group-item .oi {
+    color: #a4aab7;
+}
+
+body.o_web_login.o_dolan_dark_mode .o_user_switch .list-group-item .oi:hover {
+    color: #ff8a8a;
+}
+
+body.o_web_login.o_dolan_dark_mode .o_user_switch .o_user_avatar {
+    background-color: #f4f6f9;
+}
+
+body.o_web_login.o_dolan_dark_mode .o_user_switch > p {
+    color: #e8eaf0 !important;
+    font-weight: 500;
+}
+
+/* Textos .text-muted dentro de la tarjeta (p. ej. el separador "- o -" antes
+   de la llave de acceso): una regla de Odoo con mucha especificidad
+   (.card-body:not(...) .text-muted) los fuerza a negro al 70 %. El :not(#_)
+   suma especificidad de id para ganarle sin tocar el modo claro. */
+body.o_web_login.o_dolan_dark_mode .card-body .text-muted:not(#_) {
+    color: #a4aab7 !important;
+}
+
 body.o_web_login.o_dolan_dark_mode .dolan_login_theme_toggle {
     border-color: rgba(224, 205, 220, .24);
     color: #f0e6ef;
