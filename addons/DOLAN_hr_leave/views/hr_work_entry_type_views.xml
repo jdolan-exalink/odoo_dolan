@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_work_entry_type_view_form_dolan_leave" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.form.dolan.leave</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="inherit_id" ref="hr_holidays.hr_work_entry_type_view_form"/>
+        <field name="arch" type="xml">
+            <group name="configuration" position="after">
+                <group name="dolan_ar" string="Argentina">
+                    <field name="dolan_leave_kind"/>
+                    <field name="dolan_legal_ref"/>
+                    <field name="dolan_max_days_per_request"/>
+                    <field name="dolan_max_days_per_year"/>
+                    <field name="dolan_payroll_input_code"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

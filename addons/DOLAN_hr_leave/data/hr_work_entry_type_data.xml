@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Valores de referencia: editables por empresa y convenio. -->
+    <data noupdate="1">
+        <record id="work_entry_type_ar_vacation" model="hr.work.entry.type">
+            <field name="name">Vacaciones (LCT)</field>
+            <field name="code">AR_VAC</field>
+            <field name="display_code">VAC</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="count_as">absence</field>
+            <field name="amount_rate" eval="1.0"/>
+            <field name="time_off_selectable" eval="True"/>
+            <field name="requires_allocation" eval="True"/>
+            <field name="employee_requests" eval="True"/>
+            <field name="leave_validation_type">both</field>
+            <field name="allocation_validation_type">hr</field>
+            <field name="request_unit">day</field>
+            <field name="unit_of_measure">day</field>
+            <field name="count_days_as">calendar</field>
+            <field name="unpaid" eval="False"/>
+            <field name="support_document" eval="False"/>
+            <field name="color">11</field>
+            <field name="sequence">101</field>
+            <field name="dolan_leave_kind">vacation</field>
+            <field name="dolan_legal_ref">LCT arts. 150 a 157</field>
+            <field name="dolan_max_days_per_request">0</field>
+            <field name="dolan_max_days_per_year">0</field>
+            <field name="dolan_payroll_input_code">VACDIAS</field>
+        </record>
+        <record id="work_entry_type_ar_sick" model="hr.work.entry.type">
+            <field name="name">Enfermedad inculpable</field>
+            <field name="code">AR_ENF</field>
+            <field name="display_code">ENF</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="count_as">absence</field>
+            <field name="amount_rate" eval="1.0"/>
+            <field name="time_off_selectable" eval="True"/>
+            <field name="requires_allocation" eval="False"/>
+            <field name="employee_requests" eval="True"/>
+            <field name="leave_validation_type">hr</field>
+            <field name="allocation_validation_type">hr</field>
+            <field name="request_unit">day</field>
+            <field name="unit_of_measure">day</field>
+            <field name="count_days_as">calendar</field>
+            <field name="unpaid" eval="False"/>
+            <field name="support_document" eval="True"/>
+            <field name="color">3</field>
+            <field name="sequence">102</field>
+            <field name="dolan_leave_kind">sick</field>
+            <field name="dolan_legal_ref">LCT art. 208</field>
+            <field name="dolan_max_days_per_request">0</field>
+            <field name="dolan_max_days_per_year">0</field>
+            <field name="dolan_payroll_input_code"></field>
+        </record>
+        <record id="work_entry_type_ar_work_accident" model="hr.work.entry.type">
+            <field name="name">Accidente o enfermedad laboral (ART)</field>
+            <field name="code">AR_ART</field>
+            <field name="display_code">ART</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="count_as">absence</field>
+            <field name="amount_rate" eval="1.0"/>
+            <field name="time_off_selectable" eval="True"/>
+            <field name="requires_allocation" eval="False"/>
+            <field name="employee_requests" eval="False"/>
+            <field name="leave_validation_type">hr</field>
+            <field name="allocation_validation_type">hr</field>
+            <field name="request_unit">day</field>
+            <field name="unit_of_measure">day</field>
+            <field name="count_days_as">calendar</field>
+            <field name="unpaid" eval="False"/>
+            <field name="support_document" eval="True"/>
+            <field name="color">9</field>
+            <field name="sequence">103</field>
+            <field name="dolan_leave_kind">work_accident</field>
+            <field name="dolan_legal_ref">Ley 24.557</field>
+            <field name="dolan_max_days_per_request">0</field>
+            <field name="dolan_max_days_per_year">0</field>
+            <field name="dolan_payroll_input_code"></field>
+        </record>
+        <record id="work_entry_type_ar_marriage" model="hr.work.entry.type">
+            <field name="name">Matrimonio</field>
+            <field name="code">AR_MAT</field>
+            <field name="display_code">MAT</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="count_as">absence</field>
+            <field name="amount_rate" eval="1.0"/>
+            <field name="time_off_selectable" eval="True"/>
+            <field name="requires_allocation" eval="False"/>
+            <field name="employee_requests" eval="True"/>
+            <field name="leave_validation_type">hr</field>
+            <field name="allocation_validation_type">hr</field>
+            <field name="request_unit">day</field>
+            <field name="unit_of_measure">day</field>
+            <field name="count_days_as">calendar</field>
+            <field name="unpaid" eval="False"/>
+            <field name="support_document" eval="True"/>
+            <field name="color">6</field>
+            <field name="sequence">104</field>
+            <field name="dolan_leave_kind">special</field>
+            <field name="dolan_legal_ref">LCT art. 158 inc. b</field>
+            <field name="dolan_max_days_per_request">10</field>
+            <field name="dolan_max_days_per_year">0</field>
+            <field name="dolan_payroll_input_code"></field>
+        </record>
+        <record id="work_entry_type_ar_birth" model="hr.work.entry.type">
+            <field name="name">Nacimiento de hijo</field>
+            <field name="code">AR_NAC</field>
+            <field name="display_code">NAC</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="count_as">absence</field>
+            <field name="amount_rate" eval="1.0"/>
+            <field name="time_off_selectable" eval="True"/>
+            <field name="requires_allocation" eval="False"/>
+            <field name="employee_requests" eval="True"/>
+            <field name="leave_validation_type">hr</field>
+            <field name="allocation_validation_type">hr</field>
+            <field name="request_unit">day</field>
+            <field name="unit_of_measure">day</field>
+            <field name="count_days_as">calendar</field>
+            <field name="unpaid" eval="False"/>
+            <field name="support_document" eval="True"/>
+            <field name="color">6</field>
+            <field name="sequence">105</field>
+            <field name="dolan_leave_kind">parental</field>
+            <field name="dolan_legal_ref">LCT art. 158 inc. a</field>
+            <field name="dolan_max_days_per_request">2</field>
+            <field name="dolan_max_days_per_year">0</field>
+            <field name="dolan_payroll_input_code"></field>
+        </record>
+        <record id="work_entry_type_ar_maternity" model="hr.work.entry.type">
+            <field name="name">Maternidad</field>
+            <field name="code">AR_MATER</field>
+            <field name="display_code">MTR</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="count_as">absence</field>
+            <field name="amount_rate" eval="1.0"/>
+            <field name="time_off_selectable" eval="True"/>
+            <field name="requires_allocation" eval="False"/>
+            <field name="employee_requests" eval="False"/>
+            <field name="leave_validation_type">hr</field>
+            <field name="allocation_validation_type">hr</field>
+            <field name="request_unit">day</field>
+            <field name="unit_of_measure">day</field>
+            <field name="count_days_as">calendar</field>
+            <field name="unpaid" eval="False"/>
+            <field name="support_document" eval="True"/>
+            <field name="color">6</field>
+            <field name="sequence">106</field>
+            <field name="dolan_leave_kind">parental</field>
+            <field name="dolan_legal_ref">LCT art. 177</field>
+            <field name="dolan_max_days_per_request">90</field>
+            <field name="dolan_max_days_per_year">0</field>
+            <field name="dolan_payroll_input_code"></field>
+        </record>
+        <record id="work_entry_type_ar_death_close" model="hr.work.entry.type">
+            <field name="name">Fallecimiento de cónyuge, hijo o padres</field>
+            <field name="code">AR_FAL1</field>
+            <field name="display_code">FAL</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="count_as">absence</field>
+            <field name="amount_rate" eval="1.0"/>
+            <field name="time_off_selectable" eval="True"/>
+            <field name="requires_allocation" eval="False"/>
+            <field name="employee_requests" eval="True"/>
+            <field name="leave_validation_type">hr</field>
+            <field name="allocation_validation_type">hr</field>
+            <field name="request_unit">day</field>
+            <field name="unit_of_measure">day</field>
+            <field name="count_days_as">calendar</field>
+            <field name="unpaid" eval="False"/>
+            <field name="support_document" eval="True"/>
+            <field name="color">8</field>
+            <field name="sequence">107</field>
+            <field name="dolan_leave_kind">special</field>
+            <field name="dolan_legal_ref">LCT art. 158 inc. c</field>
+            <field name="dolan_max_days_per_request">3</field>
+            <field name="dolan_max_days_per_year">0</field>
+            <field name="dolan_payroll_input_code"></field>
+        </record>
+        <record id="work_entry_type_ar_death_sibling" model="hr.work.entry.type">
+            <field name="name">Fallecimiento de hermano</field>
+            <field name="code">AR_FAL2</field>
+            <field name="display_code">FAH</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="count_as">absence</field>
+            <field name="amount_rate" eval="1.0"/>
+            <field name="time_off_selectable" eval="True"/>
+            <field name="requires_allocation" eval="False"/>
+            <field name="employee_requests" eval="True"/>
+            <field name="leave_validation_type">hr</field>
+            <field name="allocation_validation_type">hr</field>
+            <field name="request_unit">day</field>
+            <field name="unit_of_measure">day</field>
+            <field name="count_days_as">calendar</field>
+            <field name="unpaid" eval="False"/>
+            <field name="support_document" eval="True"/>
+            <field name="color">8</field>
+            <field name="sequence">108</field>
+            <field name="dolan_leave_kind">special</field>
+            <field name="dolan_legal_ref">LCT art. 158 inc. d</field>
+            <field name="dolan_max_days_per_request">1</field>
+            <field name="dolan_max_days_per_year">0</field>
+            <field name="dolan_payroll_input_code"></field>
+        </record>
+        <record id="work_entry_type_ar_exam" model="hr.work.entry.type">
+            <field name="name">Examen</field>
+            <field name="code">AR_EXA</field>
+            <field name="display_code">EXA</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="count_as">absence</field>
+            <field name="amount_rate" eval="1.0"/>
+            <field name="time_off_selectable" eval="True"/>
+            <field name="requires_allocation" eval="False"/>
+            <field name="employee_requests" eval="True"/>
+            <field name="leave_validation_type">hr</field>
+            <field name="allocation_validation_type">hr</field>
+            <field name="request_unit">day</field>
+            <field name="unit_of_measure">day</field>
+            <field name="count_days_as">calendar</field>
+            <field name="unpaid" eval="False"/>
+            <field name="support_document" eval="True"/>
+            <field name="color">5</field>
+            <field name="sequence">109</field>
+            <field name="dolan_leave_kind">study</field>
+            <field name="dolan_legal_ref">LCT art. 158 inc. e</field>
+            <field name="dolan_max_days_per_request">2</field>
+            <field name="dolan_max_days_per_year">10</field>
+            <field name="dolan_payroll_input_code"></field>
+        </record>
+        <record id="work_entry_type_ar_unpaid" model="hr.work.entry.type">
+            <field name="name">Licencia sin goce de haberes</field>
+            <field name="code">AR_SG</field>
+            <field name="display_code">SG</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="count_as">absence</field>
+            <field name="amount_rate" eval="0.0"/>
+            <field name="time_off_selectable" eval="True"/>
+            <field name="requires_allocation" eval="False"/>
+            <field name="employee_requests" eval="True"/>
+            <field name="leave_validation_type">hr</field>
+            <field name="allocation_validation_type">hr</field>
+            <field name="request_unit">day</field>
+            <field name="unit_of_measure">day</field>
+            <field name="count_days_as">calendar</field>
+            <field name="unpaid" eval="True"/>
+            <field name="support_document" eval="False"/>
+            <field name="color">1</field>
+            <field name="sequence">110</field>
+            <field name="dolan_leave_kind">unpaid</field>
+            <field name="dolan_legal_ref">Acuerdo de partes</field>
+            <field name="dolan_max_days_per_request">0</field>
+            <field name="dolan_max_days_per_year">0</field>
+            <field name="dolan_payroll_input_code">AUSINJ</field>
+        </record>
+        <record id="work_entry_type_ar_unjustified" model="hr.work.entry.type">
+            <field name="name">Ausencia injustificada</field>
+            <field name="code">AR_AUSINJ</field>
+            <field name="display_code">AUS</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="count_as">absence</field>
+            <field name="amount_rate" eval="0.0"/>
+            <field name="time_off_selectable" eval="True"/>
+            <field name="requires_allocation" eval="False"/>
+            <field name="employee_requests" eval="False"/>
+            <field name="leave_validation_type">hr</field>
+            <field name="allocation_validation_type">hr</field>
+            <field name="request_unit">day</field>
+            <field name="unit_of_measure">day</field>
+            <field name="count_days_as">calendar</field>
+            <field name="unpaid" eval="True"/>
+            <field name="support_document" eval="False"/>
+            <field name="color">1</field>
+            <field name="sequence">111</field>
+            <field name="dolan_leave_kind">unjustified</field>
+            <field name="dolan_legal_ref"></field>
+            <field name="dolan_max_days_per_request">0</field>
+            <field name="dolan_max_days_per_year">0</field>
+            <field name="dolan_payroll_input_code">AUSINJ</field>
+        </record>
+    </data>
+</odoo>

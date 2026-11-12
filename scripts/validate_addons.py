@@ -41,6 +41,7 @@ EXPECTED_MODULES = [
     "DOLAN_payment_terminal",
     "DOLAN_hr_core",
     "DOLAN_payroll_ar",
+    "DOLAN_hr_leave",
     "DOLAN_personal_operativo",
     "DOLAN_personal",
     "ePOS_print",

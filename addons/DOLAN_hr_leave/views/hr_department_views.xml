@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_department_form_dolan_leave" model="ir.ui.view">
+        <field name="name">hr.department.form.dolan.leave</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form"/>
+        <field name="arch" type="xml">
+            <field name="manager_id" position="after">
+                <field name="dolan_min_present"/>
+            </field>
+        </field>
+    </record>
+</odoo>
