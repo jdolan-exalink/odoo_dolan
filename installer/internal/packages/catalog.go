@@ -170,6 +170,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_hr_documents",
+		Title:       "Personal: Legajo digital y vencimientos",
+		Version:     "20.0.1.0.0",
+		Category:    "Recursos Humanos",
+		Application: false,
+		Depends:     []string{"mail", "DOLAN_hr_core"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_personal_operativo",
 		Title:       "Personal Operativo (sin nómina)",
 		Version:     "20.0.1.0.0",
@@ -184,7 +193,7 @@ var Catalog = []ModuleSpec{
 		Version:     "20.0.1.0.0",
 		Category:    "Recursos Humanos",
 		Application: false,
-		Depends:     []string{"DOLAN_personal_operativo", "DOLAN_payroll_ar", "DOLAN_hr_payroll_bridge", "DOLAN_hr_portal_payroll"},
+		Depends:     []string{"DOLAN_personal_operativo", "DOLAN_payroll_ar", "DOLAN_hr_payroll_bridge", "DOLAN_hr_portal_payroll", "DOLAN_hr_documents"},
 		HasData:     false,
 	},
 	{

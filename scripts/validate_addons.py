@@ -49,6 +49,7 @@ EXPECTED_MODULES = [
     "DOLAN_hr_portal",
     "DOLAN_hr_portal_payroll",
     "DOLAN_hr_reports",
+    "DOLAN_hr_documents",
     "DOLAN_personal_operativo",
     "DOLAN_personal",
     "ePOS_print",
