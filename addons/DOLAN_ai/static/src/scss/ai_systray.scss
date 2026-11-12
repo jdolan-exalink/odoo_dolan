@@ -1356,3 +1356,28 @@ body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_model_option:hover,
 body.o_dolan_dark_mode .o_dolan_ai_drawer .o_dolan_ai_model_option.is-selected {
     background: #343946;
 }
+
+.o_dolan_ai_download {
+    display: inline-flex;
+    align-items: center;
+    margin: 2px 4px 2px 0;
+    padding: 4px 10px;
+    border: 1px solid var(--border-color, #d8dadd);
+    border-radius: 6px;
+    background: var(--o-view-background-color, #fff);
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: none;
+        border-color: currentColor;
+    }
+
+    .fa-file-pdf-o {
+        color: #c0392b;
+    }
+
+    .fa-file-excel-o {
+        color: #1d6f42;
+    }
+}

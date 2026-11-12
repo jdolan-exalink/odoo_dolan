@@ -263,7 +263,7 @@
                                                         <t t-foreach="this.inlineMessageParts(block.content)" t-as="part" t-key="part_index">
                                                             <strong t-if="part.type === 'bold'" t-out="part.content"/>
                                                             <code t-elif="part.type === 'inline_code'" t-out="part.content"/>
-                                                            <a t-elif="part.type === 'link'" t-att-href="part.href" target="_blank" rel="noopener noreferrer" t-out="part.content"/>
+                                                            <a t-elif="part.type === 'link'" t-att-href="part.href" target="_blank" rel="noopener noreferrer" t-att-class="part.download ? 'o_dolan_ai_download' : ''"><i t-if="part.download" t-att-class="'fa me-1 ' + part.icon"/><t t-out="part.content"/></a>
                                                             <t t-else="" t-out="part.content"/>
                                                         </t>
                                                     </h4>
@@ -272,7 +272,7 @@
                                                             <t t-foreach="this.inlineMessageParts(item)" t-as="part" t-key="part_index">
                                                                 <strong t-if="part.type === 'bold'" t-out="part.content"/>
                                                                 <code t-elif="part.type === 'inline_code'" t-out="part.content"/>
-                                                                <a t-elif="part.type === 'link'" t-att-href="part.href" target="_blank" rel="noopener noreferrer" t-out="part.content"/>
+                                                                <a t-elif="part.type === 'link'" t-att-href="part.href" target="_blank" rel="noopener noreferrer" t-att-class="part.download ? 'o_dolan_ai_download' : ''"><i t-if="part.download" t-att-class="'fa me-1 ' + part.icon"/><t t-out="part.content"/></a>
                                                                 <t t-else="" t-out="part.content"/>
                                                             </t>
                                                         </li>
@@ -281,7 +281,7 @@
                                                         <t t-foreach="this.inlineMessageParts(block.content)" t-as="part" t-key="part_index">
                                                             <strong t-if="part.type === 'bold'" t-out="part.content"/>
                                                             <code t-elif="part.type === 'inline_code'" t-out="part.content"/>
-                                                            <a t-elif="part.type === 'link'" t-att-href="part.href" target="_blank" rel="noopener noreferrer" t-out="part.content"/>
+                                                            <a t-elif="part.type === 'link'" t-att-href="part.href" target="_blank" rel="noopener noreferrer" t-att-class="part.download ? 'o_dolan_ai_download' : ''"><i t-if="part.download" t-att-class="'fa me-1 ' + part.icon"/><t t-out="part.content"/></a>
                                                             <t t-else="" t-out="part.content"/>
                                                         </t>
                                                     </p>

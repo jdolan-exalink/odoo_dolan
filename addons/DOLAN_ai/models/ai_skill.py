@@ -9,6 +9,8 @@ import calendar
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 
+from .ai_report import REPORT_CODES
+
 _logger = logging.getLogger(__name__)
 
 
@@ -190,6 +192,30 @@ class AiSkill(models.Model):
                 'parameters': {'type': 'object', 'properties': {}, 'required': []},
             },
         })
+        tools.append({
+            'type': 'function',
+            'function': {
+                'name': 'generate_report_file',
+                'description': (
+                    'Genera un reporte descargable en Excel (xlsx) o PDF y devuelve el enlace de descarga. '
+                    'Usala cuando pidan un reporte, listado, planilla, Excel o PDF de: ventas por cliente '
+                    '(sales_by_customer), ventas por factura o comprobante (sales_by_invoice), ventas por '
+                    'artículo o producto (sales_by_product), IVA ventas vs compras (vat_sales_vs_purchases) '
+                    'o cobranzas por medio de pago (collections_by_payment_method). Incluí el enlace '
+                    'devuelto en tu respuesta.'
+                ),
+                'parameters': {
+                    'type': 'object',
+                    'properties': {
+                        'report': {'type': 'string', 'enum': list(REPORT_CODES), 'description': 'Reporte a generar.'},
+                        'format': {'type': 'string', 'enum': ['xlsx', 'pdf'], 'description': 'xlsx para Excel (por defecto) o pdf.'},
+                        'date_from': {'type': 'string', 'description': 'Fecha inicial YYYY-MM-DD. Si se omite, primer día del mes actual.'},
+                        'date_to': {'type': 'string', 'description': 'Fecha final YYYY-MM-DD. Si se omite, hoy.'},
+                    },
+                    'required': ['report'],
+                },
+            },
+        })
         return tools
 
     @api.model
@@ -216,6 +242,8 @@ class AiSkill(models.Model):
                 return self._exec_receivables_by_partner(params)
             elif tool_name == 'sales_billing_summary':
                 return self._exec_sales_billing_summary(params)
+            elif tool_name == 'generate_report_file':
+                return self._exec_generate_report_file(params)
             elif tool_name in ('create', 'ai_tool_create', 'write', 'ai_tool_write'):
                 return {'status': 'error', 'error': _('El chat general opera en modo solo lectura; no puede crear ni modificar registros.')}
             else:
@@ -226,6 +254,19 @@ class AiSkill(models.Model):
         except Exception as exc:
             _logger.exception("Error ejecutando tool ORM %s", tool_name)
             return {'status': 'error', 'error': str(exc)}
+
+    def _exec_generate_report_file(self, params):
+        session = self.env['ai.session']
+        session_id = self.env.context.get('dolan_ai_session_id')
+        if session_id:
+            session = session.browse(session_id).exists()
+        return self.env['dolan.ai.report'].generate_file(
+            params.get('report'),
+            file_format=params.get('format') or 'xlsx',
+            date_from=params.get('date_from') or None,
+            date_to=params.get('date_to') or None,
+            session=session or None,
+        )
 
     def _validate_model(self, model_name):
         if not model_name or model_name not in self.env:
