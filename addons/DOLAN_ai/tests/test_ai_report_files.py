@@ -2,7 +2,6 @@
 # Part of DOLAN Suite for Odoo 20 CE. See LICENSE file for full copyright and licensing details.
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0).
 
-import base64
 from unittest.mock import patch
 
 from odoo import fields
@@ -20,6 +19,14 @@ class TestAiReportFiles(TransactionCase):
         self.Session = self.env['ai.session']
         self.Report = self.env['dolan.ai.report']
         self.today = fields.Date.context_today(self.Session)
+
+    @staticmethod
+    def _content(attachment):
+        # En Odoo 20 `raw` puede devolver un objeto de archivo en lugar de bytes.
+        raw = attachment.raw
+        if hasattr(raw, 'content'):
+            raw = raw.content
+        return raw if isinstance(raw, bytes) else bytes(raw)
 
     def _session(self):
         agent = self.env['ai.agent'].sudo().search([], limit=1) or self.env['ai.agent'].sudo().create({'name': 'Reportes AI'})
@@ -77,10 +84,10 @@ class TestAiReportFiles(TransactionCase):
         xlsx = self.Report.generate_file('sales_by_customer', 'xlsx', session=session)
         attachment = self.env['ir.attachment'].browse(xlsx['file']['attachment_id'])
         self.assertEqual((attachment.res_model, attachment.res_id), ('ai.session', session.id))
-        self.assertTrue(base64.b64decode(attachment.datas).startswith(b'PK'), 'Un xlsx es un zip.')
+        self.assertTrue(self._content(attachment).startswith(b'PK'), 'Un xlsx es un zip.')
         self.assertEqual(xlsx['file']['url'], '/web/content/%s?download=true' % attachment.id)
         pdf = self.Report.generate_file('vat_sales_vs_purchases', 'pdf', session=session)
-        content = base64.b64decode(self.env['ir.attachment'].browse(pdf['file']['attachment_id']).datas)
+        content = self._content(self.env['ir.attachment'].browse(pdf['file']['attachment_id']))
         # Sin wkhtmltopdf (modo test) Odoo devuelve el HTML del reporte.
         self.assertTrue(content.startswith(b'%PDF') or b'IVA ventas vs compras' in content)
 
