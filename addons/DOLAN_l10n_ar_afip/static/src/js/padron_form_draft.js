@@ -46,10 +46,18 @@ patch(FormController.prototype, {
                 }
                 await record.update(values);
                 const partnerName = values.name || vat;
-                this.dolanPadronNotification.add(
-                    _t("Datos obtenidos correctamente de ARCA para: %s", partnerName),
-                    { title: _t("Padrón ARCA Actualizado"), type: "success" }
-                );
+                const warnings = result.warnings || [];
+                if (warnings.length) {
+                    this.dolanPadronNotification.add(
+                        _t("Se cargaron los datos de %s. ARCA informa: %s", partnerName, warnings.join(" | ")),
+                        { title: _t("Padrón ARCA con observaciones"), type: "warning", sticky: true }
+                    );
+                } else {
+                    this.dolanPadronNotification.add(
+                        _t("Datos obtenidos correctamente de ARCA para: %s", partnerName),
+                        { title: _t("Padrón ARCA Actualizado"), type: "success" }
+                    );
+                }
             } else {
                 const message = result?.error || _t("ARCA no devolvió datos para este CUIT.");
                 await record.update({ l10n_ar_padron_error: message });

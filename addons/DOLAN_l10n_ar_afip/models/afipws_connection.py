@@ -12,7 +12,8 @@ import urllib.error
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 
-from odoo import _, api, fields, models
+from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo.modules import module as odoo_module
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -28,14 +29,16 @@ AFIP_WS_URLS = {
         'wsfex': 'https://wswhomo.afip.gov.ar/wsfexv1/service.asmx',
         'wsmtxca': 'https://fwshomo.afip.gov.ar/wsmtxca/services/MTXCAService',
         'wsfecred': 'https://fwshomo.afip.gov.ar/wsfecred/FECredService',
-        'ws_sr_constancia_inscripcion': 'https://awshomo.arca.gob.ar/sr-padron/webservices/personaServiceA5',
+        # ARCA kept the afip.gov.ar hosts for its web services: awshomo.arca.gob.ar
+        # does not resolve and aws.arca.gob.ar serves an incomplete TLS chain.
+        'ws_sr_constancia_inscripcion': 'https://awshomo.afip.gov.ar/sr-padron/webservices/personaServiceA5',
     },
     'production': {
         'wsfe': 'https://servicios1.afip.gov.ar/wsfev1/service.asmx',
         'wsfex': 'https://servicios1.afip.gov.ar/wsfexv1/service.asmx',
         'wsmtxca': 'https://serviciosjava.afip.gov.ar/wsmtxca/services/MTXCAService',
         'wsfecred': 'https://serviciosjava.afip.gov.ar/wsfecred/FECredService',
-        'ws_sr_constancia_inscripcion': 'https://aws.arca.gob.ar/sr-padron/webservices/personaServiceA5',
+        'ws_sr_constancia_inscripcion': 'https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5',
     },
 }
 
@@ -69,6 +72,91 @@ def _is_connection_failure(exc):
         # processed the request. Only connect-phase failures are certain.
         return not isinstance(reason, (TimeoutError, socket.timeout))
     return isinstance(exc, (ConnectionRefusedError, socket.gaierror))
+
+
+SERVICE_LABELS = {
+    'wsfe': 'Facturación electrónica (wsfe)',
+    'wsfex': 'Factura de exportación (wsfex)',
+    'wsmtxca': 'Factura con detalle (wsmtxca)',
+    'wsfecred': 'Factura de Crédito Electrónica MiPyME (wsfecred)',
+    'ws_sr_constancia_inscripcion': 'Consulta de constancia de inscripción / padrón A5 (ws_sr_constancia_inscripcion)',
+}
+
+
+def _soap_fault(raw):
+    """Return ``(faultcode, faultstring)`` of a SOAP fault, or ``('', '')``."""
+    if not raw:
+        return '', ''
+    try:
+        root = ET.fromstring(raw)
+    except ET.ParseError:
+        return '', ''
+    for node in root.iter():
+        if node.tag.split('}')[-1] != 'Fault':
+            continue
+        code = text = ''
+        for child in node.iter():
+            name = child.tag.split('}')[-1]
+            value = (child.text or '').strip()
+            if name in ('faultcode', 'Value') and value and not code:
+                code = value
+            elif name in ('faultstring', 'Text') and value and not text:
+                text = value
+        return code, text
+    return '', ''
+
+
+def _soap_fault_text(raw):
+    code, text = _soap_fault(raw)
+    return ': '.join(part for part in (code.split(':')[-1], text) if part)
+
+
+def _wsaa_error_message(code, text, service, environment):
+    """Explain the usual WSAA rejections in terms of what to fix in ARCA."""
+    short_code = (code or '').split(':')[-1]
+    service_label = SERVICE_LABELS.get(service, service)
+    env_label = 'Producción' if environment == 'production' else 'Homologación'
+    if short_code == 'coe.notAuthorized':
+        where = (
+            'En ARCA entrá a "Administrador de Relaciones de Clave Fiscal", elegí la empresa, '
+            '"Nueva relación" > Buscar > ARCA > WebServices > el servicio, y como representante '
+            'elegí el computador fiscal (alias) de este certificado.'
+            if environment == 'production' else
+            'En homologación la autorización se crea desde el servicio "WSASS - Autogestión '
+            'Certificados Homologación" > "Crear autorización a servicio".'
+        )
+        return _('El certificado no está autorizado para el servicio %(service)s. %(where)s', service=service_label, where=where)
+    if short_code == 'coe.alreadyAuthenticated':
+        return _(
+            'ARCA ya entregó un ticket vigente para %(service)s a este certificado y no da otro hasta que venza '
+            '(hasta 12 horas). Suele pasar cuando otra instalación usa el mismo certificado. '
+            'Esperá a que venza o generá un certificado propio para esta instalación.',
+            service=service_label,
+        )
+    if short_code.startswith('cms.cert') or short_code in ('cms.bad', 'cms.sign.invalid'):
+        if 'expir' in (text or '').lower() or short_code == 'cms.cert.expired':
+            return _('El certificado ARCA está vencido. Generá un pedido nuevo desde Ajustes > ARCA.')
+        return _(
+            'ARCA (%(env)s) no reconoce el certificado (%(detail)s). Revisá que el ambiente elegido coincida con '
+            'el certificado: los de WSASS son de Homologación y los de "Administración de Certificados '
+            'Digitales" son de Producción.',
+            env=env_label, detail=text or short_code,
+        )
+    if 'generationTime' in short_code or 'expirationTime' in short_code:
+        return _('ARCA rechazó la hora del pedido (%s). Revisá que el reloj del servidor esté en hora.') % (text or short_code)
+    return _('ARCA (WSAA, %(env)s) rechazó el pedido de ticket para %(service)s: %(detail)s',
+             env=env_label, service=service_label, detail=': '.join(p for p in (short_code, text) if p) or _('sin detalle'))
+
+
+def _parse_ta_datetime(value):
+    """WSAA datetimes carry an offset (``2026-11-12T21:30:00.123-03:00``); store naive UTC."""
+    try:
+        parsed = datetime.fromisoformat((value or '').strip())
+    except ValueError:
+        return False
+    if parsed.tzinfo is None:
+        return False
+    return parsed.astimezone(timezone.utc).replace(tzinfo=None)
 
 
 class L10nArAfipwsConnection(models.Model):
@@ -165,7 +253,7 @@ class L10nArAfipwsConnection(models.Model):
         )
         return tra_xml, unique_id
 
-    def _sign_tra_cms(self, tra_xml, cert_pem, key_pem):
+    def _sign_tra_cms(self, tra_xml, cert_pem, key_pem, key_password=None):
         """Firma el TRA XML en formato CMS (PKCS#7) Base64 usando cryptography, pyafipws u OpenSSL."""
 
         def pem_text(value):
@@ -216,7 +304,9 @@ class L10nArAfipwsConnection(models.Model):
             from cryptography.hazmat.primitives.serialization import pkcs7
 
             cert_obj = x509.load_pem_x509_certificate(cert_str.encode('utf-8'))
-            key_obj = serialization.load_pem_private_key(key_str.encode('utf-8'), password=None)
+            if isinstance(key_password, str):
+                key_password = key_password.encode('utf-8')
+            key_obj = serialization.load_pem_private_key(key_str.encode('utf-8'), password=key_password or None)
             cms_der = (
                 pkcs7.PKCS7SignatureBuilder()
                 .set_data(tra_xml.encode('utf-8'))
@@ -241,7 +331,7 @@ class L10nArAfipwsConnection(models.Model):
                 "Verifique que el certificado y la clave privada estén en formato PEM válido.\nDetalle: %s"
             ) % exc)
 
-    def _call_wsaa_soap(self, cms_b64, environment):
+    def _call_wsaa_soap(self, cms_b64, environment, service=None):
         """Invoca el servicio SOAP LoginCms de WSAA y parsea el LoginTicketResponse."""
         url = WSAA_URLS.get(environment, WSAA_URLS['testing'])
         soap_envelope = f"""<?xml version="1.0" encoding="UTF-8"?>
@@ -263,37 +353,94 @@ class L10nArAfipwsConnection(models.Model):
             method='POST',
         )
         try:
-            with urllib.request.urlopen(req, timeout=25) as response:
-                raw_xml = response.read().decode('utf-8')
+            with urllib.request.urlopen(req, timeout=25, context=_arca_ssl_context()) as response:
+                raw_xml = response.read()
         except urllib.error.HTTPError as http_err:
-            err_body = http_err.read().decode('utf-8', errors='ignore')
+            err_body = http_err.read()
+            code, text = _soap_fault(err_body)
+            if code or text:
+                # A SOAP fault is ARCA's own answer about the request (not an
+                # outage): explain what has to be fixed instead of the raw XML.
+                raise UserError(_wsaa_error_message(code, text, service or self.l10n_ar_afip_ws, environment))
             error_class = ArcaUnavailableError if http_err.code >= 500 else UserError
-            raise error_class(_("Error HTTP de WSAA ARCA/AFIP (%s): %s") % (http_err.code, err_body[:500]))
+            raise error_class(_("Error HTTP de WSAA ARCA/AFIP (%s): %s") % (
+                http_err.code, err_body.decode('utf-8', errors='ignore')[:500]))
         except Exception as exc:
             # WSAA only issues access tickets: no fiscal authorization can be
             # lost here, so any network failure means ARCA is unavailable.
-            raise ArcaUnavailableError(_("No se pudo conectar con WSAA ARCA/AFIP (%s): %s") % (url, exc))
+            reason = getattr(exc, 'reason', None) or exc
+            raise ArcaUnavailableError(_("No se pudo conectar con WSAA ARCA/AFIP (%s): %s") % (url, reason))
 
-        root = ET.fromstring(raw_xml)
+        try:
+            root = ET.fromstring(raw_xml)
+        except ET.ParseError:
+            raise UserError(_("Respuesta inválida de WSAA ARCA/AFIP."))
+        code, text = _soap_fault(raw_xml)
+        if code or text:
+            raise UserError(_wsaa_error_message(code, text, service or self.l10n_ar_afip_ws, environment))
         login_return = None
         for elem in root.iter():
             if elem.tag.endswith('loginCmsReturn'):
                 login_return = elem.text
                 break
         if not login_return:
-            raise UserError(_("Respuesta inesperada de WSAA ARCA/AFIP: %s") % raw_xml[:500])
+            raise UserError(_("Respuesta inesperada de WSAA ARCA/AFIP: %s") % raw_xml[:500].decode('utf-8', errors='ignore'))
 
-        ltr_root = ET.fromstring(login_return)
+        ltr_root = ET.fromstring(login_return.encode('utf-8'))
         unique_id = ltr_root.findtext('.//header/uniqueId') or ''
         token = ltr_root.findtext('.//credentials/token') or ''
         sign = ltr_root.findtext('.//credentials/sign') or ''
+        if not token or not sign:
+            raise UserError(_("WSAA ARCA/AFIP no devolvió token y sign en el ticket de acceso."))
+        now = fields.Datetime.now()
+        generation_time = _parse_ta_datetime(ltr_root.findtext('.//header/generationTime')) or now
+        expiration_time = _parse_ta_datetime(ltr_root.findtext('.//header/expirationTime'))
+        if not expiration_time:
+            expiration_time = now + timedelta(hours=11, minutes=50)
+        # Renew a few minutes early so a request never travels with a ticket
+        # that expires on the way.
+        expiration_time -= timedelta(minutes=5)
         return {
             'uniqueid': unique_id,
             'token': token,
             'sign': sign,
-            'generation_time': fields.Datetime.now(),
-            'expiration_time': fields.Datetime.now() + timedelta(hours=11, minutes=50),
+            'generation_time': generation_time,
+            'expiration_time': expiration_time,
         }
+
+    def _l10n_ar_store_ticket(self, vals):
+        """Persist a fresh WSAA ticket even if the caller's transaction rolls back.
+
+        WSAA refuses a new ticket for the same certificate and service while the
+        previous one is valid (``coe.alreadyAuthenticated``, up to 12 hours). If
+        the ticket were only written in the current transaction, any later error
+        (an invoice rejected by ARCA, a failed lookup) would roll it back and
+        block the service for hours. The ticket is therefore committed on an
+        independent cursor when the connection row already exists.
+        """
+        self.ensure_one()
+        committed = False
+        if self.id and not getattr(odoo_module, 'current_test', None):
+            try:
+                with self.env.registry.cursor() as cr:
+                    cr.execute(
+                        'SELECT id FROM l10n_ar_afipws_connection WHERE id = %s FOR UPDATE NOWAIT',
+                        [self.id],
+                    )
+                    if cr.fetchone():
+                        api.Environment(cr, SUPERUSER_ID, {})[self._name].browse(self.id).write(vals)
+                        committed = True
+            except Exception as exc:  # noqa: BLE001 - fall back to the current transaction
+                _logger.info('No se pudo guardar el ticket WSAA en una transacción propia: %s', exc)
+                committed = False
+        if not committed:
+            self.write(vals)
+            return
+        # The current transaction cannot see the committed row (repeatable
+        # read) and must not update it again: only refresh its cache.
+        for field_name, value in vals.items():
+            field = self._fields[field_name]
+            field._update_cache(self, field.convert_to_cache(value, self), dirty=False)
 
     def action_renew_token(self):
         """Renueva un ticket real WSAA; la ausencia de credenciales es un error explícito."""
@@ -324,11 +471,15 @@ class L10nArAfipwsConnection(models.Model):
                 cert_pem = getattr(cert_rec, 'pem_certificate', None) or getattr(cert_rec, 'content', None)
                 key_pem = getattr(key_rec, 'pem_key', None) or getattr(key_rec, 'content', None)
                 if cert_pem and key_pem:
+                    if getattr(cert_rec, 'date_end', False) and cert_rec.date_end < fields.Datetime.now():
+                        raise UserError(_(
+                            'El certificado ARCA "%s" venció el %s. Generá un pedido nuevo desde Ajustes > ARCA.'
+                        ) % (cert_rec.display_name, cert_rec.date_end))
                     tra_xml, unique_id = rec._build_tra_xml(rec.l10n_ar_afip_ws)
-                    cms_b64 = rec._sign_tra_cms(tra_xml, cert_pem, key_pem)
-                    ta_vals = rec._call_wsaa_soap(cms_b64, rec.type)
+                    cms_b64 = rec._sign_tra_cms(tra_xml, cert_pem, key_pem, getattr(key_rec, 'password', None))
+                    ta_vals = rec._call_wsaa_soap(cms_b64, rec.type, rec.l10n_ar_afip_ws)
                     ta_vals['is_simulated'] = False
-                    rec.write(ta_vals)
+                    rec._l10n_ar_store_ticket(ta_vals)
                     continue
 
             raise UserError(_(
@@ -654,16 +805,23 @@ class L10nArAfipwsConnection(models.Model):
             headers={'Content-Type': 'text/xml; charset=utf-8'},
             method='POST',
         )
-        ssl_context = ssl.create_default_context()
-        ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2
         try:
-            with urllib.request.urlopen(request, timeout=25, context=ssl_context) as response:
+            with urllib.request.urlopen(request, timeout=25, context=_arca_ssl_context()) as response:
                 raw_xml = response.read()
         except urllib.error.HTTPError as http_error:
             # Do not expose ARCA's full response: it can contain taxpayer data.
-            raise UserError(_('ARCA rechazó la consulta de Padrón (HTTP %s).') % http_error.code)
+            # SOAP faults only carry ARCA's own error text, which is safe to show.
+            fault_text = _soap_fault_text(http_error.read())
+            raise UserError(_('ARCA rechazó la consulta de Padrón (HTTP %(code)s)%(detail)s') % {
+                'code': http_error.code,
+                'detail': ': ' + fault_text[:300] if fault_text else '.',
+            })
         except Exception as exc:
-            raise UserError(_('No se pudo conectar con el Padrón ARCA (%s).') % type(exc).__name__)
+            reason = getattr(exc, 'reason', None) or exc
+            raise UserError(_('No se pudo conectar con el Padrón ARCA (%(url)s): %(error)s') % {
+                'url': request.full_url,
+                'error': str(reason)[:200] or type(exc).__name__,
+            })
 
         try:
             root = ET.fromstring(raw_xml)
@@ -680,12 +838,23 @@ class L10nArAfipwsConnection(models.Model):
         person_return = next((node for node in root.iter() if local_name(node) == 'personaReturn'), None)
         if person_return is None:
             raise UserError(_('ARCA no devolvió datos de Padrón para el CUIT solicitado.'))
-        error_node = next((node for node in person_return.iter() if local_name(node) == 'errorConstancia'), None)
-        if error_node is not None:
-            error_text = next((child.text for child in error_node.iter() if local_name(child) == 'error' and child.text), '')
-            raise UserError(_('ARCA no pudo emitir la constancia para el CUIT solicitado%s.') % (': ' + error_text[:250] if error_text else '.'))
+        # ARCA answers "errorConstancia" for taxpayers it cannot issue a
+        # certificate for (CUIT limitada, no domicilio fiscal electrónico...),
+        # yet it still identifies the person. Those observations are returned
+        # to the caller as warnings instead of discarding the whole answer.
         general = next((node for node in person_return if local_name(node) == 'datosGenerales'), None)
-        returned_cuit = next((child.text for child in general if local_name(child) == 'idPersona'), '') if general is not None else ''
-        if general is None or normalize_cuit(returned_cuit) != target_cuit:
+        error_node = next((node for node in person_return if local_name(node) == 'errorConstancia'), None)
+        identity = general if general is not None else error_node
+        returned_cuit = next((child.text for child in identity if local_name(child) == 'idPersona'), '') if identity is not None else ''
+        if general is None and error_node is not None:
+            has_name = any(
+                local_name(child) in ('razonSocial', 'apellido', 'nombre') and (child.text or '').strip()
+                for child in error_node
+            )
+            if not has_name or normalize_cuit(returned_cuit) != target_cuit:
+                error_text = next((child.text for child in error_node.iter() if local_name(child) == 'error' and child.text), '')
+                raise UserError(_('ARCA no pudo emitir la constancia para el CUIT solicitado%s') % (
+                    ': ' + error_text[:250] if error_text else '.'))
+        if identity is None or normalize_cuit(returned_cuit) != target_cuit:
             raise UserError(_('La respuesta del Padrón no identifica al CUIT consultado. No se actualizaron datos locales.'))
         return person_return

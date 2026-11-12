@@ -73,7 +73,10 @@ class ResPartner(models.Model):
         self.ensure_one()
         vals = {
             'l10n_ar_padron_last_update': fields.Datetime.now(),
-            'l10n_ar_padron_status': data['estadoClave'],
+            'l10n_ar_padron_status': data.get('estadoClave') or (_('Con observaciones') if data.get('warnings') else False),
+            'l10n_ar_padron_error': (
+                _('Aviso de ARCA: %s') % ' | '.join(data['warnings'])
+            )[:500] if data.get('warnings') else False,
         }
         if data.get('name'):
             vals['name'] = data['name']
@@ -137,6 +140,7 @@ class ResPartner(models.Model):
 
     def action_l10n_ar_update_from_padron(self):
         """Consulta explícita y de solo lectura a ARCA; aplica datos solo tras validar respuesta."""
+        warnings = []
         for partner in self:
             try:
                 cuit = ''.join(char for char in (partner.vat or '') if char.isdigit())
@@ -146,10 +150,8 @@ class ResPartner(models.Model):
                     ) % (partner.vat or ''))
 
                 data = partner._l10n_ar_fetch_padron_data(cuit)
-                partner.write({
-                    **partner._l10n_ar_padron_partner_vals(data),
-                    'l10n_ar_padron_error': False,
-                })
+                partner.write(partner._l10n_ar_padron_partner_vals(data))
+                warnings.extend(data.get('warnings') or [])
             except UserError as error:
                 partner.write({'l10n_ar_padron_error': str(error)[:500]})
                 return {
@@ -177,6 +179,17 @@ class ResPartner(models.Model):
                     },
                 }
 
+        if warnings:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Padrón ARCA actualizado con observaciones'),
+                    'message': _('Se cargaron los datos disponibles. ARCA informa: %s') % ' | '.join(warnings),
+                    'type': 'warning',
+                    'sticky': True,
+                },
+            }
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -215,7 +228,8 @@ class ResPartner(models.Model):
                         'display_name': related.display_name,
                     }
             return {
-                'values': {**values, 'l10n_ar_padron_error': False},
+                'values': values,
+                'warnings': data.get('warnings') or [],
             }
         except UserError as error:
             return {'error': str(error)[:500]}
@@ -242,6 +256,21 @@ class ResPartner(models.Model):
             return (node.text or '').strip() if node is not None else ''
 
         general = child(person_return, 'datosGenerales')
+        # Observations ARCA attaches to the answer ("CUIT limitada", "pendiente
+        # la constitución del domicilio fiscal electrónico"...). They do not
+        # stop the lookup: the available data is loaded and the user is warned.
+        warnings = []
+        for section_name in ('errorConstancia', 'errorRegimenGeneral', 'errorMonotributo'):
+            section = child(person_return, section_name)
+            if section is None:
+                continue
+            for node in section.iter():
+                if local_name(node) == 'error' and (node.text or '').strip():
+                    message = (node.text or '').strip()
+                    if message not in warnings:
+                        warnings.append(message)
+        if general is None:
+            general = child(person_return, 'errorConstancia')
         if general is None:
             raise UserError(_('La respuesta del Padrón no incluye datos generales.'))
         name = text(general, 'razonSocial')
@@ -289,4 +318,5 @@ class ResPartner(models.Model):
             'provincia': text(domicile, 'descripcionProvincia') if domicile is not None else '',
             'responsibility_code': responsibility_code,
             'actividad_code': activity_code,
+            'warnings': warnings,
         }

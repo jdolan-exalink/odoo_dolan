@@ -8,3 +8,4 @@ from . import test_padron_perceptions
 from . import test_provincial_ddjj
 from . import test_foreign_currency
 from . import test_fce
+from . import test_arca_certificates
