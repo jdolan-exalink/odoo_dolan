@@ -439,7 +439,7 @@ class DolanPayrollSlip(models.Model):
     def _check_can_sign(self):
         self.ensure_one()
         is_owner = self.sudo().employee_id.user_id == self.env.user
-        if not is_owner and not self.env.user.has_group('hr.group_hr_manager'):
+        if not is_owner and not self.env.user.has_group('DOLAN_payroll_ar.group_dolan_payroll_manager'):
             raise AccessError(_('Sólo el empleado puede firmar su recibo.'))
         if self.state != 'done':
             raise UserError(_('Sólo se firman recibos confirmados.'))

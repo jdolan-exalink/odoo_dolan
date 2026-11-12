@@ -39,6 +39,7 @@ EXPECTED_MODULES = [
     "DOLAN_credit_limit",
     "DOLAN_pricelist",
     "DOLAN_payment_terminal",
+    "DOLAN_hr_core",
     "DOLAN_payroll_ar",
     "ePOS_print",
     "pos_scale_management",

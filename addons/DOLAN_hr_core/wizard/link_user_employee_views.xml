@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_hr_link_user_employee_form" model="ir.ui.view">
+        <field name="name">dolan.hr.link.user.employee.form</field>
+        <field name="model">dolan.hr.link.user.employee</field>
+        <field name="arch" type="xml">
+            <form string="Vincular usuario con empleado">
+                <div class="alert alert-warning" role="alert" invisible="not existing_employee_id">
+                    Este usuario ya tiene ficha en la compañía elegida: <field name="existing_employee_id" readonly="1" class="d-inline"/>.
+                </div>
+                <div class="alert alert-info" role="alert" invisible="existing_employee_id or not candidate_ids">
+                    Encontramos fichas sin usuario que podrían ser de esta persona. Vinculá una en lugar de crear un legajo duplicado.
+                </div>
+                <group>
+                    <group>
+                        <field name="user_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="cuil" placeholder="20-12345678-9"/>
+                    </group>
+                    <group>
+                        <field name="mode" widget="radio"/>
+                        <field name="employee_id" invisible="mode != 'link'" required="mode == 'link'"/>
+                    </group>
+                </group>
+                <field name="candidate_ids" invisible="not candidate_ids" readonly="1">
+                    <list>
+                        <field name="name"/>
+                        <field name="dolan_file_number"/>
+                        <field name="dolan_cuil"/>
+                        <field name="work_email"/>
+                        <field name="department_id"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirmar" class="btn-primary"
+                            invisible="existing_employee_id"/>
+                    <button special="cancel" string="Cancelar" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

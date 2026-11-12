@@ -10,7 +10,7 @@
               action="action_dolan_payroll_my_slips" sequence="5"/>
 
     <menuitem id="menu_dolan_payroll_main" name="Liquidación" parent="menu_dolan_payroll_root"
-              sequence="10" groups="hr.group_hr_user"/>
+              sequence="10" groups="DOLAN_payroll_ar.group_dolan_payroll_user"/>
     <menuitem id="menu_dolan_payroll_runs" name="Liquidaciones" parent="menu_dolan_payroll_main"
               action="action_dolan_payroll_run" sequence="10"/>
     <menuitem id="menu_dolan_payroll_slips" name="Recibos" parent="menu_dolan_payroll_main"
@@ -19,7 +19,7 @@
               action="hr.open_view_employee_list_my" sequence="30"/>
 
     <menuitem id="menu_dolan_payroll_config" name="Configuración" parent="menu_dolan_payroll_root"
-              sequence="90" groups="hr.group_hr_user"/>
+              sequence="90" groups="DOLAN_payroll_ar.group_dolan_payroll_user"/>
     <menuitem id="menu_dolan_payroll_agreements" name="Convenios" parent="menu_dolan_payroll_config"
               action="action_dolan_payroll_agreement" sequence="10"/>
     <menuitem id="menu_dolan_payroll_concepts" name="Conceptos" parent="menu_dolan_payroll_config"
@@ -29,5 +29,5 @@
     <menuitem id="menu_dolan_payroll_tax_brackets" name="Escala de Ganancias" parent="menu_dolan_payroll_config"
               action="action_dolan_payroll_tax_bracket" sequence="40"/>
     <menuitem id="menu_dolan_payroll_company" name="Parámetros de la compañía" parent="menu_dolan_payroll_config"
-              action="action_dolan_payroll_company_settings" sequence="50" groups="hr.group_hr_manager"/>
+              action="action_dolan_payroll_company_settings" sequence="50" groups="DOLAN_payroll_ar.group_dolan_payroll_manager"/>
 </odoo>

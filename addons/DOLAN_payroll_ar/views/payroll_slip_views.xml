@@ -51,9 +51,9 @@
             <form string="Recibo de haberes">
                 <header>
                     <button name="action_compute" type="object" string="Calcular" class="btn-primary"
-                            invisible="state not in ('draft', 'computed')" groups="hr.group_hr_user"/>
+                            invisible="state not in ('draft', 'computed')" groups="DOLAN_payroll_ar.group_dolan_payroll_user"/>
                     <button name="action_confirm" type="object" string="Confirmar" class="btn-primary"
-                            invisible="state != 'computed'" groups="hr.group_hr_user"/>
+                            invisible="state != 'computed'" groups="DOLAN_payroll_ar.group_dolan_payroll_user"/>
                     <button name="action_employee_sign" type="object" string="Firmar en conformidad"
                             class="btn-primary"
                             invisible="state != 'done' or employee_sign_state != 'pending'"/>
@@ -63,7 +63,7 @@
                     <button name="action_verify_signature" type="object" string="Verificar huella"
                             invisible="state != 'done'"/>
                     <button name="action_draft" type="object" string="Volver a borrador"
-                            invisible="state not in ('computed', 'done', 'cancel')" groups="hr.group_hr_manager"/>
+                            invisible="state not in ('computed', 'done', 'cancel')" groups="DOLAN_payroll_ar.group_dolan_payroll_manager"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,computed,done"/>
                 </header>
                 <sheet>

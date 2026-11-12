@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_hr_establishment_user,dolan.hr.establishment.user,dolan.hr.establishment,base.group_user,r,
+access_dolan_hr_establishment_manager,dolan.hr.establishment.manager,dolan.hr.establishment,hr.group_hr_manager,crud,
+dolan_hr_establishment_company_rule,dolan.hr.establishment.company.rule,dolan.hr.establishment,,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_hr_link_user_employee,dolan.hr.link.user.employee.user,dolan.hr.link.user.employee,hr.group_hr_user,crud,

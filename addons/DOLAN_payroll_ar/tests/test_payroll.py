@@ -55,7 +55,7 @@ class TestDolanPayroll(TransactionCase):
         cls.manager_employee = cls.env['hr.employee'].create({
             'name': 'Gerente General',
             'company_id': cls.company.id,
-            'dolan_cuil': '20-12345678-6',
+            'dolan_cuil': '20-11122233-9',
             'dolan_payroll_agreement_id': cls.fuera.id,
             'dolan_payroll_basic': 10000000.0,
             'dolan_seniority_date': date(2015, 1, 1),
@@ -269,3 +269,27 @@ class TestDolanPayroll(TransactionCase):
         self.assertIn(run.slip_ids[0].employer_hash.encode(), html)
         with self.assertRaises(UserError):
             run.unlink()
+
+    def test_11_hr_officer_without_payroll_group_sees_no_salaries(self):
+        officer = self.env['res.users'].create({
+            'name': 'Oficial RRHH', 'login': 'oficial.rrhh@example.com',
+            'group_ids': [(6, 0, [self.env.ref('hr.group_hr_user').id])],
+        })
+        payroll_user = self.env['res.users'].create({
+            'name': 'Liquidador', 'login': 'liquidador@example.com',
+            'group_ids': [(6, 0, [self.env.ref('DOLAN_payroll_ar.group_dolan_payroll_user').id])],
+        })
+        run = self._run('Nov 2026', date(2026, 11, 1), date(2026, 11, 30))
+        run.action_compute()
+        # El oficial ve el legajo (CUIL) pero no el básico ni los recibos.
+        self.assertEqual(self.employee.with_user(officer).dolan_cuil, '20-12345678-6')
+        with self.assertRaises(AccessError):
+            self.employee.with_user(officer).read(['dolan_payroll_basic'])
+        # Sólo alcanza la regla de "mis recibos confirmados".
+        self.assertFalse(self.env['dolan.payroll.slip'].with_user(officer).search([]))
+        with self.assertRaises(AccessError):
+            self.env['dolan.payroll.agreement.scale'].with_user(officer).search([])
+        # El liquidador sí, y además es Oficial de Empleados.
+        self.assertTrue(payroll_user.has_group('hr.group_hr_user'))
+        self.assertEqual(self.env['dolan.payroll.slip'].with_user(payroll_user).search([]), run.slip_ids)
+        self.employee.with_user(payroll_user).read(['dolan_payroll_basic'])

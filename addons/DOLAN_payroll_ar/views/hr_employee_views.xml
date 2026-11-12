@@ -7,22 +7,17 @@
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button name="action_dolan_open_payslips" type="object" class="oe_stat_button"
-                        icon="fa-file-text-o" groups="hr.group_hr_user">
+                        icon="fa-file-text-o" groups="DOLAN_payroll_ar.group_dolan_payroll_user">
                     <field name="dolan_payslip_count" widget="statinfo" string="Recibos"/>
                 </button>
             </div>
             <page name="payroll_information" position="after">
-                <page name="dolan_payroll_ar" string="Sueldos AR" groups="hr.group_hr_user">
+                <page name="dolan_payroll_ar" string="Sueldos AR" groups="DOLAN_payroll_ar.group_dolan_payroll_user">
                     <group>
                         <group string="Liquidación">
-                            <field name="dolan_file_number"/>
-                            <field name="dolan_cuil" placeholder="20-12345678-9"/>
                             <field name="dolan_payroll_agreement_id"/>
                             <field name="dolan_payroll_category_id"/>
                             <field name="dolan_payroll_basic"/>
-                            <field name="dolan_seniority_date"/>
-                            <field name="dolan_seniority_years"/>
-                            <field name="dolan_vacation_days"/>
                             <field name="dolan_union_member"/>
                         </group>
                         <group string="Pago">
