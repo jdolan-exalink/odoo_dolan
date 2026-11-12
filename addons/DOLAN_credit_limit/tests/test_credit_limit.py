@@ -51,10 +51,23 @@ class TestDolanCreditLimit(TransactionCase):
         self.assertEqual(order.dolan_credit_override_user_id, self.supervisor)
 
     def test_manual_block(self):
-        self.customer.dolan_credit_blocked = True
+        self.customer.dolan_credit_hold = True
         order = self._order(10.0)
         with self.assertRaises(UserError):
             order.action_confirm()
+
+    def test_overdue_block_only_with_checkbox(self):
+        if 'dolan_credit_blocked' not in self.customer._fields:
+            self.skipTest('El bloqueo por mora lo define DOLAN_accounting')
+        self.customer.dolan_credit_blocked = True
+        self.assertFalse(self.customer._dolan_credit_check(10.0)['blocked'])
+        self._order(10.0).action_confirm()
+        self.customer.dolan_overdue_blocks_sales = True
+        check = self.customer._dolan_credit_check(10.0)
+        self.assertTrue(check['blocked'])
+        self.assertIn('por mora', check['message'])
+        with self.assertRaises(UserError):
+            self._order(10.0).action_confirm()
 
     def test_warning_mode_does_not_block(self):
         self.company.dolan_credit_limit_mode = 'warning'

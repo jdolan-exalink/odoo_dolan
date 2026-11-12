@@ -172,7 +172,7 @@ var Catalog = []ModuleSpec{
 	{
 		ID:          "DOLAN_credit_limit",
 		Title:       "Límite de crédito con bloqueo de ventas",
-		Version:     "20.0.1.0.0",
+		Version:     "20.0.1.0.2",
 		Category:    "Contabilidad",
 		Application: false,
 		Depends:     []string{"sale", "account"},

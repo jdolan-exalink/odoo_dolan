@@ -93,11 +93,11 @@ trap cleanup EXIT
 cd "$PROJECT"
 docker compose ps >/dev/null || { echo "No responde Docker Compose para $PROJECT." >&2; exit 1; }
 
-echo "1/5 Resguardando base de datos..."
+echo "1/6 Resguardando base de datos..."
 umask 077
 docker compose exec -T db sh -c 'exec pg_dump -U "${POSTGRES_USER:-odoo}" -Fc --no-owner "$1"' sh "$DB_NAME" > "$BACKUP/database.dump"
 [[ -s "$BACKUP/database.dump" ]] || { echo "El respaldo de la base quedó vacío." >&2; exit 1; }
-echo "2/5 Resguardando addons y archivos adjuntos..."
+echo "2/6 Resguardando addons y archivos adjuntos..."
 tar -czf "$BACKUP/addons.tar.gz" -C "$PROJECT" addons
 CONFIG_PATHS=()
 for path in Dockerfile docker-compose.yml .env odoo.conf services/local-whisper certs; do
@@ -115,7 +115,7 @@ fi
 
 STAGE="$WORK/addons"
 mkdir -p "$STAGE"
-echo "3/5 Descargando las revisiones fijadas de los módulos..."
+echo "3/6 Descargando las revisiones fijadas de los módulos..."
 while IFS=$'\t' read -r name repo commit; do
   checkout="$WORK/$name"
   git init -q "$checkout"
@@ -134,7 +134,10 @@ done < <(python3 "$REPO/scripts/distribution_lock.py" adhoc)
 if [[ -f "$STAGE/l10n_ar_fiscal_ws/__manifest__.py" ]]; then
   sed -i 's/"installable": False/"installable": True/' "$STAGE/l10n_ar_fiscal_ws/__manifest__.py"
 fi
-for module_dir in "$REPO"/addons/DOLAN_*; do
+# Todos los addons propios del repositorio: DOLAN_* y también los de POS que no
+# llevan ese prefijo (ePOS_print, pos_scale_management).
+for module_dir in "$REPO"/addons/*/; do
+  module_dir="${module_dir%/}"
   [[ -f "$module_dir/__manifest__.py" ]] || continue
   cp -a "$module_dir" "$STAGE/$(basename "$module_dir")"
 done
@@ -143,7 +146,7 @@ done
 # only after every remote repository has cloned successfully and backups exist.
 mapfile -t MODULE_DIRS < <(find "$STAGE" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)
 ((${#MODULE_DIRS[@]})) || { echo "No se descargaron módulos para actualizar." >&2; exit 1; }
-echo "4/5 Aplicando módulos y reconstruyendo la imagen..."
+echo "4/6 Aplicando módulos y reconstruyendo la imagen..."
 docker compose stop odoo
 RESTART_NEEDED=1
 for module in "${MODULE_DIRS[@]}"; do
@@ -155,8 +158,107 @@ cp -a "$REPO/services/local-whisper/." "$PROJECT/services/local-whisper/" 2>/dev
 # must not silently switch the Odoo base image/dependency recipe.
 echo "Conservando el Dockerfile existente; no se actualizará la imagen base implícitamente."
 docker compose build odoo
-echo "5/5 Actualizando todos los módulos instalados de la base..."
+echo "5/6 Actualizando todos los módulos instalados de la base..."
 docker compose run -T --rm --no-deps odoo --logfile= --stop-after-init --no-http -d "$DB_NAME" -u all
+
+echo "6/6 Instalando los módulos nuevos del perfil de la instalación..."
+# Los módulos que una versión nueva agrega a un perfil todavía no están en la
+# base, así que "-u all" no los toca. Se toman del perfil guardado en
+# dolan-installation.json (con las listas del checkout nuevo), de los módulos
+# registrados en ese manifiesto y de DOLAN_ADDONS en el .env.
+PROFILE_NAME=""
+TARGET_MODULES=""
+if [[ -f "$PROJECT/dolan-installation.json" ]]; then
+  IFS=$'\t' read -r PROFILE_NAME TARGET_MODULES < <(python3 - "$PROJECT/dolan-installation.json" <<'PY'
+import json, sys
+with open(sys.argv[1], encoding="utf-8") as f:
+    data = json.load(f)
+modules = data.get("modules") or []
+if isinstance(modules, str):
+    modules = modules.split(",")
+print(str(data.get("profile") or "-") + "\t" + (",".join(m.strip() for m in modules if m.strip()) or "-"))
+PY
+) || true
+  [[ "$PROFILE_NAME" == "-" ]] && PROFILE_NAME=""
+  [[ "$TARGET_MODULES" == "-" ]] && TARGET_MODULES=""
+fi
+case "$PROFILE_NAME" in
+  basico|core) LEGACY_PROFILE=core ;;
+  completo|full) LEGACY_PROFILE=full ;;
+  comercio|servicios) LEGACY_PROFILE="$PROFILE_NAME" ;;
+  *) LEGACY_PROFILE="" ;;
+esac
+if [[ -n "$LEGACY_PROFILE" ]]; then
+  PROFILE_MODULES=$(bash "$REPO/crear_odoo20.sh" --non-interactive --profile "$LEGACY_PROFILE" --list-modules 2>/dev/null | tail -n 1) || PROFILE_MODULES=""
+  TARGET_MODULES="${TARGET_MODULES:+$TARGET_MODULES,}$PROFILE_MODULES"
+fi
+if [[ -f "$PROJECT/.env" ]]; then
+  ENV_MODULES=$(python3 - "$PROJECT/.env" <<'PY'
+import sys
+for line in open(sys.argv[1], encoding="utf-8"):
+    key, sep, value = line.strip().partition("=")
+    if sep and key == "DOLAN_ADDONS":
+        print(value.strip().strip("\"'"))
+        break
+PY
+)
+  TARGET_MODULES="${TARGET_MODULES:+$TARGET_MODULES,}$ENV_MODULES"
+fi
+# Solo nombres válidos, sin repetir y con su carpeta presente en addons.
+mapfile -t TARGET_LIST < <(printf '%s' "$TARGET_MODULES" | tr ',' '\n' | tr -d ' \t\r' | grep -E '^[A-Za-z][A-Za-z0-9_]*$' | sort -u || true)
+AVAILABLE_TARGETS=()
+for module in "${TARGET_LIST[@]}"; do
+  [[ -f "$PROJECT/addons/$module/__manifest__.py" ]] && AVAILABLE_TARGETS+=("$module")
+done
+NEW_MODULES=""
+TARGET_CSV=""
+if ((${#AVAILABLE_TARGETS[@]})); then
+  TARGET_CSV=$(IFS=,; echo "${AVAILABLE_TARGETS[*]}")
+  NEW_MODULES=$(docker compose exec -T db sh -c 'exec psql -U "${POSTGRES_USER:-odoo}" -d "$1" -tAc "$2"' sh "$DB_NAME" \
+    "SELECT COALESCE(string_agg(requested.name, ',' ORDER BY requested.name), '') FROM unnest(string_to_array('${TARGET_CSV}', ',')) AS requested(name) LEFT JOIN ir_module_module m ON m.name = requested.name AND m.state = 'installed' WHERE m.id IS NULL;" | tr -d '[:space:]')
+fi
+if [[ -n "$NEW_MODULES" ]]; then
+  echo "Instalando: $NEW_MODULES"
+  docker compose run -T --rm --no-deps odoo --logfile= --stop-after-init --no-http -d "$DB_NAME" -i "$NEW_MODULES"
+else
+  echo "No hay módulos nuevos para instalar en este perfil."
+fi
+# Registrar la lista final para que los próximos arranques y actualizaciones la usen.
+if [[ -n "$TARGET_CSV" ]]; then
+  python3 - "$PROJECT" "$TARGET_CSV" <<'PY'
+import json, os, sys
+project, modules = sys.argv[1], [m for m in sys.argv[2].split(",") if m]
+manifest = os.path.join(project, "dolan-installation.json")
+if os.path.isfile(manifest):
+    with open(manifest, encoding="utf-8") as f:
+        data = json.load(f)
+    current = data.get("modules") or []
+    if isinstance(current, str):
+        current = current.split(",")
+    data["modules"] = sorted({m.strip() for m in current if m.strip()} | set(modules))
+    tmp = manifest + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+    os.chmod(tmp, os.stat(manifest).st_mode & 0o777)
+    os.replace(tmp, manifest)
+env_path = os.path.join(project, ".env")
+if os.path.isfile(env_path):
+    with open(env_path, encoding="utf-8") as f:
+        lines = f.read().splitlines()
+    for i, line in enumerate(lines):
+        key, sep, value = line.strip().partition("=")
+        if sep and key == "DOLAN_ADDONS":
+            current = [m.strip() for m in value.strip().strip("\"'").split(",") if m.strip()]
+            lines[i] = "DOLAN_ADDONS=" + ",".join(current + [m for m in modules if m not in current])
+            tmp = env_path + ".tmp"
+            with open(tmp, "w", encoding="utf-8") as f:
+                f.write("\n".join(lines) + "\n")
+            os.chmod(tmp, os.stat(env_path).st_mode & 0o777)
+            os.replace(tmp, env_path)
+            break
+PY
+fi
 docker compose up -d odoo
 RESTART_NEEDED=0
 
