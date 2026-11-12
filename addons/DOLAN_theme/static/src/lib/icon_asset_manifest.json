@@ -1868,6 +1868,146 @@
       "upstream_path": "fluent_regular/whatsapp_mask.svg",
       "local_path": "fluent_regular/whatsapp_mask.svg",
       "sha256": "d0e771b2c902ab7472c4b2ee7772be5d5685e3f62a25db30a5980a190490b916"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_3d/scheduling.svg",
+      "local_path": "fluent_3d/scheduling.svg",
+      "sha256": "305df90405b83dd560681b1ac6f9083330fd33a23810df5f1c7e4f5f6ded4871"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_flat/scheduling.svg",
+      "local_path": "fluent_flat/scheduling.svg",
+      "sha256": "9901119049c583188220fbcd8f44c495858c55f95e7e84998e577265c9bf97e5"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_filled/scheduling.svg",
+      "local_path": "fluent_filled/scheduling.svg",
+      "sha256": "5a1d0c03a33dc3355dde866db9f92bfcd14a83190cd3aa7b53a8001cd90f12af"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_regular/scheduling.svg",
+      "local_path": "fluent_regular/scheduling.svg",
+      "sha256": "0e434335bbeb69a9b0b86a5e87ff109b36aef1a864d5542929248ddeac401dc3"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "tabler/scheduling.svg",
+      "local_path": "tabler/scheduling.svg",
+      "sha256": "73480b00288d8a2c346507e9a178e0e84d7bf564b9371e11bc7a0b853442ec9d"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_3d/payroll.svg",
+      "local_path": "fluent_3d/payroll.svg",
+      "sha256": "e27c62917ec29c36ebf1952d2c95eceae35f10c186947fbeb1b12f0c21da1437"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_flat/payroll.svg",
+      "local_path": "fluent_flat/payroll.svg",
+      "sha256": "2cfb4c6d93b3ccdb2b63f6ffbbd5a35f6d32eacb4980dada9d7187f66a61163e"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_filled/payroll.svg",
+      "local_path": "fluent_filled/payroll.svg",
+      "sha256": "f8a4d124e1edf968c279b414ba4e990c3c8e024d1e4522e0b4784283c4c631a2"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_regular/payroll.svg",
+      "local_path": "fluent_regular/payroll.svg",
+      "sha256": "8be4b49513e9099d02b1619c9c9c812c4a3ebb139d0a321a00f690231c67e1db"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "tabler/payroll.svg",
+      "local_path": "tabler/payroll.svg",
+      "sha256": "81716c8a6f88f5c25dac32c371e5cb7904366f12c460e4bfc0a2e852bfefb969"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_3d/hr_management.svg",
+      "local_path": "fluent_3d/hr_management.svg",
+      "sha256": "8da5ec7cbddeb24f29d5c5accfecea9eeb57d5838d047b2840a2b750f591c459"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_flat/hr_management.svg",
+      "local_path": "fluent_flat/hr_management.svg",
+      "sha256": "1a3115c270e6d22d01360724819b7a27eadd2e14d054dc1ea640d1a2928a3626"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_filled/hr_management.svg",
+      "local_path": "fluent_filled/hr_management.svg",
+      "sha256": "ea499a4e12fcc20632fff9482e00dd97944ce5f8837dd35ee5cc3a81545ceafd"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_regular/hr_management.svg",
+      "local_path": "fluent_regular/hr_management.svg",
+      "sha256": "15dfcaac6028bc81de420d160fefaea69c4a22400e4eb5f2d0aca66af6a99c12"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "tabler/hr_management.svg",
+      "local_path": "tabler/hr_management.svg",
+      "sha256": "7a77cb9a3f50bca331a591b6bcaee5bfb2ce1709fb1b7690e098e8249d7e9b06"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_3d/hr_reports.svg",
+      "local_path": "fluent_3d/hr_reports.svg",
+      "sha256": "97ccb89f5e9b8add364fc0e04c06a0258e74fde248545ca28159eb7244468fcf"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_flat/hr_reports.svg",
+      "local_path": "fluent_flat/hr_reports.svg",
+      "sha256": "7c2c6b2b805b2c5c8a54761f536009dbe7aa833cf0f8eb93e9717a5f2a83d6cc"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_filled/hr_reports.svg",
+      "local_path": "fluent_filled/hr_reports.svg",
+      "sha256": "6beff44f2e62f17541d602b8f7af0145fa5a69017061cbbfc6fdee17ccb99533"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "fluent_regular/hr_reports.svg",
+      "local_path": "fluent_regular/hr_reports.svg",
+      "sha256": "9ccc719de8b6901c3f9c0c0fdd5ed06c5f674b03dc837e2d6b5f760a0e8f3e62"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-12",
+      "upstream_path": "tabler/hr_reports.svg",
+      "local_path": "tabler/hr_reports.svg",
+      "sha256": "085b6a4914be62d46359abd219d285b681934ed99d8063544c002c9806166b6c"
     }
   ]
 }

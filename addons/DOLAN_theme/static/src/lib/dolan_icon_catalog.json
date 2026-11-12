@@ -1101,6 +1101,116 @@
         "fluent_regular": "fluent_regular/employees.svg",
         "tabler": null
       }
+    },
+    {
+      "id": "app.scheduling",
+      "label": "Turnos",
+      "category": "people",
+      "semantic": "calendar_clock",
+      "aliases": [
+        "turnos",
+        "planificacion de turnos",
+        "planificación de turnos",
+        "scheduling",
+        "shifts"
+      ],
+      "xmlids": [
+        "DOLAN_hr_scheduling.menu_dolan_scheduling_root"
+      ],
+      "module_ids": [
+        "DOLAN_hr_scheduling"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/scheduling.svg",
+        "fluent_flat": "fluent_flat/scheduling.svg",
+        "fluent_filled": "fluent_filled/scheduling.svg",
+        "fluent_regular": "fluent_regular/scheduling.svg",
+        "tabler": "tabler/scheduling.svg"
+      }
+    },
+    {
+      "id": "app.payroll",
+      "label": "Sueldos",
+      "category": "people",
+      "semantic": "payslip_coin",
+      "aliases": [
+        "sueldos",
+        "liquidacion de sueldos",
+        "liquidación de sueldos",
+        "nomina",
+        "nómina",
+        "payroll"
+      ],
+      "xmlids": [
+        "DOLAN_payroll_ar.menu_dolan_payroll_root"
+      ],
+      "module_ids": [
+        "DOLAN_payroll_ar"
+      ],
+      "color": "green",
+      "assets": {
+        "fluent_3d": "fluent_3d/payroll.svg",
+        "fluent_flat": "fluent_flat/payroll.svg",
+        "fluent_filled": "fluent_filled/payroll.svg",
+        "fluent_regular": "fluent_regular/payroll.svg",
+        "tabler": "tabler/payroll.svg"
+      }
+    },
+    {
+      "id": "app.hr_management",
+      "label": "Gestión RRHH",
+      "category": "people",
+      "semantic": "person_star",
+      "aliases": [
+        "gestion rrhh",
+        "gestión rrhh",
+        "rrhh",
+        "talento",
+        "capacitacion",
+        "capacitación",
+        "talent"
+      ],
+      "xmlids": [
+        "DOLAN_hr_talent.menu_dolan_hr_talent_root"
+      ],
+      "module_ids": [
+        "DOLAN_hr_talent"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/hr_management.svg",
+        "fluent_flat": "fluent_flat/hr_management.svg",
+        "fluent_filled": "fluent_filled/hr_management.svg",
+        "fluent_regular": "fluent_regular/hr_management.svg",
+        "tabler": "tabler/hr_management.svg"
+      }
+    },
+    {
+      "id": "app.hr_reports",
+      "label": "Reportes de Personal",
+      "category": "people",
+      "semantic": "people_chart",
+      "aliases": [
+        "reportes de personal",
+        "informes de personal",
+        "reportes rrhh",
+        "hr reports"
+      ],
+      "xmlids": [
+        "DOLAN_hr_reports.menu_dolan_hr_reports_root"
+      ],
+      "module_ids": [
+        "DOLAN_hr_reports"
+      ],
+      "color": "pink",
+      "assets": {
+        "fluent_3d": "fluent_3d/hr_reports.svg",
+        "fluent_flat": "fluent_flat/hr_reports.svg",
+        "fluent_filled": "fluent_filled/hr_reports.svg",
+        "fluent_regular": "fluent_regular/hr_reports.svg",
+        "tabler": "tabler/hr_reports.svg"
+      }
     }
   ],
   "variant_styles": {
@@ -1113,6 +1223,7 @@
   },
   "notes": [
     "WhatsApp uses a local brand mark; scale and barcode use purpose-built local SVGs to preserve their meaning across icon styles.",
-    "Data Cleaning uses the 20px Fluent System Broom Sparkle resource; SVG viewBox is preserved when displayed at app scale."
+    "Data Cleaning uses the 20px Fluent System Broom Sparkle resource; SVG viewBox is preserved when displayed at app scale.",
+    "Turnos, Sueldos, Gestión RRHH and Reportes de Personal use purpose-built local SVGs in every family (no upstream Fluent Emoji matches them)."
   ]
 }
