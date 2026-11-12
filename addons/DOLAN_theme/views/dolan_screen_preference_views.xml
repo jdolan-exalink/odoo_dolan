@@ -29,6 +29,15 @@
                             <field name="full_width_sheets" widget="boolean_toggle"/>
                         </group>
                     </group>
+                    <group string="Escritorio">
+                        <div colspan="2">
+                            <button name="action_dolan_add_personal_folder" type="object" class="btn-secondary"
+                                    string="Agregar carpeta Personal" icon="fa-folder-o"/>
+                            <div class="text-muted mt-1">
+                                Agrupa Empleados, Vacaciones, Asistencias, Sueldos y Reclutamiento en una carpeta. Solo aparecen las que tenés instaladas y habilitadas; el resto del escritorio no cambia.
+                            </div>
+                        </div>
+                    </group>
                     <group string="Aplicaciones visibles">
                         <field name="hidden_app_menu_ids" widget="many2many_tags" options="{'no_create': true, 'no_create_edit': true}"/>
                         <div class="text-muted">

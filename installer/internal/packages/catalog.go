@@ -32,7 +32,7 @@ type ModuleSpec struct {
 	State       ModuleState `json:"state"`
 }
 
-// Catalog defines the 18 real repository addons and their actual manifest dependencies.
+// Catalog defines the real repository addons and their actual manifest dependencies.
 var Catalog = []ModuleSpec{
 	{
 		ID:          "DOLAN_base",
@@ -80,13 +80,40 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
-		ID:          "DOLAN_payroll_ar",
-		Title:       "Sueldos y Jornales Argentina",
+		ID:          "DOLAN_hr_core",
+		Title:       "Personal: Legajo y estructura",
 		Version:     "20.0.1.0.0",
 		Category:    "Recursos Humanos",
-		Application: true,
-		Depends:     []string{"hr", "account", "l10n_ar", "mail"},
+		Application: false,
+		Depends:     []string{"hr", "analytic"},
 		HasData:     true,
+	},
+	{
+		ID:          "DOLAN_payroll_ar",
+		Title:       "Sueldos y Jornales Argentina",
+		Version:     "20.0.1.1.0",
+		Category:    "Recursos Humanos",
+		Application: true,
+		Depends:     []string{"hr", "DOLAN_hr_core", "account", "l10n_ar", "mail"},
+		HasData:     true,
+	},
+	{
+		ID:          "DOLAN_personal_operativo",
+		Title:       "Personal Operativo (sin nómina)",
+		Version:     "20.0.1.0.0",
+		Category:    "Recursos Humanos",
+		Application: false,
+		Depends:     []string{"DOLAN_hr_core", "hr_holidays", "hr_attendance"},
+		HasData:     false,
+	},
+	{
+		ID:          "DOLAN_personal",
+		Title:       "Personal Completo (con Sueldos)",
+		Version:     "20.0.1.0.0",
+		Category:    "Recursos Humanos",
+		Application: false,
+		Depends:     []string{"DOLAN_personal_operativo", "DOLAN_payroll_ar"},
+		HasData:     false,
 	},
 	{
 		ID:          "DOLAN_l10n_ar_cot",

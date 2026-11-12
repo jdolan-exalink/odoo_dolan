@@ -76,3 +76,29 @@ func TestBlockUninstallModuleWithDataOrDependents(t *testing.T) {
 		t.Fatal("expected uninstalling DOLAN_accounting (with dependent DOLAN_l10n_ar_afip and data) to be blocked")
 	}
 }
+
+func TestPersonalPackagesKeepPayrollOptional(t *testing.T) {
+	operativo, _, ceDeps, err := ResolveDependencies([]string{"DOLAN_personal_operativo"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if hasCatalogEntry(operativo, "DOLAN_payroll_ar") {
+		t.Fatalf("Personal Operativo must not install payroll; got %v", operativo)
+	}
+	if !hasCatalogEntry(operativo, "DOLAN_hr_core") || !hasCatalogEntry(ceDeps, "hr_holidays") || !hasCatalogEntry(ceDeps, "hr_attendance") {
+		t.Fatalf("Personal Operativo must pull core, time off and attendance; mods=%v ce=%v", operativo, ceDeps)
+	}
+	completo, _, _, err := ResolveDependencies([]string{"DOLAN_personal"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, id := range []string{"DOLAN_personal_operativo", "DOLAN_hr_core", "DOLAN_payroll_ar"} {
+		if !hasCatalogEntry(completo, id) {
+			t.Fatalf("Personal Completo must include %s; got %v", id, completo)
+		}
+	}
+	info := core.FindProfileInfo(core.ProfileComplete)
+	if !hasCatalogEntry(info.DolanModules, "DOLAN_personal") {
+		t.Fatalf("profile Completo must install the Personal package")
+	}
+}

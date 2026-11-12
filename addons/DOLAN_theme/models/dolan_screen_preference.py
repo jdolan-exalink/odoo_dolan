@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 
 from .icon_styles import ICON_STYLE_CHOICES
@@ -124,6 +124,21 @@ class DolanScreenPreference(models.Model):
         if not preference:
             preference = self.create({"user_id": self.env.uid})
         return preference
+
+    def action_dolan_add_personal_folder(self):
+        self.ensure_one()
+        desktop = self.env["dolan.desktop.preference"].current_user()
+        placed = desktop.dolan_add_personal_folder()
+        if placed:
+            message = _("La carpeta Personal ya está en tu Inicio con %s aplicaciones.", placed)
+        else:
+            message = _("No tenés aplicaciones de Personal instaladas o habilitadas para tu usuario.")
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {"title": _("Escritorio"), "message": message,
+                       "type": "success" if placed else "warning", "sticky": False},
+        }
 
     @api.model
     def action_open_current_user(self):

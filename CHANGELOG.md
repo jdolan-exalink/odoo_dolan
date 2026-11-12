@@ -6,6 +6,15 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Unreleased]
 
+### Agregado
+- Suite **Personal**, ola 1 (ver `docs/DOLAN_PERSONAL_SUITE.md`):
+  - `DOLAN_hr_core 20.0.1.0.0` (nuevo): legajo único con CUIL validado, número de legajo y fecha de ingreso reconocida, únicos por compañía entre empleados activos; antigüedad y días de vacaciones del art. 150 LCT; establecimientos y centro de costos con vigencia en las versiones estándar del empleado (`hr.version`); grupo **Supervisor de Personal**; asistente **Vincular empleado** en Usuarios, que propone fichas existentes sin usuario (por correo, CUIL o nombre) antes de crear una nueva y reemplaza al botón estándar "Crear empleado".
+  - `DOLAN_personal_operativo` y `DOLAN_personal` (nuevos, paquetes): Personal Operativo instala legajos, Ausencias y Asistencias sin Sueldos; Personal Completo suma Sueldos y Jornales. El perfil Completo del instalador instala Personal Completo.
+  - `DOLAN_theme 20.0.2.79.0`: carpeta **Personal** en el Inicio con Empleados, Ausencias, Asistencias, Sueldos y Reclutamiento (solo las instaladas y que el usuario puede abrir). Los escritorios nuevos la traen; los ya armados la agregan con "Agregar carpeta Personal" en Configuración de pantalla, sin tocar el resto.
+
+### Seguridad
+- `DOLAN_payroll_ar 20.0.1.1.0`: Sueldos tiene permisos propios (**Liquidación de sueldos** y **Responsable de sueldos**) en lugar de los de Empleados; un Oficial de Empleados ya no ve básicos, escalas, recibos ni liquidaciones. Al actualizar, los Oficiales y Administradores de Empleados existentes reciben el grupo equivalente para no perder acceso. CUIL, legajo y fecha de ingreso pasan a `DOLAN_hr_core` con el mismo nombre de campo, sin migrar datos.
+
 ### Seguridad y distribución
 - `DOLAN_ocr`: reemplaza PyMuPDF por `pypdfium2==5.10.1` para renderizar PDFs y decodificar QR; serializa llamadas al motor PDFium y crea PDFs de prueba con ReportLab. Los Dockerfiles Linux, actualización y Windows fijan la misma versión y copian notices del wheel a `/opt/dolan/licenses/pypdfium2`.
 - CI y `scripts/validate_addons.py` ahora enumeran los 18 addons versionados del repositorio, incluidos descuentos, terminales, ePOS y balanzas.

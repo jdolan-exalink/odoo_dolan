@@ -3,7 +3,9 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 from ..controllers.screen_preferences import _catalog_payload
-from ..models.dolan_desktop import DEFAULT_DESKTOP_APP_ORDER, POS_MENU_XMLID
+from ..models.dolan_desktop import (
+    DEFAULT_DESKTOP_APP_ORDER, PERSONAL_FOLDER_NAME, PERSONAL_FOLDER_XMLIDS, POS_MENU_XMLID,
+)
 
 
 @tagged("post_install", "-at_install")
@@ -111,7 +113,10 @@ class TestScreenPreferences(TransactionCase):
         folders = self.env["dolan.desktop.folder"].with_user(self.user).search([
             ("user_id", "=", self.user.id),
         ])
-        self.assertEqual(set(folders.mapped("name")), {"Configuraciones", "Varios"})
+        expected = {"Configuraciones", "Varios"}
+        if self._visible_personal_menus(self.user):
+            expected.add(PERSONAL_FOLDER_NAME)
+        self.assertEqual(set(folders.mapped("name")), expected)
         items = self.env["dolan.desktop.item"].with_user(self.user).search([
             ("user_id", "=", self.user.id),
         ])
@@ -129,8 +134,48 @@ class TestScreenPreferences(TransactionCase):
             set(self.env["dolan.desktop.folder"].with_user(self.user).search([
                 ("user_id", "=", self.user.id),
             ]).mapped("name")),
-            {"Configuraciones", "Mi carpeta"},
+            (expected - {"Varios"}) | {"Mi carpeta"},
         )
+
+    def _visible_personal_menus(self, user):
+        roots = set(self.env["ir.ui.menu"].with_user(user).get_user_roots().ids)
+        menus = [self.env.ref(xmlid, raise_if_not_found=False) for xmlid in PERSONAL_FOLDER_XMLIDS]
+        return [menu for menu in menus if menu and menu.id in roots]
+
+    def test_personal_folder_groups_installed_hr_apps(self):
+        hr_user = self.env.ref("hr.group_hr_user", raise_if_not_found=False)
+        if not hr_user:
+            self.skipTest("Empleados no está instalado")
+        user = self.env["res.users"].create({
+            "name": "RRHH", "login": "dolan-desktop-personal-test",
+            "group_ids": [(6, 0, [hr_user.id])],
+        })
+        menus = self._visible_personal_menus(user)
+        self.assertTrue(menus)
+        Desktop = self.env["dolan.desktop.preference"].with_user(user)
+        Item = self.env["dolan.desktop.item"].with_user(user)
+        Folder = self.env["dolan.desktop.folder"].with_user(user)
+        preference = Desktop.current_user()
+        personal = Folder.search([("user_id", "=", user.id), ("name", "=", PERSONAL_FOLDER_NAME)])
+        self.assertEqual(len(personal), 1)
+        in_folder = Item.search([("user_id", "=", user.id), ("folder_id", "=", personal.id)]).mapped("menu_id")
+        self.assertEqual(set(in_folder.ids), {menu.id for menu in menus})
+
+        # Escritorio ya armado sin la carpeta: el botón la agrega sin tocar lo demás.
+        personal.sudo().unlink()
+        other = Folder.create({"name": "Mías", "sequence": 5})
+        employees = self.env.ref("hr.menu_hr_root")
+        Item.create({"menu_id": employees.id, "folder_id": other.id, "sequence": 10})
+        preference._write_desktop_internal({"layout_version": 3})
+        self.assertEqual(preference.dolan_add_personal_folder(), len(menus))
+        self.assertEqual(preference.dolan_add_personal_folder(), len(menus), "Es idempotente")
+        personal = Folder.search([("user_id", "=", user.id), ("name", "=", PERSONAL_FOLDER_NAME)])
+        self.assertEqual(len(personal), 1)
+        self.assertEqual(Item.search([("menu_id", "=", employees.id), ("user_id", "=", user.id)]).folder_id, personal)
+        self.assertTrue(other.exists())
+        self.assertEqual(preference.layout_version, 3)
+        action = self.env["dolan.screen.preference"].with_user(user).current_user_preferences().action_dolan_add_personal_folder()
+        self.assertEqual(action["params"]["type"], "success")
 
     def _desktop_user(self, login):
         groups = [self.env.ref("base.group_user").id]
