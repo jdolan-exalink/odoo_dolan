@@ -11,7 +11,9 @@
                 <field name="dolan_credit_exposure" widget="monetary"/>
                 <field name="dolan_credit_available" widget="monetary" invisible="not use_partner_credit_limit"
                        decoration-danger="dolan_credit_available &lt; 0"/>
-                <field name="dolan_credit_blocked" widget="boolean_toggle"
+                <field name="dolan_credit_hold" widget="boolean_toggle"
+                       groups="DOLAN_credit_limit.group_credit_limit_override"/>
+                <field name="dolan_overdue_blocks_sales"
                        groups="DOLAN_credit_limit.group_credit_limit_override"/>
             </xpath>
         </field>

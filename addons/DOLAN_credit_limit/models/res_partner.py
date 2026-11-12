@@ -6,8 +6,16 @@ from odoo.tools.misc import formatLang
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    dolan_credit_blocked = fields.Boolean(
-        string='Crédito bloqueado', company_dependent=True,
+    # Bloqueo manual propio. El bloqueo por mora (dolan_credit_blocked) lo define
+    # DOLAN_accounting y solo frena ventas si el cliente tiene el tilde
+    # dolan_overdue_blocks_sales.
+    dolan_overdue_blocks_sales = fields.Boolean(
+        string='La mora bloquea ventas y POS',
+        help='Si el seguimiento de cobranzas marca a este cliente como bloqueado por mora, '
+             'se frenan sus ventas en cuenta corriente y en el Punto de Venta.',
+    )
+    dolan_credit_hold = fields.Boolean(
+        string='Crédito bloqueado',
         help='Bloquea las ventas en cuenta corriente a este cliente aunque no haya superado el límite.',
     )
     dolan_checks_in_portfolio = fields.Monetary(
@@ -70,13 +78,21 @@ class ResPartner(models.Model):
         company = company or self.env.company
         partner = self.commercial_partner_id.with_company(company)
         currency = company.currency_id
-        blocked = bool(partner.sudo().dolan_credit_blocked)
+        sudo_partner = partner.sudo()
+        overdue_blocked = bool(
+            sudo_partner.dolan_overdue_blocks_sales
+            and 'dolan_credit_blocked' in sudo_partner._fields
+            and sudo_partner.dolan_credit_blocked
+        )
+        blocked = bool(sudo_partner.dolan_credit_hold) or overdue_blocked
         limit, exposure, checks = partner._dolan_credit_figures(company)
         total = exposure + amount
         over_limit = bool(company.account_use_credit_limit and limit and currency.compare_amounts(total, limit) > 0)
         message = ''
-        if blocked:
+        if sudo_partner.dolan_credit_hold:
             message = _('%(partner)s tiene el crédito bloqueado.', partner=partner.name)
+        elif overdue_blocked:
+            message = _('%(partner)s tiene el crédito bloqueado por mora.', partner=partner.name)
         elif over_limit:
             message = _(
                 '%(partner)s supera su límite de crédito de %(limit)s: riesgo con esta venta %(total)s '
