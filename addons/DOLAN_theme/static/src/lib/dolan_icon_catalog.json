@@ -1992,7 +1992,8 @@
       "semantic": "appointments",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_turnos_clientes"
+        "DOLAN_app_catalog.menu_app_turnos_clientes",
+        "DOLAN_appointment.menu_dolan_appointment_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"

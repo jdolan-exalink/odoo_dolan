@@ -1,0 +1,7 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_appointment_user,Turnos: recepción,dolan.appointment,DOLAN_appointment.group_appointment_user,cru,"[('company_id', 'in', company_ids)]"
+access_dolan_appointment_manager,Turnos: responsable,dolan.appointment,DOLAN_appointment.group_appointment_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_appointment_type_user,Servicios: recepción,dolan.appointment.type,DOLAN_appointment.group_appointment_user,r,"[('company_id', 'in', company_ids)]"
+access_dolan_appointment_type_manager,Servicios: responsable,dolan.appointment.type,DOLAN_appointment.group_appointment_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_appointment_resource_user,Profesionales: recepción,dolan.appointment.resource,DOLAN_appointment.group_appointment_user,r,"[('company_id', 'in', company_ids)]"
+access_dolan_appointment_resource_manager,Profesionales: responsable,dolan.appointment.resource,DOLAN_appointment.group_appointment_manager,crud,"[('company_id', 'in', company_ids)]"

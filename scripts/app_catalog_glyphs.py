@@ -50,7 +50,7 @@ GLYPHS = {
     "assets": '<path d="M4 20V10l8-6 8 6v10"/><path d="M4 20h16"/><path d="M9.5 20v-6h5v6"/><path d="M15.5 9.5h.01"/>',
     # Servicios
     "contracts": '<path d="M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v5h5"/><path d="M8.5 17c1.2-2 2.2-2 3 0 .6 1.3 1.4 1.3 2.5-.5M8.5 11h5"/>',
-    "appointments": '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/><circle cx="12" cy="15.5" r="2.8"/><path d="M12 14.3v1.4l.9.6"/>',
+    "appointments": '<path d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7z"/><path d="M4.5 7.5h4M4.5 12h4M4.5 16.5h4"/><path d="M11.5 12l2 2 3.5-3.5"/>',
     "helpdesk": '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M14.9 14.9l3.5 3.5M9.1 14.9l-3.5 3.5M5.6 5.6l3.5 3.5M18.4 5.6l-3.5 3.5"/>',
     "service_orders": '<path d="M14.7 6.3a4 4 0 0 0-5.4 5l-5.6 5.6a1.8 1.8 0 0 0 2.5 2.5l5.6-5.6a4 4 0 0 0 5-5.4l-2.5 2.5-2.2-.4-.4-2.2 2.5-2.5"/>',
     # Comunicación e IA
