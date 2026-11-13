@@ -174,6 +174,7 @@ def main():
 
     # 1) Íconos propios en las cinco familias.
     new_assets = {}
+    hashed = {}
     for app in catalog["apps"]:
         stem = icon_stem(app)
         if not stem:
@@ -188,10 +189,27 @@ def main():
             "fluent_regular": svg_regular(glyph),
             "tabler": svg_tabler(glyph),
         }
+        hashed[stem] = {}
         for family, text in files.items():
-            rel = f"{family}/{stem}.svg"
+            digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
+            # El nombre lleva parte del hash: si el dibujo cambia, el navegador no usa el viejo
+            # de su caché (Odoo sirve los estáticos con max-age de una semana).
+            rel = f"{family}/{stem}-{digest[:8]}.svg"
             write(LIB / rel, text, args.check, stale)
-            new_assets[rel] = hashlib.sha256(text.encode("utf-8")).hexdigest()
+            new_assets[rel] = digest
+            hashed[stem][family] = rel
+            if family == "fluent_flat":
+                # Copia con nombre fijo para web_icon de los menús (Odoo la embebe al instalar).
+                write(LIB / f"{family}/{stem}.svg", text, args.check, stale)
+                new_assets[f"{family}/{stem}.svg"] = digest
+    # Borra versiones viejas de los íconos del catálogo que ya no se usan.
+    for family in ("fluent_3d", "fluent_flat", "fluent_filled", "fluent_regular", "tabler"):
+        for path in (LIB / family).glob("catalog_*.svg"):
+            rel = f"{family}/{path.name}"
+            if rel not in new_assets:
+                stale.append(str(path.relative_to(ROOT)))
+                if not args.check:
+                    path.unlink()
 
     # 2) Catálogo de íconos del theme.
     catalog_ids = set()
@@ -209,8 +227,7 @@ def main():
                 "aliases": entry.get("aliases", []) if entry.get("aliases") else [],
                 "xmlids": sorted(set(entry.get("xmlids", [])) | {xmlid} | ({app["menu"]} if app.get("menu") else set())),
                 "module_ids": [MODULE], "color": CATEGORY_COLORS[category][2],
-                "assets": {family: f"{family}/{stem}.svg" for family in
-                           ("fluent_3d", "fluent_flat", "fluent_filled", "fluent_regular", "tabler")},
+                "assets": dict(hashed[stem]),
             })
             if semantic_id not in by_semantic:
                 icon_catalog["apps"].append(entry)
@@ -226,6 +243,8 @@ def main():
     write(ICON_CATALOG, json.dumps(icon_catalog, ensure_ascii=False, indent=2) + "\n", args.check, stale)
 
     # 3) Manifiesto de recursos.
+    manifest["assets"] = [asset for asset in manifest["assets"]
+                          if not asset["local_path"].split("/")[-1].startswith("catalog_") or asset["local_path"] in new_assets]
     by_path = {asset["local_path"]: asset for asset in manifest["assets"]}
     for rel, digest in sorted(new_assets.items()):
         asset = by_path.get(rel)
@@ -251,7 +270,7 @@ def main():
         print("Archivos del catálogo desactualizados; correr scripts/build_app_catalog.py:")
         print("\n".join(f"  {path}" for path in stale))
         return 1
-    print(f"Catálogo: {len(catalog['apps'])} apps, {len(new_assets) // 5} íconos propios, "
+    print(f"Catálogo: {len(catalog['apps'])} apps, {len(hashed)} íconos propios, "
           f"{len(stale)} archivos {'por actualizar' if args.check else 'actualizados'}.")
     return 0
 
