@@ -77,6 +77,63 @@ class TestScreenPreferences(TransactionCase):
             {"fluent_3d", "fluent_flat", "fluent_filled", "fluent_regular", "tabler"},
         )
 
+    def test_personal_apps_have_their_own_icons_in_every_family(self):
+        assignments, names, xmlids = _catalog_payload(self.env["dolan.icon.assignment"].browse())
+        expected = {
+            "dolan_hr_scheduling.menu_dolan_scheduling_root": ("app.scheduling", "turnos"),
+            "dolan_payroll_ar.menu_dolan_payroll_root": ("app.payroll", "sueldos"),
+            "dolan_hr_talent.menu_dolan_hr_talent_root": ("app.hr_management", "gestion rrhh"),
+            "dolan_hr_reports.menu_dolan_hr_reports_root": ("app.hr_reports", "reportes de personal"),
+        }
+        families = {"fluent_3d", "fluent_flat", "fluent_filled", "fluent_regular", "tabler"}
+        used = {}
+        for xmlid, (semantic, name) in expected.items():
+            self.assertEqual(xmlids[xmlid], semantic)
+            self.assertEqual(names[name], semantic)
+            self.assertEqual(set(assignments[semantic]), families)
+            for family, path in assignments[semantic].items():
+                self.assertNotIn((family, path), used, f"{semantic} repite el icono de {used.get((family, path))}")
+                used[(family, path)] = semantic
+        # Every Personal-folder app resolves to a DOLAN icon, so the folder never
+        # mixes DOLAN artwork with the module's own icon.
+        for xmlid in PERSONAL_FOLDER_XMLIDS:
+            self.assertIn(xmlid.lower(), xmlids, f"{xmlid} no tiene icono DOLAN")
+
+    def test_personal_apps_installed_later_join_the_personal_folder(self):
+        hr_user = self.env.ref("hr.group_hr_user", raise_if_not_found=False)
+        if not hr_user:
+            self.skipTest("Empleados no está instalado")
+        user = self.env["res.users"].create({
+            "name": "RRHH tardío", "login": "dolan-desktop-personal-late",
+            "group_ids": [(6, 0, [hr_user.id])],
+        })
+        menus = self._visible_personal_menus(user)
+        if len(menus) < 2:
+            self.skipTest("Hacen falta al menos dos apps de Personal")
+        Desktop = self.env["dolan.desktop.preference"].with_user(user)
+        Item = self.env["dolan.desktop.item"].with_user(user)
+        Folder = self.env["dolan.desktop.folder"].with_user(user)
+        preference = Desktop.current_user()
+        # Escritorio ya armado sin carpeta Personal y con una app de Personal
+        # puesta a mano en la raíz; otra app "recién instalada" no tiene lugar.
+        Folder.search([("user_id", "=", user.id), ("name", "=", PERSONAL_FOLDER_NAME)]).sudo().unlink()
+        Item.search([("user_id", "=", user.id), ("menu_id", "in", [m.id for m in menus])]).sudo().unlink()
+        kept, *new = menus
+        Item.create({"menu_id": kept.id, "folder_id": False, "sequence": 10})
+        preference._write_desktop_internal({"layout_version": 5})
+
+        Desktop.current_user()
+        personal = Folder.search([("user_id", "=", user.id), ("name", "=", PERSONAL_FOLDER_NAME)])
+        self.assertEqual(len(personal), 1)
+        placed = Item.search([("user_id", "=", user.id), ("folder_id", "=", personal.id)]).mapped("menu_id")
+        self.assertEqual(set(placed.ids), {menu.id for menu in new})
+        self.assertFalse(Item.search([("user_id", "=", user.id), ("menu_id", "=", kept.id)]).folder_id,
+                         "Lo que el usuario ya ubicó no se mueve")
+        self.assertEqual(preference.layout_version, 6, "Un guardado con el escritorio viejo debe dar conflicto")
+
+        Desktop.current_user()
+        self.assertEqual(preference.layout_version, 6, "Si no hay apps nuevas no cambia nada")
+
     def test_workspace_preferences_are_personal_and_validate_widget_keys(self):
         Preference = self.env["dolan.workspace.preference"].with_user(self.user)
         preference = Preference.create({
