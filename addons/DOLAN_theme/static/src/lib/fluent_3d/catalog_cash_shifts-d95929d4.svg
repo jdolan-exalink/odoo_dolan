@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="drawer" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b79cfb"/><stop offset="1" stop-color="#5b21b6"/></linearGradient>
+    <linearGradient id="front" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#4c1d95"/></linearGradient>
+    <linearGradient id="bill" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#86efac"/><stop offset="1" stop-color="#16a34a"/></linearGradient>
+    <linearGradient id="arrow" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fbbf24"/><stop offset="1" stop-color="#d97706"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="1" dy="4" stdDeviation="3" flood-color="#27213c" flood-opacity=".28"/></filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M10 50l8-14h60l8 14Z" fill="url(#drawer)"/>
+    <g transform="rotate(-6 40 42)"><rect x="24" y="34" width="22" height="14" rx="2" fill="url(#bill)"/></g>
+    <g transform="rotate(5 58 42)"><rect x="48" y="34" width="22" height="14" rx="2" fill="url(#bill)"/></g>
+    <path d="M10 50h76v26a6 6 0 0 1-6 6H16a6 6 0 0 1-6-6Z" fill="url(#front)"/>
+    <rect x="38" y="62" width="20" height="6" rx="3" fill="#ede9fe"/>
+    <path d="M28 22a24 24 0 0 1 40 0" fill="none" stroke="url(#arrow)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M70 10l-1 14-13-4Z" fill="#d97706"/>
+  </g>
+</svg>

@@ -11,6 +11,7 @@
 | Servicios | Órdenes de servicio | `DOLAN_field_service` | beta | [DOLAN_field_service.md](DOLAN_field_service.md) |
 | Servicios | Contratos | `DOLAN_service_contract` | beta | [DOLAN_service_contract.md](DOLAN_service_contract.md) |
 | Facturación y Finanzas | Cuentas corrientes | `DOLAN_current_account` | beta | [DOLAN_current_account.md](DOLAN_current_account.md) |
+| Facturación y Finanzas · Punto de venta y caja | Caja y Tesorería · Turnos de caja | `DOLAN_treasury` | beta | [DOLAN_treasury.md](DOLAN_treasury.md) |
 
 **Beta** quiere decir que el módulo está implementado y con pruebas automáticas, pero todavía no pasó QA
 funcional con datos reales. Pasa a operativo cuando cumpla sus criterios de aceptación.

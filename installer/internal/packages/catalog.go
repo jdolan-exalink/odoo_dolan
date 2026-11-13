@@ -107,6 +107,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_treasury",
+		Title:       "Caja y Tesorería: turnos, arqueo y diferencias",
+		Version:     "20.0.1.0.0",
+		Category:    "Contabilidad",
+		Application: true,
+		Depends:     []string{"account", "mail"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_accounting",
 		Title:       "Contabilidad Pro, Conciliación, Activos y Préstamos",
 		Version:     "20.0.1.8.0",

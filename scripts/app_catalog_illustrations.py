@@ -174,4 +174,68 @@ ILLUSTRATIONS = {
 </svg>
 """,
     },
+    # Caja y Tesorería: caja fuerte con perilla y manija (área Finanzas, azul).
+    "treasury": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7fb0ff"/><stop offset="1" stop-color="#1e40af"/></linearGradient>
+    <linearGradient id="door" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#5b8ff0"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient>
+    <radialGradient id="dial" cx=".4" cy=".35" r=".8"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#c7d2e6"/></radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffe08a"/><stop offset="1" stop-color="#d4a017"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="12" y="12" width="72" height="66" rx="10" fill="url(#body)"/>
+    <rect x="19" y="19" width="58" height="52" rx="7" fill="url(#door)" stroke="#9ec0ff" stroke-width="1.5"/>
+    <circle cx="42" cy="45" r="14" fill="url(#dial)"/>
+    <circle cx="42" cy="45" r="5" fill="#1e40af"/>
+    <g stroke="#1e40af" stroke-width="2.5" stroke-linecap="round"><path d="M42 33v4M42 57v-4M30 45h4M54 45h-4"/></g>
+    <rect x="63" y="34" width="6" height="22" rx="3" fill="url(#gold)"/>
+    <rect x="18" y="78" width="10" height="7" rx="2" fill="#1e3a8a"/><rect x="68" y="78" width="10" height="7" rx="2" fill="#1e3a8a"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <rect x="12" y="12" width="72" height="66" rx="10" fill="#1d4ed8"/>
+  <rect x="19" y="19" width="58" height="52" rx="7" fill="#4b8df8"/>
+  <circle cx="42" cy="45" r="14" fill="#ffffff"/>
+  <circle cx="42" cy="45" r="5" fill="#1d4ed8"/>
+  <g stroke="#1d4ed8" stroke-width="2.5" stroke-linecap="round"><path d="M42 33v4M42 57v-4M30 45h4M54 45h-4"/></g>
+  <rect x="63" y="34" width="6" height="22" rx="3" fill="#f6bd3a"/>
+  <rect x="18" y="78" width="10" height="7" rx="2" fill="#1e3a8a"/><rect x="68" y="78" width="10" height="7" rx="2" fill="#1e3a8a"/>
+</svg>
+""",
+    },
+    # Turnos de caja: cajón abierto con billetes y flecha de traspaso entre turnos (área Punto de venta).
+    "cash_shifts": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="drawer" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b79cfb"/><stop offset="1" stop-color="#5b21b6"/></linearGradient>
+    <linearGradient id="front" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#4c1d95"/></linearGradient>
+    <linearGradient id="bill" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#86efac"/><stop offset="1" stop-color="#16a34a"/></linearGradient>
+    <linearGradient id="arrow" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fbbf24"/><stop offset="1" stop-color="#d97706"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M10 50l8-14h60l8 14Z" fill="url(#drawer)"/>
+    <g transform="rotate(-6 40 42)"><rect x="24" y="34" width="22" height="14" rx="2" fill="url(#bill)"/></g>
+    <g transform="rotate(5 58 42)"><rect x="48" y="34" width="22" height="14" rx="2" fill="url(#bill)"/></g>
+    <path d="M10 50h76v26a6 6 0 0 1-6 6H16a6 6 0 0 1-6-6Z" fill="url(#front)"/>
+    <rect x="38" y="62" width="20" height="6" rx="3" fill="#ede9fe"/>
+    <path d="M28 22a24 24 0 0 1 40 0" fill="none" stroke="url(#arrow)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M70 10l-1 14-13-4Z" fill="#d97706"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <path d="M10 50l8-14h60l8 14Z" fill="#a78bfa"/>
+  <g transform="rotate(-6 40 42)"><rect x="24" y="34" width="22" height="14" rx="2" fill="#22c55e"/></g>
+  <g transform="rotate(5 58 42)"><rect x="48" y="34" width="22" height="14" rx="2" fill="#22c55e"/></g>
+  <path d="M10 50h76v26a6 6 0 0 1-6 6H16a6 6 0 0 1-6-6Z" fill="#7c3aed"/>
+  <rect x="38" y="62" width="20" height="6" rx="3" fill="#ede9fe"/>
+  <path d="M28 22a24 24 0 0 1 40 0" fill="none" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
+  <path d="M70 10l-1 14-13-4Z" fill="#f59e0b"/>
+</svg>
+""",
+    },
 }

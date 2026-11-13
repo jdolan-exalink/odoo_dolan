@@ -19,7 +19,7 @@ GLYPHS = {
     "debtors": '<circle cx="10" cy="8" r="3.5"/><path d="M4 20v-1a5 5 0 0 1 5-5h2"/><circle cx="17.5" cy="17" r="3.5"/><path d="M17.5 15.5v1.8l1 .7"/>',
     "collections": '<path d="M3 15h4l3 2h5a1.5 1.5 0 0 0 0-3h-3"/><path d="M7 15v4H3v-4"/><path d="M11 14l6.3-2.3a1.6 1.6 0 0 1 1.2 3L13 18"/><circle cx="15" cy="6" r="3"/>',
     "vendor_payments": '<rect x="3" y="7" width="15" height="11" rx="2"/><path d="M18 4l3 3-3 3M21 7h-6"/><circle cx="10.5" cy="12.5" r="2.3"/><path d="M6 10.5v4"/>',
-    "treasury": '<path d="M4 10h16v10H4z"/><path d="M3 10l9-6 9 6"/><path d="M8 13v4M12 13v4M16 13v4"/>',
+    "treasury": '<rect x="3.5" y="4" width="17" height="15" rx="2.5"/><circle cx="11" cy="11.5" r="3.5"/><path d="M11 9.5v1M11 13.5v-1M9 11.5h1M13 11.5h-1"/><path d="M17 9v5"/><path d="M6 19v1.5M18 19v1.5"/>',
     "banks": '<path d="M3 9l9-5 9 5"/><path d="M4 20h16M5 9v8M9.5 9v8M14.5 9v8M19 9v8M4 17h16"/>',
     "checks": '<rect x="2.5" y="6" width="19" height="12" rx="2"/><path d="M6 14.5c1-1.5 2-1.5 3 0s2 1.5 3 0M15 14h3M6 9.5h5"/><path d="M15 10h3"/>',
     "reconciliation": '<path d="M4 7h11M12 4l3 3-3 3"/><path d="M20 17H9M12 14l-3 3 3 3"/>',
@@ -28,7 +28,7 @@ GLYPHS = {
     "financial_reports": '<path d="M4 20h16"/><rect x="5" y="11" width="3" height="6" rx=".8"/><rect x="10.5" y="7" width="3" height="10" rx=".8"/><rect x="16" y="4" width="3" height="13" rx=".8"/>',
     # Punto de venta
     "pos_closing": '<rect x="3" y="10" width="18" height="10" rx="2"/><path d="M6 10V5h8v5"/><path d="M8 7.5h4"/><path d="M8.5 15l2 2 4-4"/>',
-    "cash_shifts": '<rect x="3" y="9" width="13" height="11" rx="2"/><path d="M6 9V5h7v4"/><circle cx="17.5" cy="7.5" r="4"/><path d="M17.5 5.8v1.9l1.2.8"/><path d="M7 14.5h5"/>',
+    "cash_shifts": '<path d="M3 12h18v7a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 19Z"/><path d="M3 12l2-4h14l2 4"/><path d="M10 16h4"/><path d="M8 5a4.5 4.5 0 0 1 8 0M16 5V2.8M16 5h-2.2"/>',
     # Inventario y compras
     "products": '<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/><path d="M8 5.3l8 4.5"/>',
     "suppliers": '<path d="M3 20V9l6-4v4l6-4v4l6-4v15H3Z"/><path d="M7 16h2M12 16h2M17 16h1"/>',

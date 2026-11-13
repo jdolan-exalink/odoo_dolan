@@ -1468,18 +1468,19 @@
       "semantic": "treasury",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_caja_tesoreria"
+        "DOLAN_app_catalog.menu_app_caja_tesoreria",
+        "DOLAN_treasury.menu_dolan_treasury_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "blue",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_treasury-545345c3.svg",
-        "fluent_flat": "fluent_flat/catalog_treasury-40315b83.svg",
-        "fluent_filled": "fluent_filled/catalog_treasury-a83e186a.svg",
-        "fluent_regular": "fluent_regular/catalog_treasury-e50983a6.svg",
-        "tabler": "tabler/catalog_treasury-d1bbe7d9.svg"
+        "fluent_3d": "fluent_3d/catalog_treasury-84fb2d5d.svg",
+        "fluent_flat": "fluent_flat/catalog_treasury-861d4d99.svg",
+        "fluent_filled": "fluent_filled/catalog_treasury-e7ad64f3.svg",
+        "fluent_regular": "fluent_regular/catalog_treasury-d7f9229a.svg",
+        "tabler": "tabler/catalog_treasury-ed79d34f.svg"
       }
     },
     {
@@ -1643,11 +1644,11 @@
       ],
       "color": "violet",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_cash_shifts-54a36e4e.svg",
-        "fluent_flat": "fluent_flat/catalog_cash_shifts-c7d2ef84.svg",
-        "fluent_filled": "fluent_filled/catalog_cash_shifts-a9507db7.svg",
-        "fluent_regular": "fluent_regular/catalog_cash_shifts-be2c60cd.svg",
-        "tabler": "tabler/catalog_cash_shifts-158e2dca.svg"
+        "fluent_3d": "fluent_3d/catalog_cash_shifts-d95929d4.svg",
+        "fluent_flat": "fluent_flat/catalog_cash_shifts-8cfd2292.svg",
+        "fluent_filled": "fluent_filled/catalog_cash_shifts-7020c2f8.svg",
+        "fluent_regular": "fluent_regular/catalog_cash_shifts-8285b763.svg",
+        "tabler": "tabler/catalog_cash_shifts-a91eff5f.svg"
       }
     },
     {
