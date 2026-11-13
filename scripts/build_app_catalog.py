@@ -87,7 +87,8 @@ def svg_3d(glyph, light, deep):
 
 def write(path, text, check, stale):
     data = text.encode("utf-8")
-    if path.exists() and path.read_bytes() == data:
+    # Se compara sin CRLF: en Windows git puede convertir los finales de línea al hacer checkout.
+    if path.exists() and path.read_bytes().replace(b"\r\n", b"\n") == data:
         return
     stale.append(str(path.relative_to(ROOT)))
     if not check:
