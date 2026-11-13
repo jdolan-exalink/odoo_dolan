@@ -81,4 +81,34 @@ ILLUSTRATIONS = {
 </svg>
 """,
     },
+    # Órdenes de servicio: pin de ubicación con llave de trabajo (trabajo en el domicilio del cliente).
+    "service_orders": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="pin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffcf5c"/><stop offset="1" stop-color="#c2410c"/></linearGradient>
+    <radialGradient id="face" cx=".4" cy=".35" r=".8"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#ece7dd"/></radialGradient>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#cfd6e3"/><stop offset="1" stop-color="#6b7488"/></linearGradient>
+    <radialGradient id="ground" cx=".5" cy=".5" r=".5"><stop stop-color="#27213c" stop-opacity=".3"/><stop offset="1" stop-color="#27213c" stop-opacity="0"/></radialGradient>
+    {SHADOW}
+  </defs>
+  <ellipse cx="48" cy="86" rx="22" ry="6" fill="url(#ground)"/>
+  <g filter="url(#shadow)">
+    <path d="M48 86S20 60 20 37a28 28 0 0 1 56 0c0 23-28 49-28 49Z" fill="url(#pin)"/>
+    <circle cx="48" cy="37" r="18" fill="url(#face)"/>
+    <path d="M40 46l12-12" stroke="url(#steel)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M57.5 25.5a7 7 0 1 0 3.2 11.3l-6.4-2.5-.6-6.6Z" fill="url(#steel)"/>
+    <circle cx="39.5" cy="46.5" r="3.5" fill="#6b7488"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <ellipse cx="48" cy="86" rx="20" ry="5" fill="#27213c" fill-opacity=".15"/>
+  <path d="M48 86S20 60 20 37a28 28 0 0 1 56 0c0 23-28 49-28 49Z" fill="#f59e0b"/>
+  <circle cx="48" cy="37" r="18" fill="#ffffff"/>
+  <path d="M40 46l12-12" stroke="#64748b" stroke-width="6" stroke-linecap="round"/>
+  <path d="M57.5 25.5a7 7 0 1 0 3.2 11.3l-6.4-2.5-.6-6.6Z" fill="#64748b"/>
+  <circle cx="39.5" cy="46.5" r="3.5" fill="#475569"/>
+</svg>
+""",
+    },
 }

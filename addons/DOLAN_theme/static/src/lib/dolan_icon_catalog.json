@@ -2036,7 +2036,8 @@
       "semantic": "service_orders",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_ordenes_servicio"
+        "DOLAN_app_catalog.menu_app_ordenes_servicio",
+        "DOLAN_field_service.menu_dolan_field_service_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"

@@ -20,6 +20,7 @@ EXPECTED_MODULES = [
     "DOLAN_app_catalog",
     "DOLAN_helpdesk",
     "DOLAN_appointment",
+    "DOLAN_field_service",
     "DOLAN_l10n_ar_afip",
     "DOLAN_l10n_ar_cot",
     "DOLAN_accounting",
