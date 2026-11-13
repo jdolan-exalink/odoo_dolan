@@ -53,6 +53,15 @@ var Catalog = []ModuleSpec{
 		HasData:     false,
 	},
 	{
+		ID:          "DOLAN_app_catalog",
+		Title:       "Catálogo de apps por carpetas y pantallas En desarrollo",
+		Version:     "20.0.1.0.0",
+		Category:    "UI",
+		Application: false,
+		Depends:     []string{"base", "web", "DOLAN_theme"},
+		HasData:     false,
+	},
+	{
 		ID:          "DOLAN_accounting",
 		Title:       "Contabilidad Pro, Conciliación, Activos y Préstamos",
 		Version:     "20.0.1.8.0",

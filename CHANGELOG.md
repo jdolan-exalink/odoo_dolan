@@ -7,6 +7,9 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 ## [Unreleased]
 
 ### Agregado
+- `DOLAN_app_catalog 20.0.1.0.0` (nuevo, E1 del PRD maestro): catálogo de 94 apps en 11 carpetas del Inicio. Cada ícono abre la app real si está instalada y el usuario tiene permiso; si no, una pantalla informativa (En desarrollo, Planificado o Disponible para instalar) sin operaciones. Reutiliza las carpetas del theme, ubica cada ícono una sola vez y no mueve lo que el usuario acomodó. Panel de administración con estado, evidencia, prioridad y opción de ocultar apps o limitar las pantallas informativas a administradores. Nunca instala módulos. Se agrega a todos los perfiles del instalador.
+- `DOLAN_theme`: 56 íconos nuevos para las apps del catálogo en los cinco juegos (Mosaico, Mosaico de marca, Contorno, Expresivo 3D y los heredados), generados por `scripts/build_app_catalog.py`.
+- Auditoría E0: `docs/audits/AUDITORIA_REPO.md` y `docs/audits/MATRIZ_COBERTURA.csv` (`scripts/audit_inventory.py`, `scripts/app_catalog_matrix.py`).
 - Suite **Personal**, ola 1 (ver `docs/DOLAN_PERSONAL_SUITE.md`):
   - `DOLAN_hr_core 20.0.1.0.0` (nuevo): legajo único con CUIL validado, número de legajo y fecha de ingreso reconocida, únicos por compañía entre empleados activos; antigüedad y días de vacaciones del art. 150 LCT; establecimientos y centro de costos con vigencia en las versiones estándar del empleado (`hr.version`); grupo **Supervisor de Personal**; asistente **Vincular empleado** en Usuarios, que propone fichas existentes sin usuario (por correo, CUIL o nombre) antes de crear una nueva y reemplaza al botón estándar "Crear empleado".
   - `DOLAN_personal_operativo` y `DOLAN_personal` (nuevos, paquetes): Personal Operativo instala legajos, Ausencias y Asistencias sin Sueldos; Personal Completo suma Sueldos y Jornales. El perfil Completo del instalador instala Personal Completo.

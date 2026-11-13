@@ -173,7 +173,9 @@ class TestScreenPreferences(TransactionCase):
         expected = {"Configuraciones", "Varios"}
         if self._visible_personal_menus(self.user):
             expected.add(PERSONAL_FOLDER_NAME)
-        self.assertEqual(set(folders.mapped("name")), expected)
+        # DOLAN_app_catalog (si está instalado) suma sus carpetas; acá se mira solo las del theme.
+        catalog = set(self.env["dolan.app.catalog.folder"].search([]).mapped("name"))             if "dolan.app.catalog.folder" in self.env else set()
+        self.assertEqual(set(folders.mapped("name")) - catalog, expected - catalog)
         items = self.env["dolan.desktop.item"].with_user(self.user).search([
             ("user_id", "=", self.user.id),
         ])
@@ -190,8 +192,8 @@ class TestScreenPreferences(TransactionCase):
         self.assertEqual(
             set(self.env["dolan.desktop.folder"].with_user(self.user).search([
                 ("user_id", "=", self.user.id),
-            ]).mapped("name")),
-            (expected - {"Varios"}) | {"Mi carpeta"},
+            ]).mapped("name")) - catalog,
+            ((expected - {"Varios"}) | {"Mi carpeta"}) - catalog,
         )
 
     def _visible_personal_menus(self, user):

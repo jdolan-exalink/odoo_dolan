@@ -30,6 +30,9 @@ jobs:
       - name: Verificar idioma único es_AR del instalador
         run: python scripts/test_installer_locale_es_ar.py
 
+      - name: Verificar que el catálogo de apps generado esté al día
+        run: python scripts/build_app_catalog.py --check
+
       - name: Compilar todo el código Python (sintaxis)
         run: python -m compileall -q addons scripts
 

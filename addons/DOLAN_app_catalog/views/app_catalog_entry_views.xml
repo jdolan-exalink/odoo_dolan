@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_app_catalog_entry_list" model="ir.ui.view">
+        <field name="name">dolan.app.catalog.entry.list</field>
+        <field name="model">dolan.app.catalog.entry</field>
+        <field name="arch" type="xml">
+            <list string="Catálogo de apps" editable="bottom" create="false" delete="false"
+                  decoration-muted="not shown" decoration-info="runtime_state in ('en_desarrollo', 'planificado')"
+                  decoration-warning="runtime_state == 'beta'">
+                <field name="folder_id" column_invisible="1"/>
+                <field name="name"/>
+                <field name="runtime_state" widget="badge"
+                       decoration-success="runtime_state == 'operativo'"
+                       decoration-warning="runtime_state == 'beta'"
+                       decoration-info="runtime_state in ('en_desarrollo', 'planificado', 'disponible')"
+                       decoration-muted="runtime_state == 'no_disponible'"/>
+                <field name="evidence_status" optional="show"/>
+                <field name="priority" optional="show"/>
+                <field name="implementation_module" optional="show"/>
+                <field name="module_state" optional="hide"/>
+                <field name="profile_tags" optional="hide"/>
+                <field name="capabilities" optional="hide"/>
+                <field name="shown" optional="show"/>
+                <field name="admin_hidden"/>
+                <field name="admin_sequence" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_app_catalog_entry_form" model="ir.ui.view">
+        <field name="name">dolan.app.catalog.entry.form</field>
+        <field name="model">dolan.app.catalog.entry</field>
+        <field name="arch" type="xml">
+            <form string="App del catálogo" create="false" delete="false">
+                <header>
+                    <field name="runtime_state" widget="statusbar" statusbar_visible="operativo,beta,disponible,en_desarrollo,planificado"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                        <field name="description"/>
+                    </div>
+                    <group>
+                        <group string="Estado">
+                            <field name="product_status"/>
+                            <field name="evidence_status"/>
+                            <field name="priority"/>
+                            <field name="capabilities"/>
+                            <field name="shown"/>
+                        </group>
+                        <group string="Administración">
+                            <field name="admin_hidden"/>
+                            <field name="admin_sequence"/>
+                            <field name="folder_id"/>
+                            <field name="profile_tags"/>
+                        </group>
+                        <group string="Implementación">
+                            <field name="implementation_module"/>
+                            <field name="module_state"/>
+                            <field name="menu_xmlid"/>
+                            <field name="action_xmlid"/>
+                            <field name="required_groups"/>
+                        </group>
+                        <group string="Resolución">
+                            <field name="target_menu_id"/>
+                            <field name="catalog_menu_id"/>
+                            <field name="icon"/>
+                            <field name="last_reviewed_commit"/>
+                        </group>
+                    </group>
+                    <group string="Funcionalidades previstas">
+                        <field name="planned_features_text" nolabel="1" colspan="2"/>
+                    </group>
+                    <group string="Criterios de aceptación">
+                        <field name="acceptance_text" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_app_catalog_entry_search" model="ir.ui.view">
+        <field name="name">dolan.app.catalog.entry.search</field>
+        <field name="model">dolan.app.catalog.entry</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="implementation_module"/>
+                <field name="capabilities"/>
+                <filter name="shown" string="Visibles" domain="[('shown', '=', True)]"/>
+                <filter name="hidden" string="Ocultas por el administrador" domain="[('admin_hidden', '=', True)]"/>
+                <separator/>
+                <filter name="real" string="Operativas o beta" domain="[('runtime_state', 'in', ('operativo', 'beta'))]"/>
+                <filter name="pending" string="Sin implementar" domain="[('runtime_state', 'in', ('en_desarrollo', 'planificado'))]"/>
+                <filter name="installable" string="Disponibles para instalar" domain="[('runtime_state', '=', 'disponible')]"/>
+                <separator/>
+                <filter name="p0" string="P0" domain="[('priority', '=', 'P0')]"/>
+                <group>
+                    <filter name="group_folder" string="Carpeta" context="{'group_by': 'folder_id'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'runtime_state'}"/>
+                    <filter name="group_evidence" string="Evidencia" context="{'group_by': 'evidence_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_app_catalog_entry" model="ir.actions.act_window">
+        <field name="name">Catálogo de apps</field>
+        <field name="res_model">dolan.app.catalog.entry</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_dolan_app_catalog_entry_search"/>
+        <field name="context">{'search_default_group_folder': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no se sincronizó el catálogo</p>
+            <p>Usá Opciones → Sincronizar para importar las apps desde el archivo del módulo.</p>
+        </field>
+    </record>
+
+    <record id="view_dolan_app_catalog_settings_form" model="ir.ui.view">
+        <field name="name">dolan.app.catalog.settings.form</field>
+        <field name="model">dolan.app.catalog.settings</field>
+        <field name="arch" type="xml">
+            <form string="Opciones del catálogo">
+                <group>
+                    <field name="placeholder_visibility" widget="radio"/>
+                    <field name="installer_profile"/>
+                </group>
+                <p class="text-muted">
+                    Las apps sin implementar muestran una pantalla informativa, sin operaciones.
+                    Mostrar un ícono nunca instala un módulo. Para ocultar una app puntual, usá la columna
+                    «Oculta» en la lista del catálogo.
+                </p>
+                <footer>
+                    <button name="action_save" type="object" string="Guardar" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_app_catalog_settings" model="ir.actions.act_window">
+        <field name="name">Opciones del catálogo</field>
+        <field name="res_model">dolan.app.catalog.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_dolan_app_catalog_sync" model="ir.actions.server">
+        <field name="name">Sincronizar catálogo</field>
+        <field name="model_id" ref="model_dolan_app_catalog_entry"/>
+        <field name="group_ids" eval="[(4, ref('base.group_system'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_sync_catalog()</field>
+    </record>
+
+    <record id="action_dolan_app_catalog_my_desktop" model="ir.actions.server">
+        <field name="name">Ordenar mi Escritorio por carpetas</field>
+        <field name="model_id" ref="model_dolan_app_catalog_entry"/>
+        <field name="group_ids" eval="[(4, ref('base.group_system'))]"/>
+        <field name="state">code</field>
+        <field name="code">env['dolan.desktop.preference'].current_user().dolan_apply_catalog_folders()
+action = {'type': 'ir.actions.client', 'tag': 'reload'}</field>
+    </record>
+
+    <menuitem id="menu_app_catalog_entries" name="Apps" parent="menu_app_catalogo_apps"
+              action="action_dolan_app_catalog_entry" sequence="10" groups="base.group_system"/>
+    <menuitem id="menu_app_catalog_options" name="Opciones" parent="menu_app_catalogo_apps"
+              sequence="20" groups="base.group_system"/>
+    <menuitem id="menu_app_catalog_settings" name="Visibilidad" parent="menu_app_catalog_options"
+              action="action_dolan_app_catalog_settings" sequence="10"/>
+    <menuitem id="menu_app_catalog_sync" name="Sincronizar catálogo" parent="menu_app_catalog_options"
+              action="action_dolan_app_catalog_sync" sequence="20"/>
+    <menuitem id="menu_app_catalog_my_desktop" name="Ordenar mi Escritorio por carpetas" parent="menu_app_catalog_options"
+              action="action_dolan_app_catalog_my_desktop" sequence="30"/>
+</odoo>
