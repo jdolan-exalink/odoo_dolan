@@ -1,12 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
   <defs>
-    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f6bd3a"/><stop offset="1" stop-color="#c27803"/></linearGradient>
-    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff" stop-opacity=".55"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="sheet" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#efe8da"/></linearGradient>
+    <linearGradient id="fold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4ead6"/><stop offset="1" stop-color="#d9cbb0"/></linearGradient>
+    <radialGradient id="seal" cx=".4" cy=".35" r=".8"><stop stop-color="#ffd166"/><stop offset="1" stop-color="#c27803"/></radialGradient>
+    <linearGradient id="ribbon" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e5484d"/><stop offset="1" stop-color="#a1191f"/></linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="1" dy="4" stdDeviation="3" flood-color="#27213c" flood-opacity=".28"/></filter>
   </defs>
   <g filter="url(#shadow)">
-    <rect x="10" y="10" width="76" height="76" rx="24" fill="url(#body)"/>
-    <path d="M34 10h28a24 24 0 0 1 24 24v2c-14-6-62-6-76 0v-2a24 24 0 0 1 24-24Z" fill="url(#shine)"/>
-    <g transform="translate(18 18) scale(2.5)" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v5h5"/><path d="M8.5 17c1.2-2 2.2-2 3 0 .6 1.3 1.4 1.3 2.5-.5M8.5 11h5"/></g>
+    <path d="M18 8h40l18 18v58a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4Z" fill="url(#sheet)"/>
+    <path d="M58 8v14a4 4 0 0 0 4 4h14Z" fill="url(#fold)"/>
+    <g fill="#d6ccb8"><rect x="24" y="24" width="26" height="4" rx="2"/><rect x="24" y="34" width="40" height="4" rx="2"/><rect x="24" y="44" width="34" height="4" rx="2"/></g>
+    <path d="M24 66c4-7 7-7 9 0 2 5 4 5 7-1" fill="none" stroke="#1d4ed8" stroke-width="3" stroke-linecap="round"/>
+    <path d="M58 72l-4 18 8-4 8 4-4-18Z" fill="url(#ribbon)"/>
+    <circle cx="62" cy="66" r="13" fill="url(#seal)" stroke="#fff3d6" stroke-width="2.5"/>
+    <path d="M62 58.5l2.2 4.5 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5-3.6-3.5 5-.7Z" fill="#fff3d6"/>
   </g>
 </svg>

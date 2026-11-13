@@ -7,6 +7,12 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 ## [Unreleased]
 
 ### Agregado
+- Apps de **Servicios** (E2 del PRD maestro), todas `20.0.1.0.0` y en los perfiles Servicios y Completo del instalador:
+  - `DOLAN_helpdesk` (**Mesa de ayuda**): tickets numerados con equipos, etapas, SLA por prioridad sobre el horario laboral del equipo (en término, en riesgo, vencido, cumplido), alias de correo que abre tickets, asignación balanceada, solución obligatoria al cerrar y aviso al cliente por WhatsApp.
+  - `DOLAN_appointment` (**Agenda de turnos**): servicios con duración, profesionales o recursos con horario y zona horaria, turnos sin superposición y dentro del horario, horarios libres por día y recordatorio por correo o WhatsApp.
+  - `DOLAN_field_service` (**Órdenes de servicio**): técnico, agenda, horas, materiales, conformidad firmada y factura borrador; el técnico ve solo sus órdenes.
+  - `DOLAN_service_contract` (**Contratos**): vigencia, renovación automática, aviso de fin y ajuste periódico por índice (IPC, ICL, CER, CAC) o porcentaje, con historial; actualiza también los precios de la suscripción vinculada.
+  - Íconos propios ilustrados para las cuatro en Expresivo 3D y Flat, y glifos en Mosaico, Contorno y Tabler, sin repetir los de otras apps.
 - `DOLAN_app_catalog 20.0.1.0.0` (nuevo, E1 del PRD maestro): catálogo de 94 apps en 11 carpetas del Inicio. Cada ícono abre la app real si está instalada y el usuario tiene permiso; si no, una pantalla informativa (En desarrollo, Planificado o Disponible para instalar) sin operaciones. Reutiliza las carpetas del theme, ubica cada ícono una sola vez y no mueve lo que el usuario acomodó. Panel de administración con estado, evidencia, prioridad y opción de ocultar apps o limitar las pantallas informativas a administradores. Nunca instala módulos. Se agrega a todos los perfiles del instalador.
 - `DOLAN_theme`: 56 íconos nuevos para las apps del catálogo en los cinco juegos (Mosaico, Mosaico de marca, Contorno, Expresivo 3D y los heredados), generados por `scripts/build_app_catalog.py`.
 - Auditoría E0: `docs/audits/AUDITORIA_REPO.md` y `docs/audits/MATRIZ_COBERTURA.csv` (`scripts/audit_inventory.py`, `scripts/app_catalog_matrix.py`).

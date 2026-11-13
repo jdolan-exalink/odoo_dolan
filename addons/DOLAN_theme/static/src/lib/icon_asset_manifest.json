@@ -2119,7 +2119,7 @@
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_3d/catalog_contracts.svg",
       "local_path": "fluent_3d/catalog_contracts.svg",
-      "sha256": "7cfa759a828a5a2883e1b35d32be4c00c5ca778ca177a2988eb57023e18b33c5"
+      "sha256": "3c0ecdb96c7022e86fddad3cb25c437a3a89bf0afbe10e073ecbf23b78567103"
     },
     {
       "library": "dolan_custom",
@@ -2511,7 +2511,7 @@
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_filled/catalog_contracts.svg",
       "local_path": "fluent_filled/catalog_contracts.svg",
-      "sha256": "432c02083a6efe718b8a128983cc7b284e0c09dfaee122e67cab665d31be4e67"
+      "sha256": "d207298cb320d225c670bcd250a330411ea4a78dc1be9819b3be54e048dff3f4"
     },
     {
       "library": "dolan_custom",
@@ -2903,7 +2903,7 @@
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_contracts.svg",
       "local_path": "fluent_flat/catalog_contracts.svg",
-      "sha256": "fdede09d2c6398bbc08b9974211bd0d5167ed038a2e1ec9b8cca48ffebc062e1"
+      "sha256": "97b5e2a07a92dceffbb1f0a9ac39de6f56bff0172b0d2b87578d03d08cab0d32"
     },
     {
       "library": "dolan_custom",
@@ -3295,7 +3295,7 @@
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_regular/catalog_contracts.svg",
       "local_path": "fluent_regular/catalog_contracts.svg",
-      "sha256": "3ebfbbb66e92d118d741e63cb0e7548250c11ec420096648cfe23d78620d3709"
+      "sha256": "3944582eca22a24a82de19dbeddf42a19bf47e289bbd9ba64aae371d468bd8d9"
     },
     {
       "library": "dolan_custom",
@@ -3687,7 +3687,7 @@
       "commit": "local-2026-11-13",
       "upstream_path": "tabler/catalog_contracts.svg",
       "local_path": "tabler/catalog_contracts.svg",
-      "sha256": "99f2db81e95f8c31b9fac2bc20c1b7f179865859010119822159262f5596afe0"
+      "sha256": "3e11253d8fe2bd64e4b171624402a776d3649b00a23af5f2879e33084f30efd8"
     },
     {
       "library": "dolan_custom",

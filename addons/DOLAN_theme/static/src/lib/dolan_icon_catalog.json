@@ -1971,7 +1971,8 @@
       "semantic": "contracts",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_contratos"
+        "DOLAN_app_catalog.menu_app_contratos",
+        "DOLAN_service_contract.menu_dolan_contract_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"

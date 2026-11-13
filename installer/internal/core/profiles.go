@@ -50,6 +50,7 @@ var ProfileCatalog = []ProfileInfo{
 			"DOLAN_base", "DOLAN_theme", "DOLAN_app_catalog", "DOLAN_l10n_ar_afip", "DOLAN_accounting", "DOLAN_account_reports",
 			"DOLAN_ai", "DOLAN_ocr", "DOLAN_whatsapp", "DOLAN_subscription",
 			"DOLAN_renting", "DOLAN_views", "DOLAN_knowledge_bi",
+			"DOLAN_helpdesk", "DOLAN_appointment", "DOLAN_field_service", "DOLAN_service_contract",
 		},
 	},
 	{
@@ -96,6 +97,7 @@ var ProfileCatalog = []ProfileInfo{
 			"DOLAN_knowledge_bi", "DOLAN_exchange", "DOLAN_marketplace", "DOLAN_credit_limit_pos", "DOLAN_credit_limit", "DOLAN_pricelist", "DOLAN_discount_engine",
 			"DOLAN_payment_terminal", "ePOS_print", "pos_scale_management",
 			"DOLAN_hr_core", "DOLAN_payroll_ar", "DOLAN_personal_operativo", "DOLAN_personal",
+			"DOLAN_helpdesk", "DOLAN_appointment", "DOLAN_field_service", "DOLAN_service_contract",
 		},
 	},
 	{

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_contract_form" model="ir.ui.view">
+        <field name="name">dolan.contract.form</field>
+        <field name="model">dolan.contract</field>
+        <field name="arch" type="xml">
+            <form string="Contrato">
+                <header>
+                    <button name="action_activate" type="object" string="Poner en vigencia" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_apply_adjustment" type="object" string="Aplicar ajuste" invisible="state != 'active' or adjustment_method == 'none'"
+                            confirm="Se actualiza el importe vigente y, si hay suscripción vinculada, sus precios. ¿Continuar?"/>
+                    <button name="action_cancel" type="object" string="Rescindir" invisible="state not in ('draft', 'active')"/>
+                    <button name="action_reset_draft" type="object" string="Volver a borrador" invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,expired"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <field name="name" readonly="1" class="text-muted" invisible="name == '/'"/>
+                        <h1><field name="title" placeholder="Objeto del contrato"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="subscription_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="auto_renew"/>
+                            <field name="renewal_months" invisible="not auto_renew"/>
+                            <field name="notice_days"/>
+                            <field name="renewal_count" invisible="not renewal_count"/>
+                        </group>
+                    </group>
+                    <group string="Importe y ajuste">
+                        <group>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="base_amount"/>
+                            <field name="current_amount"/>
+                        </group>
+                        <group>
+                            <field name="adjustment_method"/>
+                            <field name="adjustment_percentage" invisible="adjustment_method != 'percentage'"/>
+                            <field name="index_id" invisible="adjustment_method != 'index'" required="adjustment_method == 'index'"/>
+                            <field name="index_lag_months" invisible="adjustment_method != 'index'"/>
+                            <field name="adjustment_period_months" invisible="adjustment_method == 'none'"/>
+                            <field name="last_adjustment_date" invisible="adjustment_method == 'none'"/>
+                            <field name="next_adjustment_date" invisible="adjustment_method == 'none'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Condiciones" name="notes">
+                            <field name="notes"/>
+                        </page>
+                        <page string="Historial de ajustes" name="adjustments" invisible="adjustment_method == 'none'">
+                            <field name="adjustment_ids">
+                                <list>
+                                    <field name="date"/>
+                                    <field name="index_from"/>
+                                    <field name="index_to"/>
+                                    <field name="factor"/>
+                                    <field name="amount_before"/>
+                                    <field name="amount_after"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Documento" name="document">
+                            <group>
+                                <field name="document" filename="document_name"/>
+                                <field name="document_name" invisible="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_contract_list" model="ir.ui.view">
+        <field name="name">dolan.contract.list</field>
+        <field name="model">dolan.contract</field>
+        <field name="arch" type="xml">
+            <list string="Contratos" decoration-muted="state in ('expired', 'cancelled')">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="partner_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="current_amount"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="next_adjustment_date" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'" decoration-warning="state == 'expired'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_contract_search" model="ir.ui.view">
+        <field name="name">dolan.contract.search</field>
+        <field name="model">dolan.contract</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="title"/>
+                <field name="partner_id"/>
+                <filter name="active_state" string="Vigentes" domain="[('state', '=', 'active')]"/>
+                <filter name="to_adjust" string="Con ajuste vencido" domain="[('state', '=', 'active'), ('next_adjustment_date', '&lt;=', 'today')]"/>
+                <filter name="ending" string="Vencen en 60 días" domain="[('state', '=', 'active'), ('date_end', '&lt;=', 'today +60d')]"/>
+                <group>
+                    <filter name="group_partner" string="Cliente" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                    <filter name="group_index" string="Índice" context="{'group_by': 'index_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_contract" model="ir.actions.act_window">
+        <field name="name">Contratos</field>
+        <field name="res_model">dolan.contract</field>
+        <field name="view_mode">list,form,activity</field>
+        <field name="search_view_id" ref="view_dolan_contract_search"/>
+        <field name="context">{'search_default_active_state': 1}</field>
+    </record>
+
+    <record id="view_dolan_contract_index_form" model="ir.ui.view">
+        <field name="name">dolan.contract.index.form</field>
+        <field name="model">dolan.contract.index</field>
+        <field name="arch" type="xml">
+            <form string="Índice">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="last_month"/>
+                    </group>
+                    <field name="value_ids">
+                        <list editable="top">
+                            <field name="month"/>
+                            <field name="value"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_contract_index_list" model="ir.ui.view">
+        <field name="name">dolan.contract.index.list</field>
+        <field name="model">dolan.contract.index</field>
+        <field name="arch" type="xml">
+            <list string="Índices">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="last_month"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_contract_index" model="ir.actions.act_window">
+        <field name="name">Índices de ajuste</field>
+        <field name="res_model">dolan.contract.index</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_dolan_contract_root" name="Contratos" sequence="63"
+              groups="group_contract_user"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_contracts.svg"/>
+    <menuitem id="menu_dolan_contract_contracts" name="Contratos" parent="menu_dolan_contract_root"
+              action="action_dolan_contract" sequence="10"/>
+    <menuitem id="menu_dolan_contract_indexes" name="Índices de ajuste" parent="menu_dolan_contract_root"
+              action="action_dolan_contract_index" sequence="20"/>
+</odoo>

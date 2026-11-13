@@ -49,7 +49,7 @@ GLYPHS = {
     "quality": '<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3Z"/><path d="M9 12l2 2 4-4"/>',
     "assets": '<path d="M4 20V10l8-6 8 6v10"/><path d="M4 20h16"/><path d="M9.5 20v-6h5v6"/><path d="M15.5 9.5h.01"/>',
     # Servicios
-    "contracts": '<path d="M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M14 3v5h5"/><path d="M8.5 17c1.2-2 2.2-2 3 0 .6 1.3 1.4 1.3 2.5-.5M8.5 11h5"/>',
+    "contracts": '<path d="M14 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9l4 4v4"/><path d="M8 8h6M8 11.5h4"/><path d="M7.5 16.5c1-1.6 1.8-1.6 2.4 0 .5 1.1 1.1 1.1 1.8-.3"/><circle cx="18" cy="15.5" r="2.8"/><path d="M16.8 18l-.8 3.5 2-1 2 1-.8-3.5"/>',
     "appointments": '<path d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7z"/><path d="M4.5 7.5h4M4.5 12h4M4.5 16.5h4"/><path d="M11.5 12l2 2 3.5-3.5"/>',
     "helpdesk": '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M14.9 14.9l3.5 3.5M9.1 14.9l-3.5 3.5M5.6 5.6l3.5 3.5M18.4 5.6l-3.5 3.5"/>',
     "service_orders": '<path d="M12 21.5s-7-6-7-12a7 7 0 0 1 14 0c0 6-7 12-7 12Z"/><path d="M10.2 11.8l3.3-3.3"/><path d="M14.6 6.6a1.6 1.6 0 1 0 .8 2.7l-1.9-.8Z"/><path d="M9.4 12.6a.9.9 0 1 0 0 0Z"/>',
