@@ -238,4 +238,39 @@ ILLUSTRATIONS = {
 </svg>
 """,
     },
+    # Costos: etiqueta de precio sobre una pila de monedas (área Inventario y Compras, naranja).
+    "costs": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="tag" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fdba74"/><stop offset="1" stop-color="#c2410c"/></linearGradient>
+    <linearGradient id="coin" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fde68a"/><stop offset="1" stop-color="#d4a017"/></linearGradient>
+    <linearGradient id="coinside" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e0b030"/><stop offset="1" stop-color="#a87a08"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M50 8h28a6 6 0 0 1 6 6v28L52 74 18 40Z" fill="url(#tag)"/>
+    <circle cx="70" cy="22" r="6" fill="#fff7ed"/>
+    <path d="M38 40l16-16M44 46l14-14" stroke="#fff7ed" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+    <g>
+      <path d="M12 74v8c0 4 9 7 20 7s20-3 20-7v-8" fill="url(#coinside)"/>
+      <ellipse cx="32" cy="74" rx="20" ry="7" fill="url(#coin)"/>
+      <path d="M12 64v8c0 4 9 7 20 7s20-3 20-7v-8" fill="url(#coinside)"/>
+      <ellipse cx="32" cy="64" rx="20" ry="7" fill="url(#coin)"/>
+      <text x="32" y="68" font-family="Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="#8a5a00">$</text>
+    </g>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <path d="M50 8h28a6 6 0 0 1 6 6v28L52 74 18 40Z" fill="#fb923c"/>
+  <circle cx="70" cy="22" r="6" fill="#ffffff"/>
+  <path d="M38 40l16-16M44 46l14-14" stroke="#ffedd5" stroke-width="4" stroke-linecap="round"/>
+  <path d="M12 74v8c0 4 9 7 20 7s20-3 20-7v-8" fill="#ca8a04"/>
+  <ellipse cx="32" cy="74" rx="20" ry="7" fill="#facc15"/>
+  <path d="M12 64v8c0 4 9 7 20 7s20-3 20-7v-8" fill="#ca8a04"/>
+  <ellipse cx="32" cy="64" rx="20" ry="7" fill="#facc15"/>
+  <text x="32" y="68" font-family="Arial, sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="#854d0e">$</text>
+</svg>
+""",
+    },
 }

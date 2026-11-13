@@ -116,6 +116,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_product_cost",
+		Title:       "Costos: reposición, última compra y márgenes",
+		Version:     "20.0.1.0.0",
+		Category:    "Compras",
+		Application: true,
+		Depends:     []string{"purchase"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_accounting",
 		Title:       "Contabilidad Pro, Conciliación, Activos y Préstamos",
 		Version:     "20.0.1.8.0",

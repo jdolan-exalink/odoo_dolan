@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_product_cost_history_user,Historial de costos: compras,dolan.product.cost.history,purchase.group_purchase_user,r,"[('company_id', 'in', company_ids)]"
+access_dolan_product_cost_history_manager,Historial de costos: responsable,dolan.product.cost.history,purchase.group_purchase_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_product_margin_user,Márgenes: compras,dolan.product.margin,purchase.group_purchase_user,r,"[('company_id', 'in', company_ids)]"
+access_dolan_product_margin_manager,Márgenes: responsable,dolan.product.margin,purchase.group_purchase_manager,crud,"[('company_id', 'in', company_ids)]"

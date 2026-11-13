@@ -7,6 +7,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 ## [Unreleased]
 
 ### Agregado
+- `DOLAN_product_cost 20.0.1.0.0` (nuevo, **Costos**, carpeta Inventario y Compras): costo de reposición manual o de la última compra confirmada, última compra con proveedor, historial de costos, margen con costo de reposición o promedio según la empresa y análisis de márgenes con alerta por margen mínimo de categoría. En todos los perfiles del instalador. Ver `docs/modulos/DOLAN_product_cost.md`.
 - `DOLAN_treasury 20.0.1.0.0` (nuevo, **Caja y Tesorería** y **Turnos de caja**): cajas con su diario de efectivo controladas contra el saldo contable, turnos por cajero, ingresos, retiros y transferencias asentados, arqueo por billetes y monedas, y diferencias que se asientan solas dentro de la tolerancia o con aprobación del tesorero. En todos los perfiles del instalador. Ver `docs/modulos/DOLAN_treasury.md`.
 - `DOLAN_current_account 20.0.1.0.0` (nuevo, **Cuentas corrientes**, carpeta Facturación y Finanzas): saldos de clientes y proveedores por empresa calculados desde los apuntes conciliables, con vencido, a vencer, antigüedad y anticipos sin aplicar; promesas de pago que se cumplen o vencen solas; estado de cuenta a fecha de corte en PDF, Excel o por correo. En todos los perfiles del instalador. Ver `docs/modulos/DOLAN_current_account.md`.
 - Apps de **Servicios** (E2 del PRD maestro), todas `20.0.1.0.0` y en los perfiles Servicios y Completo del instalador:

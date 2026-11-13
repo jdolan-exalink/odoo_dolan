@@ -24,6 +24,7 @@ EXPECTED_MODULES = [
     "DOLAN_service_contract",
     "DOLAN_current_account",
     "DOLAN_treasury",
+    "DOLAN_product_cost",
     "DOLAN_l10n_ar_afip",
     "DOLAN_l10n_ar_cot",
     "DOLAN_accounting",

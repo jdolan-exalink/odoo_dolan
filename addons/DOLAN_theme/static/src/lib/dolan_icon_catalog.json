@@ -1784,18 +1784,19 @@
       "semantic": "costs",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_costos"
+        "DOLAN_app_catalog.menu_app_costos",
+        "DOLAN_product_cost.menu_dolan_product_cost_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "orange",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_costs-2302a027.svg",
-        "fluent_flat": "fluent_flat/catalog_costs-c7fa3a7f.svg",
-        "fluent_filled": "fluent_filled/catalog_costs-7abbe37c.svg",
-        "fluent_regular": "fluent_regular/catalog_costs-1a111418.svg",
-        "tabler": "tabler/catalog_costs-9fca6a66.svg"
+        "fluent_3d": "fluent_3d/catalog_costs-76241f51.svg",
+        "fluent_flat": "fluent_flat/catalog_costs-df59fa80.svg",
+        "fluent_filled": "fluent_filled/catalog_costs-0688cbaf.svg",
+        "fluent_regular": "fluent_regular/catalog_costs-1896d303.svg",
+        "tabler": "tabler/catalog_costs-df0b1f91.svg"
       }
     },
     {

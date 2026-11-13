@@ -36,7 +36,7 @@ GLYPHS = {
     "transfers": '<rect x="2.5" y="8" width="7" height="7" rx="1.2"/><rect x="14.5" y="8" width="7" height="7" rx="1.2"/><path d="M9.5 10h5M12.5 8l2 2-2 2"/><path d="M14.5 13.5h-5"/>',
     "lots": '<path d="M4 6h3M4 10h3M4 14h3M4 18h3"/><path d="M10 6v12M13 6v12M16 6v12M19 6v12"/>',
     "stock_count": '<rect x="4" y="4" width="16" height="17" rx="2"/><path d="M9 3h6v3H9z"/><path d="M8 11l1.5 1.5L12 10M8 16.5l1.5 1.5L12 15.5M14 11.5h2.5M14 17h2.5"/>',
-    "costs": '<circle cx="12" cy="12" r="9"/><path d="M14.8 9.2A2.5 2.5 0 0 0 12.5 8h-1a2 2 0 0 0 0 4h1a2 2 0 0 1 0 4h-1a2.5 2.5 0 0 1-2.3-1.2M12 6.5V8M12 16v1.5"/>',
+    "costs": '<ellipse cx="9" cy="17" rx="5.5" ry="2"/><path d="M3.5 17v2.5c0 1.1 2.5 2 5.5 2s5.5-.9 5.5-2V17"/><path d="M3.5 13v4M14.5 13v4"/><ellipse cx="9" cy="13" rx="5.5" ry="2"/><path d="M13 4h5.5l2.5 2.5V12l-5 5"/><circle cx="17.5" cy="7.5" r="1"/>',
     # Logística
     "delivery_notes": '<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 11h7M9 14h7M9 17h4"/>',
     "picking": '<path d="M4 7l8-4 8 4-8 4-8-4Z"/><path d="M4 7v9l8 4 8-4V7"/><path d="M8.5 13.5l2 2 4-4"/>',

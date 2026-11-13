@@ -1,7 +1,7 @@
 # Pendientes
 
 Actualizado el 13/11/2026. Lo que está en desarrollo sigue el orden que pidió Juan: Servicios (hecho),
-Facturación y Finanzas (hecho: Cuentas corrientes y Caja y Tesorería), Inventario y Compras. Comercial quedó en pausa.
+Facturación y Finanzas (hecho: Cuentas corrientes y Caja y Tesorería), Inventario y Compras (hecho: Costos; el resto de la carpeta ya eran apps de Odoo). Comercial quedó en pausa.
 
 ## Apps del catálogo sin implementación propia
 
@@ -9,7 +9,6 @@ Facturación y Finanzas (hecho: Cuentas corrientes y Caja y Tesorería), Inventa
 |---|---|---|---|
 | Comercial | Fidelización | en pausa | Propuesta: activar `loyalty`, `sale_loyalty` y `pos_loyalty` de Odoo sin desarrollo propio y revisar que no choquen con `DOLAN_discount_engine`. Falta el OK. |
 | Comercial | Tienda online | en pausa | `website_sale` de Odoo instala el sitio web completo. Queda como «Disponible para instalar» hasta decidir. |
-| Inventario y Compras | Costos | planificado | Próximo después de Finanzas. |
 | Logística | Preparación de pedidos, Rutas y reparto, Prueba de entrega | planificado | Sin empezar. |
 | Gestión y Análisis | Rentabilidad, Flujo de caja, Auditoría, Alertas, Presupuesto financiero | en desarrollo / planificado | Sin empezar. |
 | Configuraciones | Sucursales, Integraciones, Importaciones, Respaldos, Diagnóstico | en desarrollo / planificado | Sin empezar. |
@@ -24,6 +23,8 @@ Detalle en la sección *Pendiente* de cada documento:
 * **Contratos**: descarga automática de índices BCRA/INDEC, PDF del contrato y firma digital, revisión legal.
 * **Caja y Tesorería**: rendición automática del POS a la caja central, turno desde la pantalla del POS, entrega
   de caja entre cajeros, cajas por sucursal y en moneda extranjera.
+* **Costos**: gastos de importación prorrateados con `stock_landed_costs`, reposición en dólares, aviso de
+  aumentos de proveedor.
 * **Cuentas corrientes**: cobranza activa por WhatsApp con reglas (horarios, exclusiones, opt-out, aprobación),
   bloqueo de venta con límite de crédito, multimoneda, filtro por sucursal.
 
