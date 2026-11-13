@@ -1,12 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
   <defs>
-    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f6bd3a"/><stop offset="1" stop-color="#c27803"/></linearGradient>
-    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff" stop-opacity=".55"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+    <radialGradient id="ring" cx=".4" cy=".35" r=".75"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e6e1d6"/></radialGradient>
+    <linearGradient id="band" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffcf5c"/><stop offset="1" stop-color="#d97706"/></linearGradient>
+    <linearGradient id="ticket" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff7e6"/><stop offset="1" stop-color="#ffe0a3"/></linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="1" dy="4" stdDeviation="3" flood-color="#27213c" flood-opacity=".28"/></filter>
   </defs>
   <g filter="url(#shadow)">
-    <rect x="10" y="10" width="76" height="76" rx="24" fill="url(#body)"/>
-    <path d="M34 10h28a24 24 0 0 1 24 24v2c-14-6-62-6-76 0v-2a24 24 0 0 1 24-24Z" fill="url(#shine)"/>
-    <g transform="translate(18 18) scale(2.5)" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/><path d="M19 19a3 3 0 0 1-3 2.5h-2.5"/></g>
+    <circle cx="44" cy="42" r="27" fill="none" stroke="url(#ring)" stroke-width="17"/>
+    <circle cx="44" cy="42" r="27" fill="none" stroke="url(#band)" stroke-width="17" stroke-dasharray="21 21.4" transform="rotate(-34 44 42)"/>
+    <circle cx="44" cy="42" r="35.5" fill="none" stroke="#b45309" stroke-opacity=".35" stroke-width="1.5"/>
+    <circle cx="44" cy="42" r="18.5" fill="none" stroke="#b45309" stroke-opacity=".35" stroke-width="1.5"/>
+    <path d="M65 62l9 9" stroke="#8a5a1f" stroke-width="3" stroke-linecap="round"/>
+    <path d="M66 70h22a4 4 0 0 1 4 4v4a4 4 0 0 0 0 8v0a4 4 0 0 1-4 4H66a4 4 0 0 1-4-4v0a4 4 0 0 0 0-8v-4a4 4 0 0 1 4-4Z" fill="url(#ticket)" stroke="#d97706" stroke-width="2"/>
+    <path d="M70 78h14M70 83h9" stroke="#c27803" stroke-width="2.5" stroke-linecap="round"/>
   </g>
 </svg>

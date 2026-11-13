@@ -68,7 +68,10 @@ class DolanDesktopPreference(models.Model):
                 if entry.key not in placed_keys:
                     newly_placed.append(entry.key)
                 continue
-            if not is_catalog_menu and (not include_real_apps or (item and item.folder_id)):
+            # Una app que el usuario ya tenía como ícono del catálogo y ahora se instaló de verdad
+            # ocupa el mismo lugar: va a la carpeta del catálogo si todavía no está ubicada.
+            promoted = entry.key in placed_keys and not item
+            if not is_catalog_menu and not promoted and (not include_real_apps or (item and item.folder_id)):
                 continue
             folder = self._catalog_folder(entry.folder_id, cache)
             last = Item.search([('user_id', '=', self.env.uid), ('folder_id', '=', folder.id)], order='sequence desc', limit=1)

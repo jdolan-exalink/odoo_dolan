@@ -19,6 +19,7 @@ from xml.sax.saxutils import escape, quoteattr
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from app_catalog_glyphs import GLYPHS  # noqa: E402
+from app_catalog_illustrations import ILLUSTRATIONS  # noqa: E402
 
 CATALOG = ROOT / "addons" / "DOLAN_app_catalog" / "data" / "app_catalog.json"
 MENUS_XML = ROOT / "addons" / "DOLAN_app_catalog" / "data" / "app_catalog_menus.xml"
@@ -156,6 +157,17 @@ def main():
             errors.append(f'{app["key"]}: ícono {icon} no existe en el catálogo del theme')
         else:
             reused_flat[app["key"]] = by_semantic[icon]["assets"].get("fluent_flat", "")
+    used = {}
+    for app in catalog["apps"]:
+        if app.get("icon", "").startswith("cat."):
+            if app["icon"] in used:
+                errors.append(f'{app["key"]}: el ícono {app["icon"]} ya lo usa {used[app["icon"]]}')
+            used[app["icon"]] = app["key"]
+    glyph_bodies = {}
+    for name, body in GLYPHS.items():
+        if body in glyph_bodies:
+            errors.append(f"glifo {name} repite el dibujo de {glyph_bodies[body]}")
+        glyph_bodies[body] = name
     if errors:
         print("\n".join(errors))
         return 1
@@ -168,9 +180,10 @@ def main():
             continue
         glyph = GLYPHS[app["icon"][4:]]
         light, deep, _color = CATEGORY_COLORS[FOLDER_CATEGORY[app["folder"]]]
+        illustration = ILLUSTRATIONS.get(app["icon"][4:], {})
         files = {
-            "fluent_3d": svg_3d(glyph, light, deep),
-            "fluent_flat": svg_flat(glyph, light, deep),
+            "fluent_3d": illustration.get("fluent_3d") or svg_3d(glyph, light, deep),
+            "fluent_flat": illustration.get("fluent_flat") or svg_flat(glyph, light, deep),
             "fluent_filled": svg_filled(glyph),
             "fluent_regular": svg_regular(glyph),
             "tabler": svg_tabler(glyph),
@@ -194,7 +207,7 @@ def main():
             entry.update({
                 "label": app["name"], "category": category, "semantic": icon[4:],
                 "aliases": entry.get("aliases", []) if entry.get("aliases") else [],
-                "xmlids": sorted(set(entry.get("xmlids", [])) | {xmlid}),
+                "xmlids": sorted(set(entry.get("xmlids", [])) | {xmlid} | ({app["menu"]} if app.get("menu") else set())),
                 "module_ids": [MODULE], "color": CATEGORY_COLORS[category][2],
                 "assets": {family: f"{family}/{stem}.svg" for family in
                            ("fluent_3d", "fluent_flat", "fluent_filled", "fluent_regular", "tabler")},

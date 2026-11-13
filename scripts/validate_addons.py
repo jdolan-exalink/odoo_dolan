@@ -18,6 +18,7 @@ EXPECTED_MODULES = [
     "DOLAN_base",
     "DOLAN_theme",
     "DOLAN_app_catalog",
+    "DOLAN_helpdesk",
     "DOLAN_l10n_ar_afip",
     "DOLAN_l10n_ar_cot",
     "DOLAN_accounting",

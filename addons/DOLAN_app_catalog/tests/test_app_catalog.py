@@ -160,3 +160,21 @@ class TestAppCatalog(TransactionCase):
         params.set_param('dolan_app_catalog.modules_signature', 'otra')
         self.assertTrue(self.Entry._sync_if_modules_changed())
         self.assertFalse(self.Entry._sync_if_modules_changed())
+
+    def test_app_installed_later_keeps_its_folder(self):
+        Preference = self.env['dolan.desktop.preference'].with_user(self.user)
+        Preference.current_user()
+        Item = self.env['dolan.desktop.item'].with_user(self.user)
+        self.assertTrue(Item.search([('menu_id', '=', self.menu('caja_tesoreria').id)]))
+        # Simula que la app pasó a tener un menú raíz real (como al instalar su módulo).
+        real_menu = self.env['ir.ui.menu'].create({'name': 'Caja real', 'action': 'ir.actions.act_window,%d' % self.env.ref('base.action_res_company_form').id})
+        self.env['ir.model.data'].create({'module': 'test_catalog', 'name': 'menu_caja_real', 'model': 'ir.ui.menu', 'res_id': real_menu.id})
+        entry = self.entry('caja_tesoreria')
+        entry.sudo().write({'menu_xmlid': 'test_catalog.menu_caja_real'})
+        entry.sudo()._apply_runtime_state()
+        self.assertEqual(entry.target_menu_id, real_menu)
+        self.assertFalse(self.menu('caja_tesoreria').active)
+        Preference.current_user()
+        item = Item.search([('menu_id', '=', real_menu.id)])
+        self.assertEqual(item.folder_id.name, 'Facturación y Finanzas')
+
