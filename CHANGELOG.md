@@ -7,6 +7,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 ## [Unreleased]
 
 ### Agregado
+- `DOLAN_current_account 20.0.1.0.0` (nuevo, **Cuentas corrientes**, carpeta Facturación y Finanzas): saldos de clientes y proveedores por empresa calculados desde los apuntes conciliables, con vencido, a vencer, antigüedad y anticipos sin aplicar; promesas de pago que se cumplen o vencen solas; estado de cuenta a fecha de corte en PDF, Excel o por correo. En todos los perfiles del instalador. Ver `docs/modulos/DOLAN_current_account.md`.
 - Apps de **Servicios** (E2 del PRD maestro), todas `20.0.1.0.0` y en los perfiles Servicios y Completo del instalador:
   - `DOLAN_helpdesk` (**Mesa de ayuda**): tickets numerados con equipos, etapas, SLA por prioridad sobre el horario laboral del equipo (en término, en riesgo, vencido, cumplido), alias de correo que abre tickets, asignación balanceada, solución obligatoria al cerrar y aviso al cliente por WhatsApp.
   - `DOLAN_appointment` (**Agenda de turnos**): servicios con duración, profesionales o recursos con horario y zona horaria, turnos sin superposición y dentro del horario, horarios libres por día y recordatorio por correo o WhatsApp.

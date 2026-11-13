@@ -98,6 +98,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_current_account",
+		Title:       "Cuentas corrientes de clientes y proveedores",
+		Version:     "20.0.1.0.0",
+		Category:    "Contabilidad",
+		Application: true,
+		Depends:     []string{"account", "mail"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_accounting",
 		Title:       "Contabilidad Pro, Conciliación, Activos y Préstamos",
 		Version:     "20.0.1.8.0",

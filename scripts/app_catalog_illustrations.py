@@ -143,4 +143,35 @@ ILLUSTRATIONS = {
 </svg>
 """,
     },
+    # Cuentas corrientes: ficha de cliente con flechas de debe y haber (área Finanzas, azul).
+    "current_accounts": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e3ecfb"/></linearGradient>
+    <linearGradient id="head" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6ea8ff"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient>
+    <linearGradient id="avatar" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#93c5fd"/><stop offset="1" stop-color="#2563eb"/></linearGradient>
+    <linearGradient id="up" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#4ade80"/><stop offset="1" stop-color="#15803d"/></linearGradient>
+    <linearGradient id="down" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fb7185"/><stop offset="1" stop-color="#be123c"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="8" y="14" width="80" height="64" rx="12" fill="url(#card)"/>
+    <path d="M20 14h56a12 12 0 0 1 12 12v2H8v-2a12 12 0 0 1 12-12Z" fill="url(#head)"/>
+    <circle cx="30" cy="48" r="9" fill="url(#avatar)"/>
+    <path d="M16 70a14 14 0 0 1 28 0Z" fill="url(#avatar)"/>
+    <path d="M58 46l8-9 8 9h-5v10h-6V46Z" fill="url(#up)"/>
+    <path d="M58 58l8 9 8-9h-5V50h-6v8Z" fill="url(#down)" transform="translate(14 4)"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <rect x="8" y="14" width="80" height="64" rx="12" fill="#ffffff" stroke="#1d4ed8" stroke-width="2.5"/>
+  <path d="M20 14h56a12 12 0 0 1 12 12v2H8v-2a12 12 0 0 1 12-12Z" fill="#4b8df8"/>
+  <circle cx="30" cy="48" r="9" fill="#4b8df8"/>
+  <path d="M16 70a14 14 0 0 1 28 0Z" fill="#4b8df8"/>
+  <path d="M58 46l8-9 8 9h-5v10h-6V46Z" fill="#22c55e"/>
+  <path d="M58 58l8 9 8-9h-5V50h-6v8Z" fill="#f43f5e" transform="translate(14 4)"/>
+</svg>
+""",
+    },
 }

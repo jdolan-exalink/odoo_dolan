@@ -15,7 +15,7 @@ GLYPHS = {
     "ecommerce": '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M8 8.5h1.2l1.3 4.5h4.8l1-3.2H10"/>',
     "loyalty": '<path d="M12 4l2.3 4.7 5.2.8-3.8 3.6.9 5.1L12 15.8 7.4 18.2l.9-5.1L4.5 9.5l5.2-.8L12 4Z"/>',
     # Finanzas
-    "current_accounts": '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/><path d="M15.5 15v3M14 16.5h3"/>',
+    "current_accounts": '<rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="10" r="2"/><path d="M5.5 16.5a3 3 0 0 1 6 0"/><path d="M14.5 9l2-2 2 2M16.5 7v4.5M14.5 15l2 2 2-2M16.5 17v-4.5"/>',
     "debtors": '<circle cx="10" cy="8" r="3.5"/><path d="M4 20v-1a5 5 0 0 1 5-5h2"/><circle cx="17.5" cy="17" r="3.5"/><path d="M17.5 15.5v1.8l1 .7"/>',
     "collections": '<path d="M3 15h4l3 2h5a1.5 1.5 0 0 0 0-3h-3"/><path d="M7 15v4H3v-4"/><path d="M11 14l6.3-2.3a1.6 1.6 0 0 1 1.2 3L13 18"/><circle cx="15" cy="6" r="3"/>',
     "vendor_payments": '<rect x="3" y="7" width="15" height="11" rx="2"/><path d="M18 4l3 3-3 3M21 7h-6"/><circle cx="10.5" cy="12.5" r="2.3"/><path d="M6 10.5v4"/>',
