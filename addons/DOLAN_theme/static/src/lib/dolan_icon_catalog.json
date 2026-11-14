@@ -2146,18 +2146,19 @@
       "semantic": "profitability",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_rentabilidad"
+        "DOLAN_app_catalog.menu_app_rentabilidad",
+        "DOLAN_profitability.menu_dolan_profitability_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "pink",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_profitability-fabb1216.svg",
-        "fluent_flat": "fluent_flat/catalog_profitability-85b4e904.svg",
-        "fluent_filled": "fluent_filled/catalog_profitability-0b505a4a.svg",
-        "fluent_regular": "fluent_regular/catalog_profitability-3bb52506.svg",
-        "tabler": "tabler/catalog_profitability-b1e5537a.svg"
+        "fluent_3d": "fluent_3d/catalog_profitability-ff477ae3.svg",
+        "fluent_flat": "fluent_flat/catalog_profitability-b01f4bda.svg",
+        "fluent_filled": "fluent_filled/catalog_profitability-f3404956.svg",
+        "fluent_regular": "fluent_regular/catalog_profitability-edc10b0f.svg",
+        "tabler": "tabler/catalog_profitability-8ea5de75.svg"
       }
     },
     {
@@ -2167,15 +2168,16 @@
       "semantic": "cash_flow",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_flujo_caja"
+        "DOLAN_app_catalog.menu_app_flujo_caja",
+        "DOLAN_cash_flow.menu_dolan_cash_flow_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "pink",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_cash_flow-079be38e.svg",
-        "fluent_flat": "fluent_flat/catalog_cash_flow-ceb04c2e.svg",
+        "fluent_3d": "fluent_3d/catalog_cash_flow-f4da357f.svg",
+        "fluent_flat": "fluent_flat/catalog_cash_flow-bce7dda9.svg",
         "fluent_filled": "fluent_filled/catalog_cash_flow-e2b829e1.svg",
         "fluent_regular": "fluent_regular/catalog_cash_flow-07e2a21d.svg",
         "tabler": "tabler/catalog_cash_flow-0c96ceca.svg"
@@ -2188,15 +2190,16 @@
       "semantic": "audit",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_auditoria"
+        "DOLAN_app_catalog.menu_app_auditoria",
+        "DOLAN_audit_log.menu_dolan_audit_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "pink",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_audit-9c6b977d.svg",
-        "fluent_flat": "fluent_flat/catalog_audit-14e1c43d.svg",
+        "fluent_3d": "fluent_3d/catalog_audit-4f72f11a.svg",
+        "fluent_flat": "fluent_flat/catalog_audit-7d2fcc1b.svg",
         "fluent_filled": "fluent_filled/catalog_audit-63f67681.svg",
         "fluent_regular": "fluent_regular/catalog_audit-ce11061e.svg",
         "tabler": "tabler/catalog_audit-6813e4fc.svg"
@@ -2209,6 +2212,7 @@
       "semantic": "alerts",
       "aliases": [],
       "xmlids": [
+        "DOLAN_alerts.menu_dolan_alerts_root",
         "DOLAN_app_catalog.menu_app_alertas"
       ],
       "module_ids": [
@@ -2216,8 +2220,8 @@
       ],
       "color": "pink",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_alerts-7cf10849.svg",
-        "fluent_flat": "fluent_flat/catalog_alerts-6cb84053.svg",
+        "fluent_3d": "fluent_3d/catalog_alerts-ef408b9e.svg",
+        "fluent_flat": "fluent_flat/catalog_alerts-f66fa37b.svg",
         "fluent_filled": "fluent_filled/catalog_alerts-cfa70de8.svg",
         "fluent_regular": "fluent_regular/catalog_alerts-db7521d0.svg",
         "tabler": "tabler/catalog_alerts-891d0894.svg"
@@ -2230,18 +2234,19 @@
       "semantic": "budget",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_presupuesto_financiero"
+        "DOLAN_app_catalog.menu_app_presupuesto_financiero",
+        "DOLAN_budget.menu_dolan_budget_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "pink",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_budget-0c3e063e.svg",
-        "fluent_flat": "fluent_flat/catalog_budget-3a11cae0.svg",
-        "fluent_filled": "fluent_filled/catalog_budget-a2641201.svg",
-        "fluent_regular": "fluent_regular/catalog_budget-2703837d.svg",
-        "tabler": "tabler/catalog_budget-a0aa14f2.svg"
+        "fluent_3d": "fluent_3d/catalog_budget-4a2adb55.svg",
+        "fluent_flat": "fluent_flat/catalog_budget-4593bac9.svg",
+        "fluent_filled": "fluent_filled/catalog_budget-346dff6d.svg",
+        "fluent_regular": "fluent_regular/catalog_budget-ecd1b0bd.svg",
+        "tabler": "tabler/catalog_budget-a89d0185.svg"
       }
     },
     {

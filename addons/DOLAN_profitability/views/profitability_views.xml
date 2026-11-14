@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_profitability_list" model="ir.ui.view">
+        <field name="name">dolan.profitability.list</field>
+        <field name="model">dolan.profitability</field>
+        <field name="arch" type="xml">
+            <list string="Rentabilidad" create="false" edit="false" delete="false" decoration-danger="margin &lt; 0">
+                <field name="date"/>
+                <field name="move_id"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="categ_id" optional="hide"/>
+                <field name="user_id" optional="show"/>
+                <field name="quantity" sum="Total"/>
+                <field name="revenue" sum="Total"/>
+                <field name="cost" sum="Total"/>
+                <field name="margin" sum="Total"/>
+                <field name="margin_pct"/>
+                <field name="cost_estimated" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_profitability_pivot" model="ir.ui.view">
+        <field name="name">dolan.profitability.pivot</field>
+        <field name="model">dolan.profitability</field>
+        <field name="arch" type="xml">
+            <pivot string="Rentabilidad" display_quantity="0">
+                <field name="categ_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="revenue" type="measure"/>
+                <field name="cost" type="measure"/>
+                <field name="margin" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_dolan_profitability_graph" model="ir.ui.view">
+        <field name="name">dolan.profitability.graph</field>
+        <field name="model">dolan.profitability</field>
+        <field name="arch" type="xml">
+            <graph string="Margen por mes" type="bar">
+                <field name="date" interval="month"/>
+                <field name="margin" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_dolan_profitability_search" model="ir.ui.view">
+        <field name="name">dolan.profitability.search</field>
+        <field name="model">dolan.profitability</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="categ_id"/>
+                <filter name="this_month" string="Este mes" domain="[('date', '&gt;=', 'today -1m +1d')]"/>
+                <filter name="this_year" string="Últimos 12 meses" domain="[('date', '&gt;=', 'today -1y')]"/>
+                <separator/>
+                <filter name="negative" string="Margen negativo" domain="[('margin', '&lt;', 0)]"/>
+                <filter name="estimated" string="Costo estimado" domain="[('cost_estimated', '=', True)]"/>
+                <group>
+                    <filter name="group_product" string="Producto" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_categ" string="Categoría" context="{'group_by': 'categ_id'}"/>
+                    <filter name="group_partner" string="Cliente" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_user" string="Vendedor" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_month" string="Mes" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_profitability" model="ir.actions.act_window">
+        <field name="name">Rentabilidad</field>
+        <field name="res_model">dolan.profitability</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="view_dolan_profitability_search"/>
+        <field name="context">{'search_default_this_year': 1}</field>
+    </record>
+
+    <menuitem id="menu_dolan_profitability_root" name="Rentabilidad" sequence="49"
+              groups="account.group_account_manager" action="action_dolan_profitability"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_profitability.svg"/>
+</odoo>

@@ -273,4 +273,150 @@ ILLUSTRATIONS = {
 </svg>
 """,
     },
+    # Flujo de caja: tarjeta con la curva de saldo y el tramo proyectado punteado (área Gestión y Análisis, rosa).
+    "cash_flow": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#fbe4ef"/></linearGradient>
+    <linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f178b0" stop-opacity=".55"/><stop offset="1" stop-color="#f178b0" stop-opacity="0"/></linearGradient>
+    <linearGradient id="coin" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fde68a"/><stop offset="1" stop-color="#d4a017"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="8" y="14" width="80" height="66" rx="12" fill="url(#card)"/>
+    <path d="M16 64c8 0 10-18 18-18s10 10 16 10V72H16Z" fill="url(#area)"/>
+    <path d="M16 64c8 0 10-18 18-18s10 10 16 10" fill="none" stroke="#c42d72" stroke-width="4" stroke-linecap="round"/>
+    <path d="M50 56c8 0 10-20 18-20s8 6 12 6" fill="none" stroke="#c42d72" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 7"/>
+    <path d="M50 22v52" stroke="#e9a8c6" stroke-width="2" stroke-dasharray="3 4"/>
+    <circle cx="74" cy="26" r="11" fill="url(#coin)" stroke="#fff3d6" stroke-width="2"/>
+    <text x="74" y="30.5" font-family="Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#8a5a00">$</text>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <rect x="8" y="14" width="80" height="66" rx="12" fill="#ffffff" stroke="#c42d72" stroke-width="2.5"/>
+  <path d="M16 64c8 0 10-18 18-18s10 10 16 10V72H16Z" fill="#fbd0e3"/>
+  <path d="M16 64c8 0 10-18 18-18s10 10 16 10" fill="none" stroke="#c42d72" stroke-width="4" stroke-linecap="round"/>
+  <path d="M50 56c8 0 10-20 18-20s8 6 12 6" fill="none" stroke="#c42d72" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 7"/>
+  <path d="M50 22v52" stroke="#f0b5cf" stroke-width="2" stroke-dasharray="3 4"/>
+  <circle cx="74" cy="26" r="11" fill="#facc15" stroke="#ffffff" stroke-width="2"/>
+  <text x="74" y="30.5" font-family="Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#854d0e">$</text>
+</svg>
+""",
+    },
+    # Rentabilidad: bolsa de dinero con flecha de crecimiento.
+    "profitability": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <radialGradient id="bag" cx=".4" cy=".35" r=".8"><stop stop-color="#f9a8d4"/><stop offset="1" stop-color="#be185d"/></radialGradient>
+    <linearGradient id="tie" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fde68a"/><stop offset="1" stop-color="#d4a017"/></linearGradient>
+    <linearGradient id="arrow" x1="0" y1="1" x2="0" y2="0"><stop stop-color="#16a34a"/><stop offset="1" stop-color="#4ade80"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M36 14h22l-6 12H42Z" fill="url(#bag)"/>
+    <path d="M40 26C22 34 14 50 14 62c0 12 8 20 20 20h26c12 0 20-8 20-20 0-12-8-28-26-36Z" fill="url(#bag)"/>
+    <rect x="38" y="23" width="18" height="6" rx="3" fill="url(#tie)"/>
+    <text x="47" y="66" font-family="Arial, sans-serif" font-size="26" font-weight="700" text-anchor="middle" fill="#fff0f7">$</text>
+    <path d="M66 70V40" stroke="url(#arrow)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M54 46l12-14 12 14Z" fill="#22c55e"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <path d="M36 14h22l-6 12H42Z" fill="#ec4899"/>
+  <path d="M40 26C22 34 14 50 14 62c0 12 8 20 20 20h26c12 0 20-8 20-20 0-12-8-28-26-36Z" fill="#f472b6"/>
+  <rect x="38" y="23" width="18" height="6" rx="3" fill="#facc15"/>
+  <text x="47" y="66" font-family="Arial, sans-serif" font-size="26" font-weight="700" text-anchor="middle" fill="#ffffff">$</text>
+  <path d="M66 70V40" stroke="#22c55e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M54 46l12-14 12 14Z" fill="#22c55e"/>
+</svg>
+""",
+    },
+    # Auditoría: lupa sobre una hoja de registro con huella.
+    "audit": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="sheet" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#f6e3ec"/></linearGradient>
+    <radialGradient id="glass" cx=".35" cy=".3" r=".8"><stop stop-color="#ffffff" stop-opacity=".95"/><stop offset="1" stop-color="#fbcfe2" stop-opacity=".75"/></radialGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f178b0"/><stop offset="1" stop-color="#9d174d"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="12" y="8" width="54" height="70" rx="8" fill="url(#sheet)"/>
+    <g fill="#e9c4d5"><rect x="20" y="20" width="30" height="4" rx="2"/><rect x="20" y="30" width="38" height="4" rx="2"/><rect x="20" y="40" width="24" height="4" rx="2"/></g>
+    <circle cx="58" cy="56" r="20" fill="url(#glass)" stroke="url(#ring)" stroke-width="6"/>
+    <g fill="none" stroke="#c42d72" stroke-width="2" stroke-linecap="round">
+      <path d="M50 58a8 8 0 0 1 16 0"/><path d="M53 62a5 5 0 0 1 10 0"/><path d="M47 54a11 11 0 0 1 22 0"/>
+    </g>
+    <path d="M73 71l13 13" stroke="url(#ring)" stroke-width="9" stroke-linecap="round"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <rect x="12" y="8" width="54" height="70" rx="8" fill="#ffffff" stroke="#c42d72" stroke-width="2.5"/>
+  <g fill="#f5cfe0"><rect x="20" y="20" width="30" height="4" rx="2"/><rect x="20" y="30" width="38" height="4" rx="2"/><rect x="20" y="40" width="24" height="4" rx="2"/></g>
+  <circle cx="58" cy="56" r="20" fill="#fde7f0" stroke="#db2777" stroke-width="6"/>
+  <g fill="none" stroke="#c42d72" stroke-width="2" stroke-linecap="round">
+    <path d="M50 58a8 8 0 0 1 16 0"/><path d="M53 62a5 5 0 0 1 10 0"/><path d="M47 54a11 11 0 0 1 22 0"/>
+  </g>
+  <path d="M73 71l13 13" stroke="#db2777" stroke-width="9" stroke-linecap="round"/>
+</svg>
+""",
+    },
+    # Alertas: campana con aviso rojo.
+    "alerts": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="bell" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f9a8d4"/><stop offset="1" stop-color="#be185d"/></linearGradient>
+    <linearGradient id="clapper" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fde68a"/><stop offset="1" stop-color="#d4a017"/></linearGradient>
+    <radialGradient id="badge" cx=".4" cy=".35" r=".8"><stop stop-color="#fb7185"/><stop offset="1" stop-color="#be123c"/></radialGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <circle cx="44" cy="80" r="8" fill="url(#clapper)"/>
+    <path d="M44 12a6 6 0 0 1 6 6v2c12 3 20 14 20 27v14l7 9H17l7-9V47c0-13 8-24 20-27v-2a6 6 0 0 1 6-6Z" fill="url(#bell)" transform="translate(-6 0)"/>
+    <path d="M24 46c0-10 6-18 14-21" fill="none" stroke="#fff0f7" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+    <circle cx="70" cy="22" r="14" fill="url(#badge)" stroke="#ffffff" stroke-width="3"/>
+    <path d="M70 14v10" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/><circle cx="70" cy="30" r="2.4" fill="#ffffff"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <circle cx="44" cy="80" r="8" fill="#facc15"/>
+  <path d="M44 12a6 6 0 0 1 6 6v2c12 3 20 14 20 27v14l7 9H17l7-9V47c0-13 8-24 20-27v-2a6 6 0 0 1 6-6Z" fill="#ec4899" transform="translate(-6 0)"/>
+  <circle cx="70" cy="22" r="14" fill="#f43f5e" stroke="#ffffff" stroke-width="3"/>
+  <path d="M70 14v10" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/><circle cx="70" cy="30" r="2.4" fill="#ffffff"/>
+</svg>
+""",
+    },
+    # Presupuesto financiero: diana con flecha clavada en el centro.
+    "budget": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <radialGradient id="outer" cx=".4" cy=".35" r=".8"><stop stop-color="#f9a8d4"/><stop offset="1" stop-color="#be185d"/></radialGradient>
+    <radialGradient id="mid" cx=".4" cy=".35" r=".8"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#fbe4ef"/></radialGradient>
+    <linearGradient id="shaft" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fde68a"/><stop offset="1" stop-color="#b45309"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <circle cx="42" cy="54" r="34" fill="url(#outer)"/>
+    <circle cx="42" cy="54" r="24" fill="url(#mid)"/>
+    <circle cx="42" cy="54" r="14" fill="url(#outer)"/>
+    <circle cx="42" cy="54" r="5" fill="#ffffff"/>
+    <path d="M42 54L80 16" stroke="url(#shaft)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M74 10l12 0-2 6-8 2 2-8Z M86 10v12l-6-2-2-8Z" fill="#22c55e"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <circle cx="42" cy="54" r="34" fill="#ec4899"/>
+  <circle cx="42" cy="54" r="24" fill="#ffffff"/>
+  <circle cx="42" cy="54" r="14" fill="#ec4899"/>
+  <circle cx="42" cy="54" r="5" fill="#ffffff"/>
+  <path d="M42 54L80 16" stroke="#b45309" stroke-width="5" stroke-linecap="round"/>
+  <path d="M74 10l12 0-2 6-8 2 2-8Z M86 10v12l-6-2-2-8Z" fill="#22c55e"/>
+</svg>
+""",
+    },
 }

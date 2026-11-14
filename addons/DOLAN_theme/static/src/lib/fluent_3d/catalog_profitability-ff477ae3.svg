@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <radialGradient id="bag" cx=".4" cy=".35" r=".8"><stop stop-color="#f9a8d4"/><stop offset="1" stop-color="#be185d"/></radialGradient>
+    <linearGradient id="tie" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fde68a"/><stop offset="1" stop-color="#d4a017"/></linearGradient>
+    <linearGradient id="arrow" x1="0" y1="1" x2="0" y2="0"><stop stop-color="#16a34a"/><stop offset="1" stop-color="#4ade80"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="1" dy="4" stdDeviation="3" flood-color="#27213c" flood-opacity=".28"/></filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M36 14h22l-6 12H42Z" fill="url(#bag)"/>
+    <path d="M40 26C22 34 14 50 14 62c0 12 8 20 20 20h26c12 0 20-8 20-20 0-12-8-28-26-36Z" fill="url(#bag)"/>
+    <rect x="38" y="23" width="18" height="6" rx="3" fill="url(#tie)"/>
+    <text x="47" y="66" font-family="Arial, sans-serif" font-size="26" font-weight="700" text-anchor="middle" fill="#fff0f7">$</text>
+    <path d="M66 70V40" stroke="url(#arrow)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M54 46l12-14 12 14Z" fill="#22c55e"/>
+  </g>
+</svg>

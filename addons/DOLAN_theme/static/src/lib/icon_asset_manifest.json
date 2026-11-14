@@ -2014,7 +2014,7 @@
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_alerts.svg",
       "local_path": "fluent_flat/catalog_alerts.svg",
-      "sha256": "6cb84053557d6e60f55fe8cc1a56853e5ae9276e77beb0e07d63a08557a7e8fd"
+      "sha256": "f66fa37b4fdababaf12c0990dc81853d10de7739a6e06818d775b80ba96cf495"
     },
     {
       "library": "dolan_custom",
@@ -2042,7 +2042,7 @@
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_audit.svg",
       "local_path": "fluent_flat/catalog_audit.svg",
-      "sha256": "14e1c43d033391bfa27ef938f7867154f6ea1cd631531710901f0ecf70294e8d"
+      "sha256": "7d2fcc1b1d09eee6765b612e6454b3d101040270d6f0a3184c03211d46b87bf5"
     },
     {
       "library": "dolan_custom",
@@ -2077,14 +2077,14 @@
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_budget.svg",
       "local_path": "fluent_flat/catalog_budget.svg",
-      "sha256": "3a11cae0fea8cf166e47388e0bd6b6da7659eeed55a866d2b066d8ac87b4d3c2"
+      "sha256": "4593bac9a38832b16a640273eb40d1a8333ab6ff4338928ff946ed11e19b2923"
     },
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_cash_flow.svg",
       "local_path": "fluent_flat/catalog_cash_flow.svg",
-      "sha256": "ceb04c2e8392a9297e6817a478383fc164849bdb83e2157be9d982eb48e4b815"
+      "sha256": "bce7dda9fb57497761e722673a867c2fd044fc865b74944f01b790d17e8668c8"
     },
     {
       "library": "dolan_custom",
@@ -2294,7 +2294,7 @@
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_profitability.svg",
       "local_path": "fluent_flat/catalog_profitability.svg",
-      "sha256": "85b4e904a26c3a84a794792994af317cd1837b409d8891f17665b74697cf132c"
+      "sha256": "b01f4bda0b9f8f9f7f13e8efb4504cb373319cc38dfe7821a79ecbb3edd1437d"
     },
     {
       "library": "dolan_custom",
@@ -2404,13 +2404,6 @@
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
-      "upstream_path": "fluent_3d/catalog_alerts-7cf10849.svg",
-      "local_path": "fluent_3d/catalog_alerts-7cf10849.svg",
-      "sha256": "7cf1084979e83aca125ea52770883e751ef60ef2ad9fafd0477ade968191034e"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
       "upstream_path": "fluent_3d/catalog_app_catalog-10146380.svg",
       "local_path": "fluent_3d/catalog_app_catalog-10146380.svg",
       "sha256": "10146380eb965f078879b35beb95ced38a9d7e421952f53c2180edf0b35dc29a"
@@ -2428,13 +2421,6 @@
       "upstream_path": "fluent_3d/catalog_assets-ed0ecea8.svg",
       "local_path": "fluent_3d/catalog_assets-ed0ecea8.svg",
       "sha256": "ed0ecea84e978cbf601672060e3cdeea185b5050fa985bb2b6fd2b43db51123f"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_3d/catalog_audit-9c6b977d.svg",
-      "local_path": "fluent_3d/catalog_audit-9c6b977d.svg",
-      "sha256": "9c6b977db2ea968ac7890c87397d6e1566d14005414df4f42118331f83fecef9"
     },
     {
       "library": "dolan_custom",
@@ -2463,20 +2449,6 @@
       "upstream_path": "fluent_3d/catalog_branches-f874adff.svg",
       "local_path": "fluent_3d/catalog_branches-f874adff.svg",
       "sha256": "f874adfff91cdbc1f59a3e219aadf7351ab6e9d7fabeb1e3f43eaefd4d0c76f8"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_3d/catalog_budget-0c3e063e.svg",
-      "local_path": "fluent_3d/catalog_budget-0c3e063e.svg",
-      "sha256": "0c3e063e3e69185c9d9946d41f1b8b0ef1723de2ce5ed279128314fecc1fc638"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_3d/catalog_cash_flow-079be38e.svg",
-      "local_path": "fluent_3d/catalog_cash_flow-079be38e.svg",
-      "sha256": "079be38e2ebc1a035101a22d262512025eb3cb7c8cccc09ec20452443bd6f9b3"
     },
     {
       "library": "dolan_custom",
@@ -2663,13 +2635,6 @@
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
-      "upstream_path": "fluent_3d/catalog_profitability-fabb1216.svg",
-      "local_path": "fluent_3d/catalog_profitability-fabb1216.svg",
-      "sha256": "fabb121617a86f4b3bcf170381c1dfe9a448c0ba8c503350310eecbf7525255a"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
       "upstream_path": "fluent_3d/catalog_proof_delivery-ac302d4b.svg",
       "local_path": "fluent_3d/catalog_proof_delivery-ac302d4b.svg",
       "sha256": "ac302d4b0f585640705298bb61f7f565bbae956b500d5cd5af0c95820e696085"
@@ -2827,13 +2792,6 @@
       "upstream_path": "fluent_filled/catalog_branches-fafbf3d4.svg",
       "local_path": "fluent_filled/catalog_branches-fafbf3d4.svg",
       "sha256": "fafbf3d4ac524c9d6f8262f3861393055f6ed77cba3218ade416261b0ede3207"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_filled/catalog_budget-a2641201.svg",
-      "local_path": "fluent_filled/catalog_budget-a2641201.svg",
-      "sha256": "a2641201cd6ae95764b1fa74e21deb98ed97860846157e98381675ca39596d03"
     },
     {
       "library": "dolan_custom",
@@ -3027,13 +2985,6 @@
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
-      "upstream_path": "fluent_filled/catalog_profitability-0b505a4a.svg",
-      "local_path": "fluent_filled/catalog_profitability-0b505a4a.svg",
-      "sha256": "0b505a4a105886f1cc7f19cd54d59f3d11d8ca4375b2304d8e49a65bcd2d361e"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
       "upstream_path": "fluent_filled/catalog_proof_delivery-11ab95d0.svg",
       "local_path": "fluent_filled/catalog_proof_delivery-11ab95d0.svg",
       "sha256": "11ab95d0cb374dbeb3bc59ce80097b24f2f3c1146490506531a894c77d7cf3d4"
@@ -3132,13 +3083,6 @@
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
-      "upstream_path": "fluent_flat/catalog_alerts-6cb84053.svg",
-      "local_path": "fluent_flat/catalog_alerts-6cb84053.svg",
-      "sha256": "6cb84053557d6e60f55fe8cc1a56853e5ae9276e77beb0e07d63a08557a7e8fd"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_app_catalog-ce15acfb.svg",
       "local_path": "fluent_flat/catalog_app_catalog-ce15acfb.svg",
       "sha256": "ce15acfbd5a3fc8101d8912d2ffd8acf95258d963f154f8d96896791a200ca3a"
@@ -3156,13 +3100,6 @@
       "upstream_path": "fluent_flat/catalog_assets-e19994b6.svg",
       "local_path": "fluent_flat/catalog_assets-e19994b6.svg",
       "sha256": "e19994b67b4435c15a95234d30ab3c87ae01b49e3494b0056832243fa2c26a81"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_flat/catalog_audit-14e1c43d.svg",
-      "local_path": "fluent_flat/catalog_audit-14e1c43d.svg",
-      "sha256": "14e1c43d033391bfa27ef938f7867154f6ea1cd631531710901f0ecf70294e8d"
     },
     {
       "library": "dolan_custom",
@@ -3191,20 +3128,6 @@
       "upstream_path": "fluent_flat/catalog_branches-9dcda1b5.svg",
       "local_path": "fluent_flat/catalog_branches-9dcda1b5.svg",
       "sha256": "9dcda1b5de63fbfab7269ae54a64d2b16c9da20ffbab87f5483eea5e1e10bb77"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_flat/catalog_budget-3a11cae0.svg",
-      "local_path": "fluent_flat/catalog_budget-3a11cae0.svg",
-      "sha256": "3a11cae0fea8cf166e47388e0bd6b6da7659eeed55a866d2b066d8ac87b4d3c2"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_flat/catalog_cash_flow-ceb04c2e.svg",
-      "local_path": "fluent_flat/catalog_cash_flow-ceb04c2e.svg",
-      "sha256": "ceb04c2e8392a9297e6817a478383fc164849bdb83e2157be9d982eb48e4b815"
     },
     {
       "library": "dolan_custom",
@@ -3391,13 +3314,6 @@
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
-      "upstream_path": "fluent_flat/catalog_profitability-85b4e904.svg",
-      "local_path": "fluent_flat/catalog_profitability-85b4e904.svg",
-      "sha256": "85b4e904a26c3a84a794792994af317cd1837b409d8891f17665b74697cf132c"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_proof_delivery-5dde8685.svg",
       "local_path": "fluent_flat/catalog_proof_delivery-5dde8685.svg",
       "sha256": "5dde8685b3768c96b3648feff3b1103d1d2b32794342f97cf4f7829c0acc8a8a"
@@ -3555,13 +3471,6 @@
       "upstream_path": "fluent_regular/catalog_branches-417376d8.svg",
       "local_path": "fluent_regular/catalog_branches-417376d8.svg",
       "sha256": "417376d814f91fd18d1ea3e5d1d614ebd81d13d9004a544e30fb6f5526787457"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_regular/catalog_budget-2703837d.svg",
-      "local_path": "fluent_regular/catalog_budget-2703837d.svg",
-      "sha256": "2703837d1a7b7b0bd186a19a383affcba1213707787f6665677b996eb20ac11e"
     },
     {
       "library": "dolan_custom",
@@ -3755,13 +3664,6 @@
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
-      "upstream_path": "fluent_regular/catalog_profitability-3bb52506.svg",
-      "local_path": "fluent_regular/catalog_profitability-3bb52506.svg",
-      "sha256": "3bb52506b35f877e8cd9b76a75d588c47e4f70dfbbb59c5aa4ee6c4dd1c63504"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
       "upstream_path": "fluent_regular/catalog_proof_delivery-89829df0.svg",
       "local_path": "fluent_regular/catalog_proof_delivery-89829df0.svg",
       "sha256": "89829df0db787444b197f15b95e31173ee1671c031883eb35621615385f0fe88"
@@ -3919,13 +3821,6 @@
       "upstream_path": "tabler/catalog_branches-3c2be388.svg",
       "local_path": "tabler/catalog_branches-3c2be388.svg",
       "sha256": "3c2be3889013873c3118e427a4f6ea0cd8f12f74def84a7777a2881408616aa0"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "tabler/catalog_budget-a0aa14f2.svg",
-      "local_path": "tabler/catalog_budget-a0aa14f2.svg",
-      "sha256": "a0aa14f293aec6d11b6fa109fde7ef159da49a5002e0e70f20ed17276a51161d"
     },
     {
       "library": "dolan_custom",
@@ -4115,13 +4010,6 @@
       "upstream_path": "tabler/catalog_products-d1409a07.svg",
       "local_path": "tabler/catalog_products-d1409a07.svg",
       "sha256": "d1409a0735a06febe165d81d0f7f07a5c9900c8c0e2f125ebbc62e2fdde687da"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "tabler/catalog_profitability-b1e5537a.svg",
-      "local_path": "tabler/catalog_profitability-b1e5537a.svg",
-      "sha256": "b1e5537aad666cd954d1482d7256453b8cf63d8c7ae526748f21e58b19dcda28"
     },
     {
       "library": "dolan_custom",
@@ -4360,6 +4248,118 @@
       "upstream_path": "tabler/catalog_costs-df0b1f91.svg",
       "local_path": "tabler/catalog_costs-df0b1f91.svg",
       "sha256": "df0b1f91fdcf510c8a694ce45161616345ee4de771a71d5ad889a664acfdb6ca"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_3d/catalog_alerts-ef408b9e.svg",
+      "local_path": "fluent_3d/catalog_alerts-ef408b9e.svg",
+      "sha256": "ef408b9e0b70af6a9c63996fb99096c3ba761203e2eefc9ea533a581d0978e46"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_3d/catalog_audit-4f72f11a.svg",
+      "local_path": "fluent_3d/catalog_audit-4f72f11a.svg",
+      "sha256": "4f72f11a59ac5daea5c0daf8b5dc0daed1be2d2a3344eeb1e464eb00edcac503"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_3d/catalog_budget-4a2adb55.svg",
+      "local_path": "fluent_3d/catalog_budget-4a2adb55.svg",
+      "sha256": "4a2adb55f99688dac69c4032ba7a5ff7c4baae1817a64849a82106b000356f0e"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_3d/catalog_cash_flow-f4da357f.svg",
+      "local_path": "fluent_3d/catalog_cash_flow-f4da357f.svg",
+      "sha256": "f4da357ff205112d0cc35253db0721e1795874a8a6ed59cae1ed98d533fda875"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_3d/catalog_profitability-ff477ae3.svg",
+      "local_path": "fluent_3d/catalog_profitability-ff477ae3.svg",
+      "sha256": "ff477ae3f77874750c6f7994305a49df36db22b2feff1d3850627f63b382fcef"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_filled/catalog_budget-346dff6d.svg",
+      "local_path": "fluent_filled/catalog_budget-346dff6d.svg",
+      "sha256": "346dff6d40ff48515127e04cf653881475d0506843b19613e75fef50d16fd1e1"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_filled/catalog_profitability-f3404956.svg",
+      "local_path": "fluent_filled/catalog_profitability-f3404956.svg",
+      "sha256": "f3404956dfe167d4f4da91896617520110da32c82f5f6e2a9114cb0c62617697"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_alerts-f66fa37b.svg",
+      "local_path": "fluent_flat/catalog_alerts-f66fa37b.svg",
+      "sha256": "f66fa37b4fdababaf12c0990dc81853d10de7739a6e06818d775b80ba96cf495"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_audit-7d2fcc1b.svg",
+      "local_path": "fluent_flat/catalog_audit-7d2fcc1b.svg",
+      "sha256": "7d2fcc1b1d09eee6765b612e6454b3d101040270d6f0a3184c03211d46b87bf5"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_budget-4593bac9.svg",
+      "local_path": "fluent_flat/catalog_budget-4593bac9.svg",
+      "sha256": "4593bac9a38832b16a640273eb40d1a8333ab6ff4338928ff946ed11e19b2923"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_cash_flow-bce7dda9.svg",
+      "local_path": "fluent_flat/catalog_cash_flow-bce7dda9.svg",
+      "sha256": "bce7dda9fb57497761e722673a867c2fd044fc865b74944f01b790d17e8668c8"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_profitability-b01f4bda.svg",
+      "local_path": "fluent_flat/catalog_profitability-b01f4bda.svg",
+      "sha256": "b01f4bda0b9f8f9f7f13e8efb4504cb373319cc38dfe7821a79ecbb3edd1437d"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_regular/catalog_budget-ecd1b0bd.svg",
+      "local_path": "fluent_regular/catalog_budget-ecd1b0bd.svg",
+      "sha256": "ecd1b0bd5c0af34fcf5a39f3fb78ff4149f4f8943cf06e8b2f9d22aeaddf3ff6"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_regular/catalog_profitability-edc10b0f.svg",
+      "local_path": "fluent_regular/catalog_profitability-edc10b0f.svg",
+      "sha256": "edc10b0f9e7aad60fc83c0ec47dfda0c0b560a04aaec146f7d2fedd92948d061"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "tabler/catalog_budget-a89d0185.svg",
+      "local_path": "tabler/catalog_budget-a89d0185.svg",
+      "sha256": "a89d018508c0cd9855806e2876e77625eda7e38f74200b47c6d6b84ad2837938"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "tabler/catalog_profitability-8ea5de75.svg",
+      "local_path": "tabler/catalog_profitability-8ea5de75.svg",
+      "sha256": "8ea5de755d92ba4c5b5f10e9bb805387ea9c176d55e293b6430a07204f9f2075"
     }
   ]
 }

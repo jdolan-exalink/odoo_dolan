@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="sheet" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#f6e3ec"/></linearGradient>
+    <radialGradient id="glass" cx=".35" cy=".3" r=".8"><stop stop-color="#ffffff" stop-opacity=".95"/><stop offset="1" stop-color="#fbcfe2" stop-opacity=".75"/></radialGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f178b0"/><stop offset="1" stop-color="#9d174d"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="1" dy="4" stdDeviation="3" flood-color="#27213c" flood-opacity=".28"/></filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="12" y="8" width="54" height="70" rx="8" fill="url(#sheet)"/>
+    <g fill="#e9c4d5"><rect x="20" y="20" width="30" height="4" rx="2"/><rect x="20" y="30" width="38" height="4" rx="2"/><rect x="20" y="40" width="24" height="4" rx="2"/></g>
+    <circle cx="58" cy="56" r="20" fill="url(#glass)" stroke="url(#ring)" stroke-width="6"/>
+    <g fill="none" stroke="#c42d72" stroke-width="2" stroke-linecap="round">
+      <path d="M50 58a8 8 0 0 1 16 0"/><path d="M53 62a5 5 0 0 1 10 0"/><path d="M47 54a11 11 0 0 1 22 0"/>
+    </g>
+    <path d="M73 71l13 13" stroke="url(#ring)" stroke-width="9" stroke-linecap="round"/>
+  </g>
+</svg>

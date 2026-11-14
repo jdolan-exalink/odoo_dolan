@@ -59,11 +59,11 @@ GLYPHS = {
     "automations": '<path d="M13 3L5 13.5h6L10 21l8-10.5h-6L13 3Z"/>',
     # Gestión
     "executive_dashboard": '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 17v-3M11 17v-5M15 17v-2"/><circle cx="17.5" cy="13" r="1.5"/>',
-    "profitability": '<path d="M3 17l5.5-5.5 3.5 3.5 7-7"/><path d="M14 8h5v5"/><path d="M3 21h18"/>',
+    "profitability": '<path d="M9 4h6l-1.5 3h-3Z"/><path d="M10.5 7C6 9 4 13 4 16a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4c0-3-2-7-6.5-9"/><path d="M12 11v6M10 13l2-2 2 2"/>',
     "cash_flow": '<path d="M4 16c3 0 3-8 6-8s3 8 6 8 3-6 4-6"/><path d="M3 20h18"/><path d="M5 4v4M3 6h4"/>',
     "audit": '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/><path d="M8 10.5l1.8 1.8L13.5 8.5"/>',
     "alerts": '<path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3l2 3H4l2-3v-3a7 7 0 0 1 4-6"/><path d="M9.5 17a2.5 2.5 0 0 0 5 0"/>',
-    "budget": '<circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.5 6.2"/><path d="M12 12H3.5"/>',
+    "budget": '<circle cx="11" cy="13" r="8"/><circle cx="11" cy="13" r="4.5"/><circle cx="11" cy="13" r="1"/><path d="M11 13l8-8M16 5h3v3"/>',
     # Configuración
     "companies": '<rect x="4" y="3" width="10" height="18" rx="1.5"/><path d="M14 9h5a1.5 1.5 0 0 1 1.5 1.5V21H14"/><path d="M7.5 7h3M7.5 11h3M7.5 15h3M17 13h1M17 17h1"/>',
     "branches": '<circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M12 7.5v4.5M12 12l-6 4.7M12 12l6 4.7"/>',

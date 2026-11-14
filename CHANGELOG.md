@@ -7,6 +7,13 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 ## [Unreleased]
 
 ### Agregado
+- Apps de **Gestión y Análisis**, todas `20.0.1.0.0` y en todos los perfiles del instalador:
+  - `DOLAN_cash_flow` (**Flujo de caja**): caja proyectada por semana o mes desde el saldo de caja y bancos, cobranzas y pagos por vencimiento, cheques en cartera y propios, previsiones manuales y escenario de cobro de lo vencido.
+  - `DOLAN_profitability` (**Rentabilidad**): margen bruto por producto, categoría, cliente, vendedor y mes; el costo unitario se guarda en la línea al publicar la factura.
+  - `DOLAN_audit_log` (**Auditoría**): bitácora inalterable con antes y después de CUIT, cuentas bancarias, precios, anulaciones, pagos, conciliaciones y permisos; nunca guarda secretos.
+  - `DOLAN_alerts` (**Alertas**): reglas por umbral con aviso a responsables (deuda vencida, mora, pagos de la semana, caja negativa, diferencias de caja, margen bajo, stock crítico).
+  - `DOLAN_budget` (**Presupuesto financiero**): presupuesto por cuenta y mes contra lo real, con carga rápida y desvío.
+  - Íconos propios ilustrados para las cinco. Documentación en `docs/modulos/`.
 - `DOLAN_product_cost 20.0.1.0.0` (nuevo, **Costos**, carpeta Inventario y Compras): costo de reposición manual o de la última compra confirmada, última compra con proveedor, historial de costos, margen con costo de reposición o promedio según la empresa y análisis de márgenes con alerta por margen mínimo de categoría. En todos los perfiles del instalador. Ver `docs/modulos/DOLAN_product_cost.md`.
 - `DOLAN_treasury 20.0.1.0.0` (nuevo, **Caja y Tesorería** y **Turnos de caja**): cajas con su diario de efectivo controladas contra el saldo contable, turnos por cajero, ingresos, retiros y transferencias asentados, arqueo por billetes y monedas, y diferencias que se asientan solas dentro de la tolerancia o con aprobación del tesorero. En todos los perfiles del instalador. Ver `docs/modulos/DOLAN_treasury.md`.
 - `DOLAN_current_account 20.0.1.0.0` (nuevo, **Cuentas corrientes**, carpeta Facturación y Finanzas): saldos de clientes y proveedores por empresa calculados desde los apuntes conciliables, con vencido, a vencer, antigüedad y anticipos sin aplicar; promesas de pago que se cumplen o vencen solas; estado de cuenta a fecha de corte en PDF, Excel o por correo. En todos los perfiles del instalador. Ver `docs/modulos/DOLAN_current_account.md`.

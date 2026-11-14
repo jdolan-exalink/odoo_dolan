@@ -13,6 +13,11 @@
 | Facturación y Finanzas | Cuentas corrientes | `DOLAN_current_account` | beta | [DOLAN_current_account.md](DOLAN_current_account.md) |
 | Facturación y Finanzas · Punto de venta y caja | Caja y Tesorería · Turnos de caja | `DOLAN_treasury` | beta | [DOLAN_treasury.md](DOLAN_treasury.md) |
 | Inventario y Compras | Costos | `DOLAN_product_cost` | beta | [DOLAN_product_cost.md](DOLAN_product_cost.md) |
+| Gestión y Análisis | Flujo de caja | `DOLAN_cash_flow` | beta | [DOLAN_cash_flow.md](DOLAN_cash_flow.md) |
+| Gestión y Análisis | Rentabilidad | `DOLAN_profitability` | beta | [DOLAN_profitability.md](DOLAN_profitability.md) |
+| Gestión y Análisis | Auditoría | `DOLAN_audit_log` | beta | [DOLAN_audit_log.md](DOLAN_audit_log.md) |
+| Gestión y Análisis | Alertas | `DOLAN_alerts` | beta | [DOLAN_alerts.md](DOLAN_alerts.md) |
+| Gestión y Análisis | Presupuesto financiero | `DOLAN_budget` | beta | [DOLAN_budget.md](DOLAN_budget.md) |
 
 **Beta** quiere decir que el módulo está implementado y con pruebas automáticas, pero todavía no pasó QA
 funcional con datos reales. Pasa a operativo cuando cumpla sus criterios de aceptación.
