@@ -1,0 +1,67 @@
+.o_dolan_app_placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem 1rem;
+    overflow: auto;
+    background: var(--dolan-color-canvas, #f7f8fc);
+    color: var(--dolan-color-text, #172033);
+
+    &__card {
+        width: 100%;
+        max-width: 760px;
+        margin: 0 auto;
+        background: var(--dolan-color-surface, #fff);
+        border: var(--dolan-border-width, 1px) solid var(--dolan-color-border, #e4e7ef);
+        border-radius: var(--dolan-radius-lg, 0.875rem);
+        box-shadow: var(--dolan-shadow-sm, none);
+        padding: 2rem;
+    }
+    &__header { display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1rem; }
+    &__icon { width: var(--dolan-icon-launcher, 64px); height: var(--dolan-icon-launcher, 64px); flex: none; }
+    &__folder { font-size: var(--dolan-font-size-sm, .875rem); color: var(--dolan-color-text-muted, #667085); }
+    &__title { font-size: var(--dolan-font-size-xl, 1.5rem); margin: .1rem 0 .4rem; color: inherit; }
+    &__badge {
+        display: inline-block;
+        padding: .15rem .65rem;
+        border-radius: var(--dolan-radius-pill, 999px);
+        font-size: var(--dolan-font-size-xs, .75rem);
+        font-weight: 600;
+        border: 1px solid currentColor;
+        color: var(--dolan-color-info, #1769aa);
+        &--disponible { color: var(--dolan-color-secondary, #017e84); }
+        &--planificado { color: var(--dolan-color-text-muted, #667085); }
+    }
+    &__description { font-size: var(--dolan-font-size-md, 1rem); }
+    &__notice {
+        display: flex;
+        gap: .6rem;
+        align-items: baseline;
+        padding: .75rem 1rem;
+        border-radius: var(--dolan-radius-md, .625rem);
+        background: color-mix(in srgb, var(--dolan-color-info, #1769aa) 10%, transparent);
+        margin: 1rem 0;
+    }
+    &__section {
+        margin-top: 1.25rem;
+        h2 { font-size: var(--dolan-font-size-lg, 1.25rem); }
+        h3 { font-size: var(--dolan-font-size-md, 1rem); margin-top: 1rem; }
+    }
+    &__admin {
+        padding: 1rem;
+        border: 1px dashed var(--dolan-color-border, #e4e7ef);
+        border-radius: var(--dolan-radius-md, .625rem);
+        dl { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem; margin: 0; }
+        dt { color: var(--dolan-color-text-muted, #667085); font-weight: 500; }
+        dd { margin: 0; }
+    }
+    &__footer { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.5rem; }
+}
+
+@media (max-width: 575.98px) {
+    .o_dolan_app_placeholder {
+        padding: 1rem 1rem 6rem;
+        &__card { padding: 1.25rem; }
+        &__header { flex-direction: column; align-items: flex-start; }
+    }
+}

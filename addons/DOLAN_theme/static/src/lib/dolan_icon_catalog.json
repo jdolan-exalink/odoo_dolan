@@ -14,7 +14,8 @@
       "xmlids": [
         "DOLAN_l10n_ar_afip.menu_afip_root",
         "account.menu_finance_entries",
-        "account.menu_finance"
+        "account.menu_finance",
+        "DOLAN_app_catalog.menu_app_facturacion"
       ],
       "module_ids": [
         "DOLAN_l10n_ar_afip"
@@ -38,7 +39,8 @@
         "sales"
       ],
       "xmlids": [
-        "sale.sale_menu_root"
+        "sale.sale_menu_root",
+        "DOLAN_app_catalog.menu_app_ventas"
       ],
       "module_ids": [
         "sale"
@@ -83,7 +85,8 @@
         "crm"
       ],
       "xmlids": [
-        "crm.crm_menu_root"
+        "crm.crm_menu_root",
+        "DOLAN_app_catalog.menu_app_crm"
       ],
       "module_ids": [
         "crm"
@@ -108,7 +111,8 @@
         "pos"
       ],
       "xmlids": [
-        "point_of_sale.menu_point_root"
+        "point_of_sale.menu_point_root",
+        "DOLAN_app_catalog.menu_app_pos"
       ],
       "module_ids": [
         "point_of_sale"
@@ -132,7 +136,8 @@
         "dashboards"
       ],
       "xmlids": [
-        "DOLAN_knowledge_bi.menu_dolan_dashboard_root"
+        "DOLAN_knowledge_bi.menu_dolan_dashboard_root",
+        "DOLAN_app_catalog.menu_app_tableros"
       ],
       "module_ids": [
         "DOLAN_knowledge_bi"
@@ -157,7 +162,8 @@
         "dolan ai"
       ],
       "xmlids": [
-        "DOLAN_ai.menu_dolan_ai_root"
+        "DOLAN_ai.menu_dolan_ai_root",
+        "DOLAN_app_catalog.menu_app_asistente_ia"
       ],
       "module_ids": [
         "DOLAN_ai"
@@ -181,7 +187,8 @@
         "expenses"
       ],
       "xmlids": [
-        "hr_expense.menu_hr_expense_root"
+        "hr_expense.menu_hr_expense_root",
+        "DOLAN_app_catalog.menu_app_gastos"
       ],
       "module_ids": [
         "hr_expense"
@@ -207,7 +214,8 @@
         "conocimiento"
       ],
       "xmlids": [
-        "knowledge.knowledge_menu_root"
+        "knowledge.knowledge_menu_root",
+        "DOLAN_app_catalog.menu_app_conocimiento"
       ],
       "module_ids": [
         "knowledge"
@@ -231,7 +239,8 @@
         "attendance"
       ],
       "xmlids": [
-        "hr_attendance.menu_hr_attendance_root"
+        "hr_attendance.menu_hr_attendance_root",
+        "DOLAN_app_catalog.menu_app_asistencias"
       ],
       "module_ids": [
         "hr_attendance"
@@ -303,7 +312,8 @@
         "accounting"
       ],
       "xmlids": [
-        "DOLAN_accounting.menu_dolan_accounting_root"
+        "DOLAN_accounting.menu_dolan_accounting_root",
+        "DOLAN_app_catalog.menu_app_contabilidad"
       ],
       "module_ids": [
         "account"
@@ -327,7 +337,8 @@
         "purchase"
       ],
       "xmlids": [
-        "purchase.menu_purchase_root"
+        "purchase.menu_purchase_root",
+        "DOLAN_app_catalog.menu_app_compras"
       ],
       "module_ids": [
         "purchase"
@@ -377,7 +388,8 @@
         "chats"
       ],
       "xmlids": [
-        "mail.menu_root_discuss"
+        "mail.menu_root_discuss",
+        "DOLAN_app_catalog.menu_app_conversaciones"
       ],
       "module_ids": [
         "mail"
@@ -426,7 +438,8 @@
         "stock"
       ],
       "xmlids": [
-        "stock.menu_stock_root"
+        "stock.menu_stock_root",
+        "DOLAN_app_catalog.menu_app_inventario"
       ],
       "module_ids": [
         "stock"
@@ -499,7 +512,8 @@
         "maintenance"
       ],
       "xmlids": [
-        "maintenance.menu_maintenance_title"
+        "maintenance.menu_maintenance_title",
+        "DOLAN_app_catalog.menu_app_mantenimiento"
       ],
       "module_ids": [
         "maintenance"
@@ -525,7 +539,8 @@
         "manufacturing"
       ],
       "xmlids": [
-        "mrp.menu_mrp_root"
+        "mrp.menu_mrp_root",
+        "DOLAN_app_catalog.menu_app_manufactura"
       ],
       "module_ids": [
         "mrp"
@@ -549,7 +564,8 @@
         "email marketing"
       ],
       "xmlids": [
-        "mass_mailing.mass_mailing_menu_root"
+        "mass_mailing.mass_mailing_menu_root",
+        "DOLAN_app_catalog.menu_app_email_marketing"
       ],
       "module_ids": [
         "mass_mailing"
@@ -597,7 +613,8 @@
         "kitchen display"
       ],
       "xmlids": [
-        "pos_restaurant.menu_kitchen_display"
+        "pos_restaurant.menu_kitchen_display",
+        "DOLAN_app_catalog.menu_app_cocina"
       ],
       "module_ids": [
         "pos_restaurant"
@@ -621,7 +638,8 @@
         "projects"
       ],
       "xmlids": [
-        "project.menu_main_pm"
+        "project.menu_main_pm",
+        "DOLAN_app_catalog.menu_app_proyectos"
       ],
       "module_ids": [
         "project"
@@ -645,7 +663,8 @@
         "repairs"
       ],
       "xmlids": [
-        "repair.menu_repair_order"
+        "repair.menu_repair_order",
+        "DOLAN_app_catalog.menu_app_reparaciones"
       ],
       "module_ids": [
         "repair"
@@ -669,7 +688,8 @@
         "subscriptions"
       ],
       "xmlids": [
-        "sale_subscription.menu_sale_subscription_root"
+        "sale_subscription.menu_sale_subscription_root",
+        "DOLAN_app_catalog.menu_app_suscripciones"
       ],
       "module_ids": [
         "sale_subscription"
@@ -694,7 +714,8 @@
         "taller de trabajo"
       ],
       "xmlids": [
-        "mrp_workorder.menu_mrp_workorder"
+        "mrp_workorder.menu_mrp_workorder",
+        "DOLAN_app_catalog.menu_app_taller"
       ],
       "module_ids": [
         "mrp_workorder"
@@ -719,7 +740,8 @@
         "ausencias"
       ],
       "xmlids": [
-        "hr_holidays.menu_hr_holidays_root"
+        "hr_holidays.menu_hr_holidays_root",
+        "DOLAN_app_catalog.menu_app_ausencias"
       ],
       "module_ids": [
         "hr_holidays"
@@ -744,7 +766,8 @@
         "rental"
       ],
       "xmlids": [
-        "DOLAN_renting.menu_dolan_renting_root"
+        "DOLAN_renting.menu_dolan_renting_root",
+        "DOLAN_app_catalog.menu_app_alquileres"
       ],
       "module_ids": [
         "DOLAN_renting"
@@ -792,7 +815,8 @@
         "mensajeria whatsapp"
       ],
       "xmlids": [
-        "DOLAN_whatsapp.menu_dolan_whatsapp_root"
+        "DOLAN_whatsapp.menu_dolan_whatsapp_root",
+        "DOLAN_app_catalog.menu_app_whatsapp"
       ],
       "module_ids": [
         "DOLAN_whatsapp"
@@ -817,7 +841,8 @@
         "impresion pos"
       ],
       "xmlids": [
-        "ePOS_print.menu_epos_print_root"
+        "ePOS_print.menu_epos_print_root",
+        "DOLAN_app_catalog.menu_app_impresoras"
       ],
       "module_ids": [
         "ePOS_print"
@@ -842,7 +867,8 @@
         "scale"
       ],
       "xmlids": [
-        "pos_scale_management.menu_pos_scale_root"
+        "pos_scale_management.menu_pos_scale_root",
+        "DOLAN_app_catalog.menu_app_balanzas"
       ],
       "module_ids": [
         "pos_scale_management"
@@ -867,7 +893,8 @@
         "payment terminals"
       ],
       "xmlids": [
-        "DOLAN_payment_terminal.menu_payment_terminal_root"
+        "DOLAN_payment_terminal.menu_payment_terminal_root",
+        "DOLAN_app_catalog.menu_app_terminales"
       ],
       "module_ids": [
         "DOLAN_payment_terminal"
@@ -893,7 +920,8 @@
         "discount campaigns"
       ],
       "xmlids": [
-        "DOLAN_discount_engine.menu_dolan_discount_root"
+        "DOLAN_discount_engine.menu_dolan_discount_root",
+        "DOLAN_app_catalog.menu_app_promociones"
       ],
       "module_ids": [
         "DOLAN_discount_engine"
@@ -919,7 +947,8 @@
         "configuración"
       ],
       "xmlids": [
-        "base.menu_administration"
+        "base.menu_administration",
+        "DOLAN_app_catalog.menu_app_ajustes"
       ],
       "module_ids": [
         "base"
@@ -944,7 +973,8 @@
         "barcode"
       ],
       "xmlids": [
-        "stock_barcode.menu_stock_barcode"
+        "stock_barcode.menu_stock_barcode",
+        "DOLAN_app_catalog.menu_app_codigo_barras"
       ],
       "module_ids": [
         "stock_barcode"
@@ -1016,7 +1046,8 @@
         "recruitment"
       ],
       "xmlids": [
-        "hr_recruitment.menu_hr_recruitment_root"
+        "hr_recruitment.menu_hr_recruitment_root",
+        "DOLAN_app_catalog.menu_app_reclutamiento"
       ],
       "module_ids": [
         "hr_recruitment"
@@ -1040,7 +1071,8 @@
         "fleet"
       ],
       "xmlids": [
-        "fleet.fleet_menu_root"
+        "fleet.fleet_menu_root",
+        "DOLAN_app_catalog.menu_app_flota"
       ],
       "module_ids": [
         "fleet"
@@ -1064,7 +1096,8 @@
         "apps"
       ],
       "xmlids": [
-        "base.menu_management"
+        "base.menu_management",
+        "DOLAN_app_catalog.menu_app_aplicaciones"
       ],
       "module_ids": [
         "base"
@@ -1088,7 +1121,8 @@
         "employees"
       ],
       "xmlids": [
-        "hr.menu_hr_root"
+        "hr.menu_hr_root",
+        "DOLAN_app_catalog.menu_app_empleados"
       ],
       "module_ids": [
         "hr"
@@ -1100,6 +1134,1308 @@
         "fluent_filled": "fluent_filled/employees.svg",
         "fluent_regular": "fluent_regular/employees.svg",
         "tabler": null
+      }
+    },
+    {
+      "id": "app.scheduling",
+      "label": "Turnos",
+      "category": "people",
+      "semantic": "calendar_clock",
+      "aliases": [
+        "turnos",
+        "planificacion de turnos",
+        "planificación de turnos",
+        "scheduling",
+        "shifts"
+      ],
+      "xmlids": [
+        "DOLAN_hr_scheduling.menu_dolan_scheduling_root",
+        "DOLAN_app_catalog.menu_app_turnos"
+      ],
+      "module_ids": [
+        "DOLAN_hr_scheduling"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/scheduling.svg",
+        "fluent_flat": "fluent_flat/scheduling.svg",
+        "fluent_filled": "fluent_filled/scheduling.svg",
+        "fluent_regular": "fluent_regular/scheduling.svg",
+        "tabler": "tabler/scheduling.svg"
+      }
+    },
+    {
+      "id": "app.payroll",
+      "label": "Sueldos",
+      "category": "people",
+      "semantic": "payslip_coin",
+      "aliases": [
+        "sueldos",
+        "liquidacion de sueldos",
+        "liquidación de sueldos",
+        "nomina",
+        "nómina",
+        "payroll"
+      ],
+      "xmlids": [
+        "DOLAN_payroll_ar.menu_dolan_payroll_root",
+        "DOLAN_app_catalog.menu_app_sueldos"
+      ],
+      "module_ids": [
+        "DOLAN_payroll_ar"
+      ],
+      "color": "green",
+      "assets": {
+        "fluent_3d": "fluent_3d/payroll.svg",
+        "fluent_flat": "fluent_flat/payroll.svg",
+        "fluent_filled": "fluent_filled/payroll.svg",
+        "fluent_regular": "fluent_regular/payroll.svg",
+        "tabler": "tabler/payroll.svg"
+      }
+    },
+    {
+      "id": "app.hr_management",
+      "label": "Gestión RRHH",
+      "category": "people",
+      "semantic": "person_star",
+      "aliases": [
+        "gestion rrhh",
+        "gestión rrhh",
+        "rrhh",
+        "talento",
+        "capacitacion",
+        "capacitación",
+        "talent"
+      ],
+      "xmlids": [
+        "DOLAN_hr_talent.menu_dolan_hr_talent_root",
+        "DOLAN_app_catalog.menu_app_gestion_rrhh"
+      ],
+      "module_ids": [
+        "DOLAN_hr_talent"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/hr_management.svg",
+        "fluent_flat": "fluent_flat/hr_management.svg",
+        "fluent_filled": "fluent_filled/hr_management.svg",
+        "fluent_regular": "fluent_regular/hr_management.svg",
+        "tabler": "tabler/hr_management.svg"
+      }
+    },
+    {
+      "id": "app.hr_reports",
+      "label": "Reportes de Personal",
+      "category": "people",
+      "semantic": "people_chart",
+      "aliases": [
+        "reportes de personal",
+        "informes de personal",
+        "reportes rrhh",
+        "hr reports"
+      ],
+      "xmlids": [
+        "DOLAN_hr_reports.menu_dolan_hr_reports_root",
+        "DOLAN_app_catalog.menu_app_reportes_personal"
+      ],
+      "module_ids": [
+        "DOLAN_hr_reports"
+      ],
+      "color": "pink",
+      "assets": {
+        "fluent_3d": "fluent_3d/hr_reports.svg",
+        "fluent_flat": "fluent_flat/hr_reports.svg",
+        "fluent_filled": "fluent_filled/hr_reports.svg",
+        "fluent_regular": "fluent_regular/hr_reports.svg",
+        "tabler": "tabler/hr_reports.svg"
+      }
+    },
+    {
+      "id": "app.catalog_quotations",
+      "label": "Presupuestos",
+      "category": "commerce",
+      "semantic": "quotations",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_presupuestos"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_quotations-321f87b9.svg",
+        "fluent_flat": "fluent_flat/catalog_quotations-6be79835.svg",
+        "fluent_filled": "fluent_filled/catalog_quotations-703c73d5.svg",
+        "fluent_regular": "fluent_regular/catalog_quotations-dc627b28.svg",
+        "tabler": "tabler/catalog_quotations-d0fbfc68.svg"
+      }
+    },
+    {
+      "id": "app.catalog_customers",
+      "label": "Clientes",
+      "category": "commerce",
+      "semantic": "customers",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_clientes"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_customers-7c906cbe.svg",
+        "fluent_flat": "fluent_flat/catalog_customers-568df215.svg",
+        "fluent_filled": "fluent_filled/catalog_customers-f191c4a3.svg",
+        "fluent_regular": "fluent_regular/catalog_customers-6ab4b1f2.svg",
+        "tabler": "tabler/catalog_customers-fcda8f39.svg"
+      }
+    },
+    {
+      "id": "app.catalog_pricelists",
+      "label": "Listas de precios",
+      "category": "commerce",
+      "semantic": "pricelists",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_listas_precios"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_pricelists-6008f1a8.svg",
+        "fluent_flat": "fluent_flat/catalog_pricelists-bb458fbe.svg",
+        "fluent_filled": "fluent_filled/catalog_pricelists-f9c162e3.svg",
+        "fluent_regular": "fluent_regular/catalog_pricelists-a0c804ec.svg",
+        "tabler": "tabler/catalog_pricelists-fe1eda14.svg"
+      }
+    },
+    {
+      "id": "app.catalog_marketplace",
+      "label": "Marketplace",
+      "category": "commerce",
+      "semantic": "marketplace",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_marketplace"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_marketplace-e6e608a3.svg",
+        "fluent_flat": "fluent_flat/catalog_marketplace-43d3f709.svg",
+        "fluent_filled": "fluent_filled/catalog_marketplace-b7795967.svg",
+        "fluent_regular": "fluent_regular/catalog_marketplace-5fac180b.svg",
+        "tabler": "tabler/catalog_marketplace-9eb16586.svg"
+      }
+    },
+    {
+      "id": "app.catalog_ecommerce",
+      "label": "Tienda online",
+      "category": "commerce",
+      "semantic": "ecommerce",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_tienda_online"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_ecommerce-cf676ee1.svg",
+        "fluent_flat": "fluent_flat/catalog_ecommerce-71a24dff.svg",
+        "fluent_filled": "fluent_filled/catalog_ecommerce-9eb2c005.svg",
+        "fluent_regular": "fluent_regular/catalog_ecommerce-d0326e34.svg",
+        "tabler": "tabler/catalog_ecommerce-8d63cbe3.svg"
+      }
+    },
+    {
+      "id": "app.catalog_loyalty",
+      "label": "Fidelización",
+      "category": "commerce",
+      "semantic": "loyalty",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_fidelizacion"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_loyalty-b7971853.svg",
+        "fluent_flat": "fluent_flat/catalog_loyalty-d772a8a0.svg",
+        "fluent_filled": "fluent_filled/catalog_loyalty-69fe462d.svg",
+        "fluent_regular": "fluent_regular/catalog_loyalty-5e813d4f.svg",
+        "tabler": "tabler/catalog_loyalty-96eb4360.svg"
+      }
+    },
+    {
+      "id": "app.catalog_current_accounts",
+      "label": "Cuentas corrientes",
+      "category": "finance",
+      "semantic": "current_accounts",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_cuentas_corrientes",
+        "DOLAN_current_account.menu_dolan_current_account_root"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_current_accounts-b136062e.svg",
+        "fluent_flat": "fluent_flat/catalog_current_accounts-87bd2926.svg",
+        "fluent_filled": "fluent_filled/catalog_current_accounts-1bd85cc8.svg",
+        "fluent_regular": "fluent_regular/catalog_current_accounts-a857b330.svg",
+        "tabler": "tabler/catalog_current_accounts-1313e5fc.svg"
+      }
+    },
+    {
+      "id": "app.catalog_debtors",
+      "label": "Seguimiento de deudores",
+      "category": "finance",
+      "semantic": "debtors",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_seguimiento_deudores"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_debtors-b2bc62e2.svg",
+        "fluent_flat": "fluent_flat/catalog_debtors-dec44b89.svg",
+        "fluent_filled": "fluent_filled/catalog_debtors-454dafd2.svg",
+        "fluent_regular": "fluent_regular/catalog_debtors-f0046cfd.svg",
+        "tabler": "tabler/catalog_debtors-e5ee87fa.svg"
+      }
+    },
+    {
+      "id": "app.catalog_collections",
+      "label": "Cobranzas",
+      "category": "finance",
+      "semantic": "collections",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_cobranzas"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_collections-ba72f3f5.svg",
+        "fluent_flat": "fluent_flat/catalog_collections-90e0065d.svg",
+        "fluent_filled": "fluent_filled/catalog_collections-45e14464.svg",
+        "fluent_regular": "fluent_regular/catalog_collections-b0d1cf02.svg",
+        "tabler": "tabler/catalog_collections-9e06c5b9.svg"
+      }
+    },
+    {
+      "id": "app.catalog_vendor_payments",
+      "label": "Pagos a proveedores",
+      "category": "finance",
+      "semantic": "vendor_payments",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_pagos_proveedores"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_vendor_payments-5e5f18f6.svg",
+        "fluent_flat": "fluent_flat/catalog_vendor_payments-a377e2e0.svg",
+        "fluent_filled": "fluent_filled/catalog_vendor_payments-251d6f7e.svg",
+        "fluent_regular": "fluent_regular/catalog_vendor_payments-4725c735.svg",
+        "tabler": "tabler/catalog_vendor_payments-cb2ac493.svg"
+      }
+    },
+    {
+      "id": "app.catalog_treasury",
+      "label": "Caja y Tesorería",
+      "category": "finance",
+      "semantic": "treasury",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_caja_tesoreria",
+        "DOLAN_treasury.menu_dolan_treasury_root"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_treasury-84fb2d5d.svg",
+        "fluent_flat": "fluent_flat/catalog_treasury-861d4d99.svg",
+        "fluent_filled": "fluent_filled/catalog_treasury-e7ad64f3.svg",
+        "fluent_regular": "fluent_regular/catalog_treasury-d7f9229a.svg",
+        "tabler": "tabler/catalog_treasury-ed79d34f.svg"
+      }
+    },
+    {
+      "id": "app.catalog_banks",
+      "label": "Bancos",
+      "category": "finance",
+      "semantic": "banks",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_bancos"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_banks-f21c5294.svg",
+        "fluent_flat": "fluent_flat/catalog_banks-f5f82fb1.svg",
+        "fluent_filled": "fluent_filled/catalog_banks-f4f79405.svg",
+        "fluent_regular": "fluent_regular/catalog_banks-7dfcefdd.svg",
+        "tabler": "tabler/catalog_banks-d902d3db.svg"
+      }
+    },
+    {
+      "id": "app.catalog_checks",
+      "label": "Cheques y eCheq",
+      "category": "finance",
+      "semantic": "checks",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_cheques"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_checks-4a0547ee.svg",
+        "fluent_flat": "fluent_flat/catalog_checks-c6083138.svg",
+        "fluent_filled": "fluent_filled/catalog_checks-3f3423e1.svg",
+        "fluent_regular": "fluent_regular/catalog_checks-4567d0ab.svg",
+        "tabler": "tabler/catalog_checks-476a002d.svg"
+      }
+    },
+    {
+      "id": "app.catalog_reconciliation",
+      "label": "Conciliación",
+      "category": "finance",
+      "semantic": "reconciliation",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_conciliacion"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_reconciliation-56479b5c.svg",
+        "fluent_flat": "fluent_flat/catalog_reconciliation-7ca6ce22.svg",
+        "fluent_filled": "fluent_filled/catalog_reconciliation-78ad20eb.svg",
+        "fluent_regular": "fluent_regular/catalog_reconciliation-999ee334.svg",
+        "tabler": "tabler/catalog_reconciliation-cfc0059d.svg"
+      }
+    },
+    {
+      "id": "app.catalog_taxes",
+      "label": "Impuestos",
+      "category": "finance",
+      "semantic": "taxes",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_impuestos"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_taxes-fc8c55f2.svg",
+        "fluent_flat": "fluent_flat/catalog_taxes-f1fffeab.svg",
+        "fluent_filled": "fluent_filled/catalog_taxes-71d4ba91.svg",
+        "fluent_regular": "fluent_regular/catalog_taxes-2b1645c1.svg",
+        "tabler": "tabler/catalog_taxes-672992c0.svg"
+      }
+    },
+    {
+      "id": "app.catalog_fiscal_reports",
+      "label": "Reportes fiscales",
+      "category": "finance",
+      "semantic": "fiscal_reports",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_reportes_fiscales"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_fiscal_reports-7a064030.svg",
+        "fluent_flat": "fluent_flat/catalog_fiscal_reports-8f1b5d9e.svg",
+        "fluent_filled": "fluent_filled/catalog_fiscal_reports-dfa0743b.svg",
+        "fluent_regular": "fluent_regular/catalog_fiscal_reports-315726c4.svg",
+        "tabler": "tabler/catalog_fiscal_reports-14cc7f12.svg"
+      }
+    },
+    {
+      "id": "app.catalog_financial_reports",
+      "label": "Reportes financieros",
+      "category": "finance",
+      "semantic": "financial_reports",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_reportes_financieros"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "blue",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_financial_reports-e3fae700.svg",
+        "fluent_flat": "fluent_flat/catalog_financial_reports-0b3bd5fb.svg",
+        "fluent_filled": "fluent_filled/catalog_financial_reports-b5505440.svg",
+        "fluent_regular": "fluent_regular/catalog_financial_reports-05d8c45d.svg",
+        "tabler": "tabler/catalog_financial_reports-83cbf70a.svg"
+      }
+    },
+    {
+      "id": "app.catalog_pos_closing",
+      "label": "Cierres y arqueos",
+      "category": "commerce",
+      "semantic": "pos_closing",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_cierres_pos"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_pos_closing-c57eb48a.svg",
+        "fluent_flat": "fluent_flat/catalog_pos_closing-4542e8e4.svg",
+        "fluent_filled": "fluent_filled/catalog_pos_closing-d273c5ba.svg",
+        "fluent_regular": "fluent_regular/catalog_pos_closing-23f50ad7.svg",
+        "tabler": "tabler/catalog_pos_closing-2ad0fec9.svg"
+      }
+    },
+    {
+      "id": "app.catalog_cash_shifts",
+      "label": "Turnos de caja",
+      "category": "commerce",
+      "semantic": "cash_shifts",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_turnos_caja"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "violet",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_cash_shifts-d95929d4.svg",
+        "fluent_flat": "fluent_flat/catalog_cash_shifts-8cfd2292.svg",
+        "fluent_filled": "fluent_filled/catalog_cash_shifts-7020c2f8.svg",
+        "fluent_regular": "fluent_regular/catalog_cash_shifts-8285b763.svg",
+        "tabler": "tabler/catalog_cash_shifts-a91eff5f.svg"
+      }
+    },
+    {
+      "id": "app.catalog_products",
+      "label": "Productos",
+      "category": "operations",
+      "semantic": "products",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_productos"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_products-d1a82151.svg",
+        "fluent_flat": "fluent_flat/catalog_products-f958d7fc.svg",
+        "fluent_filled": "fluent_filled/catalog_products-9cbf6b56.svg",
+        "fluent_regular": "fluent_regular/catalog_products-fc8db322.svg",
+        "tabler": "tabler/catalog_products-d1409a07.svg"
+      }
+    },
+    {
+      "id": "app.catalog_suppliers",
+      "label": "Proveedores",
+      "category": "operations",
+      "semantic": "suppliers",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_proveedores"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_suppliers-1eeaca61.svg",
+        "fluent_flat": "fluent_flat/catalog_suppliers-d808c35e.svg",
+        "fluent_filled": "fluent_filled/catalog_suppliers-10d7a6ef.svg",
+        "fluent_regular": "fluent_regular/catalog_suppliers-3fe15386.svg",
+        "tabler": "tabler/catalog_suppliers-ffb117e5.svg"
+      }
+    },
+    {
+      "id": "app.catalog_replenishment",
+      "label": "Reposición",
+      "category": "operations",
+      "semantic": "replenishment",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_reposicion"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_replenishment-25995161.svg",
+        "fluent_flat": "fluent_flat/catalog_replenishment-fe1dd670.svg",
+        "fluent_filled": "fluent_filled/catalog_replenishment-28feb92f.svg",
+        "fluent_regular": "fluent_regular/catalog_replenishment-4f8379e3.svg",
+        "tabler": "tabler/catalog_replenishment-8c75c5eb.svg"
+      }
+    },
+    {
+      "id": "app.catalog_transfers",
+      "label": "Transferencias",
+      "category": "operations",
+      "semantic": "transfers",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_transferencias"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_transfers-ebd6fd2b.svg",
+        "fluent_flat": "fluent_flat/catalog_transfers-489ff9fc.svg",
+        "fluent_filled": "fluent_filled/catalog_transfers-b5c3a418.svg",
+        "fluent_regular": "fluent_regular/catalog_transfers-5d9dd2a0.svg",
+        "tabler": "tabler/catalog_transfers-0c779a0d.svg"
+      }
+    },
+    {
+      "id": "app.catalog_lots",
+      "label": "Lotes y series",
+      "category": "operations",
+      "semantic": "lots",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_lotes_series"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_lots-05491eae.svg",
+        "fluent_flat": "fluent_flat/catalog_lots-3bcff1df.svg",
+        "fluent_filled": "fluent_filled/catalog_lots-8a7e47aa.svg",
+        "fluent_regular": "fluent_regular/catalog_lots-6db56f19.svg",
+        "tabler": "tabler/catalog_lots-c7cd7cb5.svg"
+      }
+    },
+    {
+      "id": "app.catalog_stock_count",
+      "label": "Inventario físico",
+      "category": "operations",
+      "semantic": "stock_count",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_inventario_fisico"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_stock_count-60e9db28.svg",
+        "fluent_flat": "fluent_flat/catalog_stock_count-d74b4de9.svg",
+        "fluent_filled": "fluent_filled/catalog_stock_count-9ae15bcc.svg",
+        "fluent_regular": "fluent_regular/catalog_stock_count-39242865.svg",
+        "tabler": "tabler/catalog_stock_count-c830fd43.svg"
+      }
+    },
+    {
+      "id": "app.catalog_costs",
+      "label": "Costos",
+      "category": "operations",
+      "semantic": "costs",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_costos",
+        "DOLAN_product_cost.menu_dolan_product_cost_root"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_costs-76241f51.svg",
+        "fluent_flat": "fluent_flat/catalog_costs-df59fa80.svg",
+        "fluent_filled": "fluent_filled/catalog_costs-0688cbaf.svg",
+        "fluent_regular": "fluent_regular/catalog_costs-1896d303.svg",
+        "tabler": "tabler/catalog_costs-df0b1f91.svg"
+      }
+    },
+    {
+      "id": "app.catalog_delivery_notes",
+      "label": "Remitos y COT",
+      "category": "operations",
+      "semantic": "delivery_notes",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_remitos"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_delivery_notes-ce11f295.svg",
+        "fluent_flat": "fluent_flat/catalog_delivery_notes-af7532ea.svg",
+        "fluent_filled": "fluent_filled/catalog_delivery_notes-1721076b.svg",
+        "fluent_regular": "fluent_regular/catalog_delivery_notes-683b3d2e.svg",
+        "tabler": "tabler/catalog_delivery_notes-f23ffec3.svg"
+      }
+    },
+    {
+      "id": "app.catalog_picking",
+      "label": "Preparación de pedidos",
+      "category": "operations",
+      "semantic": "picking",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_preparacion"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_picking-148fa97a.svg",
+        "fluent_flat": "fluent_flat/catalog_picking-319c58b5.svg",
+        "fluent_filled": "fluent_filled/catalog_picking-643d2377.svg",
+        "fluent_regular": "fluent_regular/catalog_picking-70c1d07f.svg",
+        "tabler": "tabler/catalog_picking-1fb09b5f.svg"
+      }
+    },
+    {
+      "id": "app.catalog_routes",
+      "label": "Rutas y reparto",
+      "category": "operations",
+      "semantic": "routes",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_rutas_reparto"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_routes-e2a91b8b.svg",
+        "fluent_flat": "fluent_flat/catalog_routes-74d116fa.svg",
+        "fluent_filled": "fluent_filled/catalog_routes-88756c60.svg",
+        "fluent_regular": "fluent_regular/catalog_routes-a61977bb.svg",
+        "tabler": "tabler/catalog_routes-af4d2316.svg"
+      }
+    },
+    {
+      "id": "app.catalog_proof_delivery",
+      "label": "Prueba de entrega",
+      "category": "operations",
+      "semantic": "proof_delivery",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_prueba_entrega"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_proof_delivery-ac302d4b.svg",
+        "fluent_flat": "fluent_flat/catalog_proof_delivery-5dde8685.svg",
+        "fluent_filled": "fluent_filled/catalog_proof_delivery-11ab95d0.svg",
+        "fluent_regular": "fluent_regular/catalog_proof_delivery-89829df0.svg",
+        "tabler": "tabler/catalog_proof_delivery-9d08d97b.svg"
+      }
+    },
+    {
+      "id": "app.catalog_hr_novelties",
+      "label": "Novedades",
+      "category": "people",
+      "semantic": "hr_novelties",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_novedades"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_hr_novelties-efeaa2d4.svg",
+        "fluent_flat": "fluent_flat/catalog_hr_novelties-cc5833be.svg",
+        "fluent_filled": "fluent_filled/catalog_hr_novelties-4ae9dcba.svg",
+        "fluent_regular": "fluent_regular/catalog_hr_novelties-116a5aa7.svg",
+        "tabler": "tabler/catalog_hr_novelties-709511f5.svg"
+      }
+    },
+    {
+      "id": "app.catalog_hr_documents",
+      "label": "Documentos",
+      "category": "people",
+      "semantic": "hr_documents",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_documentos_personal"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "teal",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_hr_documents-972c61c7.svg",
+        "fluent_flat": "fluent_flat/catalog_hr_documents-1ea087b9.svg",
+        "fluent_filled": "fluent_filled/catalog_hr_documents-e5b39017.svg",
+        "fluent_regular": "fluent_regular/catalog_hr_documents-d28ea9bc.svg",
+        "tabler": "tabler/catalog_hr_documents-e2b4bd20.svg"
+      }
+    },
+    {
+      "id": "app.catalog_quality",
+      "label": "Calidad",
+      "category": "operations",
+      "semantic": "quality",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_calidad"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_quality-1823412a.svg",
+        "fluent_flat": "fluent_flat/catalog_quality-7c80a0b2.svg",
+        "fluent_filled": "fluent_filled/catalog_quality-03da0a6a.svg",
+        "fluent_regular": "fluent_regular/catalog_quality-2b268585.svg",
+        "tabler": "tabler/catalog_quality-f03bceb3.svg"
+      }
+    },
+    {
+      "id": "app.catalog_assets",
+      "label": "Activos fijos",
+      "category": "operations",
+      "semantic": "assets",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_activos"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "orange",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_assets-ed0ecea8.svg",
+        "fluent_flat": "fluent_flat/catalog_assets-e19994b6.svg",
+        "fluent_filled": "fluent_filled/catalog_assets-497bdbfd.svg",
+        "fluent_regular": "fluent_regular/catalog_assets-0648d542.svg",
+        "tabler": "tabler/catalog_assets-74540b6b.svg"
+      }
+    },
+    {
+      "id": "app.catalog_contracts",
+      "label": "Contratos",
+      "category": "productivity",
+      "semantic": "contracts",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_contratos",
+        "DOLAN_service_contract.menu_dolan_contract_root"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "yellow",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_contracts-3c0ecdb9.svg",
+        "fluent_flat": "fluent_flat/catalog_contracts-97b5e2a0.svg",
+        "fluent_filled": "fluent_filled/catalog_contracts-d207298c.svg",
+        "fluent_regular": "fluent_regular/catalog_contracts-3944582e.svg",
+        "tabler": "tabler/catalog_contracts-3e11253d.svg"
+      }
+    },
+    {
+      "id": "app.catalog_appointments",
+      "label": "Agenda de turnos",
+      "category": "productivity",
+      "semantic": "appointments",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_turnos_clientes",
+        "DOLAN_appointment.menu_dolan_appointment_root"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "yellow",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_appointments-9a667cf1.svg",
+        "fluent_flat": "fluent_flat/catalog_appointments-9659180b.svg",
+        "fluent_filled": "fluent_filled/catalog_appointments-3ac7b1ae.svg",
+        "fluent_regular": "fluent_regular/catalog_appointments-0810aa9f.svg",
+        "tabler": "tabler/catalog_appointments-7faeb81e.svg"
+      }
+    },
+    {
+      "id": "app.catalog_helpdesk",
+      "label": "Mesa de ayuda",
+      "category": "productivity",
+      "semantic": "helpdesk",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_mesa_ayuda",
+        "DOLAN_helpdesk.menu_dolan_helpdesk_root"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "yellow",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_helpdesk-db26b834.svg",
+        "fluent_flat": "fluent_flat/catalog_helpdesk-00852ac8.svg",
+        "fluent_filled": "fluent_filled/catalog_helpdesk-16f20b86.svg",
+        "fluent_regular": "fluent_regular/catalog_helpdesk-f318aa63.svg",
+        "tabler": "tabler/catalog_helpdesk-5c454e4c.svg"
+      }
+    },
+    {
+      "id": "app.catalog_service_orders",
+      "label": "Órdenes de servicio",
+      "category": "productivity",
+      "semantic": "service_orders",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_ordenes_servicio",
+        "DOLAN_field_service.menu_dolan_field_service_root"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "yellow",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_service_orders-778d90bc.svg",
+        "fluent_flat": "fluent_flat/catalog_service_orders-813093d2.svg",
+        "fluent_filled": "fluent_filled/catalog_service_orders-b499bc14.svg",
+        "fluent_regular": "fluent_regular/catalog_service_orders-a32f726d.svg",
+        "tabler": "tabler/catalog_service_orders-eb40b910.svg"
+      }
+    },
+    {
+      "id": "app.catalog_ocr",
+      "label": "OCR de comprobantes",
+      "category": "communication",
+      "semantic": "ocr",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_ocr"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "green",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_ocr-f53f0bd8.svg",
+        "fluent_flat": "fluent_flat/catalog_ocr-71636f02.svg",
+        "fluent_filled": "fluent_filled/catalog_ocr-391f243f.svg",
+        "fluent_regular": "fluent_regular/catalog_ocr-87de7729.svg",
+        "tabler": "tabler/catalog_ocr-7a6b390d.svg"
+      }
+    },
+    {
+      "id": "app.catalog_templates",
+      "label": "Plantillas",
+      "category": "communication",
+      "semantic": "templates",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_plantillas"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "green",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_templates-17c90c39.svg",
+        "fluent_flat": "fluent_flat/catalog_templates-b50c3486.svg",
+        "fluent_filled": "fluent_filled/catalog_templates-34b63414.svg",
+        "fluent_regular": "fluent_regular/catalog_templates-2f23c3e2.svg",
+        "tabler": "tabler/catalog_templates-bf04d125.svg"
+      }
+    },
+    {
+      "id": "app.catalog_automations",
+      "label": "Automatizaciones",
+      "category": "communication",
+      "semantic": "automations",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_automatizaciones"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "green",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_automations-771fb789.svg",
+        "fluent_flat": "fluent_flat/catalog_automations-e6e8425b.svg",
+        "fluent_filled": "fluent_filled/catalog_automations-3d555cbb.svg",
+        "fluent_regular": "fluent_regular/catalog_automations-44965162.svg",
+        "tabler": "tabler/catalog_automations-212b6a6f.svg"
+      }
+    },
+    {
+      "id": "app.catalog_executive_dashboard",
+      "label": "Dashboard gerencial",
+      "category": "analytics",
+      "semantic": "executive_dashboard",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_dashboard_gerencial"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "pink",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_executive_dashboard-4aef47b7.svg",
+        "fluent_flat": "fluent_flat/catalog_executive_dashboard-b4ab9285.svg",
+        "fluent_filled": "fluent_filled/catalog_executive_dashboard-fb0e7e62.svg",
+        "fluent_regular": "fluent_regular/catalog_executive_dashboard-1cfee0f6.svg",
+        "tabler": "tabler/catalog_executive_dashboard-d662006c.svg"
+      }
+    },
+    {
+      "id": "app.catalog_profitability",
+      "label": "Rentabilidad",
+      "category": "analytics",
+      "semantic": "profitability",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_rentabilidad",
+        "DOLAN_profitability.menu_dolan_profitability_root"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "pink",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_profitability-ff477ae3.svg",
+        "fluent_flat": "fluent_flat/catalog_profitability-b01f4bda.svg",
+        "fluent_filled": "fluent_filled/catalog_profitability-f3404956.svg",
+        "fluent_regular": "fluent_regular/catalog_profitability-edc10b0f.svg",
+        "tabler": "tabler/catalog_profitability-8ea5de75.svg"
+      }
+    },
+    {
+      "id": "app.catalog_cash_flow",
+      "label": "Flujo de caja",
+      "category": "analytics",
+      "semantic": "cash_flow",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_flujo_caja",
+        "DOLAN_cash_flow.menu_dolan_cash_flow_root"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "pink",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_cash_flow-f4da357f.svg",
+        "fluent_flat": "fluent_flat/catalog_cash_flow-bce7dda9.svg",
+        "fluent_filled": "fluent_filled/catalog_cash_flow-e2b829e1.svg",
+        "fluent_regular": "fluent_regular/catalog_cash_flow-07e2a21d.svg",
+        "tabler": "tabler/catalog_cash_flow-0c96ceca.svg"
+      }
+    },
+    {
+      "id": "app.catalog_audit",
+      "label": "Auditoría",
+      "category": "analytics",
+      "semantic": "audit",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_auditoria",
+        "DOLAN_audit_log.menu_dolan_audit_root"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "pink",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_audit-4f72f11a.svg",
+        "fluent_flat": "fluent_flat/catalog_audit-7d2fcc1b.svg",
+        "fluent_filled": "fluent_filled/catalog_audit-63f67681.svg",
+        "fluent_regular": "fluent_regular/catalog_audit-ce11061e.svg",
+        "tabler": "tabler/catalog_audit-6813e4fc.svg"
+      }
+    },
+    {
+      "id": "app.catalog_alerts",
+      "label": "Alertas",
+      "category": "analytics",
+      "semantic": "alerts",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_alerts.menu_dolan_alerts_root",
+        "DOLAN_app_catalog.menu_app_alertas"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "pink",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_alerts-ef408b9e.svg",
+        "fluent_flat": "fluent_flat/catalog_alerts-f66fa37b.svg",
+        "fluent_filled": "fluent_filled/catalog_alerts-cfa70de8.svg",
+        "fluent_regular": "fluent_regular/catalog_alerts-db7521d0.svg",
+        "tabler": "tabler/catalog_alerts-891d0894.svg"
+      }
+    },
+    {
+      "id": "app.catalog_budget",
+      "label": "Presupuesto financiero",
+      "category": "analytics",
+      "semantic": "budget",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_presupuesto_financiero",
+        "DOLAN_budget.menu_dolan_budget_root"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "pink",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_budget-4a2adb55.svg",
+        "fluent_flat": "fluent_flat/catalog_budget-4593bac9.svg",
+        "fluent_filled": "fluent_filled/catalog_budget-346dff6d.svg",
+        "fluent_regular": "fluent_regular/catalog_budget-ecd1b0bd.svg",
+        "tabler": "tabler/catalog_budget-a89d0185.svg"
+      }
+    },
+    {
+      "id": "app.catalog_companies",
+      "label": "Empresas",
+      "category": "tools",
+      "semantic": "companies",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_empresas"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "gray",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_companies-dd96ce98.svg",
+        "fluent_flat": "fluent_flat/catalog_companies-ea8c9723.svg",
+        "fluent_filled": "fluent_filled/catalog_companies-71dc096f.svg",
+        "fluent_regular": "fluent_regular/catalog_companies-39203281.svg",
+        "tabler": "tabler/catalog_companies-e9558cc5.svg"
+      }
+    },
+    {
+      "id": "app.catalog_branches",
+      "label": "Sucursales",
+      "category": "tools",
+      "semantic": "branches",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_sucursales"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "gray",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_branches-f874adff.svg",
+        "fluent_flat": "fluent_flat/catalog_branches-9dcda1b5.svg",
+        "fluent_filled": "fluent_filled/catalog_branches-fafbf3d4.svg",
+        "fluent_regular": "fluent_regular/catalog_branches-417376d8.svg",
+        "tabler": "tabler/catalog_branches-3c2be388.svg"
+      }
+    },
+    {
+      "id": "app.catalog_users",
+      "label": "Usuarios",
+      "category": "tools",
+      "semantic": "users",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_usuarios"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "gray",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_users-7ec3a55d.svg",
+        "fluent_flat": "fluent_flat/catalog_users-5d73491f.svg",
+        "fluent_filled": "fluent_filled/catalog_users-316add3c.svg",
+        "fluent_regular": "fluent_regular/catalog_users-c8e32e64.svg",
+        "tabler": "tabler/catalog_users-c907971e.svg"
+      }
+    },
+    {
+      "id": "app.catalog_fiscal_settings",
+      "label": "Conexión ARCA",
+      "category": "tools",
+      "semantic": "fiscal_settings",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_parametros_fiscales"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "gray",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_fiscal_settings-6f3a02cb.svg",
+        "fluent_flat": "fluent_flat/catalog_fiscal_settings-d9863505.svg",
+        "fluent_filled": "fluent_filled/catalog_fiscal_settings-f84990ba.svg",
+        "fluent_regular": "fluent_regular/catalog_fiscal_settings-e7e8f553.svg",
+        "tabler": "tabler/catalog_fiscal_settings-920e911b.svg"
+      }
+    },
+    {
+      "id": "app.catalog_integrations",
+      "label": "Integraciones",
+      "category": "tools",
+      "semantic": "integrations",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_integraciones"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "gray",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_integrations-fd13e559.svg",
+        "fluent_flat": "fluent_flat/catalog_integrations-1d4941e4.svg",
+        "fluent_filled": "fluent_filled/catalog_integrations-111fc772.svg",
+        "fluent_regular": "fluent_regular/catalog_integrations-5d2fd936.svg",
+        "tabler": "tabler/catalog_integrations-7de48b70.svg"
+      }
+    },
+    {
+      "id": "app.catalog_imports",
+      "label": "Importaciones",
+      "category": "tools",
+      "semantic": "imports",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_importaciones"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "gray",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_imports-fbb49d56.svg",
+        "fluent_flat": "fluent_flat/catalog_imports-222475eb.svg",
+        "fluent_filled": "fluent_filled/catalog_imports-f6c57bec.svg",
+        "fluent_regular": "fluent_regular/catalog_imports-fd754458.svg",
+        "tabler": "tabler/catalog_imports-449f0563.svg"
+      }
+    },
+    {
+      "id": "app.catalog_app_catalog",
+      "label": "Catálogo de apps",
+      "category": "tools",
+      "semantic": "app_catalog",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_catalogo_apps"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "gray",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_app_catalog-10146380.svg",
+        "fluent_flat": "fluent_flat/catalog_app_catalog-ce15acfb.svg",
+        "fluent_filled": "fluent_filled/catalog_app_catalog-1bf29a78.svg",
+        "fluent_regular": "fluent_regular/catalog_app_catalog-aeb04467.svg",
+        "tabler": "tabler/catalog_app_catalog-cfc50bad.svg"
+      }
+    },
+    {
+      "id": "app.catalog_backups",
+      "label": "Respaldos",
+      "category": "tools",
+      "semantic": "backups",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_respaldos"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "gray",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_backups-883a95f2.svg",
+        "fluent_flat": "fluent_flat/catalog_backups-1cfee5a6.svg",
+        "fluent_filled": "fluent_filled/catalog_backups-ca511c39.svg",
+        "fluent_regular": "fluent_regular/catalog_backups-db272328.svg",
+        "tabler": "tabler/catalog_backups-fab9c95b.svg"
+      }
+    },
+    {
+      "id": "app.catalog_diagnostics",
+      "label": "Diagnóstico",
+      "category": "tools",
+      "semantic": "diagnostics",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_diagnostico"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "gray",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_diagnostics-0f40486f.svg",
+        "fluent_flat": "fluent_flat/catalog_diagnostics-528584e3.svg",
+        "fluent_filled": "fluent_filled/catalog_diagnostics-1baa3719.svg",
+        "fluent_regular": "fluent_regular/catalog_diagnostics-a15b9685.svg",
+        "tabler": "tabler/catalog_diagnostics-0042edee.svg"
       }
     }
   ],
@@ -1113,6 +2449,8 @@
   },
   "notes": [
     "WhatsApp uses a local brand mark; scale and barcode use purpose-built local SVGs to preserve their meaning across icon styles.",
-    "Data Cleaning uses the 20px Fluent System Broom Sparkle resource; SVG viewBox is preserved when displayed at app scale."
+    "Data Cleaning uses the 20px Fluent System Broom Sparkle resource; SVG viewBox is preserved when displayed at app scale.",
+    "Turnos, Sueldos, Gestión RRHH and Reportes de Personal use purpose-built local SVGs in every family (no upstream Fluent Emoji matches them).",
+    "Las apps del catálogo DOLAN_app_catalog usan glifos propios (scripts/app_catalog_glyphs.py) generados en las cinco familias por scripts/build_app_catalog.py."
   ]
 }

@@ -1,0 +1,7 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_service_order_technician,Órdenes: técnico,dolan.service.order,DOLAN_field_service.group_field_service_technician,ru,"[('company_id', 'in', company_ids), ('user_id', '=', user.id)]"
+access_dolan_service_order_manager,Órdenes: responsable,dolan.service.order,DOLAN_field_service.group_field_service_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_service_order_line_technician,Materiales: técnico,dolan.service.order.line,DOLAN_field_service.group_field_service_technician,crud,"[('order_id.company_id', 'in', company_ids), ('order_id.user_id', '=', user.id)]"
+access_dolan_service_order_line_manager,Materiales: responsable,dolan.service.order.line,DOLAN_field_service.group_field_service_manager,crud,"[('order_id.company_id', 'in', company_ids)]"
+access_dolan_service_order_time_technician,Horas: técnico,dolan.service.order.time,DOLAN_field_service.group_field_service_technician,crud,"[('order_id.company_id', 'in', company_ids), ('order_id.user_id', '=', user.id)]"
+access_dolan_service_order_time_manager,Horas: responsable,dolan.service.order.time,DOLAN_field_service.group_field_service_manager,crud,"[('order_id.company_id', 'in', company_ids)]"

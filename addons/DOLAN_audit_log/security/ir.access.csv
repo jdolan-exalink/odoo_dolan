@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_audit_log_viewer,Bitácora: auditor,dolan.audit.log,DOLAN_audit_log.group_audit_viewer,r,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+access_dolan_audit_rule_viewer,Reglas: auditor,dolan.audit.rule,DOLAN_audit_log.group_audit_viewer,r,
+access_dolan_audit_rule_system,Reglas: administrador,dolan.audit.rule,base.group_system,ru,

@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_current_account_invoice,Cuentas corrientes: facturación,dolan.current.account,account.group_account_invoice,r,"[('company_id', 'in', company_ids)]"
+access_dolan_payment_promise_invoice,Promesas de pago: facturación,dolan.payment.promise,account.group_account_invoice,cru,"[('company_id', 'in', company_ids)]"
+access_dolan_payment_promise_manager,Promesas de pago: contador,dolan.payment.promise,account.group_account_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_account_statement_wizard,Estado de cuenta: facturación,dolan.account.statement.wizard,account.group_account_invoice,crud,

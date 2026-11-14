@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_audit_log_list" model="ir.ui.view">
+        <field name="name">dolan.audit.log.list</field>
+        <field name="model">dolan.audit.log</field>
+        <field name="arch" type="xml">
+            <list string="Bitácora" create="false" edit="false" delete="false"
+                  decoration-danger="operation == 'unlink'" decoration-info="operation == 'create'">
+                <field name="create_date" string="Fecha"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="operation" widget="badge" decoration-danger="operation == 'unlink'" decoration-info="operation == 'create'"/>
+                <field name="model_label"/>
+                <field name="res_name"/>
+                <field name="changes_text"/>
+                <field name="reason" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_audit_log_form" model="ir.ui.view">
+        <field name="name">dolan.audit.log.form</field>
+        <field name="model">dolan.audit.log</field>
+        <field name="arch" type="xml">
+            <form string="Registro de auditoría" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_open_record" type="object" string="Ver el registro" invisible="operation == 'unlink'"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date" string="Fecha"/>
+                            <field name="user_id"/>
+                            <field name="company_id"/>
+                            <field name="reason"/>
+                        </group>
+                        <group>
+                            <field name="operation"/>
+                            <field name="model_label"/>
+                            <field name="model"/>
+                            <field name="res_name"/>
+                            <field name="res_id"/>
+                        </group>
+                    </group>
+                    <field name="changes_text"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_audit_log_search" model="ir.ui.view">
+        <field name="name">dolan.audit.log.search</field>
+        <field name="model">dolan.audit.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="res_name"/>
+                <field name="user_id"/>
+                <field name="model_label"/>
+                <filter name="today" string="Hoy" domain="[('create_date', '&gt;=', 'today')]"/>
+                <filter name="week" string="Últimos 7 días" domain="[('create_date', '&gt;=', 'today -7d')]"/>
+                <separator/>
+                <filter name="unlink" string="Borrados" domain="[('operation', '=', 'unlink')]"/>
+                <filter name="with_reason" string="Con motivo" domain="[('reason', '!=', False)]"/>
+                <group>
+                    <filter name="group_user" string="Usuario" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_model" string="Documento" context="{'group_by': 'model_label'}"/>
+                    <filter name="group_operation" string="Operación" context="{'group_by': 'operation'}"/>
+                    <filter name="group_day" string="Día" context="{'group_by': 'create_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_audit_log" model="ir.actions.act_window">
+        <field name="name">Bitácora</field>
+        <field name="res_model">dolan.audit.log</field>
+        <field name="view_mode">list,form,pivot</field>
+        <field name="search_view_id" ref="view_dolan_audit_log_search"/>
+        <field name="context">{'search_default_week': 1}</field>
+    </record>
+
+    <record id="view_dolan_audit_rule_list" model="ir.ui.view">
+        <field name="name">dolan.audit.rule.list</field>
+        <field name="model">dolan.audit.rule</field>
+        <field name="arch" type="xml">
+            <list string="Reglas de auditoría" editable="bottom" create="false">
+                <field name="name"/>
+                <field name="model_id" readonly="1"/>
+                <field name="field_ids" widget="many2many_tags"/>
+                <field name="log_create"/>
+                <field name="log_write"/>
+                <field name="log_unlink"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_audit_rule" model="ir.actions.act_window">
+        <field name="name">Qué se audita</field>
+        <field name="res_model">dolan.audit.rule</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <menuitem id="menu_dolan_audit_root" name="Auditoría" sequence="95"
+              groups="group_audit_viewer"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_audit.svg"/>
+    <menuitem id="menu_dolan_audit_log" name="Bitácora" parent="menu_dolan_audit_root" action="action_dolan_audit_log" sequence="10"/>
+    <menuitem id="menu_dolan_audit_rules" name="Qué se audita" parent="menu_dolan_audit_root" action="action_dolan_audit_rule" sequence="20"
+              groups="base.group_system"/>
+</odoo>

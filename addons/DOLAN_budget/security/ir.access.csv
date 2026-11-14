@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_budget_manager,Presupuestos: contador,dolan.budget,account.group_account_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_budget_line_manager,Líneas de presupuesto: contador,dolan.budget.line,account.group_account_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_budget_analysis_manager,Presupuesto contra real: contador,dolan.budget.analysis,account.group_account_manager,r,"[('company_id', 'in', company_ids)]"
+access_dolan_budget_fill_manager,Carga de presupuesto: contador,dolan.budget.fill,account.group_account_manager,crud,

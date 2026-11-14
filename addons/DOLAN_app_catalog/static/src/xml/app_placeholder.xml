@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="DOLAN_app_catalog.AppPlaceholder">
+        <div class="o_action o_dolan_app_placeholder">
+            <div t-if="this.state.error" class="o_dolan_app_placeholder__card" role="alert">
+                <h1 class="o_dolan_app_placeholder__title">App no disponible</h1>
+                <p>Esta app no está disponible para tu usuario.</p>
+                <button class="btn btn-secondary" t-on-click="() => this.goHome()">Volver al Escritorio</button>
+            </div>
+            <div t-elif="this.state.data" class="o_dolan_app_placeholder__card">
+                <header class="o_dolan_app_placeholder__header">
+                    <img t-if="this.state.data.icon_url" t-att-src="this.state.data.icon_url" alt="" class="o_dolan_app_placeholder__icon"/>
+                    <div>
+                        <div class="o_dolan_app_placeholder__folder" t-esc="this.state.data.folder"/>
+                        <h1 class="o_dolan_app_placeholder__title" t-esc="this.state.data.name"/>
+                        <span t-attf-class="o_dolan_app_placeholder__badge o_dolan_app_placeholder__badge--{{ this.state.data.state }}"
+                              t-esc="this.state.data.state_label"/>
+                    </div>
+                </header>
+                <p class="o_dolan_app_placeholder__description" t-esc="this.state.data.description"/>
+                <div class="o_dolan_app_placeholder__notice" role="status">
+                    <i class="fa fa-info-circle" aria-hidden="true"/>
+                    <span t-esc="this.help"/>
+                </div>
+                <section t-if="this.state.data.planned_features.length" class="o_dolan_app_placeholder__section">
+                    <h2>Funcionalidades previstas</h2>
+                    <ul>
+                        <li t-foreach="this.state.data.planned_features" t-as="feature" t-key="feature_index" t-esc="feature"/>
+                    </ul>
+                </section>
+                <section t-if="this.state.data.is_admin" class="o_dolan_app_placeholder__section o_dolan_app_placeholder__admin">
+                    <h2>Para el administrador</h2>
+                    <dl>
+                        <dt>Prioridad</dt><dd t-esc="this.state.data.priority or '—'"/>
+                        <dt>Evidencia</dt><dd t-esc="this.state.data.evidence or '—'"/>
+                        <dt>Módulo</dt>
+                        <dd>
+                            <t t-esc="this.state.data.module or 'Sin implementación'"/>
+                            <t t-if="this.state.data.module_state"> (<t t-esc="this.state.data.module_state"/>)</t>
+                        </dd>
+                        <dt>Capacidades</dt><dd t-esc="this.state.data.capabilities or '—'"/>
+                    </dl>
+                    <t t-if="this.state.data.acceptance_criteria.length">
+                        <h3>Criterios de aceptación</h3>
+                        <ul>
+                            <li t-foreach="this.state.data.acceptance_criteria" t-as="criterion" t-key="criterion_index" t-esc="criterion"/>
+                        </ul>
+                    </t>
+                </section>
+                <footer class="o_dolan_app_placeholder__footer">
+                    <button class="btn btn-secondary" t-on-click="() => this.goHome()">Volver al Escritorio</button>
+                    <button t-if="this.state.data.is_admin and this.state.data.state === 'disponible'" class="btn btn-link" t-on-click="() => this.openApps()">
+                        Ver el módulo en Aplicaciones
+                    </button>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,9 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_contract_user,Contratos: usuario,dolan.contract,DOLAN_service_contract.group_contract_user,r,"[('company_id', 'in', company_ids)]"
+access_dolan_contract_manager,Contratos: responsable,dolan.contract,DOLAN_service_contract.group_contract_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_contract_adjustment_user,Ajustes: usuario,dolan.contract.adjustment,DOLAN_service_contract.group_contract_user,r,"[('contract_id.company_id', 'in', company_ids)]"
+access_dolan_contract_adjustment_manager,Ajustes: responsable,dolan.contract.adjustment,DOLAN_service_contract.group_contract_manager,cr,"[('contract_id.company_id', 'in', company_ids)]"
+access_dolan_contract_index_user,Índices: usuario,dolan.contract.index,DOLAN_service_contract.group_contract_user,r,
+access_dolan_contract_index_manager,Índices: responsable,dolan.contract.index,DOLAN_service_contract.group_contract_manager,crud,
+access_dolan_contract_index_value_user,Valores de índice: usuario,dolan.contract.index.value,DOLAN_service_contract.group_contract_user,r,
+access_dolan_contract_index_value_manager,Valores de índice: responsable,dolan.contract.index.value,DOLAN_service_contract.group_contract_manager,crud,

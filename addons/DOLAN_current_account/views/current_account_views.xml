@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_current_account_list" model="ir.ui.view">
+        <field name="name">dolan.current.account.list</field>
+        <field name="model">dolan.current.account</field>
+        <field name="arch" type="xml">
+            <list string="Cuentas corrientes" create="false" delete="false" edit="false"
+                  decoration-danger="due_90_plus &gt; 0" decoration-warning="overdue &gt; 0 and due_90_plus == 0">
+                <header>
+                    <button name="action_statement" type="object" string="Estado de cuenta"/>
+                </header>
+                <field name="partner_id"/>
+                <field name="kind" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="user_id" optional="hide"/>
+                <field name="balance" sum="Total"/>
+                <field name="overdue" sum="Total"/>
+                <field name="not_due" sum="Total" optional="show"/>
+                <field name="due_0_30" sum="Total" optional="show"/>
+                <field name="due_31_60" sum="Total" optional="show"/>
+                <field name="due_61_90" sum="Total" optional="show"/>
+                <field name="due_90_plus" sum="Total" optional="show"/>
+                <field name="unapplied" sum="Total" optional="hide"/>
+                <field name="promised" sum="Total" optional="show"/>
+                <field name="max_overdue_days" optional="show"/>
+                <field name="oldest_due_date" optional="hide"/>
+                <field name="open_count" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+                <button name="action_open_lines" type="object" icon="fa-list" title="Comprobantes abiertos"/>
+                <button name="action_new_promise" type="object" icon="fa-handshake-o" title="Registrar promesa de pago" invisible="kind != 'customer'"/>
+                <button name="action_statement" type="object" icon="fa-file-text-o" title="Estado de cuenta"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_current_account_form" model="ir.ui.view">
+        <field name="name">dolan.current.account.form</field>
+        <field name="model">dolan.current.account</field>
+        <field name="arch" type="xml">
+            <form string="Cuenta corriente" create="false" delete="false" edit="false">
+                <header>
+                    <button name="action_statement" type="object" string="Estado de cuenta" class="btn-primary"/>
+                    <button name="action_new_promise" type="object" string="Promesa de pago" invisible="kind != 'customer'"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_lines" type="object" class="oe_stat_button" icon="fa-list">
+                            <field name="open_count" widget="statinfo" string="Abiertos"/>
+                        </button>
+                        <button name="action_open_history" type="object" class="oe_stat_button" icon="fa-history" string="Movimientos"/>
+                    </div>
+                    <div class="oe_title"><h1><field name="partner_id"/></h1><field name="kind"/></div>
+                    <group>
+                        <group string="Saldo">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="balance"/>
+                            <field name="overdue"/>
+                            <field name="not_due"/>
+                            <field name="unapplied"/>
+                            <field name="promised"/>
+                        </group>
+                        <group string="Antigüedad de lo vencido">
+                            <field name="due_0_30"/>
+                            <field name="due_31_60"/>
+                            <field name="due_61_90"/>
+                            <field name="due_90_plus"/>
+                            <field name="max_overdue_days"/>
+                            <field name="oldest_due_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="user_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_current_account_search" model="ir.ui.view">
+        <field name="name">dolan.current.account.search</field>
+        <field name="model">dolan.current.account</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <filter name="customers" string="Clientes" domain="[('kind', '=', 'customer')]"/>
+                <filter name="suppliers" string="Proveedores" domain="[('kind', '=', 'supplier')]"/>
+                <separator/>
+                <filter name="overdue" string="Con vencido" domain="[('overdue', '&gt;', 0)]"/>
+                <filter name="over_90" string="Más de 90 días" domain="[('due_90_plus', '&gt;', 0)]"/>
+                <filter name="with_promise" string="Con promesa de pago" domain="[('promised', '&gt;', 0)]"/>
+                <filter name="credit" string="Saldo a favor del contacto" domain="[('balance', '&lt;', 0)]"/>
+                <group>
+                    <filter name="group_kind" string="Tipo" context="{'group_by': 'kind'}"/>
+                    <filter name="group_company" string="Empresa" context="{'group_by': 'company_id'}"/>
+                    <filter name="group_user" string="Vendedor" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dolan_current_account_pivot" model="ir.ui.view">
+        <field name="name">dolan.current.account.pivot</field>
+        <field name="model">dolan.current.account</field>
+        <field name="arch" type="xml">
+            <pivot string="Antigüedad de saldos">
+                <field name="kind" type="row"/>
+                <field name="balance" type="measure"/>
+                <field name="overdue" type="measure"/>
+                <field name="due_90_plus" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_dolan_current_account" model="ir.actions.act_window">
+        <field name="name">Cuentas corrientes</field>
+        <field name="res_model">dolan.current.account</field>
+        <field name="view_mode">list,form,pivot</field>
+        <field name="search_view_id" ref="view_dolan_current_account_search"/>
+        <field name="context">{'search_default_customers': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No hay saldos abiertos</p>
+            <p>Acá aparecen los clientes y proveedores con comprobantes o pagos sin conciliar.</p>
+        </field>
+    </record>
+
+    <record id="view_dolan_current_account_move_line_list" model="ir.ui.view">
+        <field name="name">account.move.line.list.dolan.current.account</field>
+        <field name="model">account.move.line</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <list string="Comprobantes" create="false" edit="false">
+                <field name="date"/>
+                <field name="move_id"/>
+                <field name="ref" optional="show"/>
+                <field name="date_maturity"/>
+                <field name="debit" sum="Total"/>
+                <field name="credit" sum="Total"/>
+                <field name="amount_residual" sum="Total"/>
+                <field name="matching_number" optional="show"/>
+                <field name="company_currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_payment_promise_form" model="ir.ui.view">
+        <field name="name">dolan.payment.promise.form</field>
+        <field name="model">dolan.payment.promise</field>
+        <field name="arch" type="xml">
+            <form string="Promesa de pago">
+                <header>
+                    <button name="action_mark_kept" type="object" string="Cumplida" invisible="state != 'open'"/>
+                    <button name="action_cancel" type="object" string="Anular" invisible="state != 'open'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,kept,broken"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="amount"/>
+                            <field name="date_promised"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="channel"/>
+                            <field name="received"/>
+                            <field name="user_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Qué dijo el cliente, con quién se habló"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_payment_promise_list" model="ir.ui.view">
+        <field name="name">dolan.payment.promise.list</field>
+        <field name="model">dolan.payment.promise</field>
+        <field name="arch" type="xml">
+            <list string="Promesas de pago" decoration-danger="state == 'broken'" decoration-success="state == 'kept'" decoration-muted="state == 'cancelled'">
+                <field name="date_promised"/>
+                <field name="partner_id"/>
+                <field name="amount" sum="Total"/>
+                <field name="channel" optional="show"/>
+                <field name="user_id" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'kept'" decoration-danger="state == 'broken'" decoration-info="state == 'open'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_payment_promise" model="ir.actions.act_window">
+        <field name="name">Promesas de pago</field>
+        <field name="res_model">dolan.payment.promise</field>
+        <field name="view_mode">list,form,calendar</field>
+        <field name="context">{'search_default_open': 1}</field>
+    </record>
+
+    <record id="view_dolan_payment_promise_search" model="ir.ui.view">
+        <field name="name">dolan.payment.promise.search</field>
+        <field name="model">dolan.payment.promise</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <filter name="open" string="Pendientes" domain="[('state', '=', 'open')]"/>
+                <filter name="broken" string="Incumplidas" domain="[('state', '=', 'broken')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dolan_payment_promise_calendar" model="ir.ui.view">
+        <field name="name">dolan.payment.promise.calendar</field>
+        <field name="model">dolan.payment.promise</field>
+        <field name="arch" type="xml">
+            <calendar string="Promesas" date_start="date_promised" color="state" mode="month">
+                <field name="partner_id"/>
+                <field name="amount"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_partner_form_dolan_current_account" model="ir.ui.view">
+        <field name="name">res.partner.form.dolan.current.account</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_dolan_current_account" type="object" class="oe_stat_button" icon="fa-balance-scale"
+                        groups="account.group_account_invoice" string="Cuenta corriente"/>
+                <button name="action_dolan_account_statement" type="object" class="oe_stat_button" icon="fa-file-text-o"
+                        groups="account.group_account_invoice" string="Estado de cuenta"/>
+            </div>
+        </field>
+    </record>
+
+    <menuitem id="menu_dolan_current_account_root" name="Cuentas corrientes" sequence="45"
+              groups="account.group_account_invoice"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_current_accounts.svg"/>
+    <menuitem id="menu_dolan_current_account_accounts" name="Saldos" parent="menu_dolan_current_account_root"
+              action="action_dolan_current_account" sequence="10"/>
+    <menuitem id="menu_dolan_current_account_promises" name="Promesas de pago" parent="menu_dolan_current_account_root"
+              action="action_dolan_payment_promise" sequence="20"/>
+    <menuitem id="menu_dolan_current_account_statement" name="Estado de cuenta" parent="menu_dolan_current_account_root"
+              action="action_dolan_account_statement_wizard" sequence="30"/>
+</odoo>

@@ -1,0 +1,11 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_helpdesk_ticket_user,Tickets: usuario,dolan.helpdesk.ticket,DOLAN_helpdesk.group_helpdesk_user,cru,"[('company_id', 'in', company_ids)]"
+access_dolan_helpdesk_ticket_manager,Tickets: responsable,dolan.helpdesk.ticket,DOLAN_helpdesk.group_helpdesk_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_helpdesk_team_user,Equipos: usuario,dolan.helpdesk.team,DOLAN_helpdesk.group_helpdesk_user,r,"[('company_id', 'in', company_ids)]"
+access_dolan_helpdesk_team_manager,Equipos: responsable,dolan.helpdesk.team,DOLAN_helpdesk.group_helpdesk_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_helpdesk_stage_user,Etapas: usuario,dolan.helpdesk.stage,DOLAN_helpdesk.group_helpdesk_user,r,
+access_dolan_helpdesk_stage_manager,Etapas: responsable,dolan.helpdesk.stage,DOLAN_helpdesk.group_helpdesk_manager,crud,
+access_dolan_helpdesk_tag_user,Etiquetas: usuario,dolan.helpdesk.tag,DOLAN_helpdesk.group_helpdesk_user,cr,
+access_dolan_helpdesk_tag_manager,Etiquetas: responsable,dolan.helpdesk.tag,DOLAN_helpdesk.group_helpdesk_manager,crud,
+access_dolan_helpdesk_sla_user,SLA: usuario,dolan.helpdesk.sla,DOLAN_helpdesk.group_helpdesk_user,r,"[('company_id', 'in', company_ids)]"
+access_dolan_helpdesk_sla_manager,SLA: responsable,dolan.helpdesk.sla,DOLAN_helpdesk.group_helpdesk_manager,crud,"[('company_id', 'in', company_ids)]"
