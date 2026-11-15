@@ -162,12 +162,38 @@ class TestAppCatalog(TransactionCase):
     def test_desktop_does_not_move_apps_the_user_placed(self):
         Folder = self.env['dolan.desktop.folder'].with_user(self.user)
         Item = self.env['dolan.desktop.item'].with_user(self.user)
+        Preference = self.env['dolan.desktop.preference'].with_user(self.user)
+        preference = Preference.current_user()
+        # Después del armado inicial, lo que el usuario mueve queda donde lo puso.
         mine = Folder.create({'name': 'Mis cosas'})
-        Item.create({'menu_id': self.menu('integraciones').id, 'folder_id': mine.id})
-        preference = self.env['dolan.desktop.preference'].with_user(self.user).current_user()
-        self.assertEqual(Item.search([('menu_id', '=', self.menu('integraciones').id)]).folder_id, mine)
+        item = Item.search([('menu_id', '=', self.menu('integraciones').id)])
+        item.write({'folder_id': mine.id})
+        Preference.current_user()
+        self.assertEqual(item.folder_id, mine)
+        # «Ordenar con las carpetas del catálogo» vuelve a armar todo.
         preference.dolan_apply_catalog_folders()
-        self.assertEqual(Item.search([('menu_id', '=', self.menu('integraciones').id)]).folder_id, mine)
+        self.assertEqual(item.folder_id.name, 'Configuraciones')
+        self.assertFalse(mine.exists(), 'La carpeta que quedó vacía se borra')
+
+    def test_layout_follows_catalog_folders_and_order(self):
+        Folder = self.env['dolan.desktop.folder'].with_user(self.user)
+        Item = self.env['dolan.desktop.item'].with_user(self.user)
+        # Un escritorio viejo: una carpeta RRHH propia y una app del catálogo en otra carpeta.
+        old = Folder.create({'name': 'RRHH', 'sequence': 5})
+        Item.create({'menu_id': self.menu('importaciones').id, 'folder_id': old.id})
+        preference = self.env['dolan.desktop.preference'].with_user(self.user).current_user()
+        self.assertEqual(preference.catalog_layout_version, 1)
+        self.assertFalse(old.exists(), 'La carpeta vieja que quedó vacía se borra')
+        folders = Folder.search([('name', 'in', self.env['dolan.app.catalog.folder'].search([]).mapped('name'))])
+        catalog_order = {f.name: f.sequence for f in self.env['dolan.app.catalog.folder'].search([])}
+        self.assertEqual(folders.mapped('name'), sorted(folders.mapped('name'), key=lambda n: catalog_order[n]))
+        config = Folder.search([('name', '=', 'Configuraciones')])
+        items = Item.search([('folder_id', '=', config.id)], order='sequence')
+        keys = [self.Entry.search([('target_menu_id', '=', i.menu_id.id)], limit=1).key for i in items]
+        expected = [e.key for e in self.Entry.search([('folder_id.name', '=', 'Configuraciones'), ('shown', '=', True)])
+                    if e.target_menu_id in items.menu_id]
+        self.assertEqual(keys, expected)
+        self.assertLess(keys.index('integraciones'), keys.index('importaciones'))
 
     def test_resync_when_modules_change(self):
         params = self.env['ir.config_parameter'].sudo()
@@ -191,4 +217,8 @@ class TestAppCatalog(TransactionCase):
         Preference.current_user()
         item = Item.search([('menu_id', '=', real_menu.id)])
         self.assertEqual(item.folder_id.name, 'Configuraciones')
+        # Si el navegador todavía tenía el ícono informativo, abrirlo lleva a la app real.
+        data = self.Entry.with_user(self.user).get_placeholder('integraciones')
+        self.assertEqual(data['redirect_menu_id'], real_menu.id)
+        self.assertEqual(data['redirect_action'], 'ir.actions.act_window,%d' % self.env.ref('base.action_res_company_form').id)
 

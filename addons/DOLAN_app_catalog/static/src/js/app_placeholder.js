@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
+import { Component, onMounted, onWillStart, proxy, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -22,15 +22,40 @@ export class DolanAppPlaceholder extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
-        this.state = proxy({ data: null, error: false });
+        this.menu = useService("menu");
+        this.state = proxy({ data: null, error: false, redirecting: false });
+        this.redirect = null;
         onWillStart(async () => {
             const key = this.props.action?.params?.key;
+            let data;
             try {
-                this.state.data = await this.orm.call("dolan.app.catalog.entry", "get_placeholder", [key]);
+                data = await this.orm.call("dolan.app.catalog.entry", "get_placeholder", [key]);
             } catch {
                 this.state.error = true;
+                return;
+            }
+            if (data.redirect_menu_id) {
+                // La app ya está instalada (el navegador tenía los menús viejos): se abre la real.
+                this.redirect = data;
+                this.state.redirecting = true;
+                return;
+            }
+            this.state.data = data;
+        });
+        onMounted(() => {
+            if (this.redirect) {
+                this.openRealApp(this.redirect);
             }
         });
+    }
+
+    async openRealApp(redirect) {
+        await this.menu.reload();
+        if (redirect.redirect_action) {
+            await this.action.doAction(redirect.redirect_action, { clearBreadcrumbs: true });
+        } else {
+            window.location.reload();
+        }
     }
 
     get help() {

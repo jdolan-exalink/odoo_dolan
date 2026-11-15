@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Catálogo de apps',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.1.0',
     'summary': 'Catálogo visual de apps por carpetas, con estados y pantallas de En desarrollo',
     'description': """
 Catálogo declarativo de las apps de la distribución DOLAN.

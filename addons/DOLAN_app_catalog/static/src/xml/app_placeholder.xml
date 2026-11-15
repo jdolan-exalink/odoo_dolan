@@ -2,7 +2,10 @@
 <templates xml:space="preserve">
     <t t-name="DOLAN_app_catalog.AppPlaceholder">
         <div class="o_action o_dolan_app_placeholder">
-            <div t-if="this.state.error" class="o_dolan_app_placeholder__card" role="alert">
+            <div t-if="this.state.redirecting" class="o_dolan_app_placeholder__card" role="status">
+                <p><i class="fa fa-spinner fa-spin" aria-hidden="true"/> Abriendo la app…</p>
+            </div>
+            <div t-elif="this.state.error" class="o_dolan_app_placeholder__card" role="alert">
                 <h1 class="o_dolan_app_placeholder__title">App no disponible</h1>
                 <p>Esta app no está disponible para tu usuario.</p>
                 <button class="btn btn-secondary" t-on-click="() => this.goHome()">Volver al Escritorio</button>

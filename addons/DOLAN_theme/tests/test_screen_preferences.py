@@ -175,25 +175,31 @@ class TestScreenPreferences(TransactionCase):
             expected.add(PERSONAL_FOLDER_NAME)
         # DOLAN_app_catalog (si está instalado) suma sus carpetas; acá se mira solo las del theme.
         catalog = set(self.env["dolan.app.catalog.folder"].search([]).mapped("name"))             if "dolan.app.catalog.folder" in self.env else set()
-        self.assertEqual(set(folders.mapped("name")) - catalog, expected - catalog)
+        if catalog:
+            # Con el catálogo, las apps de Varios que son del catálogo van a su carpeta y Varios puede quedar vacía.
+            expected.discard("Varios")
+            self.assertEqual(set(folders.mapped("name")) - catalog - {"Varios"}, expected - catalog)
+        else:
+            self.assertEqual(set(folders.mapped("name")), expected)
         items = self.env["dolan.desktop.item"].with_user(self.user).search([
             ("user_id", "=", self.user.id),
         ])
         placed = {item.menu_id.get_external_id()[item.menu_id.id]: item.folder_id.name for item in items}
         self.assertEqual(placed.get("base.menu_management"), "Configuraciones")
-        self.assertEqual(placed.get("mail.menu_root_discuss"), "Varios")
+        self.assertEqual(placed.get("mail.menu_root_discuss"), "Comunicación e IA" if catalog else "Varios")
 
         # Once a user saves a layout, subsequent reads leave their choices alone.
         preference._write_desktop_internal({"layout_version": 1})
-        self.env["dolan.desktop.folder"].with_user(self.user).search([
+        varios = self.env["dolan.desktop.folder"].with_user(self.user).search([
             ("user_id", "=", self.user.id), ("name", "=", "Varios"),
-        ]).write({"name": "Mi carpeta"})
+        ])
+        varios.write({"name": "Mi carpeta"})
         Desktop.current_user()
         self.assertEqual(
             set(self.env["dolan.desktop.folder"].with_user(self.user).search([
                 ("user_id", "=", self.user.id),
             ]).mapped("name")) - catalog,
-            ((expected - {"Varios"}) | {"Mi carpeta"}) - catalog,
+            ((expected - {"Varios"}) | ({"Mi carpeta"} if varios else set())) - catalog,
         )
 
     def _visible_personal_menus(self, user):

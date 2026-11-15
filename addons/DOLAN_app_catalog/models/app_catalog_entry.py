@@ -314,12 +314,33 @@ class DolanAppCatalogEntry(models.Model):
     # API para la interfaz
     # ------------------------------------------------------------------
     @api.model
+    def _first_action(self, menu, visible):
+        """Acción que abre una app: la del menú raíz o la del primer submenú visible que tenga."""
+        if menu.action:
+            return menu.action
+        for child in menu.child_id.sorted(lambda m: (m.sequence, m.id)):
+            if child.id in visible:
+                action = self._first_action(child, visible)
+                if action:
+                    return action
+        return False
+
+    @api.model
     def get_placeholder(self, key):
         """Datos de la pantalla informativa. Solo para apps que el usuario puede ver."""
+        with self.env.cr.savepoint():
+            self.sudo()._sync_if_modules_changed()
         entry = self.sudo().search([('key', '=', key)], limit=1)
         if not entry or not entry.catalog_menu_id:
             raise AccessError(_('Esta aplicación no está disponible.'))
         visible = self.env['ir.ui.menu']._visible_menu_ids()
+        real_menu = entry.target_menu_id
+        if real_menu and real_menu != entry.catalog_menu_id and real_menu.id in visible:
+            # El ícono era de la pantalla informativa y la app ya se instaló (el navegador
+            # todavía tenía los menús viejos): se abre la app real.
+            action = self._first_action(real_menu, visible)
+            return {'redirect_menu_id': real_menu.id,
+                    'redirect_action': f'{action._name},{action.id}' if action else False}
         if entry.catalog_menu_id.id not in visible:
             raise AccessError(_('Esta aplicación no está disponible para tu usuario.'))
         is_admin = self.env.user.has_group('base.group_system')
