@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_delivery_route_form_treasury" model="ir.ui.view">
+        <field name="name">dolan.delivery.route.form.treasury</field>
+        <field name="model">dolan.delivery.route</field>
+        <field name="inherit_id" ref="DOLAN_logistics.view_dolan_delivery_route_form"/>
+        <field name="arch" type="xml">
+            <field name="cash_declared" position="before">
+                <field name="cash_box_id" readonly="state == 'done'" options="{'no_create': True}"/>
+            </field>
+            <field name="cash_difference" position="after">
+                <field name="rendition_move_id" invisible="not rendition_move_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

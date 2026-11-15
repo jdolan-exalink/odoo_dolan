@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_dolan_owner_dashboard" model="ir.actions.client">
+        <field name="name">Tablero del dueño</field>
+        <field name="tag">dolan_owner_dashboard</field>
+    </record>
+
+    <menuitem id="menu_dolan_owner_dashboard_root" name="Tablero del dueño" sequence="5"
+              action="action_dolan_owner_dashboard"
+              groups="account.group_account_manager,base.group_erp_manager"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_owner_dashboard.svg"/>
+</odoo>

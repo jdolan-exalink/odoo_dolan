@@ -118,3 +118,32 @@ class TestLogistics(TransactionCase):
         self.assertNotIn(route, Route.search([]))
         with self.assertRaises(AccessError):
             route.stop_ids.with_user(self.other_driver).write({'received_by': 'X'})
+
+    def test_scan_adds_one_unit_per_read(self):
+        self.product_a.barcode = '7790000000017'
+        picking = self.delivery(3, 1)
+        wave = self.env['dolan.picking.wave'].create({})
+        wave.picking_ids = picking
+        wave.action_start()
+        line_a = wave.action_scan('7790000000017')
+        wave.action_scan('7790000000017')
+        self.assertEqual(line_a.qty_picked, 2)
+        with self.assertRaises(UserError):
+            wave.action_scan('0000')
+
+    def test_map_link_and_order_by_distance(self):
+        near = self.env['res.partner'].create({'name': 'Cerca', 'street': 'Córdoba 100', 'city': 'Rosario',
+                                               'partner_latitude': -32.95, 'partner_longitude': -60.64})
+        far = self.env['res.partner'].create({'name': 'Lejos', 'street': 'Mitre 900', 'city': 'Funes',
+                                              'partner_latitude': -32.92, 'partner_longitude': -60.81})
+        self.env.company.partner_id.write({'partner_latitude': -32.946, 'partner_longitude': -60.639})
+        first, second = self.delivery(1, 0), self.delivery(1, 0)
+        first.partner_id, second.partner_id = far, near
+        route = self.prepared_route(first, second)
+        route.state = 'loaded'
+        route.action_sort_by_distance()
+        ordered = route.stop_ids.sorted('sequence').mapped('partner_id')
+        self.assertEqual(ordered.mapped('name'), ['Cerca', 'Lejos'])
+        url = route.action_open_map()['url']
+        self.assertTrue(url.startswith('https://www.google.com/maps/dir/?api=1'))
+        self.assertIn('-32.92', url)

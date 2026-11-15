@@ -4360,6 +4360,48 @@
       "upstream_path": "fluent_flat/catalog_loyalty-5cd7a2ef.svg",
       "local_path": "fluent_flat/catalog_loyalty-5cd7a2ef.svg",
       "sha256": "5cd7a2ef6fad1f18de996c4032d61dee48b8f633f8e041a80123e79489b13709"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_3d/catalog_owner_dashboard-0a98f5b9.svg",
+      "local_path": "fluent_3d/catalog_owner_dashboard-0a98f5b9.svg",
+      "sha256": "0a98f5b94f709ecd9633b97124565ddcd458f052908f472fab171164a2c5bc73"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_filled/catalog_owner_dashboard-29388744.svg",
+      "local_path": "fluent_filled/catalog_owner_dashboard-29388744.svg",
+      "sha256": "293887448f517aaf584a3b48a624b3b807d1d015710b3a040408e5d80eccd0d2"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_owner_dashboard-86b188dc.svg",
+      "local_path": "fluent_flat/catalog_owner_dashboard-86b188dc.svg",
+      "sha256": "86b188dcfc7e1a6e37bf1581189b89942529fc54b68f3ad17f3c0d834211d95e"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_owner_dashboard.svg",
+      "local_path": "fluent_flat/catalog_owner_dashboard.svg",
+      "sha256": "86b188dcfc7e1a6e37bf1581189b89942529fc54b68f3ad17f3c0d834211d95e"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_regular/catalog_owner_dashboard-aa41ae28.svg",
+      "local_path": "fluent_regular/catalog_owner_dashboard-aa41ae28.svg",
+      "sha256": "aa41ae28d1e2f8876cb17a7e67120702817479fe74a89f3800a37d45ec356e03"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "tabler/catalog_owner_dashboard-af9d3e3c.svg",
+      "local_path": "tabler/catalog_owner_dashboard-af9d3e3c.svg",
+      "sha256": "af9d3e3c18c0313bd98e2f4f5576dc1a23ef7b5e46ffff28bd76da51ece4fb15"
     }
   ]
 }

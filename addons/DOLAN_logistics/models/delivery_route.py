@@ -1,5 +1,18 @@
+import math
+from urllib.parse import quote
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+
+# Google Maps acepta hasta 9 paradas intermedias en un link de recorrido.
+MAPS_MAX_WAYPOINTS = 9
+
+
+def _distance_km(a, b):
+    """Distancia en km entre dos puntos (lat, lon)."""
+    lat1, lon1, lat2, lon2 = map(math.radians, (a[0], a[1], b[0], b[1]))
+    h = math.sin((lat2 - lat1) / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin((lon2 - lon1) / 2) ** 2
+    return 6371 * 2 * math.asin(math.sqrt(h))
 
 
 class DolanDeliveryRejectReason(models.Model):
@@ -65,6 +78,67 @@ class DolanDeliveryRoute(models.Model):
                 sequence += 10
                 self.env['dolan.delivery.stop'].create({'route_id': route.id, 'picking_id': picking.id, 'sequence': sequence})
         return True
+
+    @staticmethod
+    def _partner_point(partner):
+        if partner and (partner.partner_latitude or partner.partner_longitude):
+            return (partner.partner_latitude, partner.partner_longitude)
+        return None
+
+    @staticmethod
+    def _partner_place(partner):
+        if not partner:
+            return ''
+        point = DolanDeliveryRoute._partner_point(partner)
+        if point:
+            return '%s,%s' % point
+        return ', '.join(filter(None, [partner.street, partner.city, partner.state_id.name, partner.country_id.name]))
+
+    def action_sort_by_distance(self):
+        """Ordena las paradas pendientes por cercanía, empezando desde la empresa (vecino más cercano)."""
+        for route in self:
+            stops = route.stop_ids.filtered(lambda s: s.state == 'pending')
+            missing = stops.filtered(lambda s: not self._partner_point(s.partner_id))
+            if missing:
+                raise UserError(_('Faltan las coordenadas de: %s. Cargalas en el contacto (pestaña de ubicación) '
+                                  'o usá «Ver en el mapa» y ordená a mano.') % ', '.join(missing.mapped('partner_id.display_name')))
+            current = self._partner_point(route.company_id.partner_id)
+            remaining = list(stops)
+            ordered = []
+            while remaining:
+                if current:
+                    nxt = min(remaining, key=lambda s: _distance_km(current, self._partner_point(s.partner_id)))
+                else:
+                    nxt = remaining[0]
+                ordered.append(nxt)
+                remaining.remove(nxt)
+                current = self._partner_point(nxt.partner_id)
+            start = max(route.stop_ids.filtered(lambda s: s.state != 'pending').mapped('sequence') or [0])
+            for index, stop in enumerate(ordered, start=1):
+                stop.sequence = start + index * 10
+        return True
+
+    def _maps_url(self):
+        """Link de Google Maps con el recorrido: sale de la empresa y pasa por las paradas pendientes en orden."""
+        self.ensure_one()
+        stops = self.stop_ids.filtered(lambda s: s.state == 'pending').sorted(lambda s: (s.sequence, s.id))
+        places = [self._partner_place(stop.partner_id) for stop in stops]
+        places = [place for place in places if place]
+        if not places:
+            raise UserError(_('No hay paradas pendientes con dirección.'))
+        origin = self._partner_place(self.company_id.partner_id)
+        destination = places[-1]
+        waypoints = places[:-1][:MAPS_MAX_WAYPOINTS]
+        url = 'https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=%s' % quote(destination)
+        if origin:
+            url += '&origin=%s' % quote(origin)
+        if waypoints:
+            url += '&waypoints=%s' % quote('|'.join(waypoints))
+        return url
+
+    def action_open_map(self):
+        self.ensure_one()
+        return {'type': 'ir.actions.act_url', 'url': self._maps_url(), 'target': 'new'}
 
     def action_load(self):
         for route in self:

@@ -38,6 +38,9 @@ class DolanPickingWave(models.Model):
     picking_ids = fields.One2many('stock.picking', 'dolan_wave_id', 'Entregas',
                                   domain="[('picking_type_code', '=', 'outgoing'), ('state', '=', 'assigned')]")
     line_ids = fields.One2many('dolan.picking.wave.line', 'wave_id', 'A juntar')
+    scan_code = fields.Char('Escanear', store=False,
+                            help='Código de barras o código interno del producto: cada lectura suma una unidad juntada.')
+    last_scan = fields.Char('Última lectura', store=False)
     picking_count = fields.Integer(compute='_compute_counts')
     missing_count = fields.Integer('Faltantes', compute='_compute_counts')
 
@@ -75,6 +78,45 @@ class DolanPickingWave(models.Model):
                 'line_ids': [(0, 0, {'product_id': product.id, 'qty_to_pick': qty}) for product, qty in totals.items()],
             })
         return True
+
+    def _scan_line(self, code):
+        """Línea de la oleada que corresponde a un código leído (código de barras o código interno)."""
+        self.ensure_one()
+        code = (code or '').strip()
+        if not code:
+            return self.env['dolan.picking.wave.line']
+        return self.line_ids.filtered(lambda line: code in (line.product_id.barcode, line.product_id.default_code))[:1]
+
+    @api.onchange('scan_code')
+    def _onchange_scan_code(self):
+        code = (self.scan_code or '').strip()
+        if not code:
+            return None
+        self.scan_code = False
+        line = self._scan_line(code)
+        if not line:
+            self.last_scan = _('%s: no está en esta oleada') % code
+            return {'warning': {'title': _('Código no encontrado'),
+                                'message': _('El código %s no es de ningún producto de esta oleada.') % code}}
+        line.qty_picked += 1
+        self.last_scan = _('%(product)s: %(picked)s de %(total)s') % {
+            'product': line.product_id.display_name, 'picked': line.qty_picked, 'total': line.qty_to_pick}
+        if line.qty_picked > line.qty_to_pick:
+            return {'warning': {'title': _('Sobra mercadería'),
+                                'message': _('Ya se juntaron %(picked)s de %(total)s de %(product)s.') % {
+                                    'picked': line.qty_picked, 'total': line.qty_to_pick, 'product': line.product_id.display_name}}}
+        return None
+
+    def action_scan(self, code):
+        """Lectura de un código desde un lector o la app: suma una unidad. Devuelve la línea."""
+        self.ensure_one()
+        if self.state != 'in_progress':
+            raise UserError(_('La oleada tiene que estar en preparación para escanear.'))
+        line = self._scan_line(code)
+        if not line:
+            raise UserError(_('El código %s no es de ningún producto de esta oleada.') % code)
+        line.qty_picked += 1
+        return line
 
     def action_pick_all(self):
         for line in self.line_ids:

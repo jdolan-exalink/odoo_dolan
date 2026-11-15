@@ -2447,6 +2447,28 @@
         "fluent_regular": "fluent_regular/catalog_diagnostics-a15b9685.svg",
         "tabler": "tabler/catalog_diagnostics-0042edee.svg"
       }
+    },
+    {
+      "id": "app.catalog_owner_dashboard",
+      "label": "Tablero del dueño",
+      "category": "analytics",
+      "semantic": "owner_dashboard",
+      "aliases": [],
+      "xmlids": [
+        "DOLAN_app_catalog.menu_app_tablero_dueno",
+        "DOLAN_owner_dashboard.menu_dolan_owner_dashboard_root"
+      ],
+      "module_ids": [
+        "DOLAN_app_catalog"
+      ],
+      "color": "pink",
+      "assets": {
+        "fluent_3d": "fluent_3d/catalog_owner_dashboard-0a98f5b9.svg",
+        "fluent_flat": "fluent_flat/catalog_owner_dashboard-86b188dc.svg",
+        "fluent_filled": "fluent_filled/catalog_owner_dashboard-29388744.svg",
+        "fluent_regular": "fluent_regular/catalog_owner_dashboard-aa41ae28.svg",
+        "tabler": "tabler/catalog_owner_dashboard-af9d3e3c.svg"
+      }
     }
   ],
   "variant_styles": {

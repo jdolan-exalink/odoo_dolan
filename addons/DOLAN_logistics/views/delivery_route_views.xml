@@ -10,6 +10,8 @@
                     <button name="action_load" type="object" string="Cargada" class="btn-primary" invisible="state != 'draft'"/>
                     <button name="action_start" type="object" string="Salir a repartir" class="btn-primary" invisible="state != 'loaded'"/>
                     <button name="action_close" type="object" string="Rendir y cerrar" class="btn-primary" invisible="state != 'in_progress'"/>
+                    <button name="action_sort_by_distance" type="object" string="Ordenar por cercanía" invisible="state not in ('draft', 'loaded')"/>
+                    <button name="action_open_map" type="object" string="Ver en el mapa" icon="fa-map-marker" invisible="state == 'done'"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>

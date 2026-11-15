@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_delivery_route_form_whatsapp" model="ir.ui.view">
+        <field name="name">dolan.delivery.route.form.whatsapp</field>
+        <field name="model">dolan.delivery.route</field>
+        <field name="inherit_id" ref="DOLAN_logistics.view_dolan_delivery_route_form"/>
+        <field name="arch" type="xml">
+            <field name="vehicle" position="after">
+                <field name="notify_whatsapp" readonly="state == 'done'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_dolan_delivery_stop_form_whatsapp" model="ir.ui.view">
+        <field name="name">dolan.delivery.stop.form.whatsapp</field>
+        <field name="model">dolan.delivery.stop</field>
+        <field name="inherit_id" ref="DOLAN_logistics.view_dolan_delivery_stop_form"/>
+        <field name="arch" type="xml">
+            <field name="delivered_at" position="after">
+                <field name="whatsapp_state" invisible="not whatsapp_state"/>
+                <field name="whatsapp_error" invisible="not whatsapp_error"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_company_form_delivery_whatsapp" model="ir.ui.view">
+        <field name="name">res.company.form.delivery.whatsapp</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="after">
+                <field name="dolan_delivery_whatsapp"/>
+            </field>
+        </field>
+    </record>
+</odoo>

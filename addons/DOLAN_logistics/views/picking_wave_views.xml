@@ -28,6 +28,10 @@
                     </group>
                     <notebook>
                         <page string="A juntar" name="lines" invisible="state == 'draft'">
+                            <group invisible="state != 'in_progress'">
+                                <field name="scan_code" placeholder="Leé el código de barras del producto" default_focus="1"/>
+                                <field name="last_scan" readonly="1"/>
+                            </group>
                             <field name="line_ids" readonly="state != 'in_progress'">
                                 <list editable="bottom" create="false" delete="false" decoration-warning="qty_picked &lt; qty_to_pick" decoration-success="qty_picked &gt;= qty_to_pick">
                                     <field name="product_id"/>

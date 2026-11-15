@@ -25,8 +25,8 @@ Detalle en la sección *Pendiente* de cada documento:
   de caja entre cajeros, cajas por sucursal y en moneda extranjera.
 * **Costos**: gastos de importación prorrateados con `stock_landed_costs`, reposición en dólares, aviso de
   aumentos de proveedor.
-* **Logística**: lector de códigos en la preparación, mapa y ubicación automática, rendición a Caja y
-  Tesorería con recibos, aviso por WhatsApp al entregar.
+* **Logística**: preparación por zona, ubicación automática del celular y geolocalización de clientes, rendición
+  de transferencias, cheques y Mercado Pago.
 * **Flujo de caja**: suscripciones y contratos como entradas previstas, escenarios guardados, monedas extranjeras.
 * **Rentabilidad**: margen por sucursal, costo con gastos de importación.
 * **Auditoría**: motivo y aprobación en la interfaz, descuentos y devoluciones de POS y ventas, exportación firmada.

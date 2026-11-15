@@ -172,7 +172,7 @@ var Catalog = []ModuleSpec{
 	{
 		ID:          "DOLAN_logistics",
 		Title:       "Logística: preparación, rutas y prueba de entrega",
-		Version:     "20.0.1.0.0",
+		Version:     "20.0.1.1.0",
 		Category:    "Logística",
 		Application: true,
 		Depends:     []string{"stock", "mail"},
@@ -239,6 +239,24 @@ var Catalog = []ModuleSpec{
 		Category:    "Comercial",
 		Application: true,
 		Depends:     []string{"website_sale", "website_sale_stock", "payment_mercado_pago"},
+		HasData:     true,
+	},
+	{
+		ID:          "DOLAN_logistics_treasury",
+		Title:       "Logística: rendición del reparto a Caja y Tesorería",
+		Version:     "20.0.1.0.0",
+		Category:    "Logística",
+		Application: false,
+		Depends:     []string{"DOLAN_logistics", "DOLAN_treasury"},
+		HasData:     true,
+	},
+	{
+		ID:          "DOLAN_logistics_whatsapp",
+		Title:       "Logística: aviso de entrega por WhatsApp",
+		Version:     "20.0.1.0.0",
+		Category:    "Logística",
+		Application: false,
+		Depends:     []string{"DOLAN_logistics", "DOLAN_whatsapp"},
 		HasData:     true,
 	},
 	{
