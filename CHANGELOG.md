@@ -7,6 +7,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 ## [Unreleased]
 
 ### Agregado
+- `DOLAN_logistics 20.0.1.0.0` (nuevo, carpeta **Logística**): **Preparación de pedidos** por oleadas con lo que hay que juntar sumado por producto; **Rutas y reparto** con hojas de ruta por repartidor, cobranza en reparto y rendición de efectivo; **Prueba de entrega** con quién recibió, firma o foto, ubicación, y entrega total, parcial (con pedido pendiente) o rechazo con motivo. Perfiles Comercio y Completo. Ver `docs/modulos/DOLAN_logistics.md`.
 - Apps de **Gestión y Análisis**, todas `20.0.1.0.0` y en todos los perfiles del instalador:
   - `DOLAN_cash_flow` (**Flujo de caja**): caja proyectada por semana o mes desde el saldo de caja y bancos, cobranzas y pagos por vencimiento, cheques en cartera y propios, previsiones manuales y escenario de cobro de lo vencido.
   - `DOLAN_profitability` (**Rentabilidad**): margen bruto por producto, categoría, cliente, vendedor y mes; el costo unitario se guarda en la línea al publicar la factura.

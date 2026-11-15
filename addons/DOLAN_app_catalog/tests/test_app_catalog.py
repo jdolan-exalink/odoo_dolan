@@ -64,37 +64,37 @@ class TestAppCatalog(TransactionCase):
         self.assertIn(self.env.ref('base.group_erp_manager'), menu.group_ids)
 
     def test_unimplemented_app_shows_placeholder_without_operations(self):
-        entry = self.entry('rutas_reparto')
-        menu = self.menu('rutas_reparto')
+        entry = self.entry('integraciones')
+        menu = self.menu('integraciones')
         self.assertEqual(entry.runtime_state, 'planificado')
         self.assertTrue(menu.active)
         self.assertEqual(menu.action._name, 'ir.actions.client')
         self.assertEqual(menu.action.tag, 'dolan_app_catalog_placeholder')
-        data = self.Entry.with_user(self.user).get_placeholder('rutas_reparto')
+        data = self.Entry.with_user(self.user).get_placeholder('integraciones')
         self.assertEqual(data['state'], 'planificado')
         self.assertTrue(data['planned_features'])
         self.assertNotIn('evidence', data, 'Los datos de evidencia son solo para administradores')
-        admin_data = self.Entry.with_user(self.admin).get_placeholder('rutas_reparto')
+        admin_data = self.Entry.with_user(self.admin).get_placeholder('integraciones')
         self.assertIn('evidence', admin_data)
 
     def test_placeholder_respects_visibility(self):
         self.env['ir.config_parameter'].sudo().set_param('dolan_app_catalog.placeholder_visibility', 'admins')
         self.Entry.search([])._apply_runtime_state()
         with self.assertRaises(AccessError):
-            self.Entry.with_user(self.user).get_placeholder('rutas_reparto')
-        self.assertTrue(self.Entry.with_user(self.admin).get_placeholder('rutas_reparto'))
+            self.Entry.with_user(self.user).get_placeholder('integraciones')
+        self.assertTrue(self.Entry.with_user(self.admin).get_placeholder('integraciones'))
         self.env['ir.config_parameter'].sudo().set_param('dolan_app_catalog.placeholder_visibility', 'none')
         self.Entry.search([])._apply_runtime_state()
-        self.assertFalse(self.menu('rutas_reparto').active)
+        self.assertFalse(self.menu('integraciones').active)
         # Las apps reales no dependen de esa opción.
         self.assertTrue(self.menu('empresas').active)
 
     def test_hidden_or_unknown_app_is_refused(self):
         with self.assertRaises(AccessError):
             self.Entry.with_user(self.user).get_placeholder('no_existe')
-        self.entry('prueba_entrega').admin_hidden = True
+        self.entry('importaciones').admin_hidden = True
         with self.assertRaises(AccessError):
-            self.Entry.with_user(self.user).get_placeholder('prueba_entrega')
+            self.Entry.with_user(self.user).get_placeholder('importaciones')
 
     def test_profile_filters_catalog(self):
         params = self.env['ir.config_parameter'].sudo()
@@ -108,7 +108,7 @@ class TestAppCatalog(TransactionCase):
 
     def test_only_admin_can_hide_apps(self):
         with self.assertRaises(AccessError):
-            self.Entry.with_user(self.user).browse(self.entry('prueba_entrega').id).write({'admin_hidden': True})
+            self.Entry.with_user(self.user).browse(self.entry('importaciones').id).write({'admin_hidden': True})
 
     def test_uninstalled_module_is_available_not_in_development(self):
         source = copy.deepcopy(self.source)
@@ -121,39 +121,39 @@ class TestAppCatalog(TransactionCase):
 
     def test_removed_app_is_archived_and_menu_hidden(self):
         source = copy.deepcopy(self.source)
-        source['apps'] = [a for a in source['apps'] if a['key'] != 'preparacion']
+        source['apps'] = [a for a in source['apps'] if a['key'] != 'diagnostico']
         self.Entry._sync_catalog(source)
-        entry = self.Entry.with_context(active_test=False).search([('key', '=', 'preparacion')])
+        entry = self.Entry.with_context(active_test=False).search([('key', '=', 'diagnostico')])
         self.assertFalse(entry.active)
-        self.assertFalse(self.menu('preparacion').active)
+        self.assertFalse(self.menu('diagnostico').active)
 
     def test_desktop_places_catalog_apps_once(self):
         Preference = self.env['dolan.desktop.preference'].with_user(self.user)
         preference = Preference.current_user()
         Folder = self.env['dolan.desktop.folder'].with_user(self.user)
         Item = self.env['dolan.desktop.item'].with_user(self.user)
-        folder = Folder.search([('name', '=', 'Logística')])
+        folder = Folder.search([('name', '=', 'Configuraciones')])
         self.assertTrue(folder, 'La carpeta del catálogo se crea en el Escritorio del usuario')
-        item = Item.search([('menu_id', '=', self.menu('rutas_reparto').id)])
+        item = Item.search([('menu_id', '=', self.menu('integraciones').id)])
         self.assertEqual(item.folder_id, folder)
-        self.assertIn('rutas_reparto', preference.catalog_placed_keys)
+        self.assertIn('integraciones', preference.catalog_placed_keys)
         # Si el usuario la saca de la carpeta (o borra la carpeta), no vuelve.
         # Lo mismo que hace el guardado del Escritorio del theme al borrar la carpeta.
         item.sudo().unlink()
         folder.sudo().unlink()
         Preference.current_user()
-        self.assertFalse(Item.search([('menu_id', '=', self.menu('rutas_reparto').id)]))
-        self.assertFalse(Folder.search([('name', '=', 'Logística')]))
+        self.assertFalse(Item.search([('menu_id', '=', self.menu('integraciones').id)]))
+        self.assertFalse(Folder.search([('name', '=', 'Configuraciones')]))
 
     def test_desktop_does_not_move_apps_the_user_placed(self):
         Folder = self.env['dolan.desktop.folder'].with_user(self.user)
         Item = self.env['dolan.desktop.item'].with_user(self.user)
         mine = Folder.create({'name': 'Mis cosas'})
-        Item.create({'menu_id': self.menu('rutas_reparto').id, 'folder_id': mine.id})
+        Item.create({'menu_id': self.menu('integraciones').id, 'folder_id': mine.id})
         preference = self.env['dolan.desktop.preference'].with_user(self.user).current_user()
-        self.assertEqual(Item.search([('menu_id', '=', self.menu('rutas_reparto').id)]).folder_id, mine)
+        self.assertEqual(Item.search([('menu_id', '=', self.menu('integraciones').id)]).folder_id, mine)
         preference.dolan_apply_catalog_folders()
-        self.assertEqual(Item.search([('menu_id', '=', self.menu('rutas_reparto').id)]).folder_id, mine)
+        self.assertEqual(Item.search([('menu_id', '=', self.menu('integraciones').id)]).folder_id, mine)
 
     def test_resync_when_modules_change(self):
         params = self.env['ir.config_parameter'].sudo()
@@ -165,16 +165,16 @@ class TestAppCatalog(TransactionCase):
         Preference = self.env['dolan.desktop.preference'].with_user(self.user)
         Preference.current_user()
         Item = self.env['dolan.desktop.item'].with_user(self.user)
-        self.assertTrue(Item.search([('menu_id', '=', self.menu('rutas_reparto').id)]))
+        self.assertTrue(Item.search([('menu_id', '=', self.menu('integraciones').id)]))
         # Simula que la app pasó a tener un menú raíz real (como al instalar su módulo).
         real_menu = self.env['ir.ui.menu'].create({'name': 'Caja real', 'action': 'ir.actions.act_window,%d' % self.env.ref('base.action_res_company_form').id})
         self.env['ir.model.data'].create({'module': 'test_catalog', 'name': 'menu_caja_real', 'model': 'ir.ui.menu', 'res_id': real_menu.id})
-        entry = self.entry('rutas_reparto')
+        entry = self.entry('integraciones')
         entry.sudo().write({'menu_xmlid': 'test_catalog.menu_caja_real'})
         entry.sudo()._apply_runtime_state()
         self.assertEqual(entry.target_menu_id, real_menu)
-        self.assertFalse(self.menu('rutas_reparto').active)
+        self.assertFalse(self.menu('integraciones').active)
         Preference.current_user()
         item = Item.search([('menu_id', '=', real_menu.id)])
-        self.assertEqual(item.folder_id.name, 'Logística')
+        self.assertEqual(item.folder_id.name, 'Configuraciones')
 

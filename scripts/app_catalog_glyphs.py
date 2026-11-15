@@ -39,9 +39,9 @@ GLYPHS = {
     "costs": '<ellipse cx="9" cy="17" rx="5.5" ry="2"/><path d="M3.5 17v2.5c0 1.1 2.5 2 5.5 2s5.5-.9 5.5-2V17"/><path d="M3.5 13v4M14.5 13v4"/><ellipse cx="9" cy="13" rx="5.5" ry="2"/><path d="M13 4h5.5l2.5 2.5V12l-5 5"/><circle cx="17.5" cy="7.5" r="1"/>',
     # Logística
     "delivery_notes": '<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 11h7M9 14h7M9 17h4"/>',
-    "picking": '<path d="M4 7l8-4 8 4-8 4-8-4Z"/><path d="M4 7v9l8 4 8-4V7"/><path d="M8.5 13.5l2 2 4-4"/>',
+    "picking": '<path d="M3 4h2.5l3 13h11"/><circle cx="9.5" cy="19.5" r="1.8"/><circle cx="17.5" cy="19.5" r="1.8"/><rect x="9" y="9" width="5.5" height="5.5" rx=".8"/><rect x="12.5" y="4" width="5.5" height="5" rx=".8"/>',
     "routes": '<circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H16a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h7.5"/>',
-    "proof_delivery": '<path d="M3 7l9-4 9 4v10l-9 4-9-4V7Z"/><path d="M3 7l9 4 9-4M12 11v10"/><path d="M15 15.5l1.5 1.5 3-3"/>',
+    "proof_delivery": '<rect x="5" y="2.5" width="11" height="19" rx="2"/><path d="M8 13c1-1.6 1.8-1.6 2.4 0 .5 1.2 1.1 1.2 1.8-.2"/><path d="M9.5 18.5h2"/><circle cx="18" cy="8" r="3.5"/><path d="M16.6 8l1 1 1.8-1.8"/>',
     # Personal
     "hr_novelties": '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/><path d="M12 13v5M9.5 15.5h5"/>',
     "hr_documents": '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/><circle cx="12" cy="12.5" r="2"/><path d="M8.5 17.5a3.5 3.5 0 0 1 7 0"/>',

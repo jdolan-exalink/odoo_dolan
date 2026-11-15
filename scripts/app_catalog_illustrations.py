@@ -419,4 +419,101 @@ ILLUSTRATIONS = {
 </svg>
 """,
     },
+    # Preparación de pedidos: carretilla con cajas apiladas (área Logística, naranja).
+    "picking": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="box1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fdba74"/><stop offset="1" stop-color="#c2410c"/></linearGradient>
+    <linearGradient id="box2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fed7aa"/><stop offset="1" stop-color="#ea580c"/></linearGradient>
+    <linearGradient id="frame" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#94a3b8"/><stop offset="1" stop-color="#475569"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M12 12h8l12 56h44" fill="none" stroke="url(#frame)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="34" y="40" width="26" height="24" rx="3" fill="url(#box1)"/>
+    <path d="M44 40h6v10l-3-2-3 2Z" fill="#fff7ed" opacity=".8"/>
+    <rect x="48" y="16" width="26" height="22" rx="3" fill="url(#box2)"/>
+    <path d="M58 16h6v9l-3-2-3 2Z" fill="#fff7ed" opacity=".8"/>
+    <circle cx="38" cy="78" r="8" fill="#334155"/><circle cx="38" cy="78" r="3" fill="#cbd5e1"/>
+    <circle cx="70" cy="78" r="8" fill="#334155"/><circle cx="70" cy="78" r="3" fill="#cbd5e1"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <path d="M12 12h8l12 56h44" fill="none" stroke="#64748b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="34" y="40" width="26" height="24" rx="3" fill="#f97316"/>
+  <path d="M44 40h6v10l-3-2-3 2Z" fill="#ffedd5"/>
+  <rect x="48" y="16" width="26" height="22" rx="3" fill="#fb923c"/>
+  <path d="M58 16h6v9l-3-2-3 2Z" fill="#ffedd5"/>
+  <circle cx="38" cy="78" r="8" fill="#334155"/><circle cx="38" cy="78" r="3" fill="#e2e8f0"/>
+  <circle cx="70" cy="78" r="8" fill="#334155"/><circle cx="70" cy="78" r="3" fill="#e2e8f0"/>
+</svg>
+""",
+    },
+    # Rutas y reparto: camino con dos pines de parada y una camioneta.
+    "routes": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="road" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#cbd5e1"/><stop offset="1" stop-color="#94a3b8"/></linearGradient>
+    <linearGradient id="pin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fdba74"/><stop offset="1" stop-color="#c2410c"/></linearGradient>
+    <linearGradient id="van" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e2e8f0"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M14 82c0-18 22-16 30-28s-10-24 4-34" fill="none" stroke="url(#road)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M14 82c0-18 22-16 30-28s-10-24 4-34" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="4 5" stroke-linecap="round"/>
+    <path d="M70 40s-11-10-11-19a11 11 0 0 1 22 0c0 9-11 19-11 19Z" fill="url(#pin)"/><circle cx="70" cy="21" r="4" fill="#fff7ed"/>
+    <path d="M24 30s-8-7-8-14a8 8 0 0 1 16 0c0 7-8 14-8 14Z" fill="url(#pin)"/><circle cx="24" cy="16" r="3" fill="#fff7ed"/>
+    <g transform="translate(48 58)">
+      <rect x="0" y="4" width="26" height="16" rx="3" fill="url(#van)" stroke="#c2410c" stroke-width="2"/>
+      <path d="M26 9h8l5 6v5H26Z" fill="#fb923c"/>
+      <circle cx="8" cy="22" r="4" fill="#334155"/><circle cx="32" cy="22" r="4" fill="#334155"/>
+    </g>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <path d="M14 82c0-18 22-16 30-28s-10-24 4-34" fill="none" stroke="#cbd5e1" stroke-width="12" stroke-linecap="round"/>
+  <path d="M14 82c0-18 22-16 30-28s-10-24 4-34" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="4 5" stroke-linecap="round"/>
+  <path d="M70 40s-11-10-11-19a11 11 0 0 1 22 0c0 9-11 19-11 19Z" fill="#f97316"/><circle cx="70" cy="21" r="4" fill="#ffffff"/>
+  <path d="M24 30s-8-7-8-14a8 8 0 0 1 16 0c0 7-8 14-8 14Z" fill="#f97316"/><circle cx="24" cy="16" r="3" fill="#ffffff"/>
+  <g transform="translate(48 58)">
+    <rect x="0" y="4" width="26" height="16" rx="3" fill="#ffffff" stroke="#c2410c" stroke-width="2"/>
+    <path d="M26 9h8l5 6v5H26Z" fill="#fb923c"/>
+    <circle cx="8" cy="22" r="4" fill="#334155"/><circle cx="32" cy="22" r="4" fill="#334155"/>
+  </g>
+</svg>
+""",
+    },
+    # Prueba de entrega: celular con la firma del cliente y un tilde.
+    "proof_delivery": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#475569"/><stop offset="1" stop-color="#1e293b"/></linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#ffedd5"/></linearGradient>
+    <radialGradient id="badge" cx=".4" cy=".35" r=".8"><stop stop-color="#86efac"/><stop offset="1" stop-color="#15803d"/></radialGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="18" y="6" width="44" height="80" rx="9" fill="url(#body)"/>
+    <rect x="22" y="14" width="36" height="62" rx="4" fill="url(#screen)"/>
+    <path d="M27 54c4-7 7-7 9 0 2 5 4 5 8-2 2-3 4-2 6 1" fill="none" stroke="#c2410c" stroke-width="3" stroke-linecap="round"/>
+    <path d="M27 62h26" stroke="#fdba74" stroke-width="2"/>
+    <g fill="#fed7aa"><rect x="27" y="22" width="20" height="4" rx="2"/><rect x="27" y="30" width="26" height="4" rx="2"/></g>
+    <circle cx="68" cy="28" r="15" fill="url(#badge)" stroke="#ffffff" stroke-width="3"/>
+    <path d="M61 28l5 5 9-10" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <rect x="18" y="6" width="44" height="80" rx="9" fill="#334155"/>
+  <rect x="22" y="14" width="36" height="62" rx="4" fill="#ffffff"/>
+  <path d="M27 54c4-7 7-7 9 0 2 5 4 5 8-2 2-3 4-2 6 1" fill="none" stroke="#ea580c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M27 62h26" stroke="#fdba74" stroke-width="2"/>
+  <g fill="#ffedd5"><rect x="27" y="22" width="20" height="4" rx="2"/><rect x="27" y="30" width="26" height="4" rx="2"/></g>
+  <circle cx="68" cy="28" r="15" fill="#22c55e" stroke="#ffffff" stroke-width="3"/>
+  <path d="M61 28l5 5 9-10" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+""",
+    },
 }

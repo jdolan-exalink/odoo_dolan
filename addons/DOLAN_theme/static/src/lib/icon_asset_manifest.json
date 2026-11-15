@@ -2266,7 +2266,7 @@
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_picking.svg",
       "local_path": "fluent_flat/catalog_picking.svg",
-      "sha256": "319c58b555fbcd74f40a001ca4d933e6167401b5578fd1f69e9cbd5d4b4f6b28"
+      "sha256": "2a668e05fc72a32cedefe70256718fe5b7c21c326f40d0d701a6c25b5b77d1aa"
     },
     {
       "library": "dolan_custom",
@@ -2301,7 +2301,7 @@
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_proof_delivery.svg",
       "local_path": "fluent_flat/catalog_proof_delivery.svg",
-      "sha256": "5dde8685b3768c96b3648feff3b1103d1d2b32794342f97cf4f7829c0acc8a8a"
+      "sha256": "14849970dc9fa66ab94bed1b6ffc4ec83997a79d118cf8a3ddd671fe591ab1c9"
     },
     {
       "library": "dolan_custom",
@@ -2336,7 +2336,7 @@
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_routes.svg",
       "local_path": "fluent_flat/catalog_routes.svg",
-      "sha256": "74d116fab0838a50002089ae84806560b373798bd0688073192698ffd61cfb72"
+      "sha256": "dcd7fab75bf70ca0f7fab7de5660b228e644fc452272d05ad788105b63247910"
     },
     {
       "library": "dolan_custom",
@@ -2607,13 +2607,6 @@
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
-      "upstream_path": "fluent_3d/catalog_picking-148fa97a.svg",
-      "local_path": "fluent_3d/catalog_picking-148fa97a.svg",
-      "sha256": "148fa97ab932524973e000a4333066fb03372a38edee2965ef312de4cb665331"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
       "upstream_path": "fluent_3d/catalog_pos_closing-c57eb48a.svg",
       "local_path": "fluent_3d/catalog_pos_closing-c57eb48a.svg",
       "sha256": "c57eb48a81076afb35bc0f0bf8d2a013d0888e845257ae4ca502d6c6c53b00d9"
@@ -2631,13 +2624,6 @@
       "upstream_path": "fluent_3d/catalog_products-d1a82151.svg",
       "local_path": "fluent_3d/catalog_products-d1a82151.svg",
       "sha256": "d1a821513e9edaec8bfa7819b265d463e0d8925b55e9340d352fd9d8b8010579"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_3d/catalog_proof_delivery-ac302d4b.svg",
-      "local_path": "fluent_3d/catalog_proof_delivery-ac302d4b.svg",
-      "sha256": "ac302d4b0f585640705298bb61f7f565bbae956b500d5cd5af0c95820e696085"
     },
     {
       "library": "dolan_custom",
@@ -2666,13 +2652,6 @@
       "upstream_path": "fluent_3d/catalog_replenishment-25995161.svg",
       "local_path": "fluent_3d/catalog_replenishment-25995161.svg",
       "sha256": "2599516147ec0ec7472e33351733ef4326daeb558b1045625d141dc6424d81b0"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_3d/catalog_routes-e2a91b8b.svg",
-      "local_path": "fluent_3d/catalog_routes-e2a91b8b.svg",
-      "sha256": "e2a91b8bce2cbbf8987cfdce65f72e29716897a3f5a9cf9a8435c2d1d05c62bd"
     },
     {
       "library": "dolan_custom",
@@ -2957,13 +2936,6 @@
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
-      "upstream_path": "fluent_filled/catalog_picking-643d2377.svg",
-      "local_path": "fluent_filled/catalog_picking-643d2377.svg",
-      "sha256": "643d23779ec2e1a1424afd87d8c5c06758acaf7dd47fd57c56536bc87bd342ed"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
       "upstream_path": "fluent_filled/catalog_pos_closing-d273c5ba.svg",
       "local_path": "fluent_filled/catalog_pos_closing-d273c5ba.svg",
       "sha256": "d273c5ba3d668b164d11104fd4720fd6f2a2df387cc003139ffeb3c755d95489"
@@ -2981,13 +2953,6 @@
       "upstream_path": "fluent_filled/catalog_products-9cbf6b56.svg",
       "local_path": "fluent_filled/catalog_products-9cbf6b56.svg",
       "sha256": "9cbf6b56b9a8f703a9afe6680ed18f8deb7ac6c9c15d950b60872e99d9e45e41"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_filled/catalog_proof_delivery-11ab95d0.svg",
-      "local_path": "fluent_filled/catalog_proof_delivery-11ab95d0.svg",
-      "sha256": "11ab95d0cb374dbeb3bc59ce80097b24f2f3c1146490506531a894c77d7cf3d4"
     },
     {
       "library": "dolan_custom",
@@ -3286,13 +3251,6 @@
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
-      "upstream_path": "fluent_flat/catalog_picking-319c58b5.svg",
-      "local_path": "fluent_flat/catalog_picking-319c58b5.svg",
-      "sha256": "319c58b555fbcd74f40a001ca4d933e6167401b5578fd1f69e9cbd5d4b4f6b28"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_pos_closing-4542e8e4.svg",
       "local_path": "fluent_flat/catalog_pos_closing-4542e8e4.svg",
       "sha256": "4542e8e4b9f9c623b0db23209a69b850e5dae4931a5f9241435f335dc2f57c03"
@@ -3310,13 +3268,6 @@
       "upstream_path": "fluent_flat/catalog_products-f958d7fc.svg",
       "local_path": "fluent_flat/catalog_products-f958d7fc.svg",
       "sha256": "f958d7fc6d51cc7437fec0e0309d9b7775a1a41b7885dce91f2f56e2bf4ab6bd"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_flat/catalog_proof_delivery-5dde8685.svg",
-      "local_path": "fluent_flat/catalog_proof_delivery-5dde8685.svg",
-      "sha256": "5dde8685b3768c96b3648feff3b1103d1d2b32794342f97cf4f7829c0acc8a8a"
     },
     {
       "library": "dolan_custom",
@@ -3345,13 +3296,6 @@
       "upstream_path": "fluent_flat/catalog_replenishment-fe1dd670.svg",
       "local_path": "fluent_flat/catalog_replenishment-fe1dd670.svg",
       "sha256": "fe1dd670db0d13fea1d096a0f0bea90525b1a15a8c1886b31d8e8073c1948ddc"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_flat/catalog_routes-74d116fa.svg",
-      "local_path": "fluent_flat/catalog_routes-74d116fa.svg",
-      "sha256": "74d116fab0838a50002089ae84806560b373798bd0688073192698ffd61cfb72"
     },
     {
       "library": "dolan_custom",
@@ -3636,13 +3580,6 @@
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
-      "upstream_path": "fluent_regular/catalog_picking-70c1d07f.svg",
-      "local_path": "fluent_regular/catalog_picking-70c1d07f.svg",
-      "sha256": "70c1d07fcc34879af40c9c612732c858cea9f84573d275014dc3c916e823ad00"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
       "upstream_path": "fluent_regular/catalog_pos_closing-23f50ad7.svg",
       "local_path": "fluent_regular/catalog_pos_closing-23f50ad7.svg",
       "sha256": "23f50ad7c4e818be3d1e834e2338ab521e0cccb0ca1f11860103c8c6c74f5017"
@@ -3660,13 +3597,6 @@
       "upstream_path": "fluent_regular/catalog_products-fc8db322.svg",
       "local_path": "fluent_regular/catalog_products-fc8db322.svg",
       "sha256": "fc8db3227ec5479c84d9225741087a853715fbf91b95a0730f805ca7e1b3f76e"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_regular/catalog_proof_delivery-89829df0.svg",
-      "local_path": "fluent_regular/catalog_proof_delivery-89829df0.svg",
-      "sha256": "89829df0db787444b197f15b95e31173ee1671c031883eb35621615385f0fe88"
     },
     {
       "library": "dolan_custom",
@@ -3986,13 +3916,6 @@
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
-      "upstream_path": "tabler/catalog_picking-1fb09b5f.svg",
-      "local_path": "tabler/catalog_picking-1fb09b5f.svg",
-      "sha256": "1fb09b5fc5fe5e436d200e160a69488425763bf80eeb47f0bf9cb55d544edbec"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
       "upstream_path": "tabler/catalog_pos_closing-2ad0fec9.svg",
       "local_path": "tabler/catalog_pos_closing-2ad0fec9.svg",
       "sha256": "2ad0fec92d276e0a3dca23091fb60124d08ebfc083f90427c7b2cd9dc7d4a3a1"
@@ -4010,13 +3933,6 @@
       "upstream_path": "tabler/catalog_products-d1409a07.svg",
       "local_path": "tabler/catalog_products-d1409a07.svg",
       "sha256": "d1409a0735a06febe165d81d0f7f07a5c9900c8c0e2f125ebbc62e2fdde687da"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "tabler/catalog_proof_delivery-9d08d97b.svg",
-      "local_path": "tabler/catalog_proof_delivery-9d08d97b.svg",
-      "sha256": "9d08d97b21baa70cc39769c3a74d94b9299c95032063a25544e8a248f8183400"
     },
     {
       "library": "dolan_custom",
@@ -4360,6 +4276,90 @@
       "upstream_path": "tabler/catalog_profitability-8ea5de75.svg",
       "local_path": "tabler/catalog_profitability-8ea5de75.svg",
       "sha256": "8ea5de755d92ba4c5b5f10e9bb805387ea9c176d55e293b6430a07204f9f2075"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_3d/catalog_picking-907a86c1.svg",
+      "local_path": "fluent_3d/catalog_picking-907a86c1.svg",
+      "sha256": "907a86c120b590d7e5669c881d52cce3dd37465b23687c48fedbc20453421bc7"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_3d/catalog_proof_delivery-d07c1184.svg",
+      "local_path": "fluent_3d/catalog_proof_delivery-d07c1184.svg",
+      "sha256": "d07c118484b62943094dd006ecc50429d03ea6c74079e755b077258a26ca13e8"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_3d/catalog_routes-5e3a7412.svg",
+      "local_path": "fluent_3d/catalog_routes-5e3a7412.svg",
+      "sha256": "5e3a741240dabf02081b5625cd552d13e0a57b9a3701021812045a3038149263"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_filled/catalog_picking-dd55ed16.svg",
+      "local_path": "fluent_filled/catalog_picking-dd55ed16.svg",
+      "sha256": "dd55ed16c9c5c5555572764b12aff04ce1b80f0e93f3156df9f4860a30907fd4"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_filled/catalog_proof_delivery-a715c44c.svg",
+      "local_path": "fluent_filled/catalog_proof_delivery-a715c44c.svg",
+      "sha256": "a715c44c58110a7b469f27f4bdc255e8018bd1c21cee9865e57874b3acce9194"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_picking-2a668e05.svg",
+      "local_path": "fluent_flat/catalog_picking-2a668e05.svg",
+      "sha256": "2a668e05fc72a32cedefe70256718fe5b7c21c326f40d0d701a6c25b5b77d1aa"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_proof_delivery-14849970.svg",
+      "local_path": "fluent_flat/catalog_proof_delivery-14849970.svg",
+      "sha256": "14849970dc9fa66ab94bed1b6ffc4ec83997a79d118cf8a3ddd671fe591ab1c9"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_routes-dcd7fab7.svg",
+      "local_path": "fluent_flat/catalog_routes-dcd7fab7.svg",
+      "sha256": "dcd7fab75bf70ca0f7fab7de5660b228e644fc452272d05ad788105b63247910"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_regular/catalog_picking-990290d9.svg",
+      "local_path": "fluent_regular/catalog_picking-990290d9.svg",
+      "sha256": "990290d92d5f14dd40f0bd8d01ccae9665131c635ff0e18a0cd52322d2452e6e"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_regular/catalog_proof_delivery-cb174b90.svg",
+      "local_path": "fluent_regular/catalog_proof_delivery-cb174b90.svg",
+      "sha256": "cb174b90cec68cb3e2719f0b0d89dd2b93804ddcb90433824cf38391ad81ec91"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "tabler/catalog_picking-667adb38.svg",
+      "local_path": "tabler/catalog_picking-667adb38.svg",
+      "sha256": "667adb382a517fbf2f3370508fba7b9693f7fbed611f11ca650381ad4228d8bf"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "tabler/catalog_proof_delivery-36fce462.svg",
+      "local_path": "tabler/catalog_proof_delivery-36fce462.svg",
+      "sha256": "36fce462cdb2d10a65494b7ce63753a80a659f525e8b0d463bb4fd5ee4d00818"
     }
   ]
 }

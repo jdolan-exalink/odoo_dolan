@@ -1,0 +1,13 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_picking_wave_stock,Oleadas: inventario,dolan.picking.wave,stock.group_stock_user,cru,"[('company_id', 'in', company_ids)]"
+access_dolan_picking_wave_manager,Oleadas: responsable,dolan.picking.wave,DOLAN_logistics.group_logistics_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_picking_wave_line_stock,Líneas de oleada: inventario,dolan.picking.wave.line,stock.group_stock_user,cru,"[('wave_id.company_id', 'in', company_ids)]"
+access_dolan_picking_wave_line_manager,Líneas de oleada: responsable,dolan.picking.wave.line,DOLAN_logistics.group_logistics_manager,crud,"[('wave_id.company_id', 'in', company_ids)]"
+access_dolan_delivery_route_driver,Rutas: repartidor,dolan.delivery.route,DOLAN_logistics.group_logistics_driver,r,"[('company_id', 'in', company_ids), ('driver_id', '=', user.id)]"
+access_dolan_delivery_route_manager,Rutas: responsable,dolan.delivery.route,DOLAN_logistics.group_logistics_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_delivery_stop_driver,Paradas: repartidor,dolan.delivery.stop,DOLAN_logistics.group_logistics_driver,ru,"[('company_id', 'in', company_ids), ('route_id.driver_id', '=', user.id)]"
+access_dolan_delivery_stop_manager,Paradas: responsable,dolan.delivery.stop,DOLAN_logistics.group_logistics_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_delivery_reject_reason_user,Motivos de rechazo: usuario,dolan.delivery.reject.reason,DOLAN_logistics.group_logistics_driver,r,
+access_dolan_delivery_reject_reason_manager,Motivos de rechazo: responsable,dolan.delivery.reject.reason,DOLAN_logistics.group_logistics_manager,crud,
+access_dolan_delivery_stop_line_driver,Cantidades entregadas: repartidor,dolan.delivery.stop.line,DOLAN_logistics.group_logistics_driver,crud,"[('stop_id.route_id.driver_id', '=', user.id)]"
+access_dolan_delivery_stop_line_manager,Cantidades entregadas: responsable,dolan.delivery.stop.line,DOLAN_logistics.group_logistics_manager,crud,

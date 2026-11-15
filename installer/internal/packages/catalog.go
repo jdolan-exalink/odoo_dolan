@@ -170,6 +170,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_logistics",
+		Title:       "Logística: preparación, rutas y prueba de entrega",
+		Version:     "20.0.1.0.0",
+		Category:    "Logística",
+		Application: true,
+		Depends:     []string{"stock", "mail"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_accounting",
 		Title:       "Contabilidad Pro, Conciliación, Activos y Préstamos",
 		Version:     "20.0.1.8.0",

@@ -1827,18 +1827,19 @@
       "semantic": "picking",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_preparacion"
+        "DOLAN_app_catalog.menu_app_preparacion",
+        "DOLAN_logistics.menu_dolan_picking_wave_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "orange",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_picking-148fa97a.svg",
-        "fluent_flat": "fluent_flat/catalog_picking-319c58b5.svg",
-        "fluent_filled": "fluent_filled/catalog_picking-643d2377.svg",
-        "fluent_regular": "fluent_regular/catalog_picking-70c1d07f.svg",
-        "tabler": "tabler/catalog_picking-1fb09b5f.svg"
+        "fluent_3d": "fluent_3d/catalog_picking-907a86c1.svg",
+        "fluent_flat": "fluent_flat/catalog_picking-2a668e05.svg",
+        "fluent_filled": "fluent_filled/catalog_picking-dd55ed16.svg",
+        "fluent_regular": "fluent_regular/catalog_picking-990290d9.svg",
+        "tabler": "tabler/catalog_picking-667adb38.svg"
       }
     },
     {
@@ -1848,15 +1849,16 @@
       "semantic": "routes",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_rutas_reparto"
+        "DOLAN_app_catalog.menu_app_rutas_reparto",
+        "DOLAN_logistics.menu_dolan_delivery_route_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "orange",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_routes-e2a91b8b.svg",
-        "fluent_flat": "fluent_flat/catalog_routes-74d116fa.svg",
+        "fluent_3d": "fluent_3d/catalog_routes-5e3a7412.svg",
+        "fluent_flat": "fluent_flat/catalog_routes-dcd7fab7.svg",
         "fluent_filled": "fluent_filled/catalog_routes-88756c60.svg",
         "fluent_regular": "fluent_regular/catalog_routes-a61977bb.svg",
         "tabler": "tabler/catalog_routes-af4d2316.svg"
@@ -1869,18 +1871,19 @@
       "semantic": "proof_delivery",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_prueba_entrega"
+        "DOLAN_app_catalog.menu_app_prueba_entrega",
+        "DOLAN_logistics.menu_dolan_delivery_stop_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "orange",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_proof_delivery-ac302d4b.svg",
-        "fluent_flat": "fluent_flat/catalog_proof_delivery-5dde8685.svg",
-        "fluent_filled": "fluent_filled/catalog_proof_delivery-11ab95d0.svg",
-        "fluent_regular": "fluent_regular/catalog_proof_delivery-89829df0.svg",
-        "tabler": "tabler/catalog_proof_delivery-9d08d97b.svg"
+        "fluent_3d": "fluent_3d/catalog_proof_delivery-d07c1184.svg",
+        "fluent_flat": "fluent_flat/catalog_proof_delivery-14849970.svg",
+        "fluent_filled": "fluent_filled/catalog_proof_delivery-a715c44c.svg",
+        "fluent_regular": "fluent_regular/catalog_proof_delivery-cb174b90.svg",
+        "tabler": "tabler/catalog_proof_delivery-36fce462.svg"
       }
     },
     {
