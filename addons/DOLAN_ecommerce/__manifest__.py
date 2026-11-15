@@ -27,6 +27,7 @@ Tienda online
         'security/ir.access.csv',
         'views/ecommerce_views.xml',
     ],
+    'post_init_hook': 'post_init_hook',
     'installable': True,
     'application': True,
 }

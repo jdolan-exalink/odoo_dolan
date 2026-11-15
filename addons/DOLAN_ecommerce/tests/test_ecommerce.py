@@ -1,6 +1,8 @@
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import TransactionCase, new_test_user, tagged
 
+from ..hooks import post_init_hook
+
 
 @tagged('post_install', '-at_install')
 class TestEcommerce(TransactionCase):
@@ -62,3 +64,13 @@ class TestEcommerce(TransactionCase):
         user = new_test_user(self.env, login='shop_seller', groups='sales_team.group_sale_salesman')
         with self.assertRaises(AccessError):
             self.env['dolan.ecommerce.setup'].with_user(user).create({})
+
+    def test_website_moves_to_public_user_company(self):
+        other = self.env['res.company'].create({'name': 'Otra empresa TST'})
+        website = self.env['website'].create({'name': 'Sitio TST', 'company_id': other.id})
+        # Como queda el sitio que crea Odoo en una base con varias empresas: usuario público de otra empresa.
+        public = self.env.ref('base.public_user')
+        website.user_id = public
+        self.assertNotIn(other, public.company_ids)
+        post_init_hook(self.env)
+        self.assertEqual(website.company_id, public.company_id)
