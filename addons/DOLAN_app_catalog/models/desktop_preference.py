@@ -113,13 +113,36 @@ class DolanDesktopPreference(models.Model):
             placed[entry.key] = menu.id
         # Las apps principales, sueltas al principio y en su orden.
         roots = set(self.env['ir.ui.menu'].get_user_roots().ids)
-        for index, menu_id in enumerate([m for m in self._main_app_menu_ids() if m in roots], start=1):
+        main_ids = [m for m in self._main_app_menu_ids() if m in roots]
+        for index, menu_id in enumerate(main_ids, start=1):
             vals = {'folder_id': False, 'sequence': index * 10}
             item = by_menu.get(menu_id)
             if item:
                 item.write(vals)
             else:
-                Item.create(dict(vals, menu_id=menu_id))
+                by_menu[menu_id] = Item.create(dict(vals, menu_id=menu_id))
+        # Las demás apps que no son del catálogo y estaban sueltas (Contactos, Calendario...) van a Varios.
+        catalog_folder_ids = {folder.id for folder in cache.values()}
+        others = self.env['ir.ui.menu'].browse(sorted(roots - set(main_ids) - set(placed.values())))
+        others = others.filtered(lambda m: not (by_menu.get(m.id) and by_menu[m.id].folder_id))
+        last_catalog = max([f.sequence for f in cache.values()] or [CATALOG_FOLDER_BASE])
+        if others:
+            varios = Folder.search([('user_id', '=', self.env.uid), ('name', '=', 'Varios')], limit=1) \
+                or Folder.create({'name': 'Varios', 'sequence': last_catalog + 10})
+            last = Item.search([('user_id', '=', self.env.uid), ('folder_id', '=', varios.id)], order='sequence desc', limit=1)
+            sequence = last.sequence or 0
+            for menu in others.sorted(lambda m: (m.name or '').lower()):
+                sequence += 10
+                vals = {'folder_id': varios.id, 'sequence': sequence}
+                if by_menu.get(menu.id):
+                    by_menu[menu.id].write(vals)
+                else:
+                    by_menu[menu.id] = Item.create(dict(vals, menu_id=menu.id))
+        # Las carpetas que no son del catálogo (Varios y las del usuario) van después, en su orden.
+        extra = Folder.search([('user_id', '=', self.env.uid), ('id', 'not in', list(catalog_folder_ids))], order='sequence, id')
+        for index, folder in enumerate(extra, start=1):
+            if folder.sequence <= last_catalog:
+                folder.write({'sequence': last_catalog + index * 10})
         # Las carpetas que quedaron vacías (por ejemplo una carpeta vieja de RRHH) se borran.
         used = set(Item.search([('user_id', '=', self.env.uid), ('folder_id', '!=', False)]).mapped('folder_id').ids)
         Folder.search([('user_id', '=', self.env.uid), ('id', 'not in', list(used))]).sudo().unlink()
