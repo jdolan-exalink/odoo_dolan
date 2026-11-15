@@ -516,4 +516,172 @@ ILLUSTRATIONS = {
 </svg>
 """,
     },
+    # Sucursales: casa central y dos locales unidos por un camino (área Configuración, gris con acento azul pizarra).
+    "branches": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="hq" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#cbd5e1"/><stop offset="1" stop-color="#64748b"/></linearGradient>
+    <linearGradient id="shop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e2e8f0"/><stop offset="1" stop-color="#94a3b8"/></linearGradient>
+    <linearGradient id="awning" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#38bdf8"/><stop offset="1" stop-color="#0369a1"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M24 70L48 52L72 70" fill="none" stroke="#94a3b8" stroke-width="4" stroke-dasharray="5 4" stroke-linecap="round"/>
+    <rect x="34" y="10" width="28" height="40" rx="3" fill="url(#hq)"/>
+    <g fill="#f1f5f9"><rect x="39" y="16" width="7" height="6" rx="1"/><rect x="50" y="16" width="7" height="6" rx="1"/><rect x="39" y="27" width="7" height="6" rx="1"/><rect x="50" y="27" width="7" height="6" rx="1"/></g>
+    <rect x="44" y="39" width="8" height="11" rx="1" fill="#334155"/>
+    <g transform="translate(6 62)">
+      <rect x="2" y="8" width="30" height="20" rx="2" fill="url(#shop)"/>
+      <path d="M0 2h34v8H0Z" fill="url(#awning)"/><path d="M0 10h34" stroke="#0c4a6e" stroke-width="1.5"/>
+      <rect x="13" y="16" width="8" height="12" rx="1" fill="#334155"/>
+    </g>
+    <g transform="translate(56 62)">
+      <rect x="2" y="8" width="30" height="20" rx="2" fill="url(#shop)"/>
+      <path d="M0 2h34v8H0Z" fill="url(#awning)"/><path d="M0 10h34" stroke="#0c4a6e" stroke-width="1.5"/>
+      <rect x="13" y="16" width="8" height="12" rx="1" fill="#334155"/>
+    </g>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <path d="M24 70L48 52L72 70" fill="none" stroke="#a0aec0" stroke-width="4" stroke-dasharray="5 4" stroke-linecap="round"/>
+  <rect x="34" y="10" width="28" height="40" rx="3" fill="#8a95a6" stroke="#4a5568" stroke-width="2"/>
+  <g fill="#ffffff"><rect x="39" y="16" width="7" height="6" rx="1"/><rect x="50" y="16" width="7" height="6" rx="1"/><rect x="39" y="27" width="7" height="6" rx="1"/><rect x="50" y="27" width="7" height="6" rx="1"/></g>
+  <rect x="44" y="39" width="8" height="11" rx="1" fill="#4a5568"/>
+  <g transform="translate(6 62)">
+    <rect x="2" y="8" width="30" height="20" rx="2" fill="#e2e8f0" stroke="#4a5568" stroke-width="2"/>
+    <path d="M0 2h34v8H0Z" fill="#0ea5e9"/>
+    <rect x="13" y="16" width="8" height="12" rx="1" fill="#4a5568"/>
+  </g>
+  <g transform="translate(56 62)">
+    <rect x="2" y="8" width="30" height="20" rx="2" fill="#e2e8f0" stroke="#4a5568" stroke-width="2"/>
+    <path d="M0 2h34v8H0Z" fill="#0ea5e9"/>
+    <rect x="13" y="16" width="8" height="12" rx="1" fill="#4a5568"/>
+  </g>
+</svg>
+""",
+    },
+    # Integraciones: enchufe y toma a punto de conectarse, con chispa verde de conexión.
+    "integrations": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="plug" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#cbd5e1"/><stop offset="1" stop-color="#475569"/></linearGradient>
+    <linearGradient id="socket" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f1f5f9"/><stop offset="1" stop-color="#94a3b8"/></linearGradient>
+    <radialGradient id="spark" cx=".5" cy=".5" r=".6"><stop stop-color="#bbf7d0"/><stop offset="1" stop-color="#16a34a"/></radialGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M8 84c10 0 14-8 14-16" fill="none" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+    <path d="M88 12c-10 0-14 8-14 16" fill="none" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+    <g transform="rotate(-45 48 48)">
+      <rect x="12" y="38" width="24" height="20" rx="5" fill="url(#plug)"/>
+      <rect x="36" y="41" width="9" height="4" rx="1.5" fill="#94a3b8"/><rect x="36" y="51" width="9" height="4" rx="1.5" fill="#94a3b8"/>
+      <rect x="58" y="36" width="26" height="24" rx="6" fill="url(#socket)"/>
+      <rect x="58" y="41" width="5" height="4" rx="1" fill="#334155"/><rect x="58" y="51" width="5" height="4" rx="1" fill="#334155"/>
+    </g>
+    <circle cx="48" cy="48" r="7" fill="url(#spark)"/>
+    <path d="M48 34v-6M48 68v-6M34 48h-6M68 48h-6" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <path d="M8 84c10 0 14-8 14-16" fill="none" stroke="#4a5568" stroke-width="5" stroke-linecap="round"/>
+  <path d="M88 12c-10 0-14 8-14 16" fill="none" stroke="#4a5568" stroke-width="5" stroke-linecap="round"/>
+  <g transform="rotate(-45 48 48)">
+    <rect x="12" y="38" width="24" height="20" rx="5" fill="#8a95a6" stroke="#4a5568" stroke-width="2"/>
+    <rect x="36" y="41" width="9" height="4" rx="1.5" fill="#4a5568"/><rect x="36" y="51" width="9" height="4" rx="1.5" fill="#4a5568"/>
+    <rect x="58" y="36" width="26" height="24" rx="6" fill="#e2e8f0" stroke="#4a5568" stroke-width="2"/>
+    <rect x="58" y="41" width="5" height="4" rx="1" fill="#4a5568"/><rect x="58" y="51" width="5" height="4" rx="1" fill="#4a5568"/>
+  </g>
+  <circle cx="48" cy="48" r="7" fill="#22c55e"/>
+  <path d="M48 34v-6M48 68v-6M34 48h-6M68 48h-6" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>
+</svg>
+""",
+    },
+    # Importaciones: planilla con columnas que baja con una flecha a una bandeja.
+    "imports": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="sheet" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e2e8f0"/></linearGradient>
+    <linearGradient id="tray" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#94a3b8"/><stop offset="1" stop-color="#475569"/></linearGradient>
+    <linearGradient id="arrow" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#5eead4"/><stop offset="1" stop-color="#0f766e"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="12" y="8" width="44" height="52" rx="4" fill="url(#sheet)" stroke="#64748b" stroke-width="2"/>
+    <path d="M12 20h44M12 32h44M12 44h44M27 8v52M41 8v52" stroke="#cbd5e1" stroke-width="2"/>
+    <rect x="12" y="8" width="44" height="12" rx="4" fill="#64748b" opacity=".85"/>
+    <rect x="66" y="14" width="8" height="36" rx="4" fill="url(#arrow)"/>
+    <path d="M58 42l12 13 12-13" fill="none" stroke="#0f766e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M10 64h20l5 8h26l5-8h20v16a6 6 0 0 1-6 6H16a6 6 0 0 1-6-6Z" fill="url(#tray)"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <rect x="12" y="8" width="44" height="52" rx="4" fill="#ffffff" stroke="#4a5568" stroke-width="2"/>
+  <path d="M12 20h44M12 32h44M12 44h44M27 8v52M41 8v52" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="12" y="8" width="44" height="12" rx="4" fill="#8a95a6"/>
+  <path d="M70 18v30" stroke="#14b8a6" stroke-width="8" stroke-linecap="round"/>
+  <path d="M58 42l12 13 12-13" fill="none" stroke="#0f766e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M10 64h20l5 8h26l5-8h20v16a6 6 0 0 1-6 6H16a6 6 0 0 1-6-6Z" fill="#8a95a6" stroke="#4a5568" stroke-width="2"/>
+</svg>
+""",
+    },
+    # Respaldos: base de datos con un escudo y la flecha circular de restauración.
+    "backups": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="db" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#94a3b8"/><stop offset=".5" stop-color="#cbd5e1"/><stop offset="1" stop-color="#64748b"/></linearGradient>
+    <linearGradient id="shield" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a5b4fc"/><stop offset="1" stop-color="#4338ca"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M10 18v50c0 6 12 11 28 11s28-5 28-11V18" fill="url(#db)"/>
+    <ellipse cx="38" cy="18" rx="28" ry="10" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+    <path d="M10 35c0 6 12 11 28 11s28-5 28-11M10 52c0 6 12 11 28 11s28-5 28-11" fill="none" stroke="#64748b" stroke-width="2"/>
+    <path d="M68 42l20 7v13c0 13-9 21-20 25-11-4-20-12-20-25V49Z" fill="url(#shield)" stroke="#ffffff" stroke-width="3"/>
+    <path d="M76 62a8 8 0 1 1-3-6.2" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M74 51l1 5-5 1" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <path d="M10 18v50c0 6 12 11 28 11s28-5 28-11V18" fill="#a0aec0" stroke="#4a5568" stroke-width="2"/>
+  <ellipse cx="38" cy="18" rx="28" ry="10" fill="#e2e8f0" stroke="#4a5568" stroke-width="2"/>
+  <path d="M10 35c0 6 12 11 28 11s28-5 28-11M10 52c0 6 12 11 28 11s28-5 28-11" fill="none" stroke="#4a5568" stroke-width="2"/>
+  <path d="M68 42l20 7v13c0 13-9 21-20 25-11-4-20-12-20-25V49Z" fill="#6366f1" stroke="#ffffff" stroke-width="3"/>
+  <path d="M76 62a8 8 0 1 1-3-6.2" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M74 51l1 5-5 1" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+""",
+    },
+    # Diagnóstico: monitor con línea de pulso y una lupa sobre el gráfico.
+    "diagnostics": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#94a3b8"/><stop offset="1" stop-color="#334155"/></linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#1e293b"/><stop offset="1" stop-color="#0f172a"/></linearGradient>
+    <radialGradient id="lens" cx=".4" cy=".35" r=".8"><stop stop-color="#ffffff" stop-opacity=".9"/><stop offset="1" stop-color="#bae6fd" stop-opacity=".55"/></radialGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="6" y="12" width="72" height="50" rx="6" fill="url(#frame)"/>
+    <rect x="11" y="17" width="62" height="40" rx="3" fill="url(#screen)"/>
+    <path d="M14 40h12l5-12 8 22 5-10h26" fill="none" stroke="#f43f5e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M34 62l-4 12h24l-4-12" fill="#64748b"/><rect x="24" y="74" width="36" height="5" rx="2.5" fill="#475569"/>
+    <circle cx="70" cy="58" r="14" fill="url(#lens)" stroke="#475569" stroke-width="5"/>
+    <path d="M80 68l10 10" stroke="#334155" stroke-width="7" stroke-linecap="round"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <rect x="6" y="12" width="72" height="50" rx="6" fill="#8a95a6" stroke="#4a5568" stroke-width="2"/>
+  <rect x="11" y="17" width="62" height="40" rx="3" fill="#1e293b"/>
+  <path d="M14 40h12l5-12 8 22 5-10h26" fill="none" stroke="#f43f5e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M34 62l-4 12h24l-4-12" fill="#8a95a6"/><rect x="24" y="74" width="36" height="5" rx="2.5" fill="#4a5568"/>
+  <circle cx="70" cy="58" r="14" fill="#e0f2fe" fill-opacity=".85" stroke="#4a5568" stroke-width="5"/>
+  <path d="M80 68l10 10" stroke="#4a5568" stroke-width="7" stroke-linecap="round"/>
+</svg>
+""",
+    },
 }

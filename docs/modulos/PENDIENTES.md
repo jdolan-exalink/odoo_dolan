@@ -1,7 +1,7 @@
 # Pendientes
 
-Actualizado el 13/11/2026. Lo que está en desarrollo sigue el orden que pidió Juan: Servicios (hecho),
-Facturación y Finanzas (hecho: Cuentas corrientes y Caja y Tesorería), Inventario y Compras (hecho: Costos; el resto de la carpeta ya eran apps de Odoo), Gestión y Análisis (hecho), Logística (hecho). Comercial quedó en pausa.
+Actualizado el 15/11/2026. Lo que está en desarrollo sigue el orden que pidió Juan: Servicios (hecho),
+Facturación y Finanzas (hecho: Cuentas corrientes y Caja y Tesorería), Inventario y Compras (hecho: Costos; el resto de la carpeta ya eran apps de Odoo), Gestión y Análisis (hecho), Logística (hecho), Configuraciones (hecho). Comercial: en curso.
 
 ## Apps del catálogo sin implementación propia
 
@@ -9,7 +9,6 @@ Facturación y Finanzas (hecho: Cuentas corrientes y Caja y Tesorería), Inventa
 |---|---|---|---|
 | Comercial | Fidelización | en pausa | Propuesta: activar `loyalty`, `sale_loyalty` y `pos_loyalty` de Odoo sin desarrollo propio y revisar que no choquen con `DOLAN_discount_engine`. Falta el OK. |
 | Comercial | Tienda online | en pausa | `website_sale` de Odoo instala el sitio web completo. Queda como «Disponible para instalar» hasta decidir. |
-| Configuraciones | Sucursales, Integraciones, Importaciones, Respaldos, Diagnóstico | en desarrollo / planificado | Sin empezar. |
 
 ## Pendientes dentro de los módulos ya hechos
 
@@ -30,6 +29,14 @@ Detalle en la sección *Pendiente* de cada documento:
 * **Auditoría**: motivo y aprobación en la interfaz, descuentos y devoluciones de POS y ventas, exportación firmada.
 * **Alertas**: aviso por WhatsApp, resumen diario por correo.
 * **Presupuesto financiero**: por centro de costo, alerta de cuenta excedida.
+* **Sucursales**: numeración de comprobantes y punto de venta ARCA por sucursal, permisos que limiten los
+  datos a la sucursal del usuario, sucursal en POS y en los reportes de Rentabilidad y Flujo de caja.
+* **Integraciones**: bancos e Interbanking, historial de caídas, aviso por Alertas cuando una conexión falla.
+* **Importaciones**: proveedores con saldo en dólares, listas de precios, cheques en cartera, lotes y series.
+* **Respaldos**: copia automática fuera del servidor (S3, Google Drive o NAS) y cifrado del archivo.
+  **Importante**: en la PC local y en 10.1.1.9 la imagen tiene `pg_dump` 15 y la base es PostgreSQL 17, así
+  que los respaldos fallan hasta reconstruir la imagen con el Dockerfile nuevo (10.1.1.68 ya tiene `pg_dump` 18).
+* **Diagnóstico**: tamaño del log, workers y memoria, versión de la imagen contra la última publicada.
 * **Cuentas corrientes**: cobranza activa por WhatsApp con reglas (horarios, exclusiones, opt-out, aprobación),
   bloqueo de venta con límite de crédito, multimoneda, filtro por sucursal.
 

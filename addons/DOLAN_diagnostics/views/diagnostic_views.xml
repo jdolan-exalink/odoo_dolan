@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_diagnostic_check_list" model="ir.ui.view">
+        <field name="name">dolan.diagnostic.check.list</field>
+        <field name="model">dolan.diagnostic.check</field>
+        <field name="arch" type="xml">
+            <list string="Diagnóstico" create="false" edit="false" delete="false"
+                  decoration-danger="state == 'error'" decoration-warning="state == 'warning'">
+                <header>
+                    <button name="action_refresh" type="object" string="Revisar ahora" display="always" class="btn-primary"/>
+                </header>
+                <field name="topic"/>
+                <field name="name"/>
+                <field name="state" widget="badge" decoration-success="state == 'ok'" decoration-warning="state == 'warning'"
+                       decoration-danger="state == 'error'"/>
+                <field name="message"/>
+                <field name="advice" optional="show"/>
+                <field name="checked_at" optional="hide"/>
+                <field name="res_model" column_invisible="1"/>
+                <button name="action_open_record" type="object" icon="fa-external-link" title="Abrir" invisible="not res_model"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_diagnostic_check_search" model="ir.ui.view">
+        <field name="name">dolan.diagnostic.check.search</field>
+        <field name="model">dolan.diagnostic.check</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="problems" string="Con problemas" domain="[('state', 'in', ('error', 'warning'))]"/>
+                <group>
+                    <filter name="group_topic" string="Tema" context="{'group_by': 'topic'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_diagnostic_check" model="ir.actions.act_window">
+        <field name="name">Diagnóstico</field>
+        <field name="res_model">dolan.diagnostic.check</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_dolan_diagnostic_check_search"/>
+        <field name="help" type="html">
+            <p>Usá «Revisar ahora» para ver la salud del sistema: módulos, tareas programadas, disco, respaldos, certificados y correo.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_dolan_diagnostics_root" name="Diagnóstico" sequence="102"
+              groups="base.group_system" action="action_dolan_diagnostic_check"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_diagnostics.svg"/>
+</odoo>

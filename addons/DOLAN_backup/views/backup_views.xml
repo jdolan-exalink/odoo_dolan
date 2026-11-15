@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_backup_list" model="ir.ui.view">
+        <field name="name">dolan.backup.list</field>
+        <field name="model">dolan.backup</field>
+        <field name="arch" type="xml">
+            <list string="Respaldos" create="false" decoration-danger="state == 'error'" decoration-muted="state == 'deleted'">
+                <header>
+                    <button name="action_backup_now" type="object" string="Respaldar ahora" display="always" class="btn-primary"/>
+                </header>
+                <field name="create_date" string="Fecha"/>
+                <field name="name"/>
+                <field name="origin"/>
+                <field name="size_mb"/>
+                <field name="duration" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-danger="state == 'error'"/>
+                <field name="restore_state" widget="badge" decoration-success="restore_state == 'ok'" decoration-danger="restore_state == 'error'"/>
+                <button name="action_download" type="object" icon="fa-download" title="Descargar" invisible="state != 'done'"/>
+                <button name="action_test_restore" type="object" string="Probar restauración" invisible="state != 'done'"
+                        confirm="Se restaura el respaldo en una base temporal, se verifica y se borra. Puede tardar varios minutos. ¿Seguir?"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_backup_form" model="ir.ui.view">
+        <field name="name">dolan.backup.form</field>
+        <field name="model">dolan.backup</field>
+        <field name="arch" type="xml">
+            <form string="Respaldo" create="false">
+                <header>
+                    <button name="action_download" type="object" string="Descargar" invisible="state != 'done'"/>
+                    <button name="action_test_restore" type="object" string="Probar restauración" invisible="state != 'done'"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="create_date" string="Fecha"/>
+                            <field name="origin"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="size_mb"/>
+                            <field name="duration"/>
+                            <field name="path"/>
+                            <field name="restore_state"/>
+                            <field name="restore_message"/>
+                        </group>
+                    </group>
+                    <field name="message" invisible="not message"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_backup" model="ir.actions.act_window">
+        <field name="name">Respaldos</field>
+        <field name="res_model">dolan.backup</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay respaldos</p>
+            <p>Se hace uno por día; con «Respaldar ahora» se hace en el momento. Bajá una copia y guardala fuera del servidor.</p>
+        </field>
+    </record>
+
+    <record id="view_dolan_backup_settings_form" model="ir.ui.view">
+        <field name="name">dolan.backup.settings.form</field>
+        <field name="model">dolan.backup.settings</field>
+        <field name="arch" type="xml">
+            <form string="Opciones de respaldo">
+                <group>
+                    <field name="path"/>
+                    <field name="keep"/>
+                    <field name="next_call"/>
+                </group>
+                <p class="text-muted">La carpeta es del servidor de Odoo. Conviene que sea un disco o carpeta que también se copie a otro lugar.</p>
+                <footer>
+                    <button name="action_save" type="object" string="Guardar" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_backup_settings" model="ir.actions.act_window">
+        <field name="name">Opciones de respaldo</field>
+        <field name="res_model">dolan.backup.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_dolan_backup_root" name="Respaldos" sequence="101"
+              groups="base.group_system"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_backups.svg"/>
+    <menuitem id="menu_dolan_backup_list" name="Respaldos" parent="menu_dolan_backup_root" action="action_dolan_backup" sequence="10"/>
+    <menuitem id="menu_dolan_backup_settings" name="Opciones" parent="menu_dolan_backup_root" action="action_dolan_backup_settings" sequence="20"/>
+</odoo>

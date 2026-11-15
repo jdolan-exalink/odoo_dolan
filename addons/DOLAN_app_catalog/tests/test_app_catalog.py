@@ -5,6 +5,20 @@ from odoo.tests import TransactionCase, new_test_user, tagged
 
 from ..models.app_catalog_entry import MENU_PREFIX, MODULE, load_catalog_source
 
+# Todas las apps del catálogo ya tienen módulo propio: para probar la pantalla
+# «En desarrollo» se usan estas como si todavía no estuvieran implementadas.
+PLACEHOLDER_KEYS = ('integraciones', 'importaciones', 'diagnostico')
+
+
+def catalog_with_placeholders():
+    source = copy.deepcopy(load_catalog_source())
+    for app in source['apps']:
+        if app['key'] in PLACEHOLDER_KEYS:
+            for field in ('module', 'menu', 'action'):
+                app.pop(field, None)
+            app['status'] = 'planificado'
+    return source
+
 
 @tagged('post_install', '-at_install')
 class TestAppCatalog(TransactionCase):
@@ -13,8 +27,8 @@ class TestAppCatalog(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.Entry = cls.env['dolan.app.catalog.entry']
-        cls.source = load_catalog_source()
-        cls.Entry._sync_catalog()
+        cls.source = catalog_with_placeholders()
+        cls.Entry._sync_catalog(cls.source)
         cls.user = new_test_user(cls.env, login='catalog_user', groups='base.group_user')
         cls.admin = new_test_user(cls.env, login='catalog_admin', groups='base.group_user,base.group_system')
 
@@ -33,8 +47,8 @@ class TestAppCatalog(TransactionCase):
 
     def test_sync_is_idempotent(self):
         before = {e.key: (e.id, e.runtime_state, e.catalog_menu_id.id) for e in self.Entry.search([])}
-        self.Entry._sync_catalog()
-        self.Entry._sync_catalog()
+        self.Entry._sync_catalog(self.source)
+        self.Entry._sync_catalog(self.source)
         after = {e.key: (e.id, e.runtime_state, e.catalog_menu_id.id) for e in self.Entry.search([])}
         self.assertEqual(before, after)
         self.assertEqual(self.env['dolan.app.catalog.folder'].search_count([]), len(self.source['folders']))
@@ -42,7 +56,7 @@ class TestAppCatalog(TransactionCase):
     def test_sync_keeps_admin_decisions(self):
         entry = self.entry('cuentas_corrientes')
         entry.write({'admin_hidden': True, 'admin_sequence': 7})
-        self.Entry._sync_catalog()
+        self.Entry._sync_catalog(self.source)
         self.assertTrue(entry.admin_hidden)
         self.assertEqual(entry.effective_sequence, 7)
         self.assertFalse(entry.shown)

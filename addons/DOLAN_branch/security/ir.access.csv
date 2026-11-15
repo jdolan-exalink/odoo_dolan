@@ -1,0 +1,3 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_branch_user,Sucursales: usuario,dolan.branch,base.group_user,r,"[('company_id', 'in', company_ids)]"
+access_dolan_branch_admin,Sucursales: administrador,dolan.branch,base.group_erp_manager,crud,"[('company_id', 'in', company_ids)]"

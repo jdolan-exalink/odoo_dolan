@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_integration_status_list" model="ir.ui.view">
+        <field name="name">dolan.integration.status.list</field>
+        <field name="model">dolan.integration.status</field>
+        <field name="arch" type="xml">
+            <list string="Integraciones" create="false" edit="false" delete="false"
+                  decoration-danger="state == 'error'" decoration-warning="state == 'warning'" decoration-muted="state == 'unconfigured'">
+                <header>
+                    <button name="action_refresh" type="object" string="Revisar ahora" display="always"/>
+                </header>
+                <field name="name"/>
+                <field name="kind"/>
+                <field name="state" widget="badge" decoration-success="state == 'ok'" decoration-warning="state == 'warning'"
+                       decoration-danger="state == 'error'" decoration-muted="state == 'unconfigured'"/>
+                <field name="message"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="checked_at" optional="show"/>
+                <field name="res_model" column_invisible="1"/>
+                <button name="action_test" type="object" string="Probar" invisible="not res_model"/>
+                <button name="action_open_record" type="object" icon="fa-external-link" title="Abrir configuración" invisible="not res_model"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_integration_status_search" model="ir.ui.view">
+        <field name="name">dolan.integration.status.search</field>
+        <field name="model">dolan.integration.status</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="problems" string="Con problemas" domain="[('state', 'in', ('error', 'warning'))]"/>
+                <group>
+                    <filter name="group_kind" string="Tipo" context="{'group_by': 'kind'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_integration_status" model="ir.actions.act_window">
+        <field name="name">Integraciones</field>
+        <field name="res_model">dolan.integration.status</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_dolan_integration_status_search"/>
+        <field name="help" type="html">
+            <p>Usá «Revisar ahora» para ver el estado de las conexiones con ARCA, WhatsApp, Mercado Pago, marketplaces y correo.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_dolan_integrations_root" name="Integraciones" sequence="99"
+              groups="base.group_system" action="action_dolan_integration_status"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_integrations.svg"/>
+</odoo>

@@ -7,6 +7,13 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 ## [Unreleased]
 
 ### Agregado
+- Apps de **Configuraciones**, todas `20.0.1.0.0` y en todos los perfiles del instalador:
+  - `DOLAN_branch` (**Sucursales**): sucursales de la misma empresa con depósito, diarios, lista de precios y usuarios; facturas y remitos quedan marcados con su sucursal y se filtran por ella.
+  - `DOLAN_integrations` (**Integraciones**): tablero con el estado de ARCA, WhatsApp, Mercado Pago y Clover, marketplaces y correo, revisado cada hora y con botón «Probar».
+  - `DOLAN_import` (**Importaciones**): carga inicial de contactos, productos, saldos de cuenta corriente y stock desde Excel o CSV con plantilla, validación fila por fila y reversión.
+  - `DOLAN_backup` (**Respaldos**): respaldo diario de base y adjuntos con retención, descarga y restauración de prueba en una base aislada. Avisa claro si `pg_dump` es más viejo que PostgreSQL.
+  - `DOLAN_diagnostics` (**Diagnóstico**): módulos sin actualizar, tareas programadas con error, disco, último respaldo, versión de `pg_dump`, certificado ARCA y correo.
+- Imagen Docker: cliente de PostgreSQL 17 (PGDG) para que `pg_dump` coincida con la base `postgres:17`; sin esto los respaldos de Odoo fallan con «server version mismatch».
 - `DOLAN_logistics 20.0.1.0.0` (nuevo, carpeta **Logística**): **Preparación de pedidos** por oleadas con lo que hay que juntar sumado por producto; **Rutas y reparto** con hojas de ruta por repartidor, cobranza en reparto y rendición de efectivo; **Prueba de entrega** con quién recibió, firma o foto, ubicación, y entrega total, parcial (con pedido pendiente) o rechazo con motivo. Perfiles Comercio y Completo. Ver `docs/modulos/DOLAN_logistics.md`.
 - Apps de **Gestión y Análisis**, todas `20.0.1.0.0` y en todos los perfiles del instalador:
   - `DOLAN_cash_flow` (**Flujo de caja**): caja proyectada por semana o mes desde el saldo de caja y bancos, cobranzas y pagos por vencimiento, cheques en cartera y propios, previsiones manuales y escenario de cobro de lo vencido.

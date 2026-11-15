@@ -2280,15 +2280,16 @@
       "semantic": "branches",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_sucursales"
+        "DOLAN_app_catalog.menu_app_sucursales",
+        "DOLAN_branch.menu_dolan_branch_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "gray",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_branches-f874adff.svg",
-        "fluent_flat": "fluent_flat/catalog_branches-9dcda1b5.svg",
+        "fluent_3d": "fluent_3d/catalog_branches-854841c1.svg",
+        "fluent_flat": "fluent_flat/catalog_branches-e25df586.svg",
         "fluent_filled": "fluent_filled/catalog_branches-fafbf3d4.svg",
         "fluent_regular": "fluent_regular/catalog_branches-417376d8.svg",
         "tabler": "tabler/catalog_branches-3c2be388.svg"
@@ -2343,15 +2344,16 @@
       "semantic": "integrations",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_integraciones"
+        "DOLAN_app_catalog.menu_app_integraciones",
+        "DOLAN_integrations.menu_dolan_integrations_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "gray",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_integrations-fd13e559.svg",
-        "fluent_flat": "fluent_flat/catalog_integrations-1d4941e4.svg",
+        "fluent_3d": "fluent_3d/catalog_integrations-9745827e.svg",
+        "fluent_flat": "fluent_flat/catalog_integrations-97755696.svg",
         "fluent_filled": "fluent_filled/catalog_integrations-111fc772.svg",
         "fluent_regular": "fluent_regular/catalog_integrations-5d2fd936.svg",
         "tabler": "tabler/catalog_integrations-7de48b70.svg"
@@ -2364,15 +2366,16 @@
       "semantic": "imports",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_importaciones"
+        "DOLAN_app_catalog.menu_app_importaciones",
+        "DOLAN_import.menu_dolan_import_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "gray",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_imports-fbb49d56.svg",
-        "fluent_flat": "fluent_flat/catalog_imports-222475eb.svg",
+        "fluent_3d": "fluent_3d/catalog_imports-489c50ad.svg",
+        "fluent_flat": "fluent_flat/catalog_imports-ab500b70.svg",
         "fluent_filled": "fluent_filled/catalog_imports-f6c57bec.svg",
         "fluent_regular": "fluent_regular/catalog_imports-fd754458.svg",
         "tabler": "tabler/catalog_imports-449f0563.svg"
@@ -2406,15 +2409,16 @@
       "semantic": "backups",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_respaldos"
+        "DOLAN_app_catalog.menu_app_respaldos",
+        "DOLAN_backup.menu_dolan_backup_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "gray",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_backups-883a95f2.svg",
-        "fluent_flat": "fluent_flat/catalog_backups-1cfee5a6.svg",
+        "fluent_3d": "fluent_3d/catalog_backups-8b41c16f.svg",
+        "fluent_flat": "fluent_flat/catalog_backups-cf7d9598.svg",
         "fluent_filled": "fluent_filled/catalog_backups-ca511c39.svg",
         "fluent_regular": "fluent_regular/catalog_backups-db272328.svg",
         "tabler": "tabler/catalog_backups-fab9c95b.svg"
@@ -2427,15 +2431,16 @@
       "semantic": "diagnostics",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_diagnostico"
+        "DOLAN_app_catalog.menu_app_diagnostico",
+        "DOLAN_diagnostics.menu_dolan_diagnostics_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "gray",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_diagnostics-0f40486f.svg",
-        "fluent_flat": "fluent_flat/catalog_diagnostics-528584e3.svg",
+        "fluent_3d": "fluent_3d/catalog_diagnostics-7fb71008.svg",
+        "fluent_flat": "fluent_flat/catalog_diagnostics-d8800092.svg",
         "fluent_filled": "fluent_filled/catalog_diagnostics-1baa3719.svg",
         "fluent_regular": "fluent_regular/catalog_diagnostics-a15b9685.svg",
         "tabler": "tabler/catalog_diagnostics-0042edee.svg"

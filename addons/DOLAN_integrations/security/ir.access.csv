@@ -1,0 +1,2 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_integration_status_admin,Integraciones: administrador,dolan.integration.status,base.group_system,crud,

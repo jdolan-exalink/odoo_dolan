@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models
 from odoo.exceptions import AccessError
 
 # Nunca se registran valores de campos con estos nombres o tipos.
@@ -24,7 +24,7 @@ class DolanAuditRule(models.Model):
     active = fields.Boolean(default=True)
 
     @api.model
-    @tools.ormcache('model_name')
+    @api.ormcache('model_name')
     def _config_for(self, model_name):
         rules = self.sudo().search([('model_name', '=', model_name)])
         names = set()
@@ -55,7 +55,7 @@ class DolanAuditLog(models.Model):
 
     model = fields.Char('Modelo', readonly=True, index=True)
     model_label = fields.Char('Documento', readonly=True)
-    res_id = fields.Integer('ID', readonly=True, index=True)
+    res_id = fields.Integer('ID del registro', readonly=True, index=True)
     res_name = fields.Char('Registro', readonly=True)
     operation = fields.Selection([('create', 'Alta'), ('write', 'Modificación'), ('unlink', 'Borrado')],
                                  'Operación', readonly=True, index=True)

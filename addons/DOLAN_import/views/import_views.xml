@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_import_batch_form" model="ir.ui.view">
+        <field name="name">dolan.import.batch.form</field>
+        <field name="model">dolan.import.batch</field>
+        <field name="arch" type="xml">
+            <form string="Importación">
+                <header>
+                    <button name="action_download_template" type="object" string="Bajar plantilla" invisible="state != 'draft'"/>
+                    <button name="action_validate" type="object" string="Validar" class="btn-primary" invisible="state not in ('draft', 'validated')"/>
+                    <button name="action_import" type="object" string="Importar" class="btn-primary" invisible="state != 'validated' or error_count"
+                            confirm="Se crean o actualizan los registros del archivo. ¿Importar?"/>
+                    <button name="action_revert" type="object" string="Revertir" invisible="state != 'done'"
+                            confirm="Se borra lo creado y se deshacen saldos y stock cargados. ¿Revertir?"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,validated,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="entity" readonly="state not in ('draft', 'validated')"/>
+                            <field name="file" filename="filename" readonly="state not in ('draft', 'validated')"/>
+                            <field name="filename" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group invisible="entity != 'balance'">
+                            <field name="opening_account_id" required="entity == 'balance'"/>
+                            <field name="opening_journal_id"/>
+                            <field name="opening_date"/>
+                        </group>
+                        <group invisible="entity != 'stock'">
+                            <field name="location_id" required="entity == 'stock'"/>
+                        </group>
+                    </group>
+                    <group invisible="state == 'draft'">
+                        <field name="ok_count"/>
+                        <field name="error_count" decoration-danger="error_count &gt; 0"/>
+                    </group>
+                    <field name="line_ids" readonly="1" invisible="state == 'draft'">
+                        <list decoration-danger="error" decoration-info="action == 'update'">
+                            <field name="row"/>
+                            <field name="data_text"/>
+                            <field name="action"/>
+                            <field name="error"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_import_batch_list" model="ir.ui.view">
+        <field name="name">dolan.import.batch.list</field>
+        <field name="model">dolan.import.batch</field>
+        <field name="arch" type="xml">
+            <list string="Importaciones">
+                <field name="name"/>
+                <field name="entity"/>
+                <field name="filename"/>
+                <field name="create_date" string="Fecha"/>
+                <field name="create_uid" string="Usuario"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-muted="state == 'reverted'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_import_batch" model="ir.actions.act_window">
+        <field name="name">Importaciones</field>
+        <field name="res_model">dolan.import.batch</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cargá tus datos iniciales</p>
+            <p>Bajá la plantilla, completala, subila y validala antes de importar. Todo se puede revertir.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_dolan_import_root" name="Importaciones" sequence="100"
+              groups="base.group_erp_manager" action="action_dolan_import_batch"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_imports.svg"/>
+</odoo>

@@ -19,6 +19,11 @@
 | Gestión y Análisis | Alertas | `DOLAN_alerts` | beta | [DOLAN_alerts.md](DOLAN_alerts.md) |
 | Gestión y Análisis | Presupuesto financiero | `DOLAN_budget` | beta | [DOLAN_budget.md](DOLAN_budget.md) |
 | Logística | Preparación de pedidos · Rutas y reparto · Prueba de entrega | `DOLAN_logistics` | beta | [DOLAN_logistics.md](DOLAN_logistics.md) |
+| Configuraciones | Sucursales | `DOLAN_branch` | beta | [DOLAN_branch.md](DOLAN_branch.md) |
+| Configuraciones | Integraciones | `DOLAN_integrations` | beta | [DOLAN_integrations.md](DOLAN_integrations.md) |
+| Configuraciones | Importaciones | `DOLAN_import` | beta | [DOLAN_import.md](DOLAN_import.md) |
+| Configuraciones | Respaldos | `DOLAN_backup` | beta | [DOLAN_backup.md](DOLAN_backup.md) |
+| Configuraciones | Diagnóstico | `DOLAN_diagnostics` | beta | [DOLAN_diagnostics.md](DOLAN_diagnostics.md) |
 
 **Beta** quiere decir que el módulo está implementado y con pruebas automáticas, pero todavía no pasó QA
 funcional con datos reales. Pasa a operativo cuando cumpla sus criterios de aceptación.
