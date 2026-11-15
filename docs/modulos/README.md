@@ -6,6 +6,8 @@
 | Carpeta | App | Módulo | Estado | Documentación |
 |---|---|---|---|---|
 | Configuraciones | Catálogo de apps | `DOLAN_app_catalog` | operativo | [DOLAN_app_catalog.md](DOLAN_app_catalog.md) |
+| Comercial | Fidelización | `DOLAN_loyalty` | beta | [DOLAN_loyalty.md](DOLAN_loyalty.md) |
+| Comercial | Tienda online | `DOLAN_ecommerce` | beta | [DOLAN_ecommerce.md](DOLAN_ecommerce.md) |
 | Servicios | Mesa de ayuda | `DOLAN_helpdesk` | beta | [DOLAN_helpdesk.md](DOLAN_helpdesk.md) |
 | Servicios | Agenda de turnos | `DOLAN_appointment` | beta | [DOLAN_appointment.md](DOLAN_appointment.md) |
 | Servicios | Órdenes de servicio | `DOLAN_field_service` | beta | [DOLAN_field_service.md](DOLAN_field_service.md) |

@@ -684,4 +684,64 @@ ILLUSTRATIONS = {
 </svg>
 """,
     },
+    # Fidelización: tarjeta de cliente con una estrella dorada de puntos (área Comercial, violeta).
+    "loyalty": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b79cfb"/><stop offset="1" stop-color="#5b21b6"/></linearGradient>
+    <linearGradient id="card2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ede9fe"/><stop offset="1" stop-color="#c4b5fd"/></linearGradient>
+    <radialGradient id="star" cx=".4" cy=".35" r=".8"><stop stop-color="#fde68a"/><stop offset="1" stop-color="#d97706"/></radialGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="16" y="14" width="64" height="42" rx="7" fill="url(#card2)" transform="rotate(-10 48 35)"/>
+    <rect x="8" y="30" width="66" height="44" rx="7" fill="url(#card)"/>
+    <rect x="8" y="40" width="66" height="7" fill="#3b0764" opacity=".55"/>
+    <g fill="#ede9fe"><rect x="15" y="56" width="22" height="4" rx="2"/><rect x="15" y="63" width="14" height="4" rx="2"/></g>
+    <path d="M70 46l5.6 11.3 12.4 1.8-9 8.8 2.1 12.4L70 74.4l-11.1 5.9 2.1-12.4-9-8.8 12.4-1.8Z" fill="url(#star)" stroke="#ffffff" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <rect x="16" y="14" width="64" height="42" rx="7" fill="#ddd6fe" stroke="#6430d4" stroke-width="2" transform="rotate(-10 48 35)"/>
+  <rect x="8" y="30" width="66" height="44" rx="7" fill="#9b74f7" stroke="#6430d4" stroke-width="2"/>
+  <rect x="9" y="40" width="64" height="7" fill="#6430d4"/>
+  <g fill="#ffffff"><rect x="15" y="56" width="22" height="4" rx="2"/><rect x="15" y="63" width="14" height="4" rx="2"/></g>
+  <path d="M70 46l5.6 11.3 12.4 1.8-9 8.8 2.1 12.4L70 74.4l-11.1 5.9 2.1-12.4-9-8.8 12.4-1.8Z" fill="#fbbf24" stroke="#ffffff" stroke-width="3" stroke-linejoin="round"/>
+</svg>
+""",
+    },
+    # Tienda online: notebook con la vidriera de la tienda y una bolsa de compras.
+    "ecommerce": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="lid" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#64748b"/><stop offset="1" stop-color="#1e293b"/></linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#ede9fe"/></linearGradient>
+    <linearGradient id="bag" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b79cfb"/><stop offset="1" stop-color="#6430d4"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="8" y="12" width="64" height="44" rx="5" fill="url(#lid)"/>
+    <rect x="12" y="16" width="56" height="36" rx="2" fill="url(#screen)"/>
+    <path d="M12 16h56v8H12Z" fill="#8b5cf6"/>
+    <g fill="#c4b5fd"><rect x="16" y="29" width="14" height="10" rx="2"/><rect x="33" y="29" width="14" height="10" rx="2"/><rect x="50" y="29" width="14" height="10" rx="2"/></g>
+    <g fill="#ddd6fe"><rect x="16" y="42" width="14" height="5" rx="2"/><rect x="33" y="42" width="14" height="5" rx="2"/></g>
+    <path d="M2 60h76l-4 6H6Z" fill="#94a3b8"/>
+    <path d="M58 50h30l-3 34H61Z" fill="url(#bag)" stroke="#ffffff" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M66 56v-6a7 7 0 0 1 14 0v6" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <rect x="8" y="12" width="64" height="44" rx="5" fill="#334155"/>
+  <rect x="12" y="16" width="56" height="36" rx="2" fill="#ffffff"/>
+  <path d="M12 16h56v8H12Z" fill="#9b74f7"/>
+  <g fill="#c4b5fd"><rect x="16" y="29" width="14" height="10" rx="2"/><rect x="33" y="29" width="14" height="10" rx="2"/><rect x="50" y="29" width="14" height="10" rx="2"/></g>
+  <g fill="#ede9fe"><rect x="16" y="42" width="14" height="5" rx="2"/><rect x="33" y="42" width="14" height="5" rx="2"/></g>
+  <path d="M2 60h76l-4 6H6Z" fill="#a0aec0"/>
+  <path d="M58 50h30l-3 34H61Z" fill="#9b74f7" stroke="#ffffff" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M66 56v-6a7 7 0 0 1 14 0v6" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+</svg>
+""",
+    },
 }

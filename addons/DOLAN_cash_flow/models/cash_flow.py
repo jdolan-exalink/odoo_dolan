@@ -43,7 +43,7 @@ class DolanCashFlowReport(models.TransientModel):
     company_id = fields.Many2one('res.company', 'Empresa', required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one(related='company_id.currency_id')
     date_start = fields.Date('Desde', required=True, default=fields.Date.context_today)
-    periodicity = fields.Selection([('week', 'Semanal'), ('month', 'Mensual')], 'Períodos', default='week', required=True)
+    periodicity = fields.Selection([('week', 'Semanal'), ('month', 'Mensual')], 'Agrupar por', default='week', required=True)
     periods = fields.Integer('Cantidad de períodos', default=12, required=True)
     overdue_collection_pct = fields.Float('Se cobra de lo vencido (%)', default=50.0,
                                           help='Porcentaje de las cobranzas vencidas que se espera cobrar.')

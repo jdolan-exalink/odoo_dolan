@@ -33,8 +33,8 @@ class DolanServiceOrder(models.Model):
     labor_product_id = fields.Many2one('product.product', 'Mano de obra', domain=[('type', '=', 'service')],
                                        default=lambda self: self.env.ref('DOLAN_field_service.product_labor_hour', raise_if_not_found=False))
     labor_price = fields.Monetary('Precio por hora', compute='_compute_labor_price', store=True, readonly=False)
-    amount_materials = fields.Monetary('Materiales', compute='_compute_totals', store=True)
-    amount_labor = fields.Monetary('Mano de obra', compute='_compute_totals', store=True)
+    amount_materials = fields.Monetary('Total materiales', compute='_compute_totals', store=True)
+    amount_labor = fields.Monetary('Total mano de obra', compute='_compute_totals', store=True)
     amount_total = fields.Monetary('Total sin impuestos', compute='_compute_totals', store=True)
     require_signature = fields.Boolean('Exigir conformidad firmada', default=True)
     signature = fields.Binary('Firma del cliente', copy=False, attachment=True)

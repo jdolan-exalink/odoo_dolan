@@ -1,14 +1,17 @@
 # Pendientes
 
 Actualizado el 15/11/2026. Lo que está en desarrollo sigue el orden que pidió Juan: Servicios (hecho),
-Facturación y Finanzas (hecho: Cuentas corrientes y Caja y Tesorería), Inventario y Compras (hecho: Costos; el resto de la carpeta ya eran apps de Odoo), Gestión y Análisis (hecho), Logística (hecho), Configuraciones (hecho). Comercial: en curso.
+Facturación y Finanzas (hecho: Cuentas corrientes y Caja y Tesorería), Inventario y Compras (hecho: Costos; el resto de la carpeta ya eran apps de Odoo), Gestión y Análisis (hecho), Logística (hecho), Configuraciones (hecho), Comercial (hecho). Todas las apps del catálogo tienen módulo.
 
 ## Apps del catálogo sin implementación propia
 
-| Carpeta | App | Estado | Qué falta / decisión |
-|---|---|---|---|
-| Comercial | Fidelización | en pausa | Propuesta: activar `loyalty`, `sale_loyalty` y `pos_loyalty` de Odoo sin desarrollo propio y revisar que no choquen con `DOLAN_discount_engine`. Falta el OK. |
-| Comercial | Tienda online | en pausa | `website_sale` de Odoo instala el sitio web completo. Queda como «Disponible para instalar» hasta decidir. |
+Ninguna. Decisiones abiertas:
+
+* **Tienda online** instala el sitio web de Odoo (página pública en `/` y `/shop`). Está solo en el perfil
+  Completo; falta que Juan decida si se instala en los servidores de producción y con qué dominio.
+* **Fidelización** y **Promociones** conviven: los puntos se calculan sobre lo que el cliente paga después de los
+  descuentos de Promociones. Si hace falta que un premio de puntos no se combine con una promoción, hay que
+  sumarlo al motor de Promociones.
 
 ## Pendientes dentro de los módulos ya hechos
 
@@ -37,6 +40,10 @@ Detalle en la sección *Pendiente* de cada documento:
   **Importante**: en la PC local y en 10.1.1.9 la imagen tiene `pg_dump` 15 y la base es PostgreSQL 17, así
   que los respaldos fallan hasta reconstruir la imagen con el Dockerfile nuevo (10.1.1.68 ya tiene `pg_dump` 18).
 * **Diagnóstico**: tamaño del log, workers y memoria, versión de la imagen contra la última publicada.
+* **Fidelización**: aviso de puntos por WhatsApp, puntos por cumpleaños o por categoría de cliente, reporte de
+  puntos por vencer.
+* **Tienda online**: promociones del motor DOLAN en la web (hoy son solo del POS), envío con costo por zona,
+  sincronización de precios con Listas de precios DOLAN, plantilla visual de la tienda.
 * **Cuentas corrientes**: cobranza activa por WhatsApp con reglas (horarios, exclusiones, opt-out, aprobación),
   bloqueo de venta con límite de crédito, multimoneda, filtro por sucursal.
 

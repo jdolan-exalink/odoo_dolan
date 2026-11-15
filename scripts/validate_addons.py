@@ -36,6 +36,8 @@ EXPECTED_MODULES = [
     "DOLAN_import",
     "DOLAN_backup",
     "DOLAN_diagnostics",
+    "DOLAN_loyalty",
+    "DOLAN_ecommerce",
     "DOLAN_l10n_ar_afip",
     "DOLAN_l10n_ar_cot",
     "DOLAN_accounting",

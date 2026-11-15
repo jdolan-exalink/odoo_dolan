@@ -1341,15 +1341,16 @@
       "semantic": "ecommerce",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_tienda_online"
+        "DOLAN_app_catalog.menu_app_tienda_online",
+        "DOLAN_ecommerce.menu_dolan_ecommerce_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "violet",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_ecommerce-cf676ee1.svg",
-        "fluent_flat": "fluent_flat/catalog_ecommerce-71a24dff.svg",
+        "fluent_3d": "fluent_3d/catalog_ecommerce-4d946199.svg",
+        "fluent_flat": "fluent_flat/catalog_ecommerce-8a09096a.svg",
         "fluent_filled": "fluent_filled/catalog_ecommerce-9eb2c005.svg",
         "fluent_regular": "fluent_regular/catalog_ecommerce-d0326e34.svg",
         "tabler": "tabler/catalog_ecommerce-8d63cbe3.svg"
@@ -1362,15 +1363,16 @@
       "semantic": "loyalty",
       "aliases": [],
       "xmlids": [
-        "DOLAN_app_catalog.menu_app_fidelizacion"
+        "DOLAN_app_catalog.menu_app_fidelizacion",
+        "DOLAN_loyalty.menu_dolan_loyalty_root"
       ],
       "module_ids": [
         "DOLAN_app_catalog"
       ],
       "color": "violet",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_loyalty-b7971853.svg",
-        "fluent_flat": "fluent_flat/catalog_loyalty-d772a8a0.svg",
+        "fluent_3d": "fluent_3d/catalog_loyalty-a4420ee5.svg",
+        "fluent_flat": "fluent_flat/catalog_loyalty-5cd7a2ef.svg",
         "fluent_filled": "fluent_filled/catalog_loyalty-69fe462d.svg",
         "fluent_regular": "fluent_regular/catalog_loyalty-5e813d4f.svg",
         "tabler": "tabler/catalog_loyalty-96eb4360.svg"

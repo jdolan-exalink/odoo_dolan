@@ -2168,7 +2168,7 @@
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_ecommerce.svg",
       "local_path": "fluent_flat/catalog_ecommerce.svg",
-      "sha256": "71a24dff9f0c0ddf79b28c445e46188437a31fbb39bab6ce345a709298de7b0f"
+      "sha256": "8a09096a094e15cadefb56becd78d4f9fe20ef9c588fc64d4ad1b8d28fd10fde"
     },
     {
       "library": "dolan_custom",
@@ -2245,7 +2245,7 @@
       "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_loyalty.svg",
       "local_path": "fluent_flat/catalog_loyalty.svg",
-      "sha256": "d772a8a0c4131f4d31e1c8fcdd30ccba9708905e884af5806e4d363b74902903"
+      "sha256": "5cd7a2ef6fad1f18de996c4032d61dee48b8f633f8e041a80123e79489b13709"
     },
     {
       "library": "dolan_custom",
@@ -2488,13 +2488,6 @@
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
-      "upstream_path": "fluent_3d/catalog_ecommerce-cf676ee1.svg",
-      "local_path": "fluent_3d/catalog_ecommerce-cf676ee1.svg",
-      "sha256": "cf676ee185f6c93edaf364d261e09ff58572bb4fac7e9acb6fd6f3f64f88b5dc"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
       "upstream_path": "fluent_3d/catalog_executive_dashboard-4aef47b7.svg",
       "local_path": "fluent_3d/catalog_executive_dashboard-4aef47b7.svg",
       "sha256": "4aef47b74092da44adac37109f2b80c026c63d0cb2c96a8214b292600e0c79e7"
@@ -2547,13 +2540,6 @@
       "upstream_path": "fluent_3d/catalog_lots-05491eae.svg",
       "local_path": "fluent_3d/catalog_lots-05491eae.svg",
       "sha256": "05491eaea8ffcefb1e645e9ec70820f97fe62cf930676a2d58bb5b60f7ff1649"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_3d/catalog_loyalty-b7971853.svg",
-      "local_path": "fluent_3d/catalog_loyalty-b7971853.svg",
-      "sha256": "b79718539c0288f5edd208896014b76f62ad78ead3bd422c3d5d641eebed330b"
     },
     {
       "library": "dolan_custom",
@@ -3097,13 +3083,6 @@
     {
       "library": "dolan_custom",
       "commit": "local-2026-11-13",
-      "upstream_path": "fluent_flat/catalog_ecommerce-71a24dff.svg",
-      "local_path": "fluent_flat/catalog_ecommerce-71a24dff.svg",
-      "sha256": "71a24dff9f0c0ddf79b28c445e46188437a31fbb39bab6ce345a709298de7b0f"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
       "upstream_path": "fluent_flat/catalog_executive_dashboard-b4ab9285.svg",
       "local_path": "fluent_flat/catalog_executive_dashboard-b4ab9285.svg",
       "sha256": "b4ab92854898b3165134f034efaefafb795995c3fac6f43dd83b94cf55e6b941"
@@ -3156,13 +3135,6 @@
       "upstream_path": "fluent_flat/catalog_lots-3bcff1df.svg",
       "local_path": "fluent_flat/catalog_lots-3bcff1df.svg",
       "sha256": "3bcff1dfb79ac440a6a27f77a4c20256686c86f0a58de22b315bc301d29a3306"
-    },
-    {
-      "library": "dolan_custom",
-      "commit": "local-2026-11-13",
-      "upstream_path": "fluent_flat/catalog_loyalty-d772a8a0.svg",
-      "local_path": "fluent_flat/catalog_loyalty-d772a8a0.svg",
-      "sha256": "d772a8a0c4131f4d31e1c8fcdd30ccba9708905e884af5806e4d363b74902903"
     },
     {
       "library": "dolan_custom",
@@ -4360,6 +4332,34 @@
       "upstream_path": "fluent_3d/catalog_imports-489c50ad.svg",
       "local_path": "fluent_3d/catalog_imports-489c50ad.svg",
       "sha256": "489c50ade299a963d10158c625533ec547bda386c7c9bbdacb312cfa2c7860c5"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_3d/catalog_ecommerce-4d946199.svg",
+      "local_path": "fluent_3d/catalog_ecommerce-4d946199.svg",
+      "sha256": "4d94619975079edb511f72441e3ffd7e7d894d62b3eebcff14dcf59fa88ad167"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_3d/catalog_loyalty-a4420ee5.svg",
+      "local_path": "fluent_3d/catalog_loyalty-a4420ee5.svg",
+      "sha256": "a4420ee5999f846ad332f9ffa0844ddc1616d5f427fc78360f9e197018cdd6b5"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_ecommerce-8a09096a.svg",
+      "local_path": "fluent_flat/catalog_ecommerce-8a09096a.svg",
+      "sha256": "8a09096a094e15cadefb56becd78d4f9fe20ef9c588fc64d4ad1b8d28fd10fde"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_loyalty-5cd7a2ef.svg",
+      "local_path": "fluent_flat/catalog_loyalty-5cd7a2ef.svg",
+      "sha256": "5cd7a2ef6fad1f18de996c4032d61dee48b8f633f8e041a80123e79489b13709"
     }
   ]
 }

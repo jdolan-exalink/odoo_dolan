@@ -7,6 +7,9 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 ## [Unreleased]
 
 ### Agregado
+- Apps de **Comercial**, `20.0.1.0.0`:
+  - `DOLAN_loyalty` (**Fidelización**, perfiles Comercio y Completo): app propia sobre la fidelización de Odoo con asistente para armar el programa de puntos en pesos (pesos por punto, valor del punto, mínimo para canjear, vencimiento) y la tarjeta de regalo, saldo de puntos en la ficha del cliente y movimientos de puntos por mes. Funciona en Ventas y POS (`sale_loyalty` y `pos_loyalty` se instalan solos).
+  - `DOLAN_ecommerce` (**Tienda online**, perfil Completo): app propia sobre el eCommerce de Odoo con asistente para publicar por categoría (opcionalmente solo con stock), categorías de la tienda armadas desde las de producto, stock en línea, acciones «Publicar en la tienda» / «Sacar de la tienda» y acceso a Mercado Pago.
 - Apps de **Configuraciones**, todas `20.0.1.0.0` y en todos los perfiles del instalador:
   - `DOLAN_branch` (**Sucursales**): sucursales de la misma empresa con depósito, diarios, lista de precios y usuarios; facturas y remitos quedan marcados con su sucursal y se filtran por ella.
   - `DOLAN_integrations` (**Integraciones**): tablero con el estado de ARCA, WhatsApp, Mercado Pago y Clover, marketplaces y correo, revisado cada hora y con botón «Probar».
