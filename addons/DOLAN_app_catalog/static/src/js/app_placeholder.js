@@ -50,11 +50,19 @@ export class DolanAppPlaceholder extends Component {
     }
 
     async openRealApp(redirect) {
-        await this.menu.reload();
-        if (redirect.redirect_action) {
+        // Si algo falla al abrirla sin recargar, se recarga la página directo en la app real:
+        // así nunca queda colgado en «Abriendo la app…».
+        const fallback = () => {
+            window.location.href = redirect.redirect_action ? `/odoo/action-${redirect.redirect_action}` : "/odoo";
+        };
+        try {
+            await this.menu.reload();
+            if (!redirect.redirect_action) {
+                return fallback();
+            }
             await this.action.doAction(redirect.redirect_action, { clearBreadcrumbs: true });
-        } else {
-            window.location.reload();
+        } catch {
+            fallback();
         }
     }
 

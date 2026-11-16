@@ -340,7 +340,7 @@ class DolanAppCatalogEntry(models.Model):
             # todavía tenía los menús viejos): se abre la app real.
             action = self._first_action(real_menu, visible)
             return {'redirect_menu_id': real_menu.id,
-                    'redirect_action': f'{action._name},{action.id}' if action else False}
+                    'redirect_action': action.id if action else False}
         if entry.catalog_menu_id.id not in visible:
             raise AccessError(_('Esta aplicación no está disponible para tu usuario.'))
         is_admin = self.env.user.has_group('base.group_system')

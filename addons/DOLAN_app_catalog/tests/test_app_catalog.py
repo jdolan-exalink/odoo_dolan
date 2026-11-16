@@ -220,5 +220,5 @@ class TestAppCatalog(TransactionCase):
         # Si el navegador todavía tenía el ícono informativo, abrirlo lleva a la app real.
         data = self.Entry.with_user(self.user).get_placeholder('integraciones')
         self.assertEqual(data['redirect_menu_id'], real_menu.id)
-        self.assertEqual(data['redirect_action'], 'ir.actions.act_window,%d' % self.env.ref('base.action_res_company_form').id)
+        self.assertEqual(data['redirect_action'], self.env.ref('base.action_res_company_form').id)
 
