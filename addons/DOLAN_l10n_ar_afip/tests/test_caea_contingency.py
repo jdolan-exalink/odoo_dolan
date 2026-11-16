@@ -282,10 +282,11 @@ class TestCaeaContingency(AccountTestInvoicingCommon):
 
     # ------------------------------------------------------------------
     def test_caea_request_and_consult_fallback(self):
+        # Período futuro fijo: con el período en curso la prueba dependía de la fecha del día.
         result = (
-            '<Envelope><{op}Result><ResultGet><CAEA>{code}</CAEA><Periodo>202611</Periodo><Orden>2</Orden>'
-            '<FchVigDesde>20261116</FchVigDesde><FchVigHasta>20261130</FchVigHasta>'
-            '<FchTopeInf>20261208</FchTopeInf><FchProceso>20261111</FchProceso></ResultGet></{op}Result></Envelope>'
+            '<Envelope><{op}Result><ResultGet><CAEA>{code}</CAEA><Periodo>203001</Periodo><Orden>2</Orden>'
+            '<FchVigDesde>20300116</FchVigDesde><FchVigHasta>20300131</FchVigHasta>'
+            '<FchTopeInf>20300208</FchTopeInf><FchProceso>20300111</FchProceso></ResultGet></{op}Result></Envelope>'
         )
         already = (
             '<Envelope><FECAEASolicitarResult><Errors><Err><Code>15008</Code>'
@@ -295,14 +296,14 @@ class TestCaeaContingency(AccountTestInvoicingCommon):
             io.BytesIO(already.encode()),
             io.BytesIO(result.format(op='FECAEAConsultar', code='41234567890123').encode()),
         ]) as urlopen, patch.object(type(self.connection), 'get_active_connection', return_value=self.connection):
-            caea = self.env['l10n_ar.caea']._request_for(self.company_data['company'], '202611', '2')
+            caea = self.env['l10n_ar.caea']._request_for(self.company_data['company'], '203001', '2')
         self.assertEqual(urlopen.call_count, 2)
         self.assertEqual(caea.code, '41234567890123')
-        self.assertEqual(caea.date_from, fields.Date.to_date('2026-11-16'))
-        self.assertEqual(caea.inform_deadline, fields.Date.to_date('2026-12-08'))
+        self.assertEqual(caea.date_from, fields.Date.to_date('2030-01-16'))
+        self.assertEqual(caea.inform_deadline, fields.Date.to_date('2030-02-08'))
         sent = urlopen.call_args_list[0].args[0].data.decode()
         self.assertIn('FECAEASolicitar', sent)
-        self.assertIn('<ns0:Periodo>202611</ns0:Periodo>', sent.replace('ar:', 'ns0:'))
+        self.assertIn('<ns0:Periodo>203001</ns0:Periodo>', sent.replace('ar:', 'ns0:'))
 
     def test_fedummy_health_probe(self):
         healthy = (b'<Envelope><FEDummyResult><AppServer>OK</AppServer><DbServer>OK</DbServer>'

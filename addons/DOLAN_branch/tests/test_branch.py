@@ -28,9 +28,11 @@ class TestBranch(TransactionCase):
         self.assertEqual(self.move(self.journal).dolan_branch_id, self.centro)
 
     def test_move_falls_back_to_user_branch(self):
-        journal = self.env['account.journal'].create({'name': 'Otro', 'code': 'OTR', 'type': 'general'})
-        move = self.env['account.move'].with_user(self.seller).sudo(False).create({'move_type': 'entry', 'journal_id': journal.id}) \
-            if False else self.env['account.move'].with_user(self.seller).create({'move_type': 'entry', 'journal_id': journal.id})
+        # Una factura borrador que arma la vendedora en un diario sin sucursal toma la sucursal de ella.
+        journal = self.env['account.journal'].create({'name': 'Ventas sin sucursal', 'code': 'VSSU', 'type': 'sale'})
+        partner = self.env['res.partner'].create({'name': 'Cliente Norte'})
+        move = self.env['account.move'].with_user(self.seller).create({
+            'move_type': 'out_invoice', 'journal_id': journal.id, 'partner_id': partner.id})
         self.assertEqual(move.dolan_branch_id, self.norte)
 
     def test_picking_takes_branch_from_warehouse(self):

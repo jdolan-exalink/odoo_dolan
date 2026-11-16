@@ -43,7 +43,7 @@ class TestAudit(TransactionCase):
 
     def test_bank_account_creation(self):
         partner = self.env['res.partner'].create({'name': 'Titular'})
-        bank = self.env['res.partner.bank'].create({'partner_id': partner.id, 'account_number': '0110599520000001234567'})
+        bank = self.env['res.partner.bank'].create({'partner_id': partner.id, 'account_number': '2850590940090418135201'})
         self.assertEqual(self.logs(bank).operation, 'create')
 
     def test_log_is_immutable(self):

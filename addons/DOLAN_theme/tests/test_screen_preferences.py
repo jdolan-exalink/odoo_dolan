@@ -224,7 +224,11 @@ class TestScreenPreferences(TransactionCase):
         personal = Folder.search([("user_id", "=", user.id), ("name", "=", PERSONAL_FOLDER_NAME)])
         self.assertEqual(len(personal), 1)
         in_folder = Item.search([("user_id", "=", user.id), ("folder_id", "=", personal.id)]).mapped("menu_id")
-        self.assertEqual(set(in_folder.ids), {menu.id for menu in menus})
+        if "dolan.app.catalog.folder" in self.env:
+            # Con el catálogo, la carpeta Personal suma además sus apps propias (Novedades, Documentos...).
+            self.assertLessEqual({menu.id for menu in menus}, set(in_folder.ids))
+        else:
+            self.assertEqual(set(in_folder.ids), {menu.id for menu in menus})
 
         # Escritorio ya armado sin la carpeta: el botón la agrega sin tocar lo demás.
         personal.sudo().unlink()
