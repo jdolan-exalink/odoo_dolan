@@ -1,0 +1,35 @@
+{
+  "app": "reposicion",
+  "intro": "Mínimos y máximos por producto: cuando el stock baja del mínimo, DOLAN sugiere cuánto comprar.",
+  "who": "Compras y depósito.",
+  "tasks": [
+    {
+      "slug": "configurar-minimos",
+      "title": "Poner mínimos y máximos",
+      "summary": "En **Reglas de reordenamiento** cargás el mínimo y el máximo de cada producto; la columna **Por ordenar** dice cuánto pedir.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Abrí **Reposición** (1). Cada fila es un producto con lo que hay, el pronóstico, el **Mínimo**, el **Máximo** y lo **Por ordenar**.",
+          "shot": {
+            "id": "reposicion-minimos-1",
+            "go": "/odoo/action-stock.action_orderpoint",
+            "mark": [
+              ".o_list_table thead, .o_view_nocontent"
+            ],
+            "menu": "stock.menu_stock_root"
+          }
+        },
+        {
+          "text": "Tocá **Nuevo**, elegí el producto y poné mínimo y máximo."
+        },
+        {
+          "text": "Cuando hay algo **Por ordenar**, tildá la fila y tocá **Pedir**: se crea la solicitud de cotización al proveedor."
+        }
+      ],
+      "related": [
+        "compras/pedir-cotizacion"
+      ]
+    }
+  ]
+}

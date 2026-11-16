@@ -20,7 +20,7 @@
 | Gestión y Análisis | Auditoría | `DOLAN_audit_log` | beta | [DOLAN_audit_log.md](DOLAN_audit_log.md) |
 | Gestión y Análisis | Alertas | `DOLAN_alerts` | beta | [DOLAN_alerts.md](DOLAN_alerts.md) |
 | Gestión y Análisis | Presupuesto financiero | `DOLAN_budget` | beta | [DOLAN_budget.md](DOLAN_budget.md) |
-| Gestión y Análisis | Ayuda | `DOLAN_help` | beta | [DOLAN_help.md](DOLAN_help.md) |
+| Gestión y Análisis | Ayuda (+ `DOLAN_help_ai`) | `DOLAN_help` | beta | [DOLAN_help.md](DOLAN_help.md) |
 | Logística | Preparación de pedidos · Rutas y reparto · Prueba de entrega | `DOLAN_logistics` | beta | [DOLAN_logistics.md](DOLAN_logistics.md) |
 | Configuraciones | Sucursales | `DOLAN_branch` | beta | [DOLAN_branch.md](DOLAN_branch.md) |
 | Configuraciones | Integraciones | `DOLAN_integrations` | beta | [DOLAN_integrations.md](DOLAN_integrations.md) |

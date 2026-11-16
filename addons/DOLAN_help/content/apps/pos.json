@@ -9,12 +9,48 @@
       "summary": "En el tablero del punto de venta tocás **Abrir caja registradora**, contás el efectivo inicial y empezás a vender.",
       "minutes": 1,
       "steps": [
-        {"text": "Entrá a **Punto de venta**. Cada tarjeta es una caja. Tocá **Abrir caja registradora** (1).",
-         "shot": {"id": "pos-abrir-1", "go": "/odoo/action-point_of_sale.action_pos_config_kanban", "mark": ["text=Abrir caja registradora"]}},
-        {"text": "Se abre la pantalla de venta. Te pide el **efectivo de apertura**: contá lo que hay en el cajón y confirmalo."},
-        {"text": "Si la caja ya estaba abierta, el botón dice **Continuar vendiendo**."}
+        {
+          "text": "Entrá a **Punto de venta**. Cada tarjeta es una caja. Tocá **Abrir caja registradora** (1).",
+          "shot": {
+            "id": "pos-abrir-1",
+            "go": "/odoo/action-point_of_sale.action_pos_config_kanban",
+            "mark": [
+              "text=Abrir caja registradora"
+            ]
+          }
+        },
+        {
+          "text": "Se abre la pantalla de venta y te pide el **efectivo de apertura** (1): contá lo que hay en el cajón, escribilo y tocá **Abrir caja registradora** (2).",
+          "shot": {
+            "id": "pos-abrir-2",
+            "go": "/pos/ui?config_id={id}",
+            "record": {
+              "model": "pos.config",
+              "domain": [
+                [
+                  "module_pos_restaurant",
+                  "=",
+                  false
+                ]
+              ]
+            },
+            "click": [
+              "?text=Abrir caja registradora"
+            ],
+            "wait": ".modal-content",
+            "mark": [
+              ".modal-content input, .modal-content .form-control",
+              ".modal-footer .btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Si la caja ya estaba abierta, el botón dice **Continuar vendiendo** (o **Desbloquear caja registradora** al volver a la pantalla de venta)."
+        }
       ],
-      "related": ["pos/cobrar-venta"]
+      "related": [
+        "pos/cobrar-venta"
+      ]
     },
     {
       "slug": "cobrar-venta",
@@ -22,15 +58,28 @@
       "summary": "Tocás los productos (o los escaneás), elegís el cliente si hace falta factura A, tocás **Pago**, el medio y **Validar**.",
       "minutes": 1,
       "steps": [
-        {"text": "Tocá los productos o escaneá su código de barras. Para cambiar cantidad o precio, tocá la línea y usá el teclado de la derecha."},
-        {"text": "Si el cliente pide factura a su nombre, tocá **Cliente** y buscalo por nombre o CUIT. Sin cliente sale a consumidor final."},
-        {"text": "Tocá **Pago**, elegí el medio (efectivo, tarjeta, QR) y el importe. En efectivo te muestra el vuelto."},
-        {"text": "Tocá **Validar**. Se emite la factura electrónica y se imprime el ticket."}
+        {
+          "text": "Tocá los productos o escaneá su código de barras. Cada uno se suma al ticket de la izquierda. Para cambiar cantidad o precio, tocá la línea y usá el teclado."
+        },
+        {
+          "text": "Si el cliente pide factura a su nombre, tocá **Cliente** y buscalo por nombre o CUIT. Sin cliente sale a consumidor final."
+        },
+        {
+          "text": "Tocá **Pago**."
+        },
+        {
+          "text": "Elegí el medio de pago (efectivo, tarjeta, QR) y el importe. En efectivo te muestra el vuelto. Tocá **Validar**: se emite la factura electrónica y se imprime el ticket."
+        }
       ],
       "errors": [
-        {"problem": "La factura no salió (sin conexión con ARCA)", "fix": "La venta queda guardada y se informa cuando vuelve la conexión. No la cobres dos veces."}
+        {
+          "problem": "La factura no salió (sin conexión con ARCA)",
+          "fix": "La venta queda guardada y se informa cuando vuelve la conexión. No la cobres dos veces."
+        }
       ],
-      "related": ["pos/cerrar-caja-pos"]
+      "related": [
+        "pos/cerrar-caja-pos"
+      ]
     },
     {
       "slug": "cerrar-caja-pos",
@@ -38,13 +87,29 @@
       "summary": "Desde el menú de la pantalla de venta tocás **Cerrar caja**, contás el efectivo y confirmás el cierre.",
       "minutes": 3,
       "steps": [
-        {"text": "En la pantalla de venta abrí el menú (las tres rayitas) y tocá **Cerrar caja registradora**."},
-        {"text": "Contá el efectivo y escribí el total (o usá el contador de billetes). DOLAN muestra la diferencia contra lo esperado."},
-        {"text": "Tocá **Cerrar la sesión**. Las ventas se pasan a la contabilidad y la sesión queda en **Sesiones** para consultarla.",
-         "shot": {"id": "pos-cerrar-1", "go": "/odoo/action-point_of_sale.action_pos_session", "mark": [".o_list_table thead"]}}
+        {
+          "text": "En la pantalla de venta abrí el menú (las tres rayitas) y tocá **Cerrar caja registradora**."
+        },
+        {
+          "text": "Contá el efectivo y escribí el total (o usá el contador de billetes). DOLAN muestra la diferencia contra lo esperado."
+        },
+        {
+          "text": "Tocá **Cerrar la sesión**. Las ventas se pasan a la contabilidad y la sesión queda en **Sesiones** para consultarla.",
+          "shot": {
+            "id": "pos-cerrar-1",
+            "go": "/odoo/action-point_of_sale.action_pos_session",
+            "mark": [
+              ".o_list_table thead"
+            ]
+          }
+        }
       ],
-      "tips": ["Si tu negocio usa **Caja y Tesorería**, la caja del punto de venta puede estar atada a su diario de efectivo: el arqueo del turno queda en un solo lugar."],
-      "related": ["caja_tesoreria/arqueo-y-cierre"]
+      "tips": [
+        "Si tu negocio usa **Caja y Tesorería**, la caja del punto de venta puede estar atada a su diario de efectivo: el arqueo del turno queda en un solo lugar."
+      ],
+      "related": [
+        "caja_tesoreria/arqueo-y-cierre"
+      ]
     }
   ]
 }

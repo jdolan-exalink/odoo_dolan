@@ -1,0 +1,51 @@
+{
+  "app": "terminales",
+  "intro": "Los posnet integrados (Mercado Pago Point y Clover): el cobro con tarjeta sale desde el punto de venta sin tipear el importe.",
+  "who": "Cajeros y administración.",
+  "tasks": [
+    {
+      "slug": "cobrar-con-terminal",
+      "title": "Cobrar con la terminal integrada",
+      "summary": "En el punto de venta elegís el medio de pago de la terminal y el importe viaja solo al posnet.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "En la pantalla de venta tocá **Pago** y elegí el medio de la terminal (por ejemplo **Mercado Pago Point**)."
+        },
+        {
+          "text": "El importe aparece en el posnet: el cliente pasa o apoya la tarjeta."
+        },
+        {
+          "text": "Cuando la terminal aprueba, el pago queda confirmado y podés **Validar** la venta."
+        }
+      ],
+      "errors": [
+        {
+          "problem": "La terminal no responde",
+          "fix": "Revisá que esté prendida y con conexión. No cobres de nuevo sin mirar antes en **Operaciones** si el primer intento quedó aprobado."
+        }
+      ]
+    },
+    {
+      "slug": "ver-operaciones",
+      "title": "Ver las operaciones de las terminales",
+      "summary": "En **Operaciones** ves cada cobro enviado a una terminal con su estado.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Terminales de cobro > Operaciones** (1).",
+          "shot": {
+            "id": "terminales-operaciones-1",
+            "go": "/odoo/action-DOLAN_payment_terminal.action_payment_operations",
+            "mark": [
+              ".o_list_table thead, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "Buscá por fecha o importe para controlar un cobro dudoso."
+        }
+      ]
+    }
+  ]
+}

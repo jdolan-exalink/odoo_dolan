@@ -1,0 +1,31 @@
+{
+  "app": "aplicaciones",
+  "intro": "Instalar y actualizar módulos de Odoo.",
+  "who": "Administradores.",
+  "tasks": [
+    {
+      "slug": "instalar-app",
+      "title": "Instalar una aplicación",
+      "summary": "Buscás la app y tocás **Activar**; conviene hacerlo primero en la base de prueba.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Abrí **Aplicaciones** (1) y buscá la app por nombre.",
+          "shot": {
+            "id": "aplicaciones-instalar-1",
+            "go": "/odoo/action-base.open_module_tree",
+            "mark": [
+              ".o_kanban_renderer, .o_action_manager .o_action"
+            ]
+          }
+        },
+        {
+          "text": "Tocá **Activar**. Al terminar se recarga el sistema con la app nueva."
+        }
+      ],
+      "tips": [
+        "Para ver qué apps DOLAN hay y en qué estado están, usá **Catálogo de apps**."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "app": "impuestos",
+  "intro": "Percepciones y retenciones de IIBB por jurisdicción, padrones y alícuotas por contacto.",
+  "who": "Contador y administración.",
+  "tasks": [
+    {
+      "slug": "jurisdicciones",
+      "title": "Configurar en qué provincias sos agente",
+      "summary": "En **Percepciones y retenciones IIBB** marcás por jurisdicción si tu empresa es agente de percepción o de retención.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Abrí **Impuestos** (1). Cada fila es una jurisdicción con su configuración.",
+          "shot": {
+            "id": "impuestos-jurisdicciones-1",
+            "go": "/odoo/action-DOLAN_l10n_ar_afip.action_dolan_ar_tax_jurisdiction",
+            "mark": [
+              ".o_list_table thead, .o_view_nocontent"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Creá o abrí la de tu provincia y tildá **Agente de percepción** y/o **Agente de retención**."
+        },
+        {
+          "text": "Las alícuotas de cada cliente o proveedor salen del padrón: en la factura tocá **Aplicar percepciones del padrón** para recalcularlas."
+        }
+      ]
+    }
+  ]
+}

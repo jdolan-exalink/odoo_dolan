@@ -1,0 +1,58 @@
+{
+  "app": "whatsapp",
+  "intro": "Mensajes de WhatsApp desde DOLAN: envío de facturas, recordatorios y avisos con la cuenta de la empresa.",
+  "who": "Todos los que se comunican con clientes.",
+  "tasks": [
+    {
+      "slug": "mandar-factura",
+      "title": "Mandar una factura por WhatsApp",
+      "summary": "Desde la factura tocás **Enviar WhatsApp** y se manda el PDF al número del cliente.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí la factura confirmada y usá **Enviar WhatsApp**. Revisá el número y el texto."
+        },
+        {
+          "text": "Tocá **Enviar**. El mensaje queda registrado en **WhatsApp > Mensajes** (1).",
+          "shot": {
+            "id": "whatsapp-mensajes-1",
+            "go": "/odoo/action-DOLAN_whatsapp.action_dolan_whatsapp_messages",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ]
+          }
+        }
+      ],
+      "errors": [
+        {
+          "problem": "El mensaje queda con error",
+          "fix": "Revisá en **Conexiones WAHA** que la sesión esté conectada. Si se desconectó, escaneá de nuevo el QR con el celular de la empresa."
+        }
+      ]
+    },
+    {
+      "slug": "conectar-whatsapp",
+      "title": "Conectar el WhatsApp de la empresa",
+      "summary": "En **Conexiones WAHA** escaneás el QR con el celular de la empresa, como en WhatsApp Web.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **WhatsApp > Conexiones WAHA** (1) y abrí la conexión.",
+          "shot": {
+            "id": "whatsapp-conexion-1",
+            "go": "/odoo/action-DOLAN_whatsapp.action_dolan_whatsapp_accounts",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "Mostrá el QR y escanealo desde el celular: **Dispositivos vinculados > Vincular dispositivo**."
+        },
+        {
+          "text": "Cuando dice **Conectada**, ya se pueden mandar mensajes."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "app": "impresoras",
+  "intro": "Impresoras de tickets y comandas (ePOS) conectadas a cada punto de venta.",
+  "who": "Encargados de caja y administración.",
+  "tasks": [
+    {
+      "slug": "configurar-impresora",
+      "title": "Configurar la impresora de un punto de venta",
+      "summary": "Cargás la impresora con su dirección y la asignás al punto de venta para tickets o comandas.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Impresoras > Impresoras** y creá la impresora con su dirección IP.",
+          "shot": {
+            "id": "impresoras-config-1",
+            "go": "/odoo/action-ePOS_print.action_epos_print_printers",
+            "mark": [
+              ".o_list_table thead, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "En **Configurar por Punto de Venta** elegí qué impresora usa cada caja para el ticket y cuál para las comandas."
+        },
+        {
+          "text": "Hacé una venta de prueba para confirmar que imprime."
+        }
+      ]
+    }
+  ]
+}

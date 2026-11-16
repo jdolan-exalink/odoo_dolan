@@ -1,0 +1,31 @@
+{
+  "app": "integraciones",
+  "intro": "En una pantalla, si las conexiones externas funcionan: ARCA, WhatsApp, terminales de cobro, marketplaces y correo.",
+  "who": "Administradores.",
+  "tasks": [
+    {
+      "slug": "ver-estado",
+      "title": "Ver el estado de las integraciones",
+      "summary": "Cada fila es una conexión en verde, amarillo o rojo; **Probar** la revisa en el momento.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Integraciones** (1).",
+          "shot": {
+            "id": "integraciones-estado-1",
+            "go": "/odoo/action-DOLAN_integrations.action_dolan_integration_status",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "Revisá las que están en **Revisar** o **Error**: el mensaje dice qué pasa (certificado por vencer, WhatsApp desconectado, correos con error)."
+        },
+        {
+          "text": "Tocá **Probar** para revisar de nuevo, o el ícono de enlace para ir a su configuración."
+        }
+      ]
+    }
+  ]
+}

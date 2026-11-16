@@ -1,0 +1,70 @@
+{
+  "app": "rutas_reparto",
+  "intro": "Hojas de ruta por fecha, vehículo y repartidor: orden de visita, mapa, cobranza en el reparto y rendición del efectivo.",
+  "who": "Logística y repartidores.",
+  "tasks": [
+    {
+      "slug": "armar-hoja-de-ruta",
+      "title": "Armar la hoja de ruta",
+      "summary": "Creás la hoja con fecha, repartidor y vehículo, agregás las entregas preparadas y las ordenás por cercanía.",
+      "minutes": 4,
+      "steps": [
+        {
+          "text": "Entrá a **Rutas y reparto > Hojas de ruta** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "rutas-hoja-1",
+            "go": "/odoo/action-DOLAN_logistics.action_dolan_delivery_route",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Elegí **Fecha**, **Repartidor** y **Vehículo**, y tocá **Agregar entregas preparadas** (1).",
+          "shot": {
+            "id": "rutas-hoja-2",
+            "go": "/odoo/action-DOLAN_logistics.action_dolan_delivery_route/new",
+            "mark": [
+              "button[name=action_add_prepared]"
+            ]
+          }
+        },
+        {
+          "text": "Tocá **Ordenar por cercanía** para que las paradas vayan de la más cercana a la más lejana, y **Ver en el mapa** para abrir el recorrido en Google Maps."
+        },
+        {
+          "text": "Cuando el camión está cargado, tocá **Cargada** y después **Salir a repartir**."
+        }
+      ],
+      "related": [
+        "prueba_entrega/registrar-entrega"
+      ]
+    },
+    {
+      "slug": "rendir-reparto",
+      "title": "Rendir lo cobrado en el reparto",
+      "summary": "Al volver, el repartidor entrega el efectivo; cargás lo rendido y la diferencia queda a la vista.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Abrí la hoja de ruta: ves **A cobrar**, **Cobrado** y **Cobrado en efectivo**."
+        },
+        {
+          "text": "Cargá el **Efectivo rendido**. La **Diferencia de rendición** tiene que quedar en cero."
+        },
+        {
+          "text": "Tocá **Rendir y cerrar**. Si usás Caja y Tesorería, el efectivo entra al turno de la **Caja de rendición** y se aplica a las deudas de cada cliente."
+        }
+      ],
+      "errors": [
+        {
+          "problem": "No me deja cerrar la hoja de ruta",
+          "fix": "Hay paradas sin resultado. Cada parada tiene que quedar entregada, parcial o rechazada."
+        }
+      ],
+      "related": [
+        "caja_tesoreria/arqueo-y-cierre"
+      ]
+    }
+  ]
+}

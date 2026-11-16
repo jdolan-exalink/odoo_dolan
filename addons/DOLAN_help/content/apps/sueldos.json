@@ -1,0 +1,76 @@
+{
+  "app": "sueldos",
+  "intro": "Liquidación de sueldos argentina por convenio: recibos, SAC, vacaciones, Ganancias, F.931 y Libro de Sueldos Digital.",
+  "who": "Liquidación de sueldos y empleados (sus recibos).",
+  "tasks": [
+    {
+      "slug": "liquidar-mes",
+      "title": "Liquidar el mes",
+      "summary": "Creás la liquidación del período, generás los recibos, calculás, revisás y confirmás.",
+      "minutes": 10,
+      "before": [
+        "Cargar las novedades del mes (horas extra, licencias) y tenerlas cerradas."
+      ],
+      "steps": [
+        {
+          "text": "Entrá a **Sueldos > Liquidación > Liquidaciones** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "sueldos-liquidar-1",
+            "go": "/odoo/action-DOLAN_payroll_ar.action_dolan_payroll_run",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Elegí el **Tipo** (mensual, SAC, vacaciones, final), **Desde**, **Hasta** y **Fecha de pago** (1).",
+          "shot": {
+            "id": "sueldos-liquidar-2",
+            "go": "/odoo/action-DOLAN_payroll_ar.action_dolan_payroll_run/new",
+            "mark": [
+              "div[name=kind]",
+              "div[name=date_from]"
+            ]
+          }
+        },
+        {
+          "text": "Tocá **Generar recibos** y después **Calcular**. Cada recibo muestra remunerativo, no remunerativo, descuentos y neto."
+        },
+        {
+          "text": "Revisá los recibos y tocá **Confirmar**. Se genera el asiento contable."
+        }
+      ],
+      "related": [
+        "sueldos/presentaciones"
+      ]
+    },
+    {
+      "slug": "presentaciones",
+      "title": "Sacar el F.931 y el Libro de Sueldos Digital",
+      "summary": "Desde la liquidación confirmada generás los archivos para ARCA.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Abrí la liquidación confirmada y usá la opción de exportar **F.931 / SICOSS** o **Libro de Sueldos Digital**."
+        },
+        {
+          "text": "Bajá el archivo y subilo en el servicio de ARCA."
+        }
+      ]
+    },
+    {
+      "slug": "ver-mi-recibo",
+      "title": "Ver y firmar mi recibo de sueldo (empleados)",
+      "summary": "En **Mis recibos** cada empleado ve sus recibos y da la conformidad.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Entrá a **Sueldos > Mis recibos**. Abrí el recibo del mes."
+        },
+        {
+          "text": "Revisalo y firmá la conformidad. Podés bajarlo en PDF."
+        }
+      ]
+    }
+  ]
+}

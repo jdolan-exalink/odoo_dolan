@@ -1,0 +1,105 @@
+{
+  "app": "clientes",
+  "intro": "La ficha de cada cliente: datos fiscales para facturar, contactos, condiciones de pago y su historial.",
+  "who": "Vendedores y administración.",
+  "tasks": [
+    {
+      "slug": "alta-cliente",
+      "title": "Dar de alta un cliente",
+      "summary": "Cargás el CUIT y DOLAN trae de ARCA la razón social, el domicilio y la condición frente al IVA.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Clientes** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "clientes-alta-1",
+            "go": "/odoo/action-account.res_partner_action_customer",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Escribí el **CUIT** (1) y tocá **Consultar ARCA**: se completan razón social, domicilio y **Tipo de responsabilidad de ARCA** (2).",
+          "shot": {
+            "id": "clientes-alta-2",
+            "go": "/odoo/action-account.res_partner_action_customer/new",
+            "mark": [
+              "div[name=vat]",
+              "div[name=l10n_ar_afip_responsibility_type_id]"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Completá correo y **Número de WhatsApp** para mandarle facturas y avisos. Guardá con la nube de arriba."
+        }
+      ],
+      "errors": [
+        {
+          "problem": "ARCA no trae los datos",
+          "fix": "Revisá el CUIT (11 números, sin guiones). Si el servicio de ARCA no responde, cargá los datos a mano y volvé a consultar después."
+        },
+        {
+          "problem": "Me dice que el cliente ya existe",
+          "fix": "Buscalo por CUIT antes de crearlo: duplicar clientes parte su cuenta corriente en dos."
+        }
+      ],
+      "related": [
+        "clientes/condiciones-de-pago"
+      ]
+    },
+    {
+      "slug": "condiciones-de-pago",
+      "title": "Poner condiciones de pago y lista de precios",
+      "summary": "En la pestaña **Ventas y compras** de la ficha elegís el plazo de pago y la lista de precios que usa ese cliente.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí la ficha del cliente y entrá a **Ventas y compras** (1).",
+          "shot": {
+            "id": "clientes-condiciones-1",
+            "go": "/odoo/action-account.res_partner_action_customer/{id}",
+            "record": {
+              "model": "res.partner",
+              "domain": [
+                [
+                  "customer_rank",
+                  ">",
+                  0
+                ],
+                [
+                  "is_company",
+                  "=",
+                  true
+                ],
+                [
+                  "vat",
+                  "!=",
+                  false
+                ]
+              ]
+            },
+            "click": [
+              ".o_notebook .nav-link:text-is('Ventas y compras')"
+            ],
+            "mark": [
+              ".o_notebook .nav-link.active"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Elegí los **Términos de pago** (contado, 30 días…) y la **Lista de precios**. Desde ahora los presupuestos y facturas de ese cliente las usan solas."
+        },
+        {
+          "text": "Arriba, los botones muestran sus **Ventas**, lo **Facturado** y su **Cuenta corriente**: tocalos para ver el detalle."
+        }
+      ],
+      "related": [
+        "cuentas_corrientes/ver-saldos"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "app": "asistencias",
+  "intro": "Fichadas de entrada y salida (reloj, quiosco o celular), conciliadas contra el turno, con incidencias para aprobar.",
+  "who": "Todos los empleados y supervisores.",
+  "tasks": [
+    {
+      "slug": "fichar",
+      "title": "Fichar entrada y salida",
+      "summary": "Desde **Mis asistencias** o en el quiosco de la entrada tocás para fichar; se registra la hora.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Entrá a **Asistencias > Mis asistencias** y tocá el botón para registrar tu entrada. Al irte, lo mismo para la salida."
+        },
+        {
+          "text": "En la entrada de la empresa puede haber una tablet en **Modo quiosco**: buscás tu nombre o escaneás tu tarjeta."
+        }
+      ]
+    },
+    {
+      "slug": "revisar-asistencias",
+      "title": "Revisar las asistencias del equipo",
+      "summary": "En **Gestión > Asistencias** ves entradas, salidas y horas trabajadas de cada empleado.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Abrí **Asistencias > Gestión > Asistencias** (1).",
+          "shot": {
+            "id": "asistencias-revisar-1",
+            "go": "/odoo/action-hr_attendance.hr_attendance_management_action",
+            "mark": [
+              ".o_list_table thead, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "Filtrá por empleado o fecha. Las fichadas faltantes quedan marcadas con 0 horas hasta que se corrijan."
+        },
+        {
+          "text": "Las incidencias (tardanzas, ausencias, fichadas faltantes) se aprueban o justifican; la fichada original nunca se borra."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "app": "ajustes",
+  "intro": "La configuración general del sistema: empresa, usuarios, idiomas, correo y opciones de cada app.",
+  "who": "Administradores.",
+  "tasks": [
+    {
+      "slug": "ajustes-generales",
+      "title": "Entrar a los ajustes generales",
+      "summary": "En **Ajustes** cada app tiene su sección; buscás la opción con el buscador de arriba.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Ajustes** (1). A la izquierda está cada app; arriba, el buscador de opciones.",
+          "shot": {
+            "id": "ajustes-generales-1",
+            "go": "/odoo/action-base_setup.action_general_configuration",
+            "mark": [
+              ".o_setting_container, .o_action_manager .o_action"
+            ]
+          }
+        },
+        {
+          "text": "Cambiá lo que necesites y tocá **Guardar** arriba."
+        }
+      ],
+      "tips": [
+        "Si no sabés qué hace una opción, no la cambies en producción: probala antes en la base de prueba."
+      ]
+    }
+  ]
+}

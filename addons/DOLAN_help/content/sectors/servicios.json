@@ -1,4 +1,68 @@
 {
   "sector": "servicios",
-  "procedures": []
+  "procedures": [
+    {
+      "slug": "turno-y-orden-de-servicio",
+      "title": "Del turno a la factura del servicio",
+      "summary": "Cómo se atiende un pedido de servicio técnico, del turno a la factura.",
+      "steps": [
+        {
+          "text": "Dale el turno al cliente con el profesional que corresponde.",
+          "who": "Recepción",
+          "task": "turnos_clientes/dar-turno"
+        },
+        {
+          "text": "Si el trabajo es en el domicilio, creá la orden de servicio y programala con el técnico.",
+          "who": "Responsable de servicio",
+          "task": "ordenes_servicio/orden-servicio"
+        },
+        {
+          "text": "Si el equipo viene al taller, abrí la orden de reparación con el diagnóstico y los repuestos.",
+          "who": "Técnico",
+          "task": "reparaciones/orden-reparacion"
+        },
+        {
+          "text": "Al terminar, facturá desde la orden.",
+          "who": "Responsable de servicio"
+        }
+      ]
+    },
+    {
+      "slug": "reclamos-de-clientes",
+      "title": "Reclamos y consultas de clientes",
+      "summary": "Todo reclamo entra como ticket y se cierra con la solución escrita.",
+      "steps": [
+        {
+          "text": "Tomá el ticket y respondé desde el hilo.",
+          "who": "Soporte",
+          "task": "mesa_ayuda/atender-ticket"
+        },
+        {
+          "text": "Cerralo con la solución para que quede el historial.",
+          "who": "Soporte",
+          "task": "mesa_ayuda/atender-ticket"
+        }
+      ],
+      "controls": [
+        "Ningún ticket queda sin responsable más de un día hábil."
+      ]
+    },
+    {
+      "slug": "abonos-y-contratos",
+      "title": "Abonos y contratos",
+      "summary": "Altas de abonos y ajuste de contratos.",
+      "steps": [
+        {
+          "text": "Cargá el contrato con su ajuste por índice o porcentaje.",
+          "who": "Administración",
+          "task": "contratos/crear-contrato"
+        },
+        {
+          "text": "Creá la suscripción para que se facture sola cada mes.",
+          "who": "Administración",
+          "task": "suscripciones/crear-suscripcion"
+        }
+      ]
+    }
+  ]
 }

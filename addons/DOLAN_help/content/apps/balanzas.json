@@ -1,0 +1,31 @@
+{
+  "app": "balanzas",
+  "intro": "Balanzas etiquetadoras y códigos de peso variable: los productos pesados se leen en caja con su precio.",
+  "who": "Encargados de góndola y caja.",
+  "tasks": [
+    {
+      "slug": "asignar-productos",
+      "title": "Mandar productos a la balanza",
+      "summary": "Asignás los productos a cada balanza y exportás la lista para que imprima etiquetas con precio actualizado.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Balanzas > Productos asignados** y agregá los productos con su código PLU.",
+          "shot": {
+            "id": "balanzas-productos-1",
+            "go": "/odoo/action-pos_scale_management.action_scale_assignments",
+            "mark": [
+              ".o_list_table thead, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "En **Exportaciones** generá el envío a la balanza después de cada cambio de precios."
+        },
+        {
+          "text": "En caja, al escanear la etiqueta, el punto de venta lee el peso o el importe del código."
+        }
+      ]
+    }
+  ]
+}

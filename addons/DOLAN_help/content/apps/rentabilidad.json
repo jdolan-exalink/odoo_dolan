@@ -1,0 +1,34 @@
+{
+  "app": "rentabilidad",
+  "intro": "Margen bruto por producto, categoría, cliente, vendedor y mes, calculado con el costo guardado al facturar.",
+  "who": "Gerencia y comerciales.",
+  "tasks": [
+    {
+      "slug": "ver-margen",
+      "title": "Ver qué deja cada producto o cliente",
+      "summary": "La tabla dinámica muestra ingreso, costo y margen; la agrupás como necesites.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Abrí **Rentabilidad** (1): arranca por categoría y mes.",
+          "shot": {
+            "id": "rentabilidad-margen-1",
+            "go": "/odoo/action-DOLAN_profitability.action_dolan_profitability",
+            "mark": [
+              ".o_pivot, .o_action_manager .o_action"
+            ]
+          }
+        },
+        {
+          "text": "Cambiá la agrupación a **producto**, **cliente** o **vendedor** desde los encabezados de la tabla."
+        },
+        {
+          "text": "Con el filtro **Margen negativo** ves lo que se vendió a pérdida. **Costo estimado** marca facturas sin costo real guardado."
+        }
+      ],
+      "related": [
+        "costos/analizar-margenes"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "app": "turnos_caja",
+  "intro": "Acceso directo a los turnos de Caja y Tesorería: apertura, movimientos, arqueo y cierre por cajero.",
+  "who": "Cajeros.",
+  "tasks": [
+    {
+      "slug": "ver-turnos",
+      "title": "Ver los turnos de caja",
+      "summary": "La lista muestra cada turno con su caja, cajero, lo contado, el saldo contable y la diferencia.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Turnos de caja** (1). Los turnos abiertos están arriba.",
+          "shot": {
+            "id": "turnos-ver-1",
+            "go": "/odoo/action-DOLAN_treasury.action_dolan_cash_session",
+            "mark": [
+              ".o_list_table thead"
+            ],
+            "menu": "point_of_sale.menu_point_root"
+          }
+        },
+        {
+          "text": "Tocá un turno para seguir trabajándolo o para ver su arqueo."
+        }
+      ],
+      "related": [
+        "caja_tesoreria/abrir-turno",
+        "caja_tesoreria/arqueo-y-cierre"
+      ]
+    }
+  ]
+}

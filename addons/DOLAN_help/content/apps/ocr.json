@@ -1,0 +1,43 @@
+{
+  "app": "ocr",
+  "intro": "Carga de facturas de proveedor leyendo el PDF, la foto o el QR de ARCA: los datos se completan solos y vos revisás.",
+  "who": "Administración.",
+  "tasks": [
+    {
+      "slug": "cargar-con-ocr",
+      "title": "Cargar una factura de proveedor desde el PDF",
+      "summary": "Subís el PDF o la foto y DOLAN lee proveedor, número, fecha, importes e IVA.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Facturas de proveedor** y tocá **Nuevo** (o arrastrá el PDF a la lista).",
+          "shot": {
+            "id": "ocr-cargar-1",
+            "go": "/odoo/action-account.action_move_in_invoice_type",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "En la factura nueva tocá **Digitalizar con IA** o usá la pestaña **OCR & QR AFIP** (1) para leer el QR del comprobante.",
+          "shot": {
+            "id": "ocr-cargar-2",
+            "go": "/odoo/action-account.action_move_in_invoice_type/new",
+            "mark": [
+              "text=OCR & QR AFIP (IA)"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Revisá lo que se completó (proveedor, número, fecha, importes, IVA) y corregí lo que haga falta. Tocá **Confirmar**."
+        }
+      ],
+      "related": [
+        "compras/cargar-factura-proveedor"
+      ]
+    }
+  ]
+}

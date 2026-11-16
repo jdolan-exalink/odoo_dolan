@@ -1,0 +1,48 @@
+{
+  "app": "codigo_barras",
+  "intro": "Recibir, entregar y contar mercadería con el lector de códigos, sin tipear cantidades.",
+  "who": "Depósito.",
+  "tasks": [
+    {
+      "slug": "escanear-remito",
+      "title": "Escanear una recepción o una entrega",
+      "summary": "Abrís una sesión de escaneo, elegís el remito y vas leyendo cada producto; al final validás en un clic.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Código de barras** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "barras-escanear-1",
+            "go": "/odoo/action-DOLAN_stock_mrp.action_dolan_stock_barcode_sessions",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Elegí el **Modo de Operación** (recepción, entrega o inventario) y el **Remito / Transferencia** (1).",
+          "shot": {
+            "id": "barras-escanear-2",
+            "go": "/odoo/action-DOLAN_stock_mrp.action_dolan_stock_barcode_sessions/new",
+            "mark": [
+              "div[name=operation_mode], div[name=mode]",
+              "div[name=picking_id]"
+            ]
+          }
+        },
+        {
+          "text": "Con el cursor en **Escanear Código de Barras**, leé cada producto: cada lectura suma una unidad y se ve en **Líneas Escaneadas en Tiempo Real**."
+        },
+        {
+          "text": "Cuando terminás, tocá **Validar Operación en 1 Clic**. Para trabajar en pantalla completa en la tablet usá **Abrir Terminal Web Fullscreen**."
+        }
+      ],
+      "errors": [
+        {
+          "problem": "El código no se reconoce",
+          "fix": "El producto no tiene ese código de barras cargado. Cargalo en la ficha del producto y volvé a escanear."
+        }
+      ]
+    }
+  ]
+}

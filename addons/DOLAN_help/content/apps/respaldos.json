@@ -1,0 +1,37 @@
+{
+  "app": "respaldos",
+  "intro": "El respaldo diario de la base y los adjuntos, con descarga y prueba de restauración.",
+  "who": "Administradores.",
+  "tasks": [
+    {
+      "slug": "respaldar",
+      "title": "Hacer y controlar los respaldos",
+      "summary": "Se respalda solo cada día; podés hacer uno en el momento, bajarlo y probar que se restaura bien.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Abrí **Respaldos** (1). Cada fila es un respaldo con fecha, tamaño, estado y el error si falló.",
+          "shot": {
+            "id": "respaldos-ver-1",
+            "go": "/odoo/action-DOLAN_backup.action_dolan_backup",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "Tocá **Respaldar ahora** antes de un cambio importante."
+        },
+        {
+          "text": "Usá **Descargar** y guardá una copia fuera del servidor. **Probar restauración** confirma que el respaldo sirve."
+        }
+      ],
+      "errors": [
+        {
+          "problem": "El respaldo da error de versión de pg_dump",
+          "fix": "El servidor tiene una herramienta de respaldo más vieja que la base de datos. Hay que actualizar la imagen del servidor (lo hace soporte)."
+        }
+      ]
+    }
+  ]
+}

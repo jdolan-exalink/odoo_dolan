@@ -1,0 +1,34 @@
+{
+  "app": "email_marketing",
+  "intro": "Campañas de correo a clientes: listas, diseño del correo, envío y resultados.",
+  "who": "Marketing y comerciales.",
+  "tasks": [
+    {
+      "slug": "mandar-campana",
+      "title": "Mandar una campaña por correo",
+      "summary": "Creás el correo, elegís a quién va, lo diseñás con bloques y lo enviás o programás.",
+      "minutes": 10,
+      "steps": [
+        {
+          "text": "Entrá a **Marketing por correo** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "marketing-campana-1",
+            "go": "/odoo/action-mass_mailing.mailing_mailing_action_mail",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Escribí el **asunto** y elegí los **destinatarios** (una lista de correo o un filtro de contactos)."
+        },
+        {
+          "text": "Diseñá el cuerpo arrastrando bloques. Mandate una **prueba** antes."
+        },
+        {
+          "text": "Tocá **Enviar** o **Programar**. En **Reportes** ves aperturas, clics y bajas."
+        }
+      ]
+    }
+  ]
+}

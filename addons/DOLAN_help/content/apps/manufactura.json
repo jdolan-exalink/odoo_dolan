@@ -1,0 +1,58 @@
+{
+  "app": "manufactura",
+  "intro": "Fabricación con listas de materiales: qué componentes lleva cada producto y las órdenes de producción que los consumen.",
+  "who": "Producción y depósito.",
+  "tasks": [
+    {
+      "slug": "lista-de-materiales",
+      "title": "Cargar la lista de materiales de un producto",
+      "summary": "La lista dice qué componentes y cuánto de cada uno lleva fabricar una unidad.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Manufactura > Productos > Listas de materiales** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "manufactura-lista-1",
+            "go": "/odoo/action-mrp.mrp_bom_form_action",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Elegí el **producto** que se fabrica y la cantidad que produce la lista."
+        },
+        {
+          "text": "En **Componentes** agregá cada insumo con su cantidad. Si hay pasos en distintos centros de trabajo, cargalos en **Operaciones**."
+        }
+      ]
+    },
+    {
+      "slug": "orden-de-fabricacion",
+      "title": "Hacer una orden de fabricación",
+      "summary": "Creás la orden con el producto y la cantidad, se reservan los componentes, producís y la marcás como hecha.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Manufactura > Operaciones > Órdenes de fabricación** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "manufactura-orden-1",
+            "go": "/odoo/action-mrp.mrp_production_action",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Elegí el **producto** y la **cantidad**. La lista de materiales trae los componentes. Tocá **Confirmar**."
+        },
+        {
+          "text": "Cuando hay stock de componentes, tocá **Producir todo** (o cargá lo producido) y **Marcar como hecho**: baja el stock de componentes y sube el del producto."
+        }
+      ],
+      "related": [
+        "taller/terminal-de-planta"
+      ]
+    }
+  ]
+}

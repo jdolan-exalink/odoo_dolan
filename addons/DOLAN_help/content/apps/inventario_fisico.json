@@ -1,0 +1,32 @@
+{
+  "app": "inventario_fisico",
+  "intro": "Acceso directo al conteo de inventario.",
+  "who": "Depósito.",
+  "tasks": [
+    {
+      "slug": "contar",
+      "title": "Contar el inventario",
+      "summary": "Cargás lo contado de cada producto y aplicás; el stock se corrige y la diferencia queda registrada.",
+      "minutes": 5,
+      "steps": [
+        {
+          "text": "Abrí **Inventario físico** (1) y completá la columna **Contado**.",
+          "shot": {
+            "id": "fisico-contar-1",
+            "go": "/odoo/action-stock.action_view_inventory_tree",
+            "mark": [
+              "th[data-name=inventory_quantity], text=Contado"
+            ],
+            "menu": "stock.menu_stock_root"
+          }
+        },
+        {
+          "text": "Tocá **Aplicar todo** cuando terminaste de revisar las diferencias."
+        }
+      ],
+      "related": [
+        "inventario/inventario-fisico"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "app": "contabilidad",
+  "intro": "La contabilidad completa: tablero de diarios, asientos, libros, balances, ajuste por inflación, activos y préstamos.",
+  "who": "Contador y administración.",
+  "tasks": [
+    {
+      "slug": "tablero",
+      "title": "Leer el tablero de contabilidad",
+      "summary": "El **Tablero** muestra una tarjeta por diario (ventas, compras, bancos, caja) con lo pendiente de cada uno.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Entrá a **Contabilidad**. Cada tarjeta (1) es un diario: facturas para validar, pagos para conciliar y el saldo.",
+          "shot": {
+            "id": "contabilidad-tablero-1",
+            "go": "/odoo/action-account.open_account_journal_dashboard_kanban",
+            "mark": [
+              ".o_kanban_record:not(.o_kanban_ghost)"
+            ]
+          }
+        },
+        {
+          "text": "Tocá el botón de una tarjeta para trabajar lo pendiente de ese diario."
+        }
+      ]
+    },
+    {
+      "slug": "asiento-manual",
+      "title": "Cargar un asiento manual",
+      "summary": "Para ajustes y movimientos que no salen de una factura o un pago: cargás las líneas al debe y al haber y lo publicás.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Desde el **Tablero**, en el diario **Operaciones varias**, abrí los asientos y tocá **Nuevo**."
+        },
+        {
+          "text": "Poné fecha y referencia, y agregá las líneas con **cuenta**, **debe** y **haber**. El total del debe tiene que ser igual al del haber."
+        },
+        {
+          "text": "Tocá **Publicar**. Un asiento publicado no se borra: se revierte con otro."
+        }
+      ]
+    },
+    {
+      "slug": "libros-y-balances",
+      "title": "Sacar libro mayor, sumas y saldos y balance",
+      "summary": "En **Reportes** tenés el libro mayor, el diario, el balance de comprobación, el balance general y el estado de resultados.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Contabilidad > Reportes** (1) y elegí el informe.",
+          "shot": {
+            "id": "contabilidad-reportes-1",
+            "go": "/odoo/action-DOLAN_accounting.action_dolan_report_trial_balance",
+            "mark": [
+              "text=Reportes"
+            ]
+          }
+        },
+        {
+          "text": "Elegí el período y, si querés, comparalo con el anterior. Desplegá una cuenta para ver sus movimientos."
+        },
+        {
+          "text": "Exportalo a **PDF** o **Excel** con los botones de arriba."
+        }
+      ],
+      "related": [
+        "reportes_financieros/balance"
+      ]
+    }
+  ]
+}

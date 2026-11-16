@@ -1,0 +1,31 @@
+{
+  "app": "flujo_caja",
+  "intro": "La caja proyectada por semana o mes: cobranzas, pagos, cheques y previsiones manuales, con escenario de cobro de lo vencido.",
+  "who": "Gerencia y tesorería.",
+  "tasks": [
+    {
+      "slug": "proyectar-caja",
+      "title": "Proyectar la caja",
+      "summary": "Cargás lo que todavía no tiene comprobante y calculás la proyección; los saldos negativos se ven en rojo.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "En **Flujo de caja > Previsiones** cargá lo que no tiene comprobante todavía: sueldos, alquileres, impuestos, cuotas (con repetición mensual)."
+        },
+        {
+          "text": "Abrí **Proyección** (1), elegí semanal o mensual, cuántos períodos y el escenario de cobro de lo vencido. Tocá **Calcular**.",
+          "shot": {
+            "id": "flujo-proyectar-1",
+            "go": "/odoo/action-DOLAN_cash_flow.action_dolan_cash_flow_report",
+            "mark": [
+              ".modal-content, .o_content, .o_action_manager > div"
+            ]
+          }
+        },
+        {
+          "text": "Mirá la lista o el gráfico: los períodos con saldo negativo aparecen en rojo."
+        }
+      ]
+    }
+  ]
+}

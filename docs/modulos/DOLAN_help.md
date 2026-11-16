@@ -77,12 +77,25 @@ Todos los usuarios internos leen la ayuda (filtrada por sus apps) y pueden respo
 
 14 tests: contenido válido, guías solo de apps del catálogo, sectores existentes, ids de captura seguros,
 portada y buscador, filtrado por permisos (un usuario sin Facturación no ve su guía), artículos de la empresa,
-respuestas, botón «?», ícono del catálogo apagado al instalar y links cortos.
+respuestas, botón «?», ícono del catálogo apagado al instalar y links cortos. `DOLAN_help_ai` suma 4 más.
+
+## Contenido actual
+
+Guías de las 95 apps del catálogo más *Primeros pasos* (147 tareas y 180 capturas) y 20 procedimientos
+sugeridos en 8 sectores. Algunas apps no están instaladas en la copia de capturas (Promociones, Tienda online,
+Turnos, Gestión RRHH, Reportes de Personal, Novedades, Documentos): sus guías son solo texto hasta sacar las fotos
+en una base que las tenga. La venta en la pantalla del punto de venta también es solo texto.
+
+## Asistente IA (`DOLAN_help_ai`)
+
+Módulo puente que se instala solo cuando están la Ayuda y el Asistente IA. Agrega la herramienta `help_search`:
+cuando alguien pregunta «cómo se hace», el asistente busca en las guías y procedimientos que el usuario puede ver
+(`dolan.help.center.search_help`) y responde con los pasos y el link `/ayuda/...` a la guía con capturas.
 
 ## Pendiente
 
-* Guías de las apps que todavía no tienen (las muestra como «Guía en preparación»).
 * Procedimientos por sector: los que vienen son sugeridos; falta que Juan confirme los sectores y cómo trabaja
   cada uno.
-* Capturas de la pantalla de venta del punto de venta (hoy esa guía es solo texto).
-* Que el Asistente IA responda usando la ayuda.
+* Capturas de las apps que no están instaladas en la copia de capturas y de la pantalla de venta del punto de venta
+  (la configuración «Mostrador» de la copia no carga productos).
+* Más tareas por app a medida que lleguen las preguntas de «¿Te sirvió?».

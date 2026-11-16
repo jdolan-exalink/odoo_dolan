@@ -170,6 +170,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_help_ai",
+		Title:       "Ayuda: el Asistente IA responde con las guías",
+		Version:     "20.0.1.0.0",
+		Category:    "Gestión y Análisis",
+		Application: false,
+		Depends:     []string{"DOLAN_help", "DOLAN_ai"},
+		HasData:     false,
+	},
+	{
 		ID:          "DOLAN_budget",
 		Title:       "Presupuesto financiero contra real",
 		Version:     "20.0.1.0.0",

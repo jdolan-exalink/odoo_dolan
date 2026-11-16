@@ -1,0 +1,32 @@
+{
+  "app": "calidad",
+  "intro": "Puntos de control, inspecciones y alertas de calidad (CAPA) para recepción, producción y entrega.",
+  "who": "Calidad y supervisores.",
+  "tasks": [
+    {
+      "slug": "registrar-control",
+      "title": "Registrar un control de calidad",
+      "summary": "Los controles aparecen solos según los puntos de control; el inspector los aprueba o rechaza.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Abrí **Calidad** (Controles de calidad) (1). Ves los controles pendientes.",
+          "shot": {
+            "id": "calidad-control-1",
+            "go": "/odoo/action-DOLAN_stock_mrp.action_dolan_quality_checks",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ],
+            "menu": "DOLAN_stock_mrp.menu_dolan_mrp_shopfloor_root"
+          }
+        },
+        {
+          "text": "Abrí el control, cargá la medición o la observación y tocá **Aprobar** o **Rechazar**."
+        },
+        {
+          "text": "Si se rechaza, creá una **Alerta de calidad (CAPA)** con la causa y la acción correctiva."
+        }
+      ]
+    }
+  ]
+}

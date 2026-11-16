@@ -22,6 +22,60 @@
           "task": "ausencias/ver-saldo-de-dias"
         }
       ]
+    },
+    {
+      "slug": "alta-de-personal",
+      "title": "Alta de un empleado nuevo",
+      "summary": "Todo lo que hay que cargar cuando entra alguien.",
+      "steps": [
+        {
+          "text": "Cargá el legajo con los datos personales y de sueldos.",
+          "who": "Recursos humanos",
+          "task": "empleados/alta-empleado"
+        },
+        {
+          "text": "Subí el contrato, el alta y el apto médico al legajo digital.",
+          "who": "Recursos humanos",
+          "task": "documentos_personal/cargar-documento"
+        },
+        {
+          "text": "Asignale su turno o cuadrilla.",
+          "who": "Supervisor",
+          "task": "turnos/publicar-cronograma"
+        }
+      ]
+    },
+    {
+      "slug": "cierre-de-sueldos",
+      "title": "Cierre mensual de sueldos",
+      "summary": "De las fichadas a los recibos y el F.931.",
+      "steps": [
+        {
+          "text": "Revisá las asistencias del mes y justificá las incidencias.",
+          "who": "Supervisor",
+          "task": "asistencias/revisar-asistencias"
+        },
+        {
+          "text": "Aprobá las horas extra.",
+          "who": "Supervisor",
+          "task": "novedades/aprobar-horas-extra"
+        },
+        {
+          "text": "Cerrá las novedades del período.",
+          "who": "Recursos humanos",
+          "task": "novedades/cerrar-periodo"
+        },
+        {
+          "text": "Liquidá el mes y confirmá los recibos.",
+          "who": "Liquidación de sueldos",
+          "task": "sueldos/liquidar-mes"
+        },
+        {
+          "text": "Generá el F.931 y el Libro de Sueldos Digital.",
+          "who": "Liquidación de sueldos",
+          "task": "sueldos/presentaciones"
+        }
+      ]
     }
   ]
 }

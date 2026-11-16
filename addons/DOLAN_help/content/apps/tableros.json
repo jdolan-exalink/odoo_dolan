@@ -1,0 +1,21 @@
+{
+  "app": "tableros",
+  "intro": "Tableros estándar de Odoo para ventas, compras, stock y contabilidad.",
+  "who": "Gerencia y responsables.",
+  "tasks": [
+    {
+      "slug": "ver-tablero",
+      "title": "Ver un tablero",
+      "summary": "Elegís el tablero del menú de la izquierda y filtrás por período.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Tableros** y elegí el tema (ventas, compras, stock, contabilidad)."
+        },
+        {
+          "text": "Cambiá el período con el filtro de fecha. Tocá un gráfico para ver los registros."
+        }
+      ]
+    }
+  ]
+}

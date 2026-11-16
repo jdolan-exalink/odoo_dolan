@@ -1,0 +1,42 @@
+{
+  "app": "tienda_online",
+  "intro": "Tu tienda web propia: publicás productos por categoría, el stock se ve en línea y el cliente paga con Mercado Pago.",
+  "who": "Ventas online y administración.",
+  "tasks": [
+    {
+      "slug": "configurar-tienda",
+      "title": "Elegir qué se publica en la tienda",
+      "summary": "En **Configurar tienda** elegís las categorías y si se publican solo los productos con stock.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Tienda online > Configuración > Configurar tienda**."
+        },
+        {
+          "text": "Elegí las **categorías** a publicar y si se muestran solo los productos con stock. Podés armar las categorías de la tienda a partir de las de producto."
+        },
+        {
+          "text": "Para publicar o sacar productos sueltos, tildalos en la lista de productos y usá **Publicar en la tienda** o **Sacar de la tienda**."
+        }
+      ]
+    },
+    {
+      "slug": "pedidos-web",
+      "title": "Atender los pedidos de la web",
+      "summary": "Los pedidos de la tienda llegan como pedidos de venta, ya pagados con Mercado Pago, y siguen el circuito normal.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Tienda online > Pedidos web**. Cada pedido muestra el pago y la entrega."
+        },
+        {
+          "text": "Prepará la entrega desde el pedido y facturalo como cualquier venta."
+        }
+      ],
+      "related": [
+        "remitos/validar-entrega",
+        "ventas/facturar-venta"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "app": "conocimiento",
+  "intro": "La wiki interna: artículos y procedimientos en un árbol, con favoritos.",
+  "who": "Todos los usuarios.",
+  "tasks": [
+    {
+      "slug": "escribir-articulo",
+      "title": "Escribir un artículo",
+      "summary": "Creás el artículo, lo ubicás debajo de otro y escribís con formato e imágenes.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Abrí **Conocimiento** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "conocimiento-articulo-1",
+            "go": "/odoo/action-DOLAN_knowledge_bi.action_dolan_knowledge_article",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Poné el título, elegí el artículo padre y escribí el contenido. Pegá capturas con Ctrl+V."
+        },
+        {
+          "text": "Marcá con la estrella los que uses seguido: quedan en **Favoritos**."
+        }
+      ],
+      "tips": [
+        "Para procedimientos paso a paso de un sector, usá **Ayuda > Procedimientos de la empresa**: aparecen en la Ayuda junto a las guías de las apps."
+      ]
+    }
+  ]
+}

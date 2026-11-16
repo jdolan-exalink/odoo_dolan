@@ -1,0 +1,36 @@
+{
+  "app": "presupuestos",
+  "intro": "Acceso directo a la lista de presupuestos (cotizaciones) de Ventas.",
+  "who": "Vendedores y mostrador.",
+  "tasks": [
+    {
+      "slug": "ver-presupuestos",
+      "title": "Ver y seguir los presupuestos",
+      "summary": "La lista muestra cada presupuesto con cliente, total y estado; los que siguen como **Cotización** todavía no fueron aceptados.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Presupuestos**. Arriba hay tarjetas con los que están **Por confirmar**, **Por entregar** y **Por facturar** (1).",
+          "shot": {
+            "id": "presupuestos-ver-1",
+            "go": "/odoo/action-sale.action_quotations_with_onboarding",
+            "mark": [
+              ".o_sale_order_dashboard, .o_dashboard_table, .o_list_renderer"
+            ],
+            "menu": "sale.sale_menu_root"
+          }
+        },
+        {
+          "text": "Tocá un presupuesto para abrirlo, reenviarlo al cliente o confirmarlo."
+        },
+        {
+          "text": "Para buscar los de un cliente escribí su nombre en el buscador y elegí **Buscar Cliente**."
+        }
+      ],
+      "related": [
+        "ventas/crear-presupuesto",
+        "ventas/confirmar-venta"
+      ]
+    }
+  ]
+}

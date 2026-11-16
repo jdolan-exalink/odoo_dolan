@@ -1,4 +1,6 @@
 """API de la ayuda para la interfaz (acción cliente dolan_help_center y botón «?»)."""
+import unicodedata
+
 from odoo import api, fields, models
 from odoo.tools import html2plaintext
 
@@ -6,6 +8,11 @@ from .help_content import load_content, shot_url
 
 VISIBLE_STATES = ('operativo', 'beta')
 GENERAL_FOLDER = {'key': 'general', 'name': 'Primeros pasos', 'sequence': 0}
+
+
+def normalize_text(text):
+    """Minúsculas y sin acentos (igual que el buscador de la interfaz)."""
+    return unicodedata.normalize('NFD', str(text or '')).encode('ascii', 'ignore').decode().lower()
 
 
 def _task_card(app_key, task):
@@ -293,6 +300,48 @@ class DolanHelpCenter(models.AbstractModel):
         with_guide = matches.filtered(lambda e: e.key in content['apps'])
         ordered = with_guide | matches
         return [{'key': e.key, 'name': e.name} for e in ordered]
+
+    # ------------------------------------------------------------------
+    # Búsqueda del lado del servidor (la usa el Asistente IA)
+    # ------------------------------------------------------------------
+    @api.model
+    def search_help(self, query, limit=5):
+        """Las tareas y procedimientos que mejor responden a la consulta, con sus pasos en texto."""
+        words = [w for w in normalize_text(query).split() if len(w) > 2]
+        if not words:
+            return []
+        index = self.get_index()
+        scored = []
+        for row in index['search']:
+            title = normalize_text(row['title'])
+            haystack = f"{title} {normalize_text(row['where'])} {normalize_text(row['text'])}"
+            hits = [w for w in words if w in haystack]
+            if not hits:
+                continue
+            score = sum(4 if w in title else 1 for w in hits) + (2 if len(hits) == len(words) else 0)
+            scored.append((score, row))
+        scored.sort(key=lambda item: -item[0])
+        results = []
+        for _score, row in scored[:max(1, min(int(limit or 5), 10))]:
+            ref = row['ref']
+            item = {'title': row['title'], 'where': row['where'], 'link': f'/ayuda/{ref}'}
+            if ref.startswith(('sector:', 'company:')):
+                data = self.get_procedure(ref)
+                if data.get('error'):
+                    continue
+                item['summary'] = data.get('summary', '')
+                item['steps'] = [s['text'] for s in data.get('steps') or []] or [html2plaintext(data.get('body') or '')[:1500]]
+            elif ref.startswith('app:'):
+                item['summary'] = row['text']
+            else:
+                data = self.get_task(ref)
+                if data.get('error'):
+                    continue
+                item['summary'] = data['summary']
+                item['steps'] = [s['text'].replace('**', '') for s in data['steps']]
+                item['problems'] = [f"{e.get('problem', '')}: {e.get('fix', '')}".replace('**', '') for e in data['errors']]
+            results.append(item)
+        return results
 
     # ------------------------------------------------------------------
     # ¿Te sirvió?

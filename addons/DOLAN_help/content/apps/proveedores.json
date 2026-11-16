@@ -1,0 +1,35 @@
+{
+  "app": "proveedores",
+  "intro": "La ficha de cada proveedor: datos fiscales, cuenta bancaria para pagarle, condiciones y saldo.",
+  "who": "Compras y administración.",
+  "tasks": [
+    {
+      "slug": "alta-proveedor",
+      "title": "Dar de alta un proveedor",
+      "summary": "Cargás el CUIT y se completan los datos de ARCA; sumás la cuenta bancaria para pagarle.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Proveedores** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "proveedores-alta-1",
+            "go": "/odoo/action-account.res_partner_action_supplier",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Escribí el **CUIT** y tocá **Consultar ARCA** para traer razón social, domicilio y condición frente al IVA."
+        },
+        {
+          "text": "En **Facturación** agregá su **cuenta bancaria** (CBU o alias) para pagarle por transferencia. Guardá."
+        }
+      ],
+      "related": [
+        "pagos_proveedores/orden-de-pago"
+      ]
+    }
+  ]
+}

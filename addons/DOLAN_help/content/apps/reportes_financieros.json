@@ -1,0 +1,32 @@
+{
+  "app": "reportes_financieros",
+  "intro": "Balance (estado de situación patrimonial), estado de resultados y sumas y saldos con comparativos y exportación a Excel.",
+  "who": "Contador y gerencia.",
+  "tasks": [
+    {
+      "slug": "balance",
+      "title": "Ver el balance y el estado de resultados",
+      "summary": "Elegís el informe, el período y la comparación; desplegás cada rubro hasta el asiento.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Abrí **Reportes financieros** (1): arranca en el estado de situación patrimonial.",
+          "shot": {
+            "id": "financieros-balance-1",
+            "go": "/odoo/action-DOLAN_account_reports.action_dolan_balance_sheet",
+            "mark": [
+              ".o_action_manager .o_action"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Cambiá la fecha o el período y elegí comparar con el período anterior."
+        },
+        {
+          "text": "Tocá un rubro para desplegar las cuentas y una cuenta para ver los movimientos. Exportá a Excel o PDF."
+        }
+      ]
+    }
+  ]
+}

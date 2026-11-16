@@ -6,7 +6,7 @@ Cada paso de una guía puede traer una receta "shot" (ver addons/DOLAN_help/mode
     "shot": {
       "id": "facturacion-emitir-factura-1",      # nombre del archivo en static/img/shots/
       "go": "/odoo/action-account.action_move_out_invoice_type",   # adónde ir
-      "click": ["selector", ...],                # clics antes de la foto (en orden)
+      "click": ["selector", ...],                # clics antes de la foto (en orden; "?selector" = solo si aparece)
       "fill": {"selector": "texto"},             # campos a completar antes de la foto
       "wait": "selector",                        # esperar a que aparezca
       "mark": ["selector", ...],                 # elementos a marcar con (1), (2)...
@@ -237,7 +237,14 @@ def take(context, base_url, shot, out_path):
         settle(page)
         page.add_style_tag(content=HIDE_CSS)
         for selector in shot.get("click") or []:
-            page.locator(selector).first.click(timeout=15000)
+            optional = selector.startswith("?")
+            target = page.locator(selector.lstrip("?")).first
+            if optional:
+                try:
+                    target.wait_for(state="visible", timeout=4000)
+                except Exception:
+                    continue
+            target.click(timeout=15000)
             settle(page)
         for selector, value in (shot.get("fill") or {}).items():
             page.locator(selector).first.fill(str(value), timeout=15000)

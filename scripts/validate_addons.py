@@ -35,6 +35,7 @@ EXPECTED_MODULES = [
     "DOLAN_logistics_whatsapp",
     "DOLAN_owner_dashboard",
     "DOLAN_help",
+    "DOLAN_help_ai",
     "DOLAN_branch",
     "DOLAN_integrations",
     "DOLAN_import",

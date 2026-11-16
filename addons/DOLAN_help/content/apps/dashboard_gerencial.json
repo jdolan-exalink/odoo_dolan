@@ -1,0 +1,31 @@
+{
+  "app": "dashboard_gerencial",
+  "intro": "Indicadores clave (KPI) por empresa con metas, cumplimiento y envío programado por correo.",
+  "who": "Gerencia.",
+  "tasks": [
+    {
+      "slug": "ver-kpi",
+      "title": "Ver los indicadores y sus metas",
+      "summary": "Cada tarjeta es un indicador con su valor, la meta y el porcentaje de cumplimiento.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Dashboard gerencial** (1).",
+          "shot": {
+            "id": "gerencial-kpi-1",
+            "go": "/odoo/action-DOLAN_knowledge_bi.action_dolan_bi_dashboard",
+            "mark": [
+              ".o_action_manager .o_action"
+            ]
+          }
+        },
+        {
+          "text": "Abrí un tablero para ver sus indicadores. Con **Exportar** lo bajás en Excel."
+        },
+        {
+          "text": "Configurá el envío programado para que te llegue por correo cada semana."
+        }
+      ]
+    }
+  ]
+}

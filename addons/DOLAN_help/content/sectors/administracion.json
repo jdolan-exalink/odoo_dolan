@@ -34,6 +34,33 @@
       ]
     },
     {
+      "slug": "bancos-y-pagos",
+      "title": "Bancos, pagos y cierre del mes",
+      "summary": "Pagar a proveedores, conciliar los bancos y preparar las presentaciones.",
+      "steps": [
+        {
+          "text": "Pagá las facturas de proveedores que vencen, con sus retenciones.",
+          "who": "Tesorería",
+          "task": "pagos_proveedores/pagar-factura-proveedor"
+        },
+        {
+          "text": "Importá el extracto del banco.",
+          "who": "Tesorería",
+          "task": "bancos/importar-extracto"
+        },
+        {
+          "text": "Conciliá cada movimiento con su cobro o pago.",
+          "who": "Tesorería",
+          "task": "conciliacion/conciliar-banco"
+        },
+        {
+          "text": "Al cierre del mes, generá el Libro IVA Digital.",
+          "who": "Contador",
+          "task": "reportes_fiscales/libro-iva-digital"
+        }
+      ]
+    },
+    {
       "slug": "facturas-de-proveedores",
       "title": "Facturas de proveedores",
       "summary": "Cargar las facturas de compra controlando contra la orden y lo recibido.",

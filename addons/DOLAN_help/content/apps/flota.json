@@ -1,0 +1,39 @@
+{
+  "app": "flota",
+  "intro": "Los vehículos de la empresa: conductor, contratos, servicios, odómetro y costos.",
+  "who": "Logística y administración.",
+  "tasks": [
+    {
+      "slug": "alta-vehiculo",
+      "title": "Cargar un vehículo",
+      "summary": "Creás el vehículo con patente, modelo y conductor; después le vas sumando servicios y lecturas del odómetro.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Flota** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "flota-alta-1",
+            "go": "/odoo/action-fleet.fleet_vehicle_action",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Completá **Matrícula** (1), **Modelo** y **Conductor**.",
+          "shot": {
+            "id": "flota-alta-2",
+            "go": "/odoo/action-fleet.fleet_vehicle_action/new",
+            "mark": [
+              "div[name=license_plate]",
+              "div[name=model_id]"
+            ]
+          }
+        },
+        {
+          "text": "Con los botones de arriba cargás **Contratos** (seguro, leasing), **Servicios** (service, cubiertas) y el **Odómetro**."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "app": "reportes_fiscales",
+  "intro": "Libro IVA Digital, SICORE y los informes de IVA e IIBB para presentar en ARCA y en las provincias.",
+  "who": "Contador.",
+  "tasks": [
+    {
+      "slug": "libro-iva-digital",
+      "title": "Generar el Libro IVA Digital",
+      "summary": "Elegís el período y el tipo de presentación y DOLAN arma los archivos para subir a ARCA.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Abrí **Reportes fiscales** (Libro IVA Digital y SICORE). Se abre el asistente (1).",
+          "shot": {
+            "id": "fiscales-iva-1",
+            "go": "/odoo/action-DOLAN_l10n_ar_afip.action_l10n_ar_libro_iva_digital_wizard",
+            "mark": [
+              ".modal-content"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Elegí **Fecha Desde**, **Fecha Hasta** y el **Tipo de Presentación**."
+        },
+        {
+          "text": "Tocá **Generar Presentación Fiscal** y bajá los archivos para subirlos en ARCA."
+        }
+      ],
+      "tips": [
+        "Para controlar antes de presentar, mirá **Facturación > Informes > Libro IVA Ventas** y **Libro IVA Compras**."
+      ]
+    }
+  ]
+}

@@ -22,6 +22,50 @@
           "task": "inventario/ver-stock"
         }
       ]
+    },
+    {
+      "slug": "tablero-diario",
+      "title": "El vistazo diario",
+      "summary": "Cinco minutos por día para saber cómo está el negocio.",
+      "steps": [
+        {
+          "text": "Abrí el tablero del dueño: caja, deuda vencida, pagos de la semana y ventas.",
+          "who": "Gerencia",
+          "task": "tablero_dueno/leer-tablero"
+        },
+        {
+          "text": "Revisá las alertas que llegaron.",
+          "who": "Gerencia",
+          "task": "alertas/configurar-alerta"
+        }
+      ]
+    },
+    {
+      "slug": "revision-mensual",
+      "title": "Revisión mensual",
+      "summary": "Rentabilidad, caja proyectada y presupuesto contra real.",
+      "steps": [
+        {
+          "text": "Mirá qué productos y clientes dejan más margen.",
+          "who": "Gerencia",
+          "task": "rentabilidad/ver-margen"
+        },
+        {
+          "text": "Proyectá la caja de las próximas semanas.",
+          "who": "Gerencia",
+          "task": "flujo_caja/proyectar-caja"
+        },
+        {
+          "text": "Compará el presupuesto con lo real.",
+          "who": "Gerencia",
+          "task": "presupuesto_financiero/armar-presupuesto"
+        },
+        {
+          "text": "Revisá en la bitácora los cambios sensibles del mes.",
+          "who": "Gerencia",
+          "task": "auditoria/revisar-bitacora"
+        }
+      ]
     }
   ]
 }

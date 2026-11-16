@@ -1,0 +1,39 @@
+{
+  "app": "seguimiento_deudores",
+  "intro": "Los clientes con deuda vencida y el reclamo por niveles: aviso, recordatorio y reclamo firme.",
+  "who": "Cobranzas y administración.",
+  "tasks": [
+    {
+      "slug": "reclamar-deuda",
+      "title": "Reclamar la deuda vencida",
+      "summary": "La lista trae solo los clientes con deuda vencida; desde cada uno mandás el reclamo por correo o WhatsApp.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Abrí **Seguimiento de deudores** (1). Cada fila es un cliente con deuda vencida.",
+          "shot": {
+            "id": "deudores-reclamar-1",
+            "go": "/odoo/action-DOLAN_accounting.action_dolan_partner_followup_list",
+            "mark": [
+              ".o_list_table thead, .o_view_nocontent"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Abrí el cliente para ver sus facturas vencidas y el nivel de reclamo que le toca."
+        },
+        {
+          "text": "Mandale el reclamo por correo con el estado de cuenta, o el recordatorio por WhatsApp desde la pestaña **Cobranza**."
+        },
+        {
+          "text": "Registrá lo que te dijo como nota o promesa de pago para el próximo contacto."
+        }
+      ],
+      "related": [
+        "cobranzas/recordatorio-whatsapp",
+        "cuentas_corrientes/promesa-de-pago"
+      ]
+    }
+  ]
+}
