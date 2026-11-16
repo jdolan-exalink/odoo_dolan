@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_delivery_route_form" model="ir.ui.view">
+        <field name="name">dolan.delivery.route.form</field>
+        <field name="model">dolan.delivery.route</field>
+        <field name="arch" type="xml">
+            <form string="Hoja de ruta">
+                <header>
+                    <button name="action_add_prepared" type="object" string="Agregar entregas preparadas" invisible="state != 'draft'"/>
+                    <button name="action_load" type="object" string="Cargada" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_start" type="object" string="Salir a repartir" class="btn-primary" invisible="state != 'loaded'"/>
+                    <button name="action_close" type="object" string="Rendir y cerrar" class="btn-primary" invisible="state != 'in_progress'"/>
+                    <button name="action_sort_by_distance" type="object" string="Ordenar por cercanía" invisible="state not in ('draft', 'loaded')"/>
+                    <button name="action_open_map" type="object" string="Ver en el mapa" icon="fa-map-marker" invisible="state == 'done'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="driver_id" widget="many2one_avatar_user"/>
+                            <field name="vehicle"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Rendición">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="to_collect"/>
+                            <field name="collected"/>
+                            <field name="collected_cash"/>
+                            <field name="cash_declared" readonly="state == 'done'"/>
+                            <field name="cash_difference" decoration-danger="cash_difference &lt; 0"/>
+                        </group>
+                    </group>
+                    <field name="stop_ids" readonly="state == 'done'">
+                        <list decoration-success="state in ('delivered', 'partial')" decoration-danger="state == 'rejected'">
+                            <field name="sequence" widget="handle"/>
+                            <field name="picking_id"/>
+                            <field name="partner_id"/>
+                            <field name="address"/>
+                            <field name="amount_to_collect" sum="Total"/>
+                            <field name="amount_collected" sum="Total"/>
+                            <field name="state" widget="badge" decoration-success="state in ('delivered', 'partial')" decoration-danger="state == 'rejected'"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_delivery_route_list" model="ir.ui.view">
+        <field name="name">dolan.delivery.route.list</field>
+        <field name="model">dolan.delivery.route</field>
+        <field name="arch" type="xml">
+            <list string="Hojas de ruta">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="driver_id" widget="many2one_avatar_user"/>
+                <field name="vehicle"/>
+                <field name="stop_count"/>
+                <field name="pending_count"/>
+                <field name="collected" sum="Total"/>
+                <field name="cash_difference" sum="Total"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-info="state in ('loaded', 'in_progress')" decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_delivery_route_search" model="ir.ui.view">
+        <field name="name">dolan.delivery.route.search</field>
+        <field name="model">dolan.delivery.route</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="driver_id"/>
+                <filter name="mine" string="Mis rutas" domain="[('driver_id', '=', uid)]"/>
+                <filter name="open" string="Abiertas" domain="[('state', '!=', 'done')]"/>
+                <group>
+                    <filter name="group_driver" string="Repartidor" context="{'group_by': 'driver_id'}"/>
+                    <filter name="group_date" string="Fecha" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_delivery_route" model="ir.actions.act_window">
+        <field name="name">Rutas y reparto</field>
+        <field name="res_model">dolan.delivery.route</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_dolan_delivery_route_search"/>
+        <field name="context">{'search_default_open': 1}</field>
+    </record>
+
+    <!-- Prueba de entrega: la pantalla del repartidor, parada por parada. -->
+    <record id="view_dolan_delivery_stop_form" model="ir.ui.view">
+        <field name="name">dolan.delivery.stop.form</field>
+        <field name="model">dolan.delivery.stop</field>
+        <field name="arch" type="xml">
+            <form string="Parada">
+                <header>
+                    <button name="action_deliver" type="object" string="Entregada" class="btn-primary" invisible="state != 'pending'"/>
+                    <button name="action_prepare_partial" type="object" string="Entrega parcial" invisible="state != 'pending'"/>
+                    <button name="action_deliver_partial" type="object" string="Confirmar parcial" invisible="state != 'pending' or not partial_line_ids"/>
+                    <button name="action_reject" type="object" string="Rechazada" invisible="state != 'pending'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="partner_id" readonly="1"/></h1>
+                        <field name="address"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="route_id" readonly="1"/>
+                            <field name="picking_id" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount_to_collect" readonly="1"/>
+                            <field name="amount_collected" readonly="state != 'pending'"/>
+                            <field name="payment_method" readonly="state != 'pending'"/>
+                        </group>
+                        <group>
+                            <field name="received_by" readonly="state != 'pending'"/>
+                            <field name="received_doc" readonly="state != 'pending'"/>
+                            <field name="delivered_at"/>
+                            <field name="reject_reason_id" readonly="state != 'pending'"/>
+                            <field name="latitude" readonly="state != 'pending'"/>
+                            <field name="longitude" readonly="state != 'pending'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="signature" widget="signature" readonly="state != 'pending'"/>
+                        <field name="photo" widget="image" readonly="state != 'pending'"/>
+                    </group>
+                    <field name="partial_line_ids" invisible="not partial_line_ids" readonly="state != 'pending'">
+                        <list editable="bottom" create="false" delete="false">
+                            <field name="product_id"/>
+                            <field name="qty_planned"/>
+                            <field name="qty_delivered"/>
+                        </list>
+                    </field>
+                    <field name="note" placeholder="Observaciones de la entrega"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_delivery_stop_kanban" model="ir.ui.view">
+        <field name="name">dolan.delivery.stop.kanban</field>
+        <field name="model">dolan.delivery.stop</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" create="false" class="o_kanban_mobile">
+                <templates>
+                    <t t-name="card">
+                        <field name="partner_id" class="fw-bold"/>
+                        <field name="address" class="small"/>
+                        <field name="picking_id" class="text-muted small"/>
+                        <footer>
+                            <field name="route_id" class="small"/>
+                            <field name="amount_to_collect" widget="monetary" class="ms-auto"/>
+                            <field name="currency_id" invisible="1"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_dolan_delivery_stop_list" model="ir.ui.view">
+        <field name="name">dolan.delivery.stop.list</field>
+        <field name="model">dolan.delivery.stop</field>
+        <field name="arch" type="xml">
+            <list string="Paradas" create="false">
+                <field name="route_id"/>
+                <field name="partner_id"/>
+                <field name="picking_id"/>
+                <field name="received_by"/>
+                <field name="delivered_at"/>
+                <field name="reject_reason_id" optional="show"/>
+                <field name="amount_collected" sum="Total"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-success="state in ('delivered', 'partial')" decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_delivery_stop_search" model="ir.ui.view">
+        <field name="name">dolan.delivery.stop.search</field>
+        <field name="model">dolan.delivery.stop</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="route_id"/>
+                <filter name="mine" string="Mis paradas" domain="[('driver_id', '=', uid)]"/>
+                <filter name="pending" string="Pendientes" domain="[('state', '=', 'pending')]"/>
+                <filter name="rejected" string="Rechazadas" domain="[('state', '=', 'rejected')]"/>
+                <group>
+                    <filter name="group_route" string="Hoja de ruta" context="{'group_by': 'route_id'}"/>
+                    <filter name="group_reason" string="Motivo de rechazo" context="{'group_by': 'reject_reason_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_delivery_stop" model="ir.actions.act_window">
+        <field name="name">Prueba de entrega</field>
+        <field name="res_model">dolan.delivery.stop</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_dolan_delivery_stop_search"/>
+        <field name="context">{'search_default_mine': 1, 'search_default_pending': 1}</field>
+    </record>
+
+    <record id="view_dolan_delivery_reject_reason_list" model="ir.ui.view">
+        <field name="name">dolan.delivery.reject.reason.list</field>
+        <field name="model">dolan.delivery.reject.reason</field>
+        <field name="arch" type="xml">
+            <list string="Motivos de rechazo" editable="bottom">
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_delivery_reject_reason" model="ir.actions.act_window">
+        <field name="name">Motivos de rechazo</field>
+        <field name="res_model">dolan.delivery.reject.reason</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_dolan_delivery_route_root" name="Rutas y reparto" sequence="52"
+              groups="group_logistics_driver"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_routes.svg"/>
+    <menuitem id="menu_dolan_delivery_routes" name="Hojas de ruta" parent="menu_dolan_delivery_route_root" action="action_dolan_delivery_route" sequence="10"/>
+    <menuitem id="menu_dolan_delivery_reject_reasons" name="Motivos de rechazo" parent="menu_dolan_delivery_route_root"
+              action="action_dolan_delivery_reject_reason" sequence="90" groups="group_logistics_manager"/>
+
+    <menuitem id="menu_dolan_delivery_stop_root" name="Prueba de entrega" sequence="53"
+              groups="group_logistics_driver" action="action_dolan_delivery_stop"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_proof_delivery.svg"/>
+</odoo>

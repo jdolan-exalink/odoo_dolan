@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_dolan_contract" model="ir.module.category">
+        <field name="name">Servicios (DOLAN): contratos</field>
+        <field name="sequence">43</field>
+    </record>
+    <record id="res_groups_privilege_dolan_contract" model="res.groups.privilege">
+        <field name="name">Contratos</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="module_category_dolan_contract"/>
+    </record>
+    <record id="group_contract_user" model="res.groups">
+        <field name="name">Usuario</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_dolan_contract"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Consulta contratos e índices.</field>
+    </record>
+    <record id="group_contract_manager" model="res.groups">
+        <field name="name">Responsable</field>
+        <field name="sequence">20</field>
+        <field name="privilege_id" ref="res_groups_privilege_dolan_contract"/>
+        <field name="implied_ids" eval="[(4, ref('group_contract_user'))]"/>
+        <field name="comment">Crea contratos, carga índices y aplica ajustes.</field>
+    </record>
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_contract_manager'))]"/>
+    </record>
+</odoo>

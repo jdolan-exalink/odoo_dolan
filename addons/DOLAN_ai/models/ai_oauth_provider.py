@@ -303,12 +303,13 @@ class DolanAiProvider(models.Model):
                 else:
                     ready = bool(rec.sudo().api_key)
                 rec.oauth_status = 'connected' if ready else 'disconnected'
-            elif rec.access_token:
+            # Los tokens son solo de administradores: el estado se calcula igual para todos.
+            elif rec.sudo().access_token:
                 if rec.token_expires_at and rec.token_expires_at <= now:
                     rec.oauth_status = 'expired'
                 else:
                     rec.oauth_status = 'connected'
-            elif rec.pkce_code_verifier:
+            elif rec.sudo().pkce_code_verifier:
                 rec.oauth_status = 'pending'
             else:
                 rec.oauth_status = 'disconnected'

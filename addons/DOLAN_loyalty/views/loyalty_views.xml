@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Saldo de puntos en la ficha del cliente -->
+    <record id="view_partner_form_dolan_loyalty" model="ir.ui.view">
+        <field name="name">res.partner.form.dolan.loyalty</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_dolan_loyalty_cards" type="object" class="oe_stat_button" icon="fa-star"
+                        invisible="not dolan_loyalty_points">
+                    <field name="dolan_loyalty_points" string="Puntos" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <!-- Asistente -->
+    <record id="view_dolan_loyalty_setup_form" model="ir.ui.view">
+        <field name="name">dolan.loyalty.setup.form</field>
+        <field name="model">dolan.loyalty.setup</field>
+        <field name="arch" type="xml">
+            <form string="Configurar fidelización">
+                <p class="text-muted">
+                    Arma un programa de puntos en pesos. Después se puede ajustar en el programa (productos que suman,
+                    premios en producto, comunicación por correo).
+                </p>
+                <group>
+                    <group string="Puntos">
+                        <field name="program_name"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="pesos_per_point"/>
+                        <field name="validity_days"/>
+                    </group>
+                    <group string="Canje">
+                        <field name="point_value"/>
+                        <field name="min_points"/>
+                        <field name="create_gift_card"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_create" type="object" string="Crear programa" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_loyalty_setup" model="ir.actions.act_window">
+        <field name="name">Configurar fidelización</field>
+        <field name="res_model">dolan.loyalty.setup</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Saldos por cliente -->
+    <record id="action_dolan_loyalty_cards" model="ir.actions.act_window">
+        <field name="name">Saldos de puntos</field>
+        <field name="res_model">loyalty.card</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('program_id.program_type', '=', 'loyalty')]</field>
+        <field name="context">{'create': False, 'program_type': 'loyalty'}</field>
+        <field name="help" type="html">
+            <p>Todavía ningún cliente sumó puntos. Los puntos se suman solos al vender a un cliente identificado.</p>
+        </field>
+    </record>
+
+    <!-- Movimientos de puntos -->
+    <record id="view_dolan_loyalty_history_list" model="ir.ui.view">
+        <field name="name">loyalty.history.list.dolan</field>
+        <field name="model">loyalty.history</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <list string="Movimientos de puntos" create="false" edit="false" delete="false">
+                <field name="points_changed_date"/>
+                <field name="card_id"/>
+                <field name="program_type" optional="hide"/>
+                <field name="description"/>
+                <field name="issued" sum="Total"/>
+                <field name="used" sum="Total"/>
+                <field name="expiration_date" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_loyalty_history_pivot" model="ir.ui.view">
+        <field name="name">loyalty.history.pivot.dolan</field>
+        <field name="model">loyalty.history</field>
+        <field name="arch" type="xml">
+            <pivot string="Movimientos de puntos">
+                <field name="points_changed_date" interval="month" type="row"/>
+                <field name="program_type" type="col"/>
+                <field name="issued" type="measure"/>
+                <field name="used" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_dolan_loyalty_history_graph" model="ir.ui.view">
+        <field name="name">loyalty.history.graph.dolan</field>
+        <field name="model">loyalty.history</field>
+        <field name="arch" type="xml">
+            <graph string="Movimientos de puntos" type="bar">
+                <field name="points_changed_date" interval="month"/>
+                <field name="issued" type="measure"/>
+                <field name="used" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_dolan_loyalty_history_search" model="ir.ui.view">
+        <field name="name">loyalty.history.search.dolan</field>
+        <field name="model">loyalty.history</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="card_id"/>
+                <filter name="issued_only" string="Emitidos" domain="[('issued', '>', 0)]"/>
+                <filter name="used_only" string="Canjeados" domain="[('used', '>', 0)]"/>
+                <filter name="expiring" string="Vencen este mes"
+                        domain="[('expiration_date', '&gt;=', context_today().strftime('%Y-%m-01')),
+                                 ('expiration_date', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                <filter name="date" string="Fecha" date="points_changed_date"/>
+                <group>
+                    <filter name="group_type" string="Tipo de programa" context="{'group_by': 'program_type'}"/>
+                    <filter name="group_month" string="Mes" context="{'group_by': 'points_changed_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_loyalty_history" model="ir.actions.act_window">
+        <field name="name">Movimientos de puntos</field>
+        <field name="res_model">loyalty.history</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="view_dolan_loyalty_history_search"/>
+        <field name="view_ids" eval="[Command.clear(),
+            Command.create({'view_mode': 'pivot', 'view_id': ref('view_dolan_loyalty_history_pivot')}),
+            Command.create({'view_mode': 'graph', 'view_id': ref('view_dolan_loyalty_history_graph')}),
+            Command.create({'view_mode': 'list', 'view_id': ref('view_dolan_loyalty_history_list')})]"/>
+    </record>
+
+    <!-- Menús -->
+    <menuitem id="menu_dolan_loyalty_root" name="Fidelización" sequence="46"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_loyalty.svg"/>
+    <menuitem id="menu_dolan_loyalty_programs" name="Programas" parent="menu_dolan_loyalty_root" sequence="10"
+              action="loyalty.loyalty_program_discount_loyalty_action"/>
+    <menuitem id="menu_dolan_loyalty_gift" name="Tarjetas de regalo y billetera" parent="menu_dolan_loyalty_root" sequence="20"
+              action="loyalty.loyalty_program_gift_ewallet_action"/>
+    <menuitem id="menu_dolan_loyalty_cards" name="Saldos de puntos" parent="menu_dolan_loyalty_root" sequence="30"
+              action="action_dolan_loyalty_cards"/>
+    <menuitem id="menu_dolan_loyalty_history" name="Movimientos" parent="menu_dolan_loyalty_root" sequence="40"
+              action="action_dolan_loyalty_history"/>
+    <menuitem id="menu_dolan_loyalty_setup" name="Configurar" parent="menu_dolan_loyalty_root" sequence="90"
+              action="action_dolan_loyalty_setup" groups="base.group_erp_manager"/>
+</odoo>

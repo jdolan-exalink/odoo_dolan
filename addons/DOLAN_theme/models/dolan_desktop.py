@@ -62,7 +62,47 @@ class DolanDesktopPreference(models.Model):
             Item = self.env['dolan.desktop.item']
             if not Folder.search_count([('user_id', '=', self.env.uid)]) and not Item.search_count([('user_id', '=', self.env.uid)]):
                 preference._seed_default_layout()
+                return preference
+        preference._place_new_personal_apps()
         return preference
+
+    def _place_new_personal_apps(self):
+        """Lleva a la carpeta Personal las apps de Personal que el usuario todavía no ubicó.
+
+        Pasa cuando se instala una app de RRHH (Turnos, Sueldos, ...) en un
+        escritorio ya armado: sin esto quedaba suelta entre las demás. Las apps
+        que el usuario ya ubicó, en cualquier lugar, no se tocan. Si no existe
+        la carpeta, se crea. Sube layout_version para que un guardado hecho con
+        el escritorio anterior no pise la nueva ubicación.
+        """
+        self.ensure_one()
+        roots = set(self.env['ir.ui.menu'].get_user_roots().ids)
+        if not roots:
+            return 0
+        resolve = self._dolan_root_resolver(roots)
+        menus = [menu for menu in map(resolve, PERSONAL_FOLDER_XMLIDS) if menu]
+        if not menus:
+            return 0
+        Folder = self.env['dolan.desktop.folder']
+        Item = self.env['dolan.desktop.item']
+        placed = set(Item.search([
+            ('user_id', '=', self.env.uid), ('menu_id', 'in', [menu.id for menu in menus]),
+        ]).mapped('menu_id').ids)
+        pending = [menu for menu in menus if menu.id not in placed]
+        if not pending:
+            return 0
+        folder = Folder.search([('user_id', '=', self.env.uid), ('name', '=', PERSONAL_FOLDER_NAME)], limit=1)
+        if not folder:
+            last = Folder.search([('user_id', '=', self.env.uid)], order='sequence desc', limit=1)
+            folder = Folder.create({'name': PERSONAL_FOLDER_NAME, 'sequence': (last.sequence or 1000) + 10})
+        last_item = Item.search([('user_id', '=', self.env.uid), ('folder_id', '=', folder.id)], order='sequence desc', limit=1)
+        sequence = last_item.sequence or 0
+        order = {menu.id: index for index, menu in enumerate(menus)}
+        for menu in sorted(pending, key=lambda record: order[record.id]):
+            sequence += 10
+            Item.create({'menu_id': menu.id, 'folder_id': folder.id, 'sequence': sequence})
+        self._write_desktop_internal({'layout_version': self.layout_version + 1})
+        return len(pending)
 
     def _seed_default_layout(self):
         self.ensure_one()

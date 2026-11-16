@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="DOLAN_owner_dashboard.Dashboard">
+        <div class="o_action o_dolan_owner_dashboard">
+            <div t-if="this.state.error" class="alert alert-warning m-3" role="alert">
+                No se pudo cargar el tablero. Es para administradores y responsables de contabilidad.
+            </div>
+            <t t-elif="this.state.data">
+                <t t-set="d" t-value="this.state.data"/>
+                <header class="o_dolan_owner_dashboard__header">
+                    <div>
+                        <h1>Tablero del dueño</h1>
+                        <span class="text-muted"><t t-esc="d.company"/> · <t t-esc="d.today"/></span>
+                    </div>
+                    <button class="btn btn-secondary" t-on-click="() => this.load()" t-att-disabled="this.state.loading">
+                        <i class="fa fa-refresh" aria-hidden="true"/> Actualizar
+                    </button>
+                </header>
+                <div class="o_dolan_owner_dashboard__grid">
+                    <section class="o_dolan_owner_card" t-on-click="() => this.open(d.cash.action)" role="button">
+                        <h2><i class="fa fa-money" aria-hidden="true"/> Caja y bancos</h2>
+                        <div class="o_dolan_owner_card__big" t-esc="d.cash.total_fmt"/>
+                        <ul class="o_dolan_owner_card__list">
+                            <li t-foreach="d.cash.rows" t-as="row" t-key="row_index">
+                                <span><t t-esc="row.name"/> <small class="text-muted" t-esc="row.kind"/></span>
+                                <span t-att-class="row.amount &lt; 0 ? 'text-danger' : ''" t-esc="row.amount_fmt"/>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="o_dolan_owner_card" t-on-click="() => this.open(d.receivable.action)" role="button">
+                        <h2><i class="fa fa-users" aria-hidden="true"/> Clientes: deuda vencida</h2>
+                        <div t-attf-class="o_dolan_owner_card__big {{ d.receivable.overdue &gt; 0 ? 'text-danger' : 'text-success' }}"
+                             t-esc="d.receivable.overdue_fmt"/>
+                        <p class="text-muted mb-2"><t t-esc="d.receivable.debtors"/> clientes con deuda vencida · total a cobrar <t t-esc="d.receivable.total_fmt"/></p>
+                        <ul class="o_dolan_owner_card__list">
+                            <li t-foreach="d.receivable.top" t-as="row" t-key="row_index">
+                                <span t-esc="row.name"/><span t-esc="row.amount_fmt"/>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="o_dolan_owner_card" t-on-click="() => this.open(d.sales.action)" role="button">
+                        <h2><i class="fa fa-line-chart" aria-hidden="true"/> Ventas del mes</h2>
+                        <div class="o_dolan_owner_card__big" t-esc="d.sales.revenue_fmt"/>
+                        <p t-if="d.sales.change_pct !== null" t-att-class="this.changeClass(d.sales.change_pct)">
+                            <t t-esc="d.sales.change_pct &gt;= 0 ? '+' : ''"/><t t-esc="d.sales.change_pct"/>% contra los mismos días del mes anterior
+                        </p>
+                        <p class="text-muted mb-1">Mes anterior completo: <t t-esc="d.sales.prev_revenue_fmt"/></p>
+                        <p t-if="d.sales.margin_fmt" class="mb-0">
+                            Margen: <strong t-esc="d.sales.margin_fmt"/>
+                            <t t-if="d.sales.margin_pct !== null"> (<t t-esc="d.sales.margin_pct"/>%)</t>
+                            <small t-if="d.sales.prev_margin_pct !== null" class="text-muted"> · mes anterior <t t-esc="d.sales.prev_margin_pct"/>%</small>
+                        </p>
+                        <p t-else="" class="text-muted small mb-0">Con Rentabilidad instalada se ve también el margen.</p>
+                    </section>
+
+                    <section class="o_dolan_owner_card" t-on-click="() => this.open(d.payable.action)" role="button">
+                        <h2><i class="fa fa-truck" aria-hidden="true"/> Proveedores</h2>
+                        <div class="o_dolan_owner_card__big" t-esc="d.payable.week_fmt"/>
+                        <p class="text-muted">vence en los próximos 7 días</p>
+                        <p t-if="d.payable.late &gt; 0" class="text-danger mb-0">Ya vencido: <t t-esc="d.payable.late_fmt"/></p>
+                    </section>
+
+                    <section class="o_dolan_owner_card o_dolan_owner_card--wide">
+                        <h2><i class="fa fa-bell" aria-hidden="true"/> Alertas</h2>
+                        <p t-if="!d.alerts.events.length and !d.alerts.problems.length" class="text-success mb-0">
+                            Sin alertas en los últimos 7 días.
+                        </p>
+                        <ul class="o_dolan_owner_card__list">
+                            <li t-foreach="d.alerts.events" t-as="event" t-key="event_index" t-on-click.stop="() => this.open(d.alerts.action)" role="button">
+                                <span><strong t-esc="event.name"/> <t t-esc="event.message"/></span>
+                                <small class="text-muted" t-esc="event.date"/>
+                            </li>
+                            <li t-foreach="d.alerts.problems" t-as="problem" t-key="'p' + problem_index" t-on-click.stop="() => this.open(d.alerts.diagnostics_action)" role="button">
+                                <span><i t-attf-class="fa {{ problem.state === 'error' ? 'fa-times-circle text-danger' : 'fa-exclamation-triangle text-warning' }}" aria-hidden="true"/>
+                                    <strong t-esc="problem.name"/> <t t-esc="problem.message"/></span>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

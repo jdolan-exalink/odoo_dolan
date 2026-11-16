@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_picking_wave_form" model="ir.ui.view">
+        <field name="name">dolan.picking.wave.form</field>
+        <field name="model">dolan.picking.wave</field>
+        <field name="arch" type="xml">
+            <form string="Oleada de preparación">
+                <header>
+                    <button name="action_add_ready" type="object" string="Agregar entregas listas" invisible="state != 'draft'"/>
+                    <button name="action_start" type="object" string="Empezar a preparar" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_pick_all" type="object" string="Todo juntado" invisible="state != 'in_progress'"/>
+                    <button name="action_done" type="object" string="Terminar" class="btn-primary" invisible="state != 'in_progress'"/>
+                    <button name="action_cancel" type="object" string="Cancelar" invisible="state in ('done', 'cancel')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="picking_count"/>
+                            <field name="missing_count" invisible="state != 'in_progress'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="A juntar" name="lines" invisible="state == 'draft'">
+                            <group invisible="state != 'in_progress'">
+                                <field name="scan_code" placeholder="Leé el código de barras del producto" default_focus="1"/>
+                                <field name="last_scan" readonly="1"/>
+                            </group>
+                            <field name="line_ids" readonly="state != 'in_progress'">
+                                <list editable="bottom" create="false" delete="false" decoration-warning="qty_picked &lt; qty_to_pick" decoration-success="qty_picked &gt;= qty_to_pick">
+                                    <field name="product_id"/>
+                                    <field name="location_hint"/>
+                                    <field name="qty_to_pick"/>
+                                    <field name="qty_picked"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Entregas" name="pickings">
+                            <field name="picking_ids" readonly="state != 'draft'">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="scheduled_date"/>
+                                    <field name="origin"/>
+                                    <field name="dolan_prepared"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_picking_wave_list" model="ir.ui.view">
+        <field name="name">dolan.picking.wave.list</field>
+        <field name="model">dolan.picking.wave</field>
+        <field name="arch" type="xml">
+            <list string="Oleadas">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="picking_count"/>
+                <field name="state" widget="badge" decoration-info="state == 'in_progress'" decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_picking_wave" model="ir.actions.act_window">
+        <field name="name">Preparación de pedidos</field>
+        <field name="res_model">dolan.picking.wave</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Creá una oleada de preparación</p>
+            <p>Junta las entregas listas, suma lo que hay que buscar por producto y marca como preparadas las completas.</p>
+        </field>
+    </record>
+
+    <record id="view_picking_form_dolan_logistics" model="ir.ui.view">
+        <field name="name">stock.picking.form.dolan.logistics</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="dolan_prepared" invisible="picking_type_code != 'outgoing'"/>
+                <field name="dolan_wave_id" invisible="not dolan_wave_id"/>
+            </field>
+        </field>
+    </record>
+
+    <menuitem id="menu_dolan_picking_wave_root" name="Preparación de pedidos" sequence="51"
+              groups="stock.group_stock_user" action="action_dolan_picking_wave"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_picking.svg"/>
+</odoo>

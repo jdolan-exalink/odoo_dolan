@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_cash_forecast_user,Previsiones: facturación,dolan.cash.forecast,account.group_account_invoice,r,"[('company_id', 'in', company_ids)]"
+access_dolan_cash_forecast_manager,Previsiones: contador,dolan.cash.forecast,account.group_account_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_cash_flow_report_manager,Flujo de caja: contador,dolan.cash.flow.report,account.group_account_manager,crud,
+access_dolan_cash_flow_line_manager,Flujo de caja (líneas): contador,dolan.cash.flow.line,account.group_account_manager,crud,

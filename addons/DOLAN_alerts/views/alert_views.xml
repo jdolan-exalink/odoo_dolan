@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_alert_rule_list" model="ir.ui.view">
+        <field name="name">dolan.alert.rule.list</field>
+        <field name="model">dolan.alert.rule</field>
+        <field name="arch" type="xml">
+            <list string="Alertas">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="alert_type"/>
+                <field name="threshold"/>
+                <field name="user_ids" widget="many2many_avatar_user"/>
+                <field name="last_value"/>
+                <field name="last_triggered"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_alert_rule_form" model="ir.ui.view">
+        <field name="name">dolan.alert.rule.form</field>
+        <field name="model">dolan.alert.rule</field>
+        <field name="arch" type="xml">
+            <form string="Alerta">
+                <header>
+                    <button name="action_check_now" type="object" string="Revisar ahora" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" placeholder="Ej.: Deuda vencida alta"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="alert_type"/>
+                            <field name="threshold" invisible="alert_type in ('negative_cash', 'cash_difference')"/>
+                            <field name="available" invisible="1"/>
+                            <div class="text-warning" colspan="2" invisible="available">Esta condición necesita otro módulo DOLAN instalado.</div>
+                        </group>
+                        <group>
+                            <field name="user_ids" widget="many2many_tags_avatar"/>
+                            <field name="send_email"/>
+                            <field name="cooldown_hours"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="last_value"/>
+                        <field name="last_triggered"/>
+                    </group>
+                    <field name="event_ids" readonly="1">
+                        <list>
+                            <field name="create_date" string="Fecha"/>
+                            <field name="value"/>
+                            <field name="threshold"/>
+                            <field name="message"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_alert_rule" model="ir.actions.act_window">
+        <field name="name">Alertas</field>
+        <field name="res_model">dolan.alert.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Creá tu primera alerta</p>
+            <p>Por ejemplo: avisame si la deuda vencida supera un monto, o si la caja proyectada queda en negativo.</p>
+        </field>
+    </record>
+
+    <record id="view_dolan_alert_event_list" model="ir.ui.view">
+        <field name="name">dolan.alert.event.list</field>
+        <field name="model">dolan.alert.event</field>
+        <field name="arch" type="xml">
+            <list string="Avisos" create="false" edit="false">
+                <field name="create_date" string="Fecha"/>
+                <field name="rule_id"/>
+                <field name="alert_type"/>
+                <field name="value"/>
+                <field name="threshold"/>
+                <field name="message"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_alert_event" model="ir.actions.act_window">
+        <field name="name">Historial de avisos</field>
+        <field name="res_model">dolan.alert.event</field>
+        <field name="view_mode">list,pivot</field>
+    </record>
+
+    <menuitem id="menu_dolan_alerts_root" name="Alertas" sequence="96"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_alerts.svg"/>
+    <menuitem id="menu_dolan_alerts_rules" name="Alertas" parent="menu_dolan_alerts_root" action="action_dolan_alert_rule" sequence="10"/>
+    <menuitem id="menu_dolan_alerts_events" name="Historial de avisos" parent="menu_dolan_alerts_root" action="action_dolan_alert_event" sequence="20"/>
+</odoo>

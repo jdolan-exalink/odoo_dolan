@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_service_order_form" model="ir.ui.view">
+        <field name="name">dolan.service.order.form</field>
+        <field name="model">dolan.service.order</field>
+        <field name="arch" type="xml">
+            <form string="Orden de servicio">
+                <header>
+                    <button name="action_schedule" type="object" string="Programar" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_start" type="object" string="Empezar" class="btn-primary" invisible="state not in ('draft', 'scheduled')"/>
+                    <button name="action_done" type="object" string="Terminar" class="btn-primary" invisible="state not in ('scheduled', 'in_progress')"/>
+                    <button name="action_create_invoice" type="object" string="Crear factura" class="btn-primary" invisible="state != 'done'"
+                            groups="DOLAN_field_service.group_field_service_manager"/>
+                    <button name="action_cancel" type="object" string="Cancelar" invisible="state in ('invoiced', 'cancelled')"/>
+                    <button name="action_reset_draft" type="object" string="Volver a borrador" invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,scheduled,in_progress,done,invoiced"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="invoice_id" invisible="not invoice_id" widget="many2one_button"/>
+                    </div>
+                    <div class="oe_title">
+                        <field name="name" readonly="1" class="text-muted" invisible="name == '/'"/>
+                        <h1><field name="partner_id" placeholder="Cliente"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="address_id"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group>
+                            <field name="scheduled_date"/>
+                            <field name="scheduled_duration" widget="float_time"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Pedido" name="request">
+                            <field name="description" placeholder="Qué pidió el cliente"/>
+                        </page>
+                        <page string="Trabajo" name="work">
+                            <field name="work_done" placeholder="Qué se hizo"/>
+                            <field name="time_ids">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                    <field name="description"/>
+                                    <field name="hours" widget="float_time" sum="Total"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Materiales" name="materials">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="quantity"/>
+                                    <field name="price_unit"/>
+                                    <field name="subtotal" sum="Total"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Conformidad" name="signature">
+                            <group>
+                                <field name="require_signature"/>
+                                <field name="signed_by"/>
+                                <field name="signature" widget="signature"/>
+                                <field name="signed_on"/>
+                            </group>
+                        </page>
+                        <page string="Importes" name="amounts" groups="DOLAN_field_service.group_field_service_manager">
+                            <group>
+                                <group>
+                                    <field name="labor_product_id"/>
+                                    <field name="labor_price"/>
+                                    <field name="hours_total" widget="float_time"/>
+                                </group>
+                                <group>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="amount_materials"/>
+                                    <field name="amount_labor"/>
+                                    <field name="amount_total" class="fw-bold"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_service_order_list" model="ir.ui.view">
+        <field name="name">dolan.service.order.list</field>
+        <field name="model">dolan.service.order</field>
+        <field name="arch" type="xml">
+            <list string="Órdenes de servicio" decoration-muted="state == 'cancelled'" decoration-success="state == 'invoiced'">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="scheduled_date"/>
+                <field name="hours_total" widget="float_time" optional="show"/>
+                <field name="amount_total" optional="show" groups="DOLAN_field_service.group_field_service_manager"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-info="state in ('scheduled', 'in_progress')" decoration-success="state in ('done', 'invoiced')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_service_order_kanban" model="ir.ui.view">
+        <field name="name">dolan.service.order.kanban</field>
+        <field name="model">dolan.service.order</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" quick_create="false">
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="text-muted small"/>
+                        <field name="partner_id" class="fw-bold"/>
+                        <field name="address_id" class="small"/>
+                        <footer>
+                            <field name="scheduled_date" class="small"/>
+                            <field name="user_id" widget="many2one_avatar_user" class="ms-auto"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_dolan_service_order_calendar" model="ir.ui.view">
+        <field name="name">dolan.service.order.calendar</field>
+        <field name="model">dolan.service.order</field>
+        <field name="arch" type="xml">
+            <calendar string="Agenda de técnicos" date_start="scheduled_date" date_stop="scheduled_end" color="user_id" mode="week">
+                <field name="partner_id"/>
+                <field name="user_id" filters="1"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_dolan_service_order_search" model="ir.ui.view">
+        <field name="name">dolan.service.order.search</field>
+        <field name="model">dolan.service.order</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <filter name="mine" string="Mis órdenes" domain="[('user_id', '=', uid)]"/>
+                <filter name="pending" string="Pendientes" domain="[('state', 'in', ('draft', 'scheduled', 'in_progress'))]"/>
+                <filter name="to_invoice" string="Para facturar" domain="[('state', '=', 'done')]"/>
+                <group>
+                    <filter name="group_user" string="Técnico" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_service_order" model="ir.actions.act_window">
+        <field name="name">Órdenes de servicio</field>
+        <field name="res_model">dolan.service.order</field>
+        <field name="view_mode">kanban,list,calendar,form</field>
+        <field name="search_view_id" ref="view_dolan_service_order_search"/>
+        <field name="context">{'search_default_pending': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay órdenes de servicio</p>
+            <p>Cargá el pedido del cliente, asignale un técnico y una fecha.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_dolan_field_service_root" name="Órdenes de servicio" sequence="62"
+              groups="group_field_service_technician"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_service_orders.svg"/>
+    <menuitem id="menu_dolan_field_service_orders" name="Órdenes" parent="menu_dolan_field_service_root"
+              action="action_dolan_service_order" sequence="10"/>
+</odoo>

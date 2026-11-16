@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_app_catalog_entry_admin,dolan.app.catalog.entry admin,dolan.app.catalog.entry,base.group_system,ru,
+access_dolan_app_catalog_folder_admin,dolan.app.catalog.folder admin,dolan.app.catalog.folder,base.group_system,ru,
+access_dolan_app_catalog_settings_admin,dolan.app.catalog.settings admin,dolan.app.catalog.settings,base.group_system,crud,

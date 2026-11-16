@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_dolan_picking_wave" model="ir.sequence">
+            <field name="name">Oleadas de preparación</field>
+            <field name="code">dolan.picking.wave</field>
+            <field name="prefix">PREP-%(year)s-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_dolan_delivery_route" model="ir.sequence">
+            <field name="name">Hojas de ruta</field>
+            <field name="code">dolan.delivery.route</field>
+            <field name="prefix">RUTA-%(year)s-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="reject_absent" model="dolan.delivery.reject.reason"><field name="name">Cliente ausente</field></record>
+        <record id="reject_refused" model="dolan.delivery.reject.reason"><field name="name">El cliente no aceptó la mercadería</field></record>
+        <record id="reject_damaged" model="dolan.delivery.reject.reason"><field name="name">Mercadería dañada</field></record>
+        <record id="reject_address" model="dolan.delivery.reject.reason"><field name="name">Dirección incorrecta</field></record>
+        <record id="reject_payment" model="dolan.delivery.reject.reason"><field name="name">No pudo pagar</field></record>
+    </data>
+</odoo>

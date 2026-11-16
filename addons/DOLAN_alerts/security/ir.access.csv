@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_alert_rule_user,Alertas: usuario,dolan.alert.rule,base.group_user,r,"[('company_id', 'in', company_ids)]"
+access_dolan_alert_rule_manager,Alertas: contador,dolan.alert.rule,account.group_account_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_alert_event_user,Avisos: usuario,dolan.alert.event,base.group_user,r,"[('company_id', 'in', company_ids), ('rule_id.user_ids', 'in', user.id)]"
+access_dolan_alert_event_manager,Avisos: contador,dolan.alert.event,account.group_account_manager,r,"[('company_id', 'in', company_ids)]"

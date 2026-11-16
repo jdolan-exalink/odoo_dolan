@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_budget_form" model="ir.ui.view">
+        <field name="name">dolan.budget.form</field>
+        <field name="model">dolan.budget</field>
+        <field name="arch" type="xml">
+            <form string="Presupuesto">
+                <header>
+                    <button name="action_open_fill" type="object" string="Carga rápida" invisible="state != 'draft'"/>
+                    <button name="action_confirm" type="object" string="Aprobar" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_close" type="object" string="Cerrar" invisible="state != 'confirmed'"/>
+                    <button name="action_draft" type="object" string="Volver a borrador" invisible="state != 'confirmed'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_analysis" type="object" class="oe_stat_button" icon="fa-bar-chart" string="Contra real"/>
+                    </div>
+                    <div class="oe_title"><h1><field name="name" placeholder="Ej.: Presupuesto 2027"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="planned_total"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="line_ids" readonly="state == 'closed'">
+                        <list editable="bottom">
+                            <field name="account_id"/>
+                            <field name="month"/>
+                            <field name="amount" sum="Total"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_budget_list" model="ir.ui.view">
+        <field name="name">dolan.budget.list</field>
+        <field name="model">dolan.budget</field>
+        <field name="arch" type="xml">
+            <list string="Presupuestos">
+                <field name="name"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="planned_total"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" widget="badge" decoration-success="state == 'confirmed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_budget" model="ir.actions.act_window">
+        <field name="name">Presupuestos</field>
+        <field name="res_model">dolan.budget</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_dolan_budget_fill_form" model="ir.ui.view">
+        <field name="name">dolan.budget.fill.form</field>
+        <field name="model">dolan.budget.fill</field>
+        <field name="arch" type="xml">
+            <form string="Carga rápida">
+                <group>
+                    <field name="method" widget="radio"/>
+                    <field name="account_ids" widget="many2many_tags"/>
+                    <field name="annual_amount" invisible="method != 'even'"/>
+                    <field name="adjustment_pct" invisible="method != 'last_year'"/>
+                    <field name="currency_id" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_fill" type="object" string="Cargar" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_budget_analysis_list" model="ir.ui.view">
+        <field name="name">dolan.budget.analysis.list</field>
+        <field name="model">dolan.budget.analysis</field>
+        <field name="arch" type="xml">
+            <list string="Presupuesto contra real" create="false" edit="false" delete="false">
+                <field name="month"/>
+                <field name="account_id"/>
+                <field name="planned" sum="Total"/>
+                <field name="actual" sum="Total"/>
+                <field name="variance" sum="Total"/>
+                <field name="execution_pct"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_budget_analysis_pivot" model="ir.ui.view">
+        <field name="name">dolan.budget.analysis.pivot</field>
+        <field name="model">dolan.budget.analysis</field>
+        <field name="arch" type="xml">
+            <pivot string="Presupuesto contra real">
+                <field name="account_id" type="row"/>
+                <field name="month" interval="month" type="col"/>
+                <field name="planned" type="measure"/>
+                <field name="actual" type="measure"/>
+                <field name="variance" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_dolan_budget_analysis_graph" model="ir.ui.view">
+        <field name="name">dolan.budget.analysis.graph</field>
+        <field name="model">dolan.budget.analysis</field>
+        <field name="arch" type="xml">
+            <graph string="Presupuesto contra real" type="bar">
+                <field name="month" interval="month"/>
+                <field name="planned" type="measure"/>
+                <field name="actual" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_dolan_budget_analysis_search" model="ir.ui.view">
+        <field name="name">dolan.budget.analysis.search</field>
+        <field name="model">dolan.budget.analysis</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="budget_id"/>
+                <field name="account_id"/>
+                <filter name="over" string="Desvío positivo" domain="[('variance', '&gt;', 0)]"/>
+                <filter name="under" string="Desvío negativo" domain="[('variance', '&lt;', 0)]"/>
+                <group>
+                    <filter name="group_budget" string="Presupuesto" context="{'group_by': 'budget_id'}"/>
+                    <filter name="group_account" string="Cuenta" context="{'group_by': 'account_id'}"/>
+                    <filter name="group_type" string="Tipo de cuenta" context="{'group_by': 'account_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_budget_analysis" model="ir.actions.act_window">
+        <field name="name">Presupuesto contra real</field>
+        <field name="res_model">dolan.budget.analysis</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="view_dolan_budget_analysis_search"/>
+    </record>
+
+    <menuitem id="menu_dolan_budget_root" name="Presupuesto financiero" sequence="97"
+              groups="account.group_account_manager"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_budget.svg"/>
+    <menuitem id="menu_dolan_budget_budgets" name="Presupuestos" parent="menu_dolan_budget_root" action="action_dolan_budget" sequence="10"/>
+    <menuitem id="menu_dolan_budget_analysis" name="Contra real" parent="menu_dolan_budget_root" action="action_dolan_budget_analysis" sequence="20"/>
+</odoo>

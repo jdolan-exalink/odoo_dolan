@@ -1,0 +1,79 @@
+// Colores del theme DOLAN (claro y oscuro) con valores de respaldo.
+.o_dolan_owner_dashboard {
+    overflow: auto;
+    padding: 16px;
+    background: var(--dolan-color-canvas, #f7f8fc);
+    color: var(--dolan-color-text, #172033);
+
+    .text-muted {
+        color: var(--dolan-color-text-muted, #667085) !important;
+    }
+
+    .o_dolan_owner_dashboard__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+
+        h1 {
+            margin: 0;
+            font-size: var(--dolan-font-size-xl, 1.5rem);
+            color: inherit;
+        }
+    }
+
+    .o_dolan_owner_dashboard__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+    }
+
+    .o_dolan_owner_card {
+        background: var(--dolan-color-surface, #fff);
+        color: var(--dolan-color-text, #172033);
+        border: var(--dolan-border-width, 1px) solid var(--dolan-color-border, #e4e7ef);
+        border-radius: var(--dolan-radius-lg, 12px);
+        padding: 16px;
+        cursor: pointer;
+        transition: box-shadow 0.15s ease;
+
+        &:hover {
+            box-shadow: var(--dolan-shadow-sm, 0 4px 16px rgba(0, 0, 0, 0.08));
+        }
+
+        h2 {
+            font-size: var(--dolan-font-size-md, 1rem);
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dolan-color-text-muted, #667085);
+        }
+    }
+
+    .o_dolan_owner_card--wide {
+        grid-column: 1 / -1;
+        cursor: default;
+    }
+
+    .o_dolan_owner_card__big {
+        font-size: 1.9rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 6px;
+        word-break: break-word;
+    }
+
+    .o_dolan_owner_card__list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 4px 0;
+            border-top: 1px solid var(--dolan-color-border, #e4e7ef);
+        }
+    }
+}

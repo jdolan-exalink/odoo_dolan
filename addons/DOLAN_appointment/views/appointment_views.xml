@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_appointment_form" model="ir.ui.view">
+        <field name="name">dolan.appointment.form</field>
+        <field name="model">dolan.appointment</field>
+        <field name="arch" type="xml">
+            <form string="Turno">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirmar" class="btn-primary" invisible="state != 'booked'"/>
+                    <button name="action_done" type="object" string="Atendido" invisible="state not in ('booked', 'confirmed')"/>
+                    <button name="action_no_show" type="object" string="No vino" invisible="state not in ('booked', 'confirmed')"/>
+                    <button name="action_cancel" type="object" string="Cancelar" invisible="state in ('done', 'cancelled')"/>
+                    <button name="action_reset" type="object" string="Volver a reservar" invisible="state not in ('cancelled', 'no_show')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="booked,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <field name="name" readonly="1" class="text-muted" invisible="name == '/'"/>
+                        <h1><field name="partner_id" placeholder="Cliente"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="type_id"/>
+                            <field name="resource_id"/>
+                            <field name="partner_phone" widget="phone"/>
+                        </group>
+                        <group>
+                            <field name="start"/>
+                            <field name="stop"/>
+                            <field name="reminder_sent"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <field name="notes" placeholder="Notas internas del turno"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_appointment_list" model="ir.ui.view">
+        <field name="name">dolan.appointment.list</field>
+        <field name="model">dolan.appointment</field>
+        <field name="arch" type="xml">
+            <list string="Turnos" decoration-muted="state in ('cancelled', 'no_show')" decoration-success="state == 'done'">
+                <field name="start"/>
+                <field name="name" optional="hide"/>
+                <field name="partner_id"/>
+                <field name="type_id"/>
+                <field name="resource_id"/>
+                <field name="state" widget="badge" decoration-info="state == 'booked'" decoration-success="state in ('confirmed', 'done')" decoration-danger="state == 'no_show'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_appointment_calendar" model="ir.ui.view">
+        <field name="name">dolan.appointment.calendar</field>
+        <field name="model">dolan.appointment</field>
+        <field name="arch" type="xml">
+            <calendar string="Agenda" date_start="start" date_stop="stop" color="resource_id" mode="week" quick_create="0" event_open_popup="1">
+                <field name="partner_id"/>
+                <field name="type_id"/>
+                <field name="resource_id" filters="1"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_dolan_appointment_search" model="ir.ui.view">
+        <field name="name">dolan.appointment.search</field>
+        <field name="model">dolan.appointment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="resource_id"/>
+                <field name="type_id"/>
+                <filter name="mine" string="Mis turnos" domain="[('user_id', '=', uid)]"/>
+                <filter name="active_states" string="Vigentes" domain="[('state', 'in', ('booked', 'confirmed'))]"/>
+                <filter name="no_show" string="Ausentes" domain="[('state', '=', 'no_show')]"/>
+                <filter name="today" string="Hoy" domain="[('start', '&gt;=', 'today'), ('start', '&lt;', 'today +1d')]"/>
+                <group>
+                    <filter name="group_resource" string="Profesional" context="{'group_by': 'resource_id'}"/>
+                    <filter name="group_type" string="Servicio" context="{'group_by': 'type_id'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_appointment" model="ir.actions.act_window">
+        <field name="name">Agenda</field>
+        <field name="res_model">dolan.appointment</field>
+        <field name="view_mode">calendar,list,form,pivot</field>
+        <field name="search_view_id" ref="view_dolan_appointment_search"/>
+        <field name="context">{'search_default_active_states': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay turnos</p>
+            <p>Primero cargá los servicios y los profesionales con su horario de atención.</p>
+        </field>
+    </record>
+
+    <record id="view_dolan_appointment_type_form" model="ir.ui.view">
+        <field name="name">dolan.appointment.type.form</field>
+        <field name="model">dolan.appointment.type</field>
+        <field name="arch" type="xml">
+            <form string="Servicio">
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" placeholder="Ej.: Consulta, Corte, Service"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="duration" widget="float_time"/>
+                            <field name="slot_step" widget="float_time"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Recordatorio">
+                            <field name="reminder_hours"/>
+                            <field name="reminder_email"/>
+                            <field name="reminder_whatsapp"/>
+                        </group>
+                    </group>
+                    <field name="resource_ids" widget="many2many_tags"/>
+                    <field name="description" placeholder="Indicaciones para el cliente (ayuno, documentación, etc.)"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_appointment_type_list" model="ir.ui.view">
+        <field name="name">dolan.appointment.type.list</field>
+        <field name="model">dolan.appointment.type</field>
+        <field name="arch" type="xml">
+            <list string="Servicios">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="duration" widget="float_time"/>
+                <field name="resource_ids" widget="many2many_tags"/>
+                <field name="reminder_hours"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_appointment_type" model="ir.actions.act_window">
+        <field name="name">Servicios</field>
+        <field name="res_model">dolan.appointment.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_dolan_appointment_resource_list" model="ir.ui.view">
+        <field name="name">dolan.appointment.resource.list</field>
+        <field name="model">dolan.appointment.resource</field>
+        <field name="arch" type="xml">
+            <list string="Profesionales y recursos" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="kind"/>
+                <field name="user_id"/>
+                <field name="resource_calendar_id"/>
+                <field name="tz"/>
+                <field name="type_ids" widget="many2many_tags"/>
+                <field name="color" widget="color_picker"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_appointment_resource" model="ir.actions.act_window">
+        <field name="name">Profesionales y recursos</field>
+        <field name="res_model">dolan.appointment.resource</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_dolan_appointment_root" name="Agenda de turnos" sequence="61"
+              groups="group_appointment_user"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_appointments.svg"/>
+    <menuitem id="menu_dolan_appointment_agenda" name="Agenda" parent="menu_dolan_appointment_root"
+              action="action_dolan_appointment" sequence="10"/>
+    <menuitem id="menu_dolan_appointment_config" name="Configuración" parent="menu_dolan_appointment_root"
+              sequence="90" groups="group_appointment_manager"/>
+    <menuitem id="menu_dolan_appointment_types" name="Servicios" parent="menu_dolan_appointment_config"
+              action="action_dolan_appointment_type" sequence="10"/>
+    <menuitem id="menu_dolan_appointment_resources" name="Profesionales y recursos" parent="menu_dolan_appointment_config"
+              action="action_dolan_appointment_resource" sequence="20"/>
+</odoo>

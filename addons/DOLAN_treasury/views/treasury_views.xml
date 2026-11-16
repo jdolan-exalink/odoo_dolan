@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Cajas -->
+    <record id="view_dolan_cash_box_kanban" model="ir.ui.view">
+        <field name="name">dolan.cash.box.kanban</field>
+        <field name="model">dolan.cash.box</field>
+        <field name="arch" type="xml">
+            <kanban create="true">
+                <field name="current_session_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <field name="kind" class="text-muted small"/>
+                        </div>
+                        <div class="mt-2">Saldo contable: <field name="ledger_balance" widget="monetary"/></div>
+                        <field name="currency_id" invisible="1"/>
+                        <footer>
+                            <button name="action_open_session" type="object" class="btn btn-primary btn-sm" invisible="current_session_id">Abrir turno</button>
+                            <field name="current_session_id" invisible="not current_session_id" widget="many2one_button"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_dolan_cash_box_form" model="ir.ui.view">
+        <field name="name">dolan.cash.box.form</field>
+        <field name="model">dolan.cash.box</field>
+        <field name="arch" type="xml">
+            <form string="Caja">
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" placeholder="Ej.: Caja central, Caja sucursal Centro"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="kind"/>
+                            <field name="journal_id"/>
+                            <field name="account_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="fixed_fund"/>
+                            <field name="tolerance"/>
+                            <field name="difference_loss_account_id"/>
+                            <field name="difference_gain_account_id"/>
+                            <field name="ledger_balance"/>
+                        </group>
+                    </group>
+                    <field name="user_ids" widget="many2many_tags_avatar" placeholder="Cajeros habilitados"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_cash_box" model="ir.actions.act_window">
+        <field name="name">Cajas</field>
+        <field name="res_model">dolan.cash.box</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Creá tu primera caja</p>
+            <p>Cada caja usa un diario de efectivo; la caja física se controla contra su cuenta contable.</p>
+        </field>
+    </record>
+
+    <!-- Turnos -->
+    <record id="view_dolan_cash_session_form" model="ir.ui.view">
+        <field name="name">dolan.cash.session.form</field>
+        <field name="model">dolan.cash.session</field>
+        <field name="arch" type="xml">
+            <form string="Turno de caja">
+                <header>
+                    <button name="action_load_denominations" type="object" string="Cargar billetes y monedas" invisible="state != 'open'"/>
+                    <button name="action_close" type="object" string="Cerrar turno" class="btn-primary" invisible="state != 'open'"
+                            confirm="Se compara lo contado con el saldo contable de la caja. ¿Cerrar el turno?"/>
+                    <button name="action_approve" type="object" string="Aprobar diferencia" class="btn-primary" invisible="state != 'to_approve'"
+                            groups="DOLAN_treasury.group_treasury_manager"/>
+                    <button name="action_reopen" type="object" string="Devolver para recontar" invisible="state != 'to_approve'"
+                            groups="DOLAN_treasury.group_treasury_manager"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="box_id" readonly="id"/>
+                            <field name="user_id" readonly="id"/>
+                            <field name="opened_at"/>
+                            <field name="closed_at"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="opening_counted" readonly="id"/>
+                            <field name="opening_expected"/>
+                            <field name="opening_difference" invisible="not opening_difference"/>
+                            <field name="total_in"/>
+                            <field name="total_out"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Movimientos" name="moves">
+                            <field name="move_ids" readonly="state != 'open'" context="{'default_session_id': id}">
+                                <list editable="bottom" decoration-muted="state == 'draft'">
+                                    <field name="date"/>
+                                    <field name="kind"/>
+                                    <field name="reason_id" invisible="kind == 'transfer'" required="kind != 'transfer'"/>
+                                    <field name="target_box_id" invisible="kind != 'transfer'" required="kind == 'transfer'"/>
+                                    <field name="description"/>
+                                    <field name="amount"/>
+                                    <field name="state" widget="badge"/>
+                                    <button name="action_post" type="object" string="Asentar" invisible="state != 'draft'"/>
+                                    <field name="box_id" column_invisible="1"/>
+                                    <field name="company_id" column_invisible="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Arqueo" name="count">
+                            <field name="count_ids" readonly="state != 'open'">
+                                <list editable="bottom">
+                                    <field name="denomination_id"/>
+                                    <field name="quantity"/>
+                                    <field name="subtotal" sum="Total"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                            <group>
+                                <group>
+                                    <field name="counted"/>
+                                    <field name="expected" invisible="state == 'open'"/>
+                                    <field name="difference" invisible="state == 'open'"
+                                           decoration-danger="difference &lt; 0" decoration-success="difference &gt; 0"/>
+                                </group>
+                                <group>
+                                    <field name="difference_note" invisible="state == 'open'" required="state == 'to_approve'"/>
+                                    <field name="approved_by" invisible="not approved_by"/>
+                                    <field name="difference_move_id" invisible="not difference_move_id"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_cash_session_list" model="ir.ui.view">
+        <field name="name">dolan.cash.session.list</field>
+        <field name="model">dolan.cash.session</field>
+        <field name="arch" type="xml">
+            <list string="Turnos de caja" decoration-warning="state == 'to_approve'" decoration-info="state == 'open'">
+                <field name="name"/>
+                <field name="box_id"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="opened_at"/>
+                <field name="closed_at" optional="show"/>
+                <field name="counted" sum="Total"/>
+                <field name="expected" sum="Total" optional="show"/>
+                <field name="difference" sum="Total" decoration-danger="difference &lt; 0"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-warning="state == 'to_approve'" decoration-info="state == 'open'" decoration-success="state == 'closed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_cash_session_search" model="ir.ui.view">
+        <field name="name">dolan.cash.session.search</field>
+        <field name="model">dolan.cash.session</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="box_id"/>
+                <field name="user_id"/>
+                <filter name="mine" string="Mis turnos" domain="[('user_id', '=', uid)]"/>
+                <filter name="open" string="Abiertos" domain="[('state', '=', 'open')]"/>
+                <filter name="to_approve" string="Diferencias a aprobar" domain="[('state', '=', 'to_approve')]"/>
+                <filter name="with_difference" string="Con diferencia" domain="[('difference', '!=', 0)]"/>
+                <group>
+                    <filter name="group_box" string="Caja" context="{'group_by': 'box_id'}"/>
+                    <filter name="group_user" string="Cajero" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_day" string="Día" context="{'group_by': 'opened_at:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_cash_session" model="ir.actions.act_window">
+        <field name="name">Turnos de caja</field>
+        <field name="res_model">dolan.cash.session</field>
+        <field name="view_mode">list,form,pivot</field>
+        <field name="search_view_id" ref="view_dolan_cash_session_search"/>
+    </record>
+
+    <record id="action_dolan_cash_session_to_approve" model="ir.actions.act_window">
+        <field name="name">Diferencias a aprobar</field>
+        <field name="res_model">dolan.cash.session</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'to_approve')]</field>
+    </record>
+
+    <!-- Movimientos -->
+    <record id="view_dolan_cash_move_list" model="ir.ui.view">
+        <field name="name">dolan.cash.move.list</field>
+        <field name="model">dolan.cash.move</field>
+        <field name="arch" type="xml">
+            <list string="Movimientos de caja" create="false">
+                <field name="date"/>
+                <field name="box_id"/>
+                <field name="session_id"/>
+                <field name="kind"/>
+                <field name="reason_id"/>
+                <field name="target_box_id" optional="show"/>
+                <field name="description" optional="show"/>
+                <field name="amount" sum="Total"/>
+                <field name="user_id" optional="show"/>
+                <field name="account_move_id" optional="hide"/>
+                <field name="state" widget="badge"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_cash_move_pivot" model="ir.ui.view">
+        <field name="name">dolan.cash.move.pivot</field>
+        <field name="model">dolan.cash.move</field>
+        <field name="arch" type="xml">
+            <pivot string="Movimientos por caja y motivo">
+                <field name="box_id" type="row"/>
+                <field name="reason_id" type="row"/>
+                <field name="kind" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_dolan_cash_move" model="ir.actions.act_window">
+        <field name="name">Movimientos de caja</field>
+        <field name="res_model">dolan.cash.move</field>
+        <field name="view_mode">list,pivot</field>
+    </record>
+
+    <!-- Configuración -->
+    <record id="view_dolan_cash_reason_list" model="ir.ui.view">
+        <field name="name">dolan.cash.reason.list</field>
+        <field name="model">dolan.cash.reason</field>
+        <field name="arch" type="xml">
+            <list string="Motivos" editable="bottom">
+                <field name="name"/>
+                <field name="move_type"/>
+                <field name="account_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_cash_reason" model="ir.actions.act_window">
+        <field name="name">Motivos de ingreso y retiro</field>
+        <field name="res_model">dolan.cash.reason</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p>Cargá los motivos (aporte, retiro de socio, pago a proveedor en efectivo, gastos varios) con su cuenta contable.</p>
+        </field>
+    </record>
+
+    <record id="view_dolan_cash_denomination_list" model="ir.ui.view">
+        <field name="name">dolan.cash.denomination.list</field>
+        <field name="model">dolan.cash.denomination</field>
+        <field name="arch" type="xml">
+            <list string="Billetes y monedas" editable="bottom">
+                <field name="currency_id"/>
+                <field name="kind"/>
+                <field name="value"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dolan_cash_denomination" model="ir.actions.act_window">
+        <field name="name">Billetes y monedas</field>
+        <field name="res_model">dolan.cash.denomination</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <menuitem id="menu_dolan_treasury_root" name="Caja y Tesorería" sequence="46"
+              groups="group_treasury_cashier"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_treasury.svg"/>
+    <menuitem id="menu_dolan_treasury_boxes" name="Cajas" parent="menu_dolan_treasury_root" action="action_dolan_cash_box" sequence="10"/>
+    <menuitem id="menu_dolan_treasury_sessions" name="Turnos" parent="menu_dolan_treasury_root" action="action_dolan_cash_session" sequence="20"/>
+    <menuitem id="menu_dolan_treasury_moves" name="Movimientos" parent="menu_dolan_treasury_root" action="action_dolan_cash_move" sequence="30"
+              groups="group_treasury_manager"/>
+    <menuitem id="menu_dolan_treasury_approve" name="Diferencias a aprobar" parent="menu_dolan_treasury_root" action="action_dolan_cash_session_to_approve" sequence="40"
+              groups="group_treasury_manager"/>
+    <menuitem id="menu_dolan_treasury_config" name="Configuración" parent="menu_dolan_treasury_root" sequence="90" groups="group_treasury_manager"/>
+    <menuitem id="menu_dolan_treasury_reasons" name="Motivos" parent="menu_dolan_treasury_config" action="action_dolan_cash_reason" sequence="10"/>
+    <menuitem id="menu_dolan_treasury_denominations" name="Billetes y monedas" parent="menu_dolan_treasury_config" action="action_dolan_cash_denomination" sequence="20"/>
+</odoo>

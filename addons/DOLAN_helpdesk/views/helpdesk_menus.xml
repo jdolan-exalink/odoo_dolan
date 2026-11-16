@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dolan_helpdesk_root" name="Mesa de ayuda" sequence="60"
+              groups="group_helpdesk_user"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_helpdesk.svg"/>
+    <menuitem id="menu_dolan_helpdesk_tickets" name="Tickets" parent="menu_dolan_helpdesk_root"
+              action="action_dolan_helpdesk_ticket" sequence="10"/>
+    <menuitem id="menu_dolan_helpdesk_teams" name="Equipos" parent="menu_dolan_helpdesk_root"
+              action="action_dolan_helpdesk_team" sequence="20"/>
+    <menuitem id="menu_dolan_helpdesk_reporting" name="Análisis" parent="menu_dolan_helpdesk_root"
+              action="action_dolan_helpdesk_ticket_analysis" sequence="30" groups="group_helpdesk_manager"/>
+    <menuitem id="menu_dolan_helpdesk_config" name="Configuración" parent="menu_dolan_helpdesk_root"
+              sequence="90" groups="group_helpdesk_manager"/>
+    <menuitem id="menu_dolan_helpdesk_config_stages" name="Etapas" parent="menu_dolan_helpdesk_config"
+              action="action_dolan_helpdesk_stage" sequence="10"/>
+    <menuitem id="menu_dolan_helpdesk_config_sla" name="Reglas de SLA" parent="menu_dolan_helpdesk_config"
+              action="action_dolan_helpdesk_sla" sequence="20"/>
+    <menuitem id="menu_dolan_helpdesk_config_tags" name="Etiquetas" parent="menu_dolan_helpdesk_config"
+              action="action_dolan_helpdesk_tag" sequence="30"/>
+</odoo>

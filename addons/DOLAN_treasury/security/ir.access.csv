@@ -1,0 +1,13 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_cash_box_cashier,Cajas: cajero,dolan.cash.box,DOLAN_treasury.group_treasury_cashier,r,"[('company_id', 'in', company_ids), ('user_ids', 'in', user.id)]"
+access_dolan_cash_box_manager,Cajas: tesorero,dolan.cash.box,DOLAN_treasury.group_treasury_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_cash_session_cashier,Turnos: cajero,dolan.cash.session,DOLAN_treasury.group_treasury_cashier,cru,"[('company_id', 'in', company_ids), ('user_id', '=', user.id)]"
+access_dolan_cash_session_manager,Turnos: tesorero,dolan.cash.session,DOLAN_treasury.group_treasury_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_cash_move_cashier,Movimientos: cajero,dolan.cash.move,DOLAN_treasury.group_treasury_cashier,cru,"[('company_id', 'in', company_ids), ('session_id.user_id', '=', user.id)]"
+access_dolan_cash_move_manager,Movimientos: tesorero,dolan.cash.move,DOLAN_treasury.group_treasury_manager,crud,"[('company_id', 'in', company_ids)]"
+access_dolan_cash_count_cashier,Arqueo: cajero,dolan.cash.count,DOLAN_treasury.group_treasury_cashier,crud,"[('session_id.user_id', '=', user.id)]"
+access_dolan_cash_count_manager,Arqueo: tesorero,dolan.cash.count,DOLAN_treasury.group_treasury_manager,crud,
+access_dolan_cash_denomination_cashier,Denominaciones: cajero,dolan.cash.denomination,DOLAN_treasury.group_treasury_cashier,r,
+access_dolan_cash_denomination_manager,Denominaciones: tesorero,dolan.cash.denomination,DOLAN_treasury.group_treasury_manager,crud,
+access_dolan_cash_reason_cashier,Motivos: cajero,dolan.cash.reason,DOLAN_treasury.group_treasury_cashier,r,"[('company_id', 'in', company_ids)]"
+access_dolan_cash_reason_manager,Motivos: tesorero,dolan.cash.reason,DOLAN_treasury.group_treasury_manager,crud,"[('company_id', 'in', company_ids)]"

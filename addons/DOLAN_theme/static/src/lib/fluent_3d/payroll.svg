@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#d5f3e6"/></linearGradient>
+    <linearGradient id="coin" x1=".15" y1=".1" x2=".85" y2=".9"><stop stop-color="#ffe08a"/><stop offset="1" stop-color="#e0a020"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="1" dy="4" stdDeviation="3" flood-color="#27213c" flood-opacity=".28"/></filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="12" y="6" width="56" height="74" rx="10" fill="url(#paper)" stroke="#0d8457" stroke-width="2"/>
+    <g stroke="#2fb985" stroke-width="6" stroke-linecap="round"><path d="M25 26h30M25 40h30M25 54h16"/></g>
+    <circle cx="68" cy="68" r="22" fill="url(#coin)" stroke="#fff3c4" stroke-width="3"/>
+    <circle cx="68" cy="68" r="15.5" fill="none" stroke="#a86a00" stroke-width="2.5" opacity=".55"/>
+    <path d="M74 61.5c-1.2-1.9-3.4-3-5.9-3-3.2 0-5.4 1.7-5.4 4 0 5.5 11.5 2.8 11.5 8.4 0 2.4-2.4 4.2-6 4.2-2.7 0-5-1.1-6.3-3M68 54v28" fill="none" stroke="#7a4a00" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

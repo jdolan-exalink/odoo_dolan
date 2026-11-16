@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dolan_ecommerce_setup_form" model="ir.ui.view">
+        <field name="name">dolan.ecommerce.setup.form</field>
+        <field name="model">dolan.ecommerce.setup</field>
+        <field name="arch" type="xml">
+            <form string="Configurar tienda">
+                <p class="text-muted">
+                    Publica en la tienda los productos de las categorías elegidas. Se puede repetir: los productos
+                    que ya estaban publicados quedan como están.
+                </p>
+                <group>
+                    <group string="Qué publicar">
+                        <field name="category_ids" widget="many2many_tags"/>
+                        <field name="only_in_stock"/>
+                        <field name="mirror_categories"/>
+                    </group>
+                    <group string="Stock en la tienda">
+                        <field name="allow_out_of_stock"/>
+                        <field name="show_availability"/>
+                        <field name="available_threshold" invisible="not show_availability"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_apply" type="object" string="Publicar" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_ecommerce_setup" model="ir.actions.act_window">
+        <field name="name">Configurar tienda</field>
+        <field name="res_model">dolan.ecommerce.setup</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_dolan_ecommerce_mercado_pago" model="ir.actions.server">
+        <field name="name">Mercado Pago</field>
+        <field name="model_id" ref="model_dolan_ecommerce_setup"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open_mercado_pago()</field>
+        <field name="group_ids" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+    </record>
+
+    <record id="action_dolan_ecommerce_open_shop" model="ir.actions.act_url">
+        <field name="name">Ver la tienda</field>
+        <field name="url">/shop</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_dolan_product_publish" model="ir.actions.server">
+        <field name="name">Publicar en la tienda</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_dolan_publish()</field>
+        <field name="group_ids" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+    </record>
+
+    <record id="action_dolan_product_unpublish" model="ir.actions.server">
+        <field name="name">Sacar de la tienda</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_dolan_unpublish()</field>
+        <field name="group_ids" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+    </record>
+
+    <menuitem id="menu_dolan_ecommerce_root" name="Tienda online" sequence="47"
+              groups="sales_team.group_sale_salesman"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_ecommerce.svg"/>
+    <menuitem id="menu_dolan_ecommerce_orders" name="Pedidos web" parent="menu_dolan_ecommerce_root" sequence="10"
+              action="website_sale.action_orders_ecommerce"/>
+    <menuitem id="menu_dolan_ecommerce_products" name="Productos" parent="menu_dolan_ecommerce_root" sequence="20"
+              action="website_sale.product_template_action_website"/>
+    <menuitem id="menu_dolan_ecommerce_shop" name="Ver la tienda" parent="menu_dolan_ecommerce_root" sequence="30"
+              action="action_dolan_ecommerce_open_shop"/>
+    <menuitem id="menu_dolan_ecommerce_config" name="Configuración" parent="menu_dolan_ecommerce_root" sequence="90"
+              groups="sales_team.group_sale_manager">
+        <menuitem id="menu_dolan_ecommerce_setup" name="Configurar tienda" action="action_dolan_ecommerce_setup" sequence="10"/>
+        <menuitem id="menu_dolan_ecommerce_mp" name="Mercado Pago" action="action_dolan_ecommerce_mercado_pago" sequence="20"/>
+    </menuitem>
+</odoo>

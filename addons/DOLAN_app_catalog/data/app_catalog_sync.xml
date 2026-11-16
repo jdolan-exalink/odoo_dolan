@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Corre en cada instalación y actualización, después de cargar los menús. -->
+    <function model="dolan.app.catalog.entry" name="_sync_catalog"/>
+</odoo>

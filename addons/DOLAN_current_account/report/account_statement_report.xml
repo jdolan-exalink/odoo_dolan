@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_dolan_account_statement" model="ir.actions.report">
+        <field name="name">Estado de cuenta</field>
+        <field name="model">dolan.account.statement.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">DOLAN_current_account.report_account_statement</field>
+        <field name="print_report_name">'Estado de cuenta %s al %s' % (object.partner_id.display_name, object.date_to.strftime('%d-%m-%Y'))</field>
+    </record>
+
+    <template id="report_account_statement">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="wizard">
+                <t t-set="data" t-value="wizard._statement_data()"/>
+                <t t-set="currency" t-value="data['currency']"/>
+                <t t-call="web.external_layout">
+                    <t t-set="o" t-value="data['partner'].with_context(lang=data['partner'].lang)"/>
+                    <div class="page">
+                        <h3>Estado de cuenta</h3>
+                        <div class="row mb-3">
+                            <div class="col-7">
+                                <strong t-out="data['partner'].display_name"/><br/>
+                                <span t-if="data['partner'].vat">CUIT <t t-out="data['partner'].vat"/></span>
+                            </div>
+                            <div class="col-5 text-end">
+                                <span>Del <t t-out="data['date_from'].strftime('%d/%m/%Y')"/> al <t t-out="data['date_to'].strftime('%d/%m/%Y')"/></span><br/>
+                                <span t-out="'Cuenta de cliente' if data['kind'] == 'customer' else 'Cuenta de proveedor'"/>
+                            </div>
+                        </div>
+                        <table class="table table-sm o_main_table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th><th>Comprobante</th><th>Referencia</th><th>Vence</th>
+                                    <th class="text-end">Debe</th><th class="text-end">Haber</th><th class="text-end">Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6"><strong>Saldo inicial</strong></td>
+                                    <td class="text-end"><strong t-out="data['opening']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                                </tr>
+                                <tr t-foreach="data['rows']" t-as="row">
+                                    <td t-out="row['date'].strftime('%d/%m/%Y')"/>
+                                    <td t-out="row['document']"/>
+                                    <td t-out="row['ref']"/>
+                                    <td><t t-if="row['due']"><t t-out="row['due'].strftime('%d/%m/%Y')"/></t></td>
+                                    <td class="text-end"><t t-if="row['debit']"><t t-out="row['debit']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></t></td>
+                                    <td class="text-end"><t t-if="row['credit']"><t t-out="row['credit']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></t></td>
+                                    <td class="text-end" t-out="row['balance']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                </tr>
+                                <tr class="border-top">
+                                    <td colspan="6"><strong>Saldo al <t t-out="data['date_to'].strftime('%d/%m/%Y')"/></strong></td>
+                                    <td class="text-end"><strong t-out="data['closing']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="text-muted small">Saldos calculados desde la contabilidad publicada de <t t-out="data['company'].name"/>.</p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

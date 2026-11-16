@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_dolan_appointment" model="ir.sequence">
+            <field name="name">Turnos</field>
+            <field name="code">dolan.appointment</field>
+            <field name="prefix">TU-%(year)s-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+    <record id="ir_cron_dolan_appointment_reminders" model="ir.cron">
+        <field name="name">Agenda de turnos: enviar recordatorios</field>
+        <field name="model_id" ref="model_dolan_appointment"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_send_reminders()</field>
+        <field name="interval_number">15</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>
