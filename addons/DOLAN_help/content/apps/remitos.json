@@ -1,0 +1,55 @@
+{
+  "app": "remitos",
+  "menu": "stock.menu_stock_root",
+  "intro": "Las entregas a clientes con su remito R numerado y, cuando el traslado lo exige, el COT de ARBA.",
+  "who": "Depósito, logística y administración.",
+  "tasks": [
+    {
+      "slug": "validar-entrega",
+      "title": "Preparar y validar una entrega",
+      "summary": "Abrís la entrega, controlás que lo preparado coincida con lo pedido y tocás **Validar**: el stock baja.",
+      "minutes": 2,
+      "steps": [
+        {"text": "Entrá a **Inventario > Entregas**. Con el filtro **Listo** ves las que tienen stock para salir.",
+         "shot": {"id": "remitos-validar-1", "go": "/odoo/action-stock.action_picking_tree_outgoing", "mark": [".o_data_row"]}},
+        {"text": "Abrí la entrega. En **Operaciones** está cada producto con la **Demanda** (lo pedido) y la **Cantidad** (lo preparado) (1).",
+         "shot": {"id": "remitos-validar-2", "go": "/odoo/action-stock.action_picking_tree_outgoing/{id}", "record": {"model": "stock.picking", "domain": [["picking_type_code", "=", "outgoing"], ["state", "=", "assigned"]]}, "mark": [".o_field_x2many_list .o_list_table"]}},
+        {"text": "Si sale menos de lo pedido, corregí la **Cantidad**. Tocá **Validar** (1). Si quedó algo pendiente, DOLAN pregunta si se entrega después.",
+         "shot": {"id": "remitos-validar-3", "go": "/odoo/action-stock.action_picking_tree_outgoing/{id}", "record": {"model": "stock.picking", "domain": [["picking_type_code", "=", "outgoing"], ["state", "=", "assigned"]]}, "mark": ["button[name=button_validate]"]}}
+      ],
+      "errors": [
+        {"problem": "La entrega queda **En espera**", "fix": "No hay stock suficiente. Esperá la recepción o tocá **Reservar** cuando entre la mercadería."}
+      ],
+      "related": ["remitos/imprimir-remito"]
+    },
+    {
+      "slug": "imprimir-remito",
+      "title": "Imprimir el remito",
+      "summary": "Con la entrega validada, el remito toma su número y lo imprimís desde **Imprimir**.",
+      "minutes": 1,
+      "steps": [
+        {"text": "Al validar, la entrega toma el número de remito (1), por ejemplo **REM/00005**. Si el remito es preimpreso, el número va en **Número de Remito**.",
+         "shot": {"id": "remitos-imprimir-1", "go": "/odoo/action-stock.action_picking_tree_outgoing/{id}", "record": {"model": "stock.picking", "domain": [["picking_type_code", "=", "outgoing"], ["state", "=", "done"], ["name", "=like", "REM/%"]]}, "mark": [".o_form_sheet h1, div[name=name]"]}},
+        {"text": "Tocá **Imprimir** (1) y elegí el remito. Sale el PDF para imprimir las copias.",
+         "shot": {"id": "remitos-imprimir-2", "go": "/odoo/action-stock.action_picking_tree_outgoing/{id}", "record": {"model": "stock.picking", "domain": [["picking_type_code", "=", "outgoing"], ["state", "=", "done"], ["name", "=like", "REM/%"]]}, "mark": ["text=Imprimir"]}}
+      ],
+      "related": ["remitos/pedir-cot"]
+    },
+    {
+      "slug": "pedir-cot",
+      "title": "Pedir el COT de ARBA",
+      "summary": "Si la entrega sale o llega a Provincia de Buenos Aires y supera el mínimo, el remito necesita COT: lo pedís con un botón.",
+      "minutes": 2,
+      "before": ["El COT tiene que estar configurado en **Inventario > Configuración > COT ARBA** (lo hace el administrador)."],
+      "steps": [
+        {"text": "En la entrega abrí la pestaña **Traslado / COT** (1). Si hace falta COT, aparece un aviso.",
+         "shot": {"id": "remitos-cot-1", "go": "/odoo/action-stock.action_picking_tree_outgoing/{id}", "record": {"model": "stock.picking", "domain": [["picking_type_code", "=", "outgoing"], ["state", "=", "done"], ["name", "=like", "REM/%"]]}, "click": [".o_notebook .nav-link:has-text('COT')"], "mark": [".o_notebook .nav-link.active"]}},
+        {"text": "Completá el **transporte**: transportista, patente y fecha de salida."},
+        {"text": "Tocá **Solicitar COT**. El número queda en el remito y sale impreso. Si ARBA devuelve un error, se muestra en rojo en la misma pestaña."}
+      ],
+      "errors": [
+        {"problem": "ARBA devolvió un error", "fix": "Leé el mensaje en rojo: suele faltar el código de nomenclador del producto o un domicilio. Corregilo y volvé a pedir el COT."}
+      ]
+    }
+  ]
+}

@@ -609,6 +609,14 @@
     <menuitem id="menu_app_email_marketing" name="Marketing por correo" action="action_app_email_marketing"
               sequence="1088"
               web_icon="DOLAN_theme,static/src/lib/fluent_flat/email_marketing.svg"/>
+    <record id="action_app_ayuda" model="ir.actions.client">
+        <field name="name">Ayuda</field>
+        <field name="tag">dolan_app_catalog_placeholder</field>
+        <field name="params" eval="{'key': 'ayuda'}"/>
+    </record>
+    <menuitem id="menu_app_ayuda" name="Ayuda" action="action_app_ayuda"
+              sequence="1100"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_help.svg"/>
     <record id="action_app_tablero_dueno" model="ir.actions.client">
         <field name="name">Tablero del dueño</field>
         <field name="tag">dolan_app_catalog_placeholder</field>

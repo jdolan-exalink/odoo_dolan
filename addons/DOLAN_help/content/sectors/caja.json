@@ -1,0 +1,46 @@
+{
+  "sector": "caja",
+  "procedures": [
+    {
+      "slug": "dia-de-caja",
+      "title": "El día de caja, de la apertura al cierre",
+      "summary": "Lo que hace el cajero en cada turno para que la caja cierre sin diferencias.",
+      "steps": [
+        {
+          "text": "Al llegar, abrí el turno contando el efectivo inicial.",
+          "who": "Cajero",
+          "task": "caja_tesoreria/abrir-turno"
+        },
+        {
+          "text": "Si cobrás en el punto de venta, abrí también su caja.",
+          "who": "Cajero",
+          "task": "pos/abrir-caja-pos"
+        },
+        {
+          "text": "Cobrá cada venta con el medio que usa el cliente.",
+          "who": "Cajero",
+          "task": "pos/cobrar-venta"
+        },
+        {
+          "text": "Cada gasto, retiro o ingreso de efectivo se registra en el momento, con su comprobante.",
+          "who": "Cajero",
+          "task": "caja_tesoreria/registrar-movimiento"
+        },
+        {
+          "text": "Al terminar, hacé el arqueo por billetes y cerrá el turno.",
+          "who": "Cajero",
+          "task": "caja_tesoreria/arqueo-y-cierre"
+        },
+        {
+          "text": "Si quedó una diferencia grande, el tesorero la revisa y la aprueba o pide recontar.",
+          "who": "Tesorero",
+          "task": "caja_tesoreria/aprobar-diferencia"
+        }
+      ],
+      "controls": [
+        "Nunca se deja un turno abierto de un día para el otro.",
+        "Los retiros de efectivo siempre llevan motivo y detalle."
+      ]
+    }
+  ]
+}

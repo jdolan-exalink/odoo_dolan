@@ -4402,6 +4402,48 @@
       "upstream_path": "tabler/catalog_owner_dashboard-af9d3e3c.svg",
       "local_path": "tabler/catalog_owner_dashboard-af9d3e3c.svg",
       "sha256": "af9d3e3c18c0313bd98e2f4f5576dc1a23ef7b5e46ffff28bd76da51ece4fb15"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_3d/catalog_help-79d7aef5.svg",
+      "local_path": "fluent_3d/catalog_help-79d7aef5.svg",
+      "sha256": "79d7aef58b33042bf82ed1413fe2f61515e3685ffc76b8c1aa99692e3571a7af"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_filled/catalog_help-a4297fae.svg",
+      "local_path": "fluent_filled/catalog_help-a4297fae.svg",
+      "sha256": "a4297fae756c3bbb518126ae91eaf7e0c84c1f28f715a20d1fb4de9c3888b9e7"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_help-b6215a12.svg",
+      "local_path": "fluent_flat/catalog_help-b6215a12.svg",
+      "sha256": "b6215a12fe72b1b2a2015f6f6971dd8148daa96c2a662db598eac01cfec01cd3"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_flat/catalog_help.svg",
+      "local_path": "fluent_flat/catalog_help.svg",
+      "sha256": "b6215a12fe72b1b2a2015f6f6971dd8148daa96c2a662db598eac01cfec01cd3"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "fluent_regular/catalog_help-d8d557eb.svg",
+      "local_path": "fluent_regular/catalog_help-d8d557eb.svg",
+      "sha256": "d8d557eb474e3a2a40abe936c089dd619a2c897d9683b6a1f924b0b72d49cb4e"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "tabler/catalog_help-038cc73e.svg",
+      "local_path": "tabler/catalog_help-038cc73e.svg",
+      "sha256": "038cc73e266e5f9f629378aedfcb05a10fd152749d03b845bccaea29894a4695"
     }
   ]
 }

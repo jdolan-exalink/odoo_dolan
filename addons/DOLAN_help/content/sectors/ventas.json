@@ -1,0 +1,63 @@
+{
+  "sector": "ventas",
+  "procedures": [
+    {
+      "slug": "venta-en-mostrador",
+      "title": "Venta con presupuesto, factura y cobro",
+      "summary": "El circuito completo de una venta a un cliente: del presupuesto al cobro.",
+      "steps": [
+        {
+          "text": "Armá el presupuesto con los productos y mandáselo al cliente.",
+          "who": "Vendedor",
+          "task": "ventas/crear-presupuesto"
+        },
+        {
+          "text": "Cuando el cliente acepta, confirmá la venta. El depósito ya ve la entrega.",
+          "who": "Vendedor",
+          "task": "ventas/confirmar-venta"
+        },
+        {
+          "text": "El depósito prepara y valida la entrega, y sale el remito.",
+          "who": "Depósito",
+          "task": "remitos/validar-entrega"
+        },
+        {
+          "text": "Facturá la venta: al confirmar, ARCA da el CAE.",
+          "who": "Vendedor o administración",
+          "task": "ventas/facturar-venta"
+        },
+        {
+          "text": "Registrá el cobro cuando el cliente paga (efectivo, transferencia o cheque).",
+          "who": "Caja o administración",
+          "task": "facturacion/registrar-cobro"
+        }
+      ],
+      "controls": [
+        "No se entrega mercadería a clientes con deuda vencida sin autorización de administración.",
+        "Toda devolución se hace con nota de crédito, nunca borrando la factura."
+      ]
+    },
+    {
+      "slug": "seguimiento-de-clientes",
+      "title": "Seguimiento de lo que deben los clientes",
+      "summary": "Una vez por semana, revisá la deuda de tus clientes y reclamá lo vencido.",
+      "steps": [
+        {
+          "text": "Mirá en **Saldos** quién tiene deuda vencida, de más vieja a más nueva.",
+          "who": "Vendedor",
+          "task": "cuentas_corrientes/ver-saldos"
+        },
+        {
+          "text": "Mandale al cliente su estado de cuenta.",
+          "who": "Vendedor",
+          "task": "cuentas_corrientes/estado-de-cuenta"
+        },
+        {
+          "text": "Si promete pagar, registrá la promesa con importe y fecha.",
+          "who": "Vendedor",
+          "task": "cuentas_corrientes/promesa-de-pago"
+        }
+      ]
+    }
+  ]
+}

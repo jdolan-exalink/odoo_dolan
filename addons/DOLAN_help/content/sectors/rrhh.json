@@ -1,0 +1,27 @@
+{
+  "sector": "rrhh",
+  "procedures": [
+    {
+      "slug": "vacaciones-y-licencias",
+      "title": "Vacaciones y licencias",
+      "summary": "Cómo se piden y aprueban las ausencias.",
+      "steps": [
+        {
+          "text": "El empleado pide la ausencia desde Mi tiempo.",
+          "who": "Empleado",
+          "task": "ausencias/pedir-ausencia"
+        },
+        {
+          "text": "El responsable la aprueba o la rechaza.",
+          "who": "Responsable",
+          "task": "ausencias/aprobar-ausencia"
+        },
+        {
+          "text": "Recursos humanos controla los saldos de días.",
+          "who": "Recursos humanos",
+          "task": "ausencias/ver-saldo-de-dias"
+        }
+      ]
+    }
+  ]
+}

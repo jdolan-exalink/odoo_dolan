@@ -1,0 +1,30 @@
+{
+  "sector": "logistica",
+  "procedures": [
+    {
+      "slug": "salida-de-mercaderia",
+      "title": "Salida de mercadería con remito y COT",
+      "summary": "Todo lo que necesita un envío antes de salir del depósito.",
+      "steps": [
+        {
+          "text": "Validá la entrega con lo que realmente se carga.",
+          "who": "Depósito",
+          "task": "remitos/validar-entrega"
+        },
+        {
+          "text": "Si va a Provincia de Buenos Aires o sale de ahí, pedí el COT de ARBA.",
+          "who": "Logística",
+          "task": "remitos/pedir-cot"
+        },
+        {
+          "text": "Imprimí el remito con el COT.",
+          "who": "Logística",
+          "task": "remitos/imprimir-remito"
+        }
+      ],
+      "controls": [
+        "Ningún camión sale sin remito y, si corresponde, sin COT."
+      ]
+    }
+  ]
+}

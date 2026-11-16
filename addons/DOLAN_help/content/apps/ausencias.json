@@ -1,0 +1,122 @@
+{
+  "app": "ausencias",
+  "intro": "Vacaciones, licencias y permisos: el empleado pide, el responsable aprueba y todos ven el calendario y los días que quedan.",
+  "who": "Todos los empleados y sus responsables.",
+  "tasks": [
+    {
+      "slug": "pedir-ausencia",
+      "title": "Pedir vacaciones o un permiso",
+      "summary": "En **Mi tiempo** tocás **Nuevo > Nuevo tiempo personal** (o el día en el calendario), elegís el tipo y las fechas y se la manda a tu responsable.",
+      "minutes": 2,
+      "before": [
+        "Para vacaciones tenés que tener días asignados: los ves arriba del calendario."
+      ],
+      "steps": [
+        {
+          "text": "Entrá a **Ausencias** (en la barra dice **Vacaciones**). En **Mi tiempo** ves el calendario del año y, arriba, los días que tenés disponibles. Tocá **Nuevo** (1) y elegí **Nuevo tiempo personal**. También podés hacer clic directamente en el día del calendario.",
+          "shot": {
+            "id": "ausencias-pedir-1",
+            "go": "/odoo/action-hr_holidays.hr_leave_action_new_request",
+            "click": [
+              ".o_control_panel button:has-text('Nuevo')"
+            ],
+            "mark": [
+              "text=Nuevo",
+              "text=Nuevo tiempo personal"
+            ]
+          }
+        },
+        {
+          "text": "Elegí el **Tipo** (1) (vacaciones, enfermedad, trámite…) y las **fechas** (2). La **duración** (3) en días se calcula sola, sin contar feriados.",
+          "shot": {
+            "id": "ausencias-pedir-2",
+            "go": "/odoo/action-hr_holidays.hr_leave_action_new_request",
+            "click": [
+              ".o_control_panel button:has-text('Nuevo')",
+              "text=Nuevo tiempo personal"
+            ],
+            "wait": ".modal-dialog",
+            "mark": [
+              ".modal div[name=work_entry_type_id], .modal div[name=holiday_status_id]",
+              ".modal div[name=request_date_from]",
+              ".modal div[name=number_of_days]"
+            ]
+          }
+        },
+        {
+          "text": "Si hace falta, escribí un motivo y tocá **Adjuntar archivo** para el certificado. Tocá **Enviar solicitud**: tu responsable recibe el aviso."
+        },
+        {
+          "text": "En el calendario, tu pedido aparece rayado mientras está **por aprobar** y lleno cuando está **aprobado**."
+        }
+      ],
+      "errors": [
+        {
+          "problem": "«No tienes ninguna asignación para este tipo de permiso»",
+          "fix": "Ese tipo necesita días asignados y no tenés. Pedile a Recursos humanos que te cargue la asignación (por ejemplo, las vacaciones del año)."
+        }
+      ],
+      "related": [
+        "ausencias/aprobar-ausencia"
+      ],
+      "tips": [
+        "La tarjeta **Nueva solicitud** sirve para otra cosa: pedir que te asignen más días (por ejemplo, días por antigüedad)."
+      ]
+    },
+    {
+      "slug": "aprobar-ausencia",
+      "title": "Aprobar o rechazar pedidos (responsables)",
+      "summary": "En **Gestión > Tiempo personal** ves los pedidos de tu equipo y los aprobás o rechazás.",
+      "minutes": 1,
+      "before": [
+        "Ser responsable del empleado o de Recursos humanos."
+      ],
+      "steps": [
+        {
+          "text": "Entrá a **Gestión > Tiempo personal** (1). Con el filtro **Por aprobar** ves solo los pendientes.",
+          "shot": {
+            "id": "ausencias-aprobar-1",
+            "go": "/odoo/action-hr_holidays.hr_leave_action_action_approve_department",
+            "mark": [
+              "text=Gestión"
+            ]
+          }
+        },
+        {
+          "text": "Revisá empleado, tipo, fechas y duración. Tocá **Aprobar** o **Rechazar** en la fila (o abrila para ver el detalle y el adjunto)."
+        },
+        {
+          "text": "El empleado recibe el aviso y el pedido cambia de color en el calendario."
+        }
+      ]
+    },
+    {
+      "slug": "ver-saldo-de-dias",
+      "title": "Ver cuántos días de vacaciones quedan",
+      "summary": "Cada empleado ve su saldo en **Mi tiempo**; Recursos humanos ve el de todos en **Reportes > Saldo**.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "En **Mi tiempo**, arriba del calendario (1), hay una tarjeta por cada tipo de ausencia con días asignados: el número grande son los días **disponibles**.",
+          "shot": {
+            "id": "ausencias-saldo-1",
+            "go": "/odoo/action-hr_holidays.hr_leave_action_new_request",
+            "mark": [
+              ".o_timeoff_dashboard, .o_timeoff_card"
+            ]
+          }
+        },
+        {
+          "text": "Para ver a todo el equipo: **Reportes > Saldo** (1), agrupado por empleado y tipo.",
+          "shot": {
+            "id": "ausencias-saldo-2",
+            "go": "/odoo/action-hr_holidays.action_hr_holidays_by_employee_and_type_report",
+            "mark": [
+              "text=Reportes"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

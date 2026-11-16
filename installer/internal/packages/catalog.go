@@ -161,6 +161,15 @@ var Catalog = []ModuleSpec{
 		HasData:     true,
 	},
 	{
+		ID:          "DOLAN_help",
+		Title:       "Ayuda: guías con capturas por app y procedimientos por sector",
+		Version:     "20.0.1.0.0",
+		Category:    "Gestión y Análisis",
+		Application: true,
+		Depends:     []string{"web", "mail", "DOLAN_app_catalog"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_budget",
 		Title:       "Presupuesto financiero contra real",
 		Version:     "20.0.1.0.0",
