@@ -99,6 +99,7 @@ class DolanHelpCenter(models.AbstractModel):
         visible_tasks = {t['ref'] for app in apps.values() for t in app['tasks']}
         visible_tasks |= {t['ref'] for g in general for t in g['tasks']}
         sectors = []
+        can_edit = self.env.user.has_group('DOLAN_help.group_help_editor')
         Article = self.env['dolan.help.article']
         for sector in self.env['dolan.help.sector'].search([]):
             guide = content['sectors'].get(sector.key) or {}
@@ -120,8 +121,9 @@ class DolanHelpCenter(models.AbstractModel):
                     'summary': article.summary or '',
                     'kind': 'company',
                 })
-            if procedures:
+            if procedures or can_edit:
                 sectors.append({
+                    'id': sector.id,
                     'key': sector.key,
                     'name': sector.name,
                     'description': sector.description or '',
@@ -138,7 +140,7 @@ class DolanHelpCenter(models.AbstractModel):
             'company_articles': loose,
             'news': content['news'][:5],
             'search': self._search_index(apps, general, sectors),
-            'can_edit': self.env.user.has_group('DOLAN_help.group_help_editor'),
+            'can_edit': can_edit,
         }
 
     @api.model

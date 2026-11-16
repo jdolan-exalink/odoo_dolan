@@ -71,6 +71,17 @@ class TestHelpCenter(TransactionCase):
         self.assertEqual(data['title'], 'Cierre del sábado')
         self.assertIn('Contar dos veces', data['body'])
 
+    def test_new_sector_without_key(self):
+        """Un sector nuevo se crea solo con el nombre y aparece en la Ayuda para el editor."""
+        sector = self.env['dolan.help.sector'].create({'name': 'Atención al público'})
+        self.assertEqual(sector.key, 'atencion_al_publico')
+        again = self.env['dolan.help.sector'].create({'name': 'Atención al público'})
+        self.assertEqual(again.key, 'atencion_al_publico_2')
+        keys = [s['key'] for s in self.Center.get_index()['sectors']]
+        self.assertIn('atencion_al_publico', keys)
+        keys_plain = [s['key'] for s in self.Center.with_user(self.plain).get_index()['sectors']]
+        self.assertNotIn('atencion_al_publico', keys_plain)
+
     def test_plain_user_cannot_write_articles(self):
         with self.assertRaises(Exception):
             self.env['dolan.help.article'].with_user(self.plain).create({'name': 'No'})

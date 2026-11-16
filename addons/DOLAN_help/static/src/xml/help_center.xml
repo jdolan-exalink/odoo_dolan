@@ -264,6 +264,12 @@
                                 <span class="o_dolan_help_sector_card__text" t-out="this.formatHelpText(sector.description)"/>
                                 <span class="o_dolan_help_sector_card__meta"><t t-esc="sector.procedures.length"/> procedimientos</span>
                             </button>
+                            <button t-if="index.can_edit" type="button" class="o_dolan_help_sector_card o_dolan_help_task_card--add d-print-none"
+                                    t-on-click="() => this.newSector()">
+                                <i class="oi o_dolan_help_sector_card__icon" data-icon="add" aria-hidden="true"/>
+                                <span class="o_dolan_help_sector_card__name">Agregar un sector</span>
+                                <span class="o_dolan_help_sector_card__text">Sumá un área de tu empresa y escribí sus procedimientos.</span>
+                            </button>
                         </div>
                         <p t-if="!index.sectors.length" class="text-muted">Todavía no hay procedimientos cargados para tus sectores.</p>
                     </t>
@@ -279,7 +285,13 @@
                                 </span>
                                 <span class="o_dolan_help_task_card__summary" t-out="this.formatHelpText(proc.summary)"/>
                             </button>
+                            <button t-if="index.can_edit" type="button" class="o_dolan_help_task_card o_dolan_help_task_card--add d-print-none"
+                                    t-on-click="() => this.newCompanyArticle(sector.id)">
+                                <span class="o_dolan_help_task_card__title"><i class="oi" data-icon="add" aria-hidden="true"/> Escribir un procedimiento</span>
+                                <span class="o_dolan_help_task_card__summary">Contá paso a paso cómo trabaja este sector.</span>
+                            </button>
                         </div>
+                        <p t-if="!sector.procedures.length and !index.can_edit" class="text-muted">Todavía no hay procedimientos para este sector.</p>
                     </t>
 
                     <t t-elif="page.type === 'procedure'">

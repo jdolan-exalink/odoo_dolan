@@ -22,7 +22,9 @@ capturas) y los procedimientos de trabajo de cada sector de la empresa.
 * **Links cortos** para mandar por WhatsApp: `/ayuda/<app>/<tarea>` (por ejemplo `/ayuda/facturacion/emitir-factura`).
 * **Ayuda > Administrar** (grupo *Editor de la ayuda*; los administradores lo tienen):
   * *Procedimientos de la empresa*: artículos propios escritos desde Odoo (con capturas pegadas), por sector.
-  * *Sectores*: nombre, descripción e ícono (nombre de Material Symbols).
+  * *Sectores*: nombre, descripción e ícono (nombre de Material Symbols). También se agregan desde **Por sector >
+    Agregar un sector**, solo con el nombre (la clave se arma sola). Un sector nuevo aparece para todos en cuanto
+    tiene su primer procedimiento; dentro de cada sector, **Escribir un procedimiento** lo crea ya asignado.
   * *¿Te sirvió?*: las respuestas «No» y los comentarios, para mejorar las guías.
 
 ## Dónde está el contenido

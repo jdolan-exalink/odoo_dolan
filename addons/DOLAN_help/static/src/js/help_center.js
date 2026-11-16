@@ -225,8 +225,24 @@ export class DolanHelpCenter extends Component {
         });
     }
 
-    newCompanyArticle() {
-        this.action.doAction("DOLAN_help.action_dolan_help_article");
+    newCompanyArticle(sectorId = false) {
+        this.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: "dolan.help.article",
+            views: [[false, "form"]],
+            target: "current",
+            context: sectorId ? { default_sector_id: sectorId } : {},
+        });
+    }
+
+    newSector() {
+        this.action.doAction({
+            type: "ir.actions.act_window",
+            name: "Nuevo sector",
+            res_model: "dolan.help.sector",
+            views: [[false, "form"]],
+            target: "new",
+        }, { onClose: () => this.loadIndex().then(() => this.go("sectors", { replace: true })) });
     }
 
     async sendFeedback(useful) {

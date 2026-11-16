@@ -87,10 +87,28 @@
             <list string="Sectores" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="key"/>
+                <field name="key" required="0" placeholder="(se completa sola)"/>
                 <field name="description"/>
                 <field name="icon"/>
             </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_help_sector_form" model="ir.ui.view">
+        <field name="name">dolan.help.sector.form</field>
+        <field name="model">dolan.help.sector</field>
+        <field name="arch" type="xml">
+            <form string="Sector">
+                <sheet>
+                    <group>
+                        <field name="name" placeholder="Por ejemplo: Atención al público"/>
+                        <field name="description" placeholder="Qué hace este sector, en una o dos frases"/>
+                        <field name="icon" placeholder="group"/>
+                        <field name="key" required="0" placeholder="(se completa sola)" groups="base.group_no_one"/>
+                        <field name="sequence"/>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 

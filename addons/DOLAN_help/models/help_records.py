@@ -1,4 +1,7 @@
-from odoo import fields, models
+import re
+import unicodedata
+
+from odoo import api, fields, models
 
 
 class DolanHelpSector(models.Model):
@@ -6,15 +9,33 @@ class DolanHelpSector(models.Model):
     _description = 'Ayuda: sector de la empresa'
     _order = 'sequence, id'
 
-    key = fields.Char('Clave', required=True, help='Une el sector con sus procedimientos de content/sectors/<clave>.json.')
+    key = fields.Char('Clave', required=True, copy=False,
+                      help='Une el sector con sus procedimientos sugeridos de content/sectors/<clave>.json. '
+                           'Si se deja vacía se arma sola con el nombre.')
     name = fields.Char('Sector', required=True, translate=True)
     description = fields.Text('Qué hace', translate=True)
     icon = fields.Char('Ícono', default='group', help='Nombre de un ícono de Material Symbols, por ejemplo shopping_cart.')
-    sequence = fields.Integer(default=10)
+    sequence = fields.Integer('Orden', default=10)
     active = fields.Boolean(default=True)
     article_ids = fields.One2many('dolan.help.article', 'sector_id', 'Procedimientos de la empresa')
 
     _key_unique = models.Constraint('UNIQUE(key)', 'Ya hay un sector con esa clave.')
+
+    @api.model
+    def _key_from_name(self, name):
+        base = unicodedata.normalize('NFD', name or 'sector').encode('ascii', 'ignore').decode().lower()
+        base = re.sub(r'[^a-z0-9]+', '_', base).strip('_') or 'sector'
+        key, number = base, 2
+        while self.with_context(active_test=False).search_count([('key', '=', key)]):
+            key, number = f'{base}_{number}', number + 1
+        return key
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('key'):
+                vals['key'] = self._key_from_name(vals.get('name'))
+        return super().create(vals_list)
 
 
 class DolanHelpArticle(models.Model):
