@@ -8,7 +8,7 @@
     </record>
     <menuitem id="menu_app_crm" name="CRM" action="action_app_crm"
               sequence="921"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/crm.svg"/>
+              web_icon="crm,static/description/icon.png"/>
     <record id="action_app_ventas" model="ir.actions.client">
         <field name="name">Ventas</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -16,7 +16,7 @@
     </record>
     <menuitem id="menu_app_ventas" name="Ventas" action="action_app_ventas"
               sequence="922"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/sales.svg"/>
+              web_icon="sale_management,static/description/icon.png"/>
     <record id="action_app_presupuestos" model="ir.actions.client">
         <field name="name">Presupuestos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -24,7 +24,7 @@
     </record>
     <menuitem id="menu_app_presupuestos" name="Presupuestos" action="action_app_presupuestos"
               sequence="923"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_quotations.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_quotations.svg"/>
     <record id="action_app_clientes" model="ir.actions.client">
         <field name="name">Clientes</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -32,7 +32,7 @@
     </record>
     <menuitem id="menu_app_clientes" name="Clientes" action="action_app_clientes"
               sequence="924"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_customers.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_customers.svg"/>
     <record id="action_app_listas_precios" model="ir.actions.client">
         <field name="name">Listas de precios</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -40,7 +40,7 @@
     </record>
     <menuitem id="menu_app_listas_precios" name="Listas de precios" action="action_app_listas_precios"
               sequence="925"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_pricelists.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_pricelists.svg"/>
     <record id="action_app_promociones" model="ir.actions.client">
         <field name="name">Promociones</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -48,7 +48,7 @@
     </record>
     <menuitem id="menu_app_promociones" name="Promociones" action="action_app_promociones"
               sequence="926"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/promotions.svg"/>
+              web_icon="DOLAN_discount_engine,static/description/icon.svg"/>
     <record id="action_app_marketplace" model="ir.actions.client">
         <field name="name">Marketplace</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -56,7 +56,7 @@
     </record>
     <menuitem id="menu_app_marketplace" name="Marketplace" action="action_app_marketplace"
               sequence="927"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_marketplace.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_marketplace.svg"/>
     <record id="action_app_tienda_online" model="ir.actions.client">
         <field name="name">Tienda online</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -64,7 +64,7 @@
     </record>
     <menuitem id="menu_app_tienda_online" name="Tienda online" action="action_app_tienda_online"
               sequence="928"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_ecommerce.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_ecommerce.svg"/>
     <record id="action_app_fidelizacion" model="ir.actions.client">
         <field name="name">Fidelización</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -72,7 +72,7 @@
     </record>
     <menuitem id="menu_app_fidelizacion" name="Fidelización" action="action_app_fidelizacion"
               sequence="929"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_loyalty.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_loyalty.svg"/>
     <record id="action_app_facturacion" model="ir.actions.client">
         <field name="name">Facturación</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -80,7 +80,7 @@
     </record>
     <menuitem id="menu_app_facturacion" name="Facturación" action="action_app_facturacion"
               sequence="941"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/invoicing.svg"/>
+              web_icon="account,static/description/icon.png"/>
     <record id="action_app_contabilidad" model="ir.actions.client">
         <field name="name">Contabilidad</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -88,7 +88,7 @@
     </record>
     <menuitem id="menu_app_contabilidad" name="Contabilidad" action="action_app_contabilidad"
               sequence="942"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/accounting.svg"/>
+              web_icon="DOLAN_accounting,static/description/icon.svg"/>
     <record id="action_app_cuentas_corrientes" model="ir.actions.client">
         <field name="name">Cuentas corrientes</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -96,7 +96,7 @@
     </record>
     <menuitem id="menu_app_cuentas_corrientes" name="Cuentas corrientes" action="action_app_cuentas_corrientes"
               sequence="943"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_current_accounts.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_current_accounts.svg"/>
     <record id="action_app_seguimiento_deudores" model="ir.actions.client">
         <field name="name">Seguimiento de deudores</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -104,7 +104,7 @@
     </record>
     <menuitem id="menu_app_seguimiento_deudores" name="Seguimiento de deudores" action="action_app_seguimiento_deudores"
               sequence="944"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_debtors.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_debtors.svg"/>
     <record id="action_app_cobranzas" model="ir.actions.client">
         <field name="name">Cobranzas</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -112,7 +112,7 @@
     </record>
     <menuitem id="menu_app_cobranzas" name="Cobranzas" action="action_app_cobranzas"
               sequence="945"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_collections.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_collections.svg"/>
     <record id="action_app_pagos_proveedores" model="ir.actions.client">
         <field name="name">Pagos a proveedores</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -120,7 +120,7 @@
     </record>
     <menuitem id="menu_app_pagos_proveedores" name="Pagos a proveedores" action="action_app_pagos_proveedores"
               sequence="946"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_vendor_payments.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_vendor_payments.svg"/>
     <record id="action_app_caja_tesoreria" model="ir.actions.client">
         <field name="name">Caja y Tesorería</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -128,7 +128,7 @@
     </record>
     <menuitem id="menu_app_caja_tesoreria" name="Caja y Tesorería" action="action_app_caja_tesoreria"
               sequence="947"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_treasury.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_treasury.svg"/>
     <record id="action_app_bancos" model="ir.actions.client">
         <field name="name">Bancos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -136,7 +136,7 @@
     </record>
     <menuitem id="menu_app_bancos" name="Bancos" action="action_app_bancos"
               sequence="948"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_banks.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_banks.svg"/>
     <record id="action_app_cheques" model="ir.actions.client">
         <field name="name">Cheques y eCheq</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -144,7 +144,7 @@
     </record>
     <menuitem id="menu_app_cheques" name="Cheques y eCheq" action="action_app_cheques"
               sequence="949"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_checks.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_checks.svg"/>
     <record id="action_app_conciliacion" model="ir.actions.client">
         <field name="name">Conciliación</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -152,7 +152,7 @@
     </record>
     <menuitem id="menu_app_conciliacion" name="Conciliación" action="action_app_conciliacion"
               sequence="950"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_reconciliation.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_reconciliation.svg"/>
     <record id="action_app_impuestos" model="ir.actions.client">
         <field name="name">Impuestos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -160,7 +160,7 @@
     </record>
     <menuitem id="menu_app_impuestos" name="Impuestos" action="action_app_impuestos"
               sequence="951"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_taxes.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_taxes.svg"/>
     <record id="action_app_reportes_fiscales" model="ir.actions.client">
         <field name="name">Reportes fiscales</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -168,7 +168,7 @@
     </record>
     <menuitem id="menu_app_reportes_fiscales" name="Reportes fiscales" action="action_app_reportes_fiscales"
               sequence="952"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_fiscal_reports.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_fiscal_reports.svg"/>
     <record id="action_app_reportes_financieros" model="ir.actions.client">
         <field name="name">Reportes financieros</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -176,7 +176,7 @@
     </record>
     <menuitem id="menu_app_reportes_financieros" name="Reportes financieros" action="action_app_reportes_financieros"
               sequence="953"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_financial_reports.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_financial_reports.svg"/>
     <record id="action_app_gastos" model="ir.actions.client">
         <field name="name">Gastos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -184,7 +184,7 @@
     </record>
     <menuitem id="menu_app_gastos" name="Gastos" action="action_app_gastos"
               sequence="954"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/expenses.svg"/>
+              web_icon="hr_expense,static/description/icon.png"/>
     <record id="action_app_pos" model="ir.actions.client">
         <field name="name">Punto de venta</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -192,7 +192,7 @@
     </record>
     <menuitem id="menu_app_pos" name="Punto de venta" action="action_app_pos"
               sequence="961"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/pos.svg"/>
+              web_icon="point_of_sale,static/description/icon.png"/>
     <record id="action_app_cierres_pos" model="ir.actions.client">
         <field name="name">Cierres y arqueos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -200,7 +200,7 @@
     </record>
     <menuitem id="menu_app_cierres_pos" name="Cierres y arqueos" action="action_app_cierres_pos"
               sequence="962"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_pos_closing.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_pos_closing.svg"/>
     <record id="action_app_turnos_caja" model="ir.actions.client">
         <field name="name">Turnos de caja</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -208,7 +208,7 @@
     </record>
     <menuitem id="menu_app_turnos_caja" name="Turnos de caja" action="action_app_turnos_caja"
               sequence="963"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_cash_shifts.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_cash_shifts.svg"/>
     <record id="action_app_terminales" model="ir.actions.client">
         <field name="name">Terminales de cobro</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -216,7 +216,7 @@
     </record>
     <menuitem id="menu_app_terminales" name="Terminales de cobro" action="action_app_terminales"
               sequence="964"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/payment_terminal.svg"/>
+              web_icon="DOLAN_payment_terminal,static/description/icon.svg"/>
     <record id="action_app_balanzas" model="ir.actions.client">
         <field name="name">Balanzas</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -224,7 +224,7 @@
     </record>
     <menuitem id="menu_app_balanzas" name="Balanzas" action="action_app_balanzas"
               sequence="965"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/scale_modern.svg"/>
+              web_icon="pos_scale_management,static/description/icon.svg"/>
     <record id="action_app_impresoras" model="ir.actions.client">
         <field name="name">Impresoras</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -232,7 +232,7 @@
     </record>
     <menuitem id="menu_app_impresoras" name="Impresoras" action="action_app_impresoras"
               sequence="966"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/printer.svg"/>
+              web_icon="ePOS_print,static/description/icon.svg"/>
     <record id="action_app_cocina" model="ir.actions.client">
         <field name="name">Pantalla para cocina</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -240,7 +240,7 @@
     </record>
     <menuitem id="menu_app_cocina" name="Pantalla para cocina" action="action_app_cocina"
               sequence="967"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/kitchen.svg"/>
+              web_icon="DOLAN_pos,static/description/icon.svg"/>
     <record id="action_app_inventario" model="ir.actions.client">
         <field name="name">Inventario</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -248,7 +248,7 @@
     </record>
     <menuitem id="menu_app_inventario" name="Inventario" action="action_app_inventario"
               sequence="981"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/inventory.svg"/>
+              web_icon="stock,static/description/icon.png"/>
     <record id="action_app_compras" model="ir.actions.client">
         <field name="name">Compras</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -256,7 +256,7 @@
     </record>
     <menuitem id="menu_app_compras" name="Compras" action="action_app_compras"
               sequence="982"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/purchases.svg"/>
+              web_icon="purchase,static/description/icon.png"/>
     <record id="action_app_productos" model="ir.actions.client">
         <field name="name">Productos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -264,7 +264,7 @@
     </record>
     <menuitem id="menu_app_productos" name="Productos" action="action_app_productos"
               sequence="983"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_products.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_products.svg"/>
     <record id="action_app_proveedores" model="ir.actions.client">
         <field name="name">Proveedores</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -272,7 +272,7 @@
     </record>
     <menuitem id="menu_app_proveedores" name="Proveedores" action="action_app_proveedores"
               sequence="984"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_suppliers.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_suppliers.svg"/>
     <record id="action_app_codigo_barras" model="ir.actions.client">
         <field name="name">Código de barras</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -280,7 +280,7 @@
     </record>
     <menuitem id="menu_app_codigo_barras" name="Código de barras" action="action_app_codigo_barras"
               sequence="985"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/barcode_label.svg"/>
+              web_icon="DOLAN_stock_mrp,static/description/icon_barcode.svg"/>
     <record id="action_app_reposicion" model="ir.actions.client">
         <field name="name">Reposición</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -288,7 +288,7 @@
     </record>
     <menuitem id="menu_app_reposicion" name="Reposición" action="action_app_reposicion"
               sequence="986"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_replenishment.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_replenishment.svg"/>
     <record id="action_app_transferencias" model="ir.actions.client">
         <field name="name">Transferencias</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -296,7 +296,7 @@
     </record>
     <menuitem id="menu_app_transferencias" name="Transferencias" action="action_app_transferencias"
               sequence="987"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_transfers.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_transfers.svg"/>
     <record id="action_app_lotes_series" model="ir.actions.client">
         <field name="name">Lotes y series</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -304,7 +304,7 @@
     </record>
     <menuitem id="menu_app_lotes_series" name="Lotes y series" action="action_app_lotes_series"
               sequence="988"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_lots.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_lots.svg"/>
     <record id="action_app_inventario_fisico" model="ir.actions.client">
         <field name="name">Inventario físico</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -312,7 +312,7 @@
     </record>
     <menuitem id="menu_app_inventario_fisico" name="Inventario físico" action="action_app_inventario_fisico"
               sequence="989"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_stock_count.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_stock_count.svg"/>
     <record id="action_app_costos" model="ir.actions.client">
         <field name="name">Costos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -320,7 +320,7 @@
     </record>
     <menuitem id="menu_app_costos" name="Costos" action="action_app_costos"
               sequence="990"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_costs.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_costs.svg"/>
     <record id="action_app_remitos" model="ir.actions.client">
         <field name="name">Remitos y COT</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -328,7 +328,7 @@
     </record>
     <menuitem id="menu_app_remitos" name="Remitos y COT" action="action_app_remitos"
               sequence="1001"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_delivery_notes.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_delivery_notes.svg"/>
     <record id="action_app_preparacion" model="ir.actions.client">
         <field name="name">Preparación de pedidos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -336,7 +336,7 @@
     </record>
     <menuitem id="menu_app_preparacion" name="Preparación de pedidos" action="action_app_preparacion"
               sequence="1002"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_picking.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_picking.svg"/>
     <record id="action_app_rutas_reparto" model="ir.actions.client">
         <field name="name">Rutas y reparto</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -344,7 +344,7 @@
     </record>
     <menuitem id="menu_app_rutas_reparto" name="Rutas y reparto" action="action_app_rutas_reparto"
               sequence="1003"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_routes.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_routes.svg"/>
     <record id="action_app_prueba_entrega" model="ir.actions.client">
         <field name="name">Prueba de entrega</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -352,7 +352,7 @@
     </record>
     <menuitem id="menu_app_prueba_entrega" name="Prueba de entrega" action="action_app_prueba_entrega"
               sequence="1004"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_proof_delivery.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_proof_delivery.svg"/>
     <record id="action_app_flota" model="ir.actions.client">
         <field name="name">Flota</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -360,7 +360,7 @@
     </record>
     <menuitem id="menu_app_flota" name="Flota" action="action_app_flota"
               sequence="1005"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/fleet.svg"/>
+              web_icon="fleet,static/description/icon.png"/>
     <record id="action_app_empleados" model="ir.actions.client">
         <field name="name">Empleados</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -368,7 +368,7 @@
     </record>
     <menuitem id="menu_app_empleados" name="Empleados" action="action_app_empleados"
               sequence="1021"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/employees.svg"/>
+              web_icon="hr,static/description/icon.png"/>
     <record id="action_app_ausencias" model="ir.actions.client">
         <field name="name">Ausencias</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -376,7 +376,7 @@
     </record>
     <menuitem id="menu_app_ausencias" name="Ausencias" action="action_app_ausencias"
               sequence="1022"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/vacations.svg"/>
+              web_icon="hr_holidays,static/description/icon.png"/>
     <record id="action_app_turnos" model="ir.actions.client">
         <field name="name">Turnos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -384,7 +384,7 @@
     </record>
     <menuitem id="menu_app_turnos" name="Turnos" action="action_app_turnos"
               sequence="1023"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/scheduling.svg"/>
+              web_icon="DOLAN_hr_scheduling,static/description/icon.svg"/>
     <record id="action_app_asistencias" model="ir.actions.client">
         <field name="name">Asistencias</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -392,7 +392,7 @@
     </record>
     <menuitem id="menu_app_asistencias" name="Asistencias" action="action_app_asistencias"
               sequence="1024"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/attendance.svg"/>
+              web_icon="hr_attendance,static/description/icon.png"/>
     <record id="action_app_novedades" model="ir.actions.client">
         <field name="name">Novedades</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -400,7 +400,7 @@
     </record>
     <menuitem id="menu_app_novedades" name="Novedades" action="action_app_novedades"
               sequence="1025"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_hr_novelties.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_hr_novelties.svg"/>
     <record id="action_app_sueldos" model="ir.actions.client">
         <field name="name">Sueldos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -408,7 +408,7 @@
     </record>
     <menuitem id="menu_app_sueldos" name="Sueldos" action="action_app_sueldos"
               sequence="1026"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/payroll.svg"/>
+              web_icon="DOLAN_payroll_ar,static/description/icon.svg"/>
     <record id="action_app_documentos_personal" model="ir.actions.client">
         <field name="name">Documentos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -416,7 +416,7 @@
     </record>
     <menuitem id="menu_app_documentos_personal" name="Documentos" action="action_app_documentos_personal"
               sequence="1027"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_hr_documents.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_hr_documents.svg"/>
     <record id="action_app_gestion_rrhh" model="ir.actions.client">
         <field name="name">Gestión RRHH</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -424,7 +424,7 @@
     </record>
     <menuitem id="menu_app_gestion_rrhh" name="Gestión RRHH" action="action_app_gestion_rrhh"
               sequence="1028"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/hr_management.svg"/>
+              web_icon="DOLAN_hr_talent,static/description/icon.svg"/>
     <record id="action_app_reportes_personal" model="ir.actions.client">
         <field name="name">Reportes de Personal</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -432,7 +432,7 @@
     </record>
     <menuitem id="menu_app_reportes_personal" name="Reportes de Personal" action="action_app_reportes_personal"
               sequence="1029"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/hr_reports.svg"/>
+              web_icon="DOLAN_hr_reports,static/description/icon.svg"/>
     <record id="action_app_reclutamiento" model="ir.actions.client">
         <field name="name">Reclutamiento</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -440,7 +440,7 @@
     </record>
     <menuitem id="menu_app_reclutamiento" name="Reclutamiento" action="action_app_reclutamiento"
               sequence="1030"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/recruitment.svg"/>
+              web_icon="hr_recruitment,static/description/icon.png"/>
     <record id="action_app_manufactura" model="ir.actions.client">
         <field name="name">Manufactura</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -448,7 +448,7 @@
     </record>
     <menuitem id="menu_app_manufactura" name="Manufactura" action="action_app_manufactura"
               sequence="1041"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/manufacturing.svg"/>
+              web_icon="mrp,static/description/icon.png"/>
     <record id="action_app_taller" model="ir.actions.client">
         <field name="name">Taller</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -456,7 +456,7 @@
     </record>
     <menuitem id="menu_app_taller" name="Taller" action="action_app_taller"
               sequence="1042"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/workshop.svg"/>
+              web_icon="DOLAN_stock_mrp,static/description/icon_shopfloor.svg"/>
     <record id="action_app_calidad" model="ir.actions.client">
         <field name="name">Calidad</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -464,7 +464,7 @@
     </record>
     <menuitem id="menu_app_calidad" name="Calidad" action="action_app_calidad"
               sequence="1043"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_quality.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_quality.svg"/>
     <record id="action_app_mantenimiento" model="ir.actions.client">
         <field name="name">Mantenimiento</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -472,7 +472,7 @@
     </record>
     <menuitem id="menu_app_mantenimiento" name="Mantenimiento" action="action_app_mantenimiento"
               sequence="1044"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/maintenance.svg"/>
+              web_icon="maintenance,static/description/icon.png"/>
     <record id="action_app_activos" model="ir.actions.client">
         <field name="name">Activos fijos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -480,7 +480,7 @@
     </record>
     <menuitem id="menu_app_activos" name="Activos fijos" action="action_app_activos"
               sequence="1045"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_assets.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_assets.svg"/>
     <record id="action_app_proyectos" model="ir.actions.client">
         <field name="name">Proyectos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -488,7 +488,7 @@
     </record>
     <menuitem id="menu_app_proyectos" name="Proyectos" action="action_app_proyectos"
               sequence="1046"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/projects.svg"/>
+              web_icon="project,static/description/icon.png"/>
     <record id="action_app_reparaciones" model="ir.actions.client">
         <field name="name">Servicio técnico</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -496,7 +496,7 @@
     </record>
     <menuitem id="menu_app_reparaciones" name="Servicio técnico" action="action_app_reparaciones"
               sequence="1047"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/repairs.svg"/>
+              web_icon="repair,static/description/icon.png"/>
     <record id="action_app_suscripciones" model="ir.actions.client">
         <field name="name">Suscripciones</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -504,7 +504,7 @@
     </record>
     <menuitem id="menu_app_suscripciones" name="Suscripciones" action="action_app_suscripciones"
               sequence="1061"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/subscriptions.svg"/>
+              web_icon="DOLAN_subscription,static/description/icon.svg"/>
     <record id="action_app_alquileres" model="ir.actions.client">
         <field name="name">Alquileres</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -512,7 +512,7 @@
     </record>
     <menuitem id="menu_app_alquileres" name="Alquileres" action="action_app_alquileres"
               sequence="1062"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/rentals.svg"/>
+              web_icon="DOLAN_renting,static/description/icon.svg"/>
     <record id="action_app_contratos" model="ir.actions.client">
         <field name="name">Contratos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -520,7 +520,7 @@
     </record>
     <menuitem id="menu_app_contratos" name="Contratos" action="action_app_contratos"
               sequence="1063"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_contracts.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_contracts.svg"/>
     <record id="action_app_turnos_clientes" model="ir.actions.client">
         <field name="name">Agenda de turnos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -528,7 +528,7 @@
     </record>
     <menuitem id="menu_app_turnos_clientes" name="Agenda de turnos" action="action_app_turnos_clientes"
               sequence="1064"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_appointments.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_appointments.svg"/>
     <record id="action_app_mesa_ayuda" model="ir.actions.client">
         <field name="name">Mesa de ayuda</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -536,7 +536,7 @@
     </record>
     <menuitem id="menu_app_mesa_ayuda" name="Mesa de ayuda" action="action_app_mesa_ayuda"
               sequence="1065"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_helpdesk.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_helpdesk.svg"/>
     <record id="action_app_ordenes_servicio" model="ir.actions.client">
         <field name="name">Órdenes de servicio</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -544,7 +544,7 @@
     </record>
     <menuitem id="menu_app_ordenes_servicio" name="Órdenes de servicio" action="action_app_ordenes_servicio"
               sequence="1066"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_service_orders.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_service_orders.svg"/>
     <record id="action_app_whatsapp" model="ir.actions.client">
         <field name="name">WhatsApp</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -552,7 +552,7 @@
     </record>
     <menuitem id="menu_app_whatsapp" name="WhatsApp" action="action_app_whatsapp"
               sequence="1081"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/whatsapp_brand.svg"/>
+              web_icon="DOLAN_whatsapp,static/description/icon.svg"/>
     <record id="action_app_asistente_ia" model="ir.actions.client">
         <field name="name">Asistente IA</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -560,7 +560,7 @@
     </record>
     <menuitem id="menu_app_asistente_ia" name="Asistente IA" action="action_app_asistente_ia"
               sequence="1082"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/ai.svg"/>
+              web_icon="DOLAN_ai,static/description/icon.svg"/>
     <record id="action_app_ocr" model="ir.actions.client">
         <field name="name">OCR de comprobantes</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -568,7 +568,7 @@
     </record>
     <menuitem id="menu_app_ocr" name="OCR de comprobantes" action="action_app_ocr"
               sequence="1083"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_ocr.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_ocr.svg"/>
     <record id="action_app_conversaciones" model="ir.actions.client">
         <field name="name">Conversaciones</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -576,7 +576,7 @@
     </record>
     <menuitem id="menu_app_conversaciones" name="Conversaciones" action="action_app_conversaciones"
               sequence="1084"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/conversations.svg"/>
+              web_icon="mail,static/description/icon.png"/>
     <record id="action_app_plantillas" model="ir.actions.client">
         <field name="name">Plantillas</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -584,7 +584,7 @@
     </record>
     <menuitem id="menu_app_plantillas" name="Plantillas" action="action_app_plantillas"
               sequence="1085"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_templates.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_templates.svg"/>
     <record id="action_app_automatizaciones" model="ir.actions.client">
         <field name="name">Automatizaciones</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -592,7 +592,7 @@
     </record>
     <menuitem id="menu_app_automatizaciones" name="Automatizaciones" action="action_app_automatizaciones"
               sequence="1086"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_automations.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_automations.svg"/>
     <record id="action_app_conocimiento" model="ir.actions.client">
         <field name="name">Conocimiento</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -600,7 +600,7 @@
     </record>
     <menuitem id="menu_app_conocimiento" name="Conocimiento" action="action_app_conocimiento"
               sequence="1087"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/articles.svg"/>
+              web_icon="DOLAN_knowledge_bi,static/description/icon_knowledge.svg"/>
     <record id="action_app_email_marketing" model="ir.actions.client">
         <field name="name">Marketing por correo</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -608,7 +608,7 @@
     </record>
     <menuitem id="menu_app_email_marketing" name="Marketing por correo" action="action_app_email_marketing"
               sequence="1088"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/email_marketing.svg"/>
+              web_icon="mass_mailing,static/description/icon.png"/>
     <record id="action_app_ayuda" model="ir.actions.client">
         <field name="name">Ayuda</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -616,7 +616,7 @@
     </record>
     <menuitem id="menu_app_ayuda" name="Ayuda" action="action_app_ayuda"
               sequence="1100"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_help.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_help.svg"/>
     <record id="action_app_tablero_dueno" model="ir.actions.client">
         <field name="name">Tablero del dueño</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -624,7 +624,7 @@
     </record>
     <menuitem id="menu_app_tablero_dueno" name="Tablero del dueño" action="action_app_tablero_dueno"
               sequence="1100"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_owner_dashboard.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_owner_dashboard.svg"/>
     <record id="action_app_tableros" model="ir.actions.client">
         <field name="name">Tableros</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -632,7 +632,7 @@
     </record>
     <menuitem id="menu_app_tableros" name="Tableros" action="action_app_tableros"
               sequence="1101"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/dashboards.svg"/>
+              web_icon="spreadsheet_dashboard,static/description/icon.png"/>
     <record id="action_app_dashboard_gerencial" model="ir.actions.client">
         <field name="name">Dashboard gerencial</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -640,7 +640,7 @@
     </record>
     <menuitem id="menu_app_dashboard_gerencial" name="Dashboard gerencial" action="action_app_dashboard_gerencial"
               sequence="1102"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_executive_dashboard.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_executive_dashboard.svg"/>
     <record id="action_app_rentabilidad" model="ir.actions.client">
         <field name="name">Rentabilidad</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -648,7 +648,7 @@
     </record>
     <menuitem id="menu_app_rentabilidad" name="Rentabilidad" action="action_app_rentabilidad"
               sequence="1103"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_profitability.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_profitability.svg"/>
     <record id="action_app_flujo_caja" model="ir.actions.client">
         <field name="name">Flujo de caja</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -656,7 +656,7 @@
     </record>
     <menuitem id="menu_app_flujo_caja" name="Flujo de caja" action="action_app_flujo_caja"
               sequence="1104"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_cash_flow.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_cash_flow.svg"/>
     <record id="action_app_auditoria" model="ir.actions.client">
         <field name="name">Auditoría</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -664,7 +664,7 @@
     </record>
     <menuitem id="menu_app_auditoria" name="Auditoría" action="action_app_auditoria"
               sequence="1105"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_audit.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_audit.svg"/>
     <record id="action_app_alertas" model="ir.actions.client">
         <field name="name">Alertas</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -672,7 +672,7 @@
     </record>
     <menuitem id="menu_app_alertas" name="Alertas" action="action_app_alertas"
               sequence="1106"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_alerts.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_alerts.svg"/>
     <record id="action_app_presupuesto_financiero" model="ir.actions.client">
         <field name="name">Presupuesto financiero</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -680,7 +680,7 @@
     </record>
     <menuitem id="menu_app_presupuesto_financiero" name="Presupuesto financiero" action="action_app_presupuesto_financiero"
               sequence="1107"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_budget.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_budget.svg"/>
     <record id="action_app_ajustes" model="ir.actions.client">
         <field name="name">Ajustes</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -688,7 +688,7 @@
     </record>
     <menuitem id="menu_app_ajustes" name="Ajustes" action="action_app_ajustes"
               sequence="1121"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/settings.svg"/>
+              web_icon="base,static/description/settings.png"/>
     <record id="action_app_empresas" model="ir.actions.client">
         <field name="name">Empresas</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -696,7 +696,7 @@
     </record>
     <menuitem id="menu_app_empresas" name="Empresas" action="action_app_empresas"
               sequence="1122"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_companies.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_companies.svg"/>
     <record id="action_app_sucursales" model="ir.actions.client">
         <field name="name">Sucursales</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -704,7 +704,7 @@
     </record>
     <menuitem id="menu_app_sucursales" name="Sucursales" action="action_app_sucursales"
               sequence="1123"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_branches.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_branches.svg"/>
     <record id="action_app_usuarios" model="ir.actions.client">
         <field name="name">Usuarios</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -712,7 +712,7 @@
     </record>
     <menuitem id="menu_app_usuarios" name="Usuarios" action="action_app_usuarios"
               sequence="1124"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_users.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_users.svg"/>
     <record id="action_app_parametros_fiscales" model="ir.actions.client">
         <field name="name">Conexión ARCA</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -720,7 +720,7 @@
     </record>
     <menuitem id="menu_app_parametros_fiscales" name="Conexión ARCA" action="action_app_parametros_fiscales"
               sequence="1125"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_fiscal_settings.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_fiscal_settings.svg"/>
     <record id="action_app_integraciones" model="ir.actions.client">
         <field name="name">Integraciones</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -728,7 +728,7 @@
     </record>
     <menuitem id="menu_app_integraciones" name="Integraciones" action="action_app_integraciones"
               sequence="1126"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_integrations.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_integrations.svg"/>
     <record id="action_app_importaciones" model="ir.actions.client">
         <field name="name">Importaciones</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -736,7 +736,7 @@
     </record>
     <menuitem id="menu_app_importaciones" name="Importaciones" action="action_app_importaciones"
               sequence="1127"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_imports.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_imports.svg"/>
     <record id="action_app_aplicaciones" model="ir.actions.client">
         <field name="name">Aplicaciones</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -744,7 +744,7 @@
     </record>
     <menuitem id="menu_app_aplicaciones" name="Aplicaciones" action="action_app_aplicaciones"
               sequence="1128"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/applications.svg"/>
+              web_icon="base,static/description/modules.png"/>
     <record id="action_app_catalogo_apps" model="ir.actions.client">
         <field name="name">Catálogo de apps</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -752,7 +752,7 @@
     </record>
     <menuitem id="menu_app_catalogo_apps" name="Catálogo de apps" action="action_app_catalogo_apps"
               sequence="1129"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_app_catalog.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_app_catalog.svg"/>
     <record id="action_app_respaldos" model="ir.actions.client">
         <field name="name">Respaldos</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -760,7 +760,7 @@
     </record>
     <menuitem id="menu_app_respaldos" name="Respaldos" action="action_app_respaldos"
               sequence="1130"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_backups.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_backups.svg"/>
     <record id="action_app_diagnostico" model="ir.actions.client">
         <field name="name">Diagnóstico</field>
         <field name="tag">dolan_app_catalog_placeholder</field>
@@ -768,5 +768,5 @@
     </record>
     <menuitem id="menu_app_diagnostico" name="Diagnóstico" action="action_app_diagnostico"
               sequence="1131"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_diagnostics.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_diagnostics.svg"/>
 </odoo>

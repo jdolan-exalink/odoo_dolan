@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Presupuesto financiero',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Presupuesto por cuenta contable y mes contra lo real, con desvío y ejecución',
     'description': """
 Presupuesto financiero

@@ -24,7 +24,7 @@ ICON_STYLE_ALIASES = {
 
 ICON_STYLE_IDS = {value for value, _label in ICON_STYLE_CHOICES} | set(ICON_STYLE_ALIASES)
 
-DEFAULT_ICON_STYLE = "mosaic"
+DEFAULT_ICON_STYLE = "odoo_original"
 
 
 def normalize_icon_style(value):

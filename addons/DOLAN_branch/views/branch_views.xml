@@ -135,5 +135,5 @@
 
     <menuitem id="menu_dolan_branch_root" name="Sucursales" sequence="98"
               groups="base.group_erp_manager" action="action_dolan_branch"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_branches.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_branches.svg"/>
 </odoo>

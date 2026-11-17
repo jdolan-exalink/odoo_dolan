@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Fidelización',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Puntos por compra, tarjetas de regalo y cupones sobre el módulo de fidelización de Odoo, en pesos y en castellano',
     'description': """
 Fidelización

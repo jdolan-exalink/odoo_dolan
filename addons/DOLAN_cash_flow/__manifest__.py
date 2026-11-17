@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Flujo de caja',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Caja proyectada por semana o mes con cobranzas, pagos, cheques y previsiones manuales',
     'description': """
 Flujo de caja proyectado

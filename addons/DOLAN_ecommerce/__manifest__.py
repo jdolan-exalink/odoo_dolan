@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Tienda online',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Tienda web sobre el eCommerce de Odoo: publicación por categoría, stock en línea y cobro con Mercado Pago',
     'description': """
 Tienda online

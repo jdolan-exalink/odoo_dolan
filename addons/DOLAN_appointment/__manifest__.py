@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Agenda de turnos',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Turnos de clientes por profesional o recurso, sin superposiciones y con recordatorio',
     'description': """
 Agenda de turnos

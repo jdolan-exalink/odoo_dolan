@@ -83,5 +83,5 @@
 
     <menuitem id="menu_dolan_profitability_root" name="Rentabilidad" sequence="49"
               groups="account.group_account_manager" action="action_dolan_profitability"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_profitability.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_profitability.svg"/>
 </odoo>

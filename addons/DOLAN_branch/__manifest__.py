@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Sucursales',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Sucursales dentro de una empresa (mismo CUIT): depósito, punto de venta fiscal, caja, lista de precios y usuarios',
     'description': """
 Sucursales

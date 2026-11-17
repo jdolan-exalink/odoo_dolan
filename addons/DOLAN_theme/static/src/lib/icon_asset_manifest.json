@@ -4444,6 +4444,440 @@
       "upstream_path": "tabler/catalog_help-038cc73e.svg",
       "local_path": "tabler/catalog_help-038cc73e.svg",
       "sha256": "038cc73e266e5f9f629378aedfcb05a10fd152749d03b845bccaea29894a4695"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_alerts.svg",
+      "local_path": "odoo/catalog_alerts.svg",
+      "sha256": "aa29eaa64402b27ecc3d710844cdd704a7471b4a5bf1a46576d827f35396f2e9"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_app_catalog.svg",
+      "local_path": "odoo/catalog_app_catalog.svg",
+      "sha256": "9510b0b2ff4b142b79e0a8e8d096cb5b854108636a02e09977256a760b573656"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_appointments.svg",
+      "local_path": "odoo/catalog_appointments.svg",
+      "sha256": "49f77700b68d5859421ba57c0d548e4c0eef94848667be16663ff7b7f8822bdb"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_assets.svg",
+      "local_path": "odoo/catalog_assets.svg",
+      "sha256": "a546c5ba1325daeb874348b531c71b5151ca3645f46ed47891517236bd1df3ac"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_audit.svg",
+      "local_path": "odoo/catalog_audit.svg",
+      "sha256": "87873370c841cda406b169722a084cd1948e7ef150e6d99fb1e70c1661aac836"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_automations.svg",
+      "local_path": "odoo/catalog_automations.svg",
+      "sha256": "ff94a5db4d14b28bc2ac7f5feffe77179705c9c68da78c03fe7880a9c9cdc167"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_backups.svg",
+      "local_path": "odoo/catalog_backups.svg",
+      "sha256": "ad9bc6e587953fd1979e11b5faa81cb1ca361f53cb8d09965dca783ffb53c2fe"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_banks.svg",
+      "local_path": "odoo/catalog_banks.svg",
+      "sha256": "37dc39ee31abbd4bc3a39e88dff908c893127b448edf6108d81de8cbf368c10f"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_branches.svg",
+      "local_path": "odoo/catalog_branches.svg",
+      "sha256": "57c6c0d13d7ca06f43f9383fd1545efc52a465f438ff8f8265481abd8c034876"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_budget.svg",
+      "local_path": "odoo/catalog_budget.svg",
+      "sha256": "41287f06fc484ba0c07df416b9abf09f759053294ec52f0371dfebe74d4e8f78"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_cash_flow.svg",
+      "local_path": "odoo/catalog_cash_flow.svg",
+      "sha256": "1f8876641c6e60dd7598d0e4555cd8a02181c51ffd07198b6810c02a603de511"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_cash_shifts.svg",
+      "local_path": "odoo/catalog_cash_shifts.svg",
+      "sha256": "84857e9a3265d833ed44a17d717422aeb57cb1abcd4d8832d0ce77f306bb2b27"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_checks.svg",
+      "local_path": "odoo/catalog_checks.svg",
+      "sha256": "96410a61108e10713acca2c8e8b6dc8498317dd7b0b51b575965b2a62d6aed4c"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_collections.svg",
+      "local_path": "odoo/catalog_collections.svg",
+      "sha256": "2c31fb09b2e47366618383c50068d51cc5350af95dcb76a3e07e3aede7382c39"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_companies.svg",
+      "local_path": "odoo/catalog_companies.svg",
+      "sha256": "f93445c28ce8abc3989b5e4d7c4e1fefc29fb5f122e9effe926ab1788fb13dbb"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_contracts.svg",
+      "local_path": "odoo/catalog_contracts.svg",
+      "sha256": "29c4e2257009e6bc9fff8e807e32b729728cccbea50be87e74a4a66b370c06b6"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_costs.svg",
+      "local_path": "odoo/catalog_costs.svg",
+      "sha256": "4adc375e5e0bf7f50b96eaefd7d50d024712e5f8040230e72d9c302770781e6f"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_current_accounts.svg",
+      "local_path": "odoo/catalog_current_accounts.svg",
+      "sha256": "5e441d3d802d8a44f826c71575c7f9ccb46cd62bfea03edd793da3e5faa586dd"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_customers.svg",
+      "local_path": "odoo/catalog_customers.svg",
+      "sha256": "b02be318a565598656e67ef8f98f41b25f5b6a31f4fac7320eddb61c27c174e8"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_debtors.svg",
+      "local_path": "odoo/catalog_debtors.svg",
+      "sha256": "f6380229b74997318bf0403a829e2502e78527483835d291f20c2cccb332c994"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_delivery_notes.svg",
+      "local_path": "odoo/catalog_delivery_notes.svg",
+      "sha256": "668908d634c9151b0f5b11c8cf0da647844bd0abe3fec75a7d0802847dda68a1"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_diagnostics.svg",
+      "local_path": "odoo/catalog_diagnostics.svg",
+      "sha256": "6895c0b2fab981daf1fa411089adcad156712b8462058af247f4860dec2b38af"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_ecommerce.svg",
+      "local_path": "odoo/catalog_ecommerce.svg",
+      "sha256": "7b7c62e7ac0f5abebb88cb9ce93ae362ab425a59a8ddd9f8432a8fa1dd020a09"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_executive_dashboard.svg",
+      "local_path": "odoo/catalog_executive_dashboard.svg",
+      "sha256": "aba3c4109884d331c448d5b9fd1e9b0792e8db42079d449ee880c3f2f6c305aa"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_financial_reports.svg",
+      "local_path": "odoo/catalog_financial_reports.svg",
+      "sha256": "9a986f1b9088dd44369a5604313de00f515d5566e274471d76e729fd9a964458"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_fiscal_reports.svg",
+      "local_path": "odoo/catalog_fiscal_reports.svg",
+      "sha256": "b595385546cfe7e2be3884852c943079de0ce8ae6bfc62538b033054e5b238bd"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_fiscal_settings.svg",
+      "local_path": "odoo/catalog_fiscal_settings.svg",
+      "sha256": "8ba8f19484af0d667481b5194cc566b03f5635229262a86b450827dd005b6200"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_help.svg",
+      "local_path": "odoo/catalog_help.svg",
+      "sha256": "0784dc1761ea1373e74975e05bd64b52f3ccec4300720b17dbdd68692ba859be"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_helpdesk.svg",
+      "local_path": "odoo/catalog_helpdesk.svg",
+      "sha256": "7dfc0450f3b57a5ce154a907a7ec64b0fd56b065dbd0b6ba95d867cf27bf5a80"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_hr_documents.svg",
+      "local_path": "odoo/catalog_hr_documents.svg",
+      "sha256": "a9b332159b848fec3a102fd6a324333bd546bd8e7522508b2db308dfd4a78179"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_hr_novelties.svg",
+      "local_path": "odoo/catalog_hr_novelties.svg",
+      "sha256": "66cf1563fb2a5c8a60daf2a9dcf920b302a9e81e3ef23eda0924a493029b71e2"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_imports.svg",
+      "local_path": "odoo/catalog_imports.svg",
+      "sha256": "394badec391c9541a35a68d0ffac688b8094e35c15f8f73c16b61a7cadf0bad1"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_integrations.svg",
+      "local_path": "odoo/catalog_integrations.svg",
+      "sha256": "3e6c94f94acbd0c7425db38d64168ad55b011abf01f4bf8dd4496c98968390c9"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_lots.svg",
+      "local_path": "odoo/catalog_lots.svg",
+      "sha256": "c9ea9668ad0cd09abc0973bf679c2049bef0d274cb390140302516f1f0f6fedc"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_loyalty.svg",
+      "local_path": "odoo/catalog_loyalty.svg",
+      "sha256": "46f0f0f50be8a7fc03e994a6cf090996077aa2f9339cbe19c17461b4a409a5f7"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_marketplace.svg",
+      "local_path": "odoo/catalog_marketplace.svg",
+      "sha256": "ffefd4fb6e0da40134815603aa988f8ddcccdaf14f28f6dda1d5ac9b0a48d2a0"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_ocr.svg",
+      "local_path": "odoo/catalog_ocr.svg",
+      "sha256": "ff3d60422de6952dedb6610c46efa55e2716861a4ae8ecd483eadf1944900d9d"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_owner_dashboard.svg",
+      "local_path": "odoo/catalog_owner_dashboard.svg",
+      "sha256": "153bb111fe409c9fb5b101fe62a0523a17526e80f191caf7ecce45912a2ca4d4"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_picking.svg",
+      "local_path": "odoo/catalog_picking.svg",
+      "sha256": "0feda6de9bfb76a68aa25868f28e6e6d50c42ad4da87d5bfdf3aaca83ce2959e"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_pos_closing.svg",
+      "local_path": "odoo/catalog_pos_closing.svg",
+      "sha256": "a82383a8981e2019387b900ab75261e1a4b533b6290ba349f03405b601362b29"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_pricelists.svg",
+      "local_path": "odoo/catalog_pricelists.svg",
+      "sha256": "bb7a3f1a55820d5dabb28028f88e90ad1c925e99286385f734d99f5f6e323771"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_products.svg",
+      "local_path": "odoo/catalog_products.svg",
+      "sha256": "3b961655956e4ae336bab175258e6d493f9ca5571ce257f443a87b0a85aa7e74"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_profitability.svg",
+      "local_path": "odoo/catalog_profitability.svg",
+      "sha256": "2617217a82eb69ea6b2c0e0b7b31eb4b5554528ac0a0b00657c1b8aefb60b503"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_proof_delivery.svg",
+      "local_path": "odoo/catalog_proof_delivery.svg",
+      "sha256": "39601e4a2be5dc2abfee7ac84da00286210b29a7276244a8cb3cc165a88db7e6"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_quality.svg",
+      "local_path": "odoo/catalog_quality.svg",
+      "sha256": "f493a37a34a4eb7e8db6c0ecd1ce293b24124c45c7fecd974268559900b41111"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_quotations.svg",
+      "local_path": "odoo/catalog_quotations.svg",
+      "sha256": "08faafeabd4e482b2b47c20b2c601561ac1b38ce53245493881314a8d1a4da98"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_reconciliation.svg",
+      "local_path": "odoo/catalog_reconciliation.svg",
+      "sha256": "0e9074e615d3c3eef1c0d3d9b52a2aebe839ade281417e46c7b4dd1cb468045c"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_replenishment.svg",
+      "local_path": "odoo/catalog_replenishment.svg",
+      "sha256": "8f1a11d1ee5aa6a82fb24ae8854981bc77a830505dde84974df2525ce3fa2c05"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_routes.svg",
+      "local_path": "odoo/catalog_routes.svg",
+      "sha256": "fff1b3f3ab28f1f9b3d4a270e3641b749ba9a9f7ab1ecf43d221c50966f5103a"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_service_orders.svg",
+      "local_path": "odoo/catalog_service_orders.svg",
+      "sha256": "486b244874072a407a0180bd5e69ddffd1afcd19c36ce9ae9a302e2f8921dc82"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_stock_count.svg",
+      "local_path": "odoo/catalog_stock_count.svg",
+      "sha256": "3861d4fce6cfd1a418e03a0e85dbe518dd0c5a6d573aec4da49d39fe096a3fff"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_suppliers.svg",
+      "local_path": "odoo/catalog_suppliers.svg",
+      "sha256": "87c97c7fd24642ddefcfd82bba6ed2164298b8126a27aa0f9ee851be1708bedb"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_taxes.svg",
+      "local_path": "odoo/catalog_taxes.svg",
+      "sha256": "e6ab10b6fc7733d58cb5cf37f35039edb9b60e2bcff8169b460877518e70cea2"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_templates.svg",
+      "local_path": "odoo/catalog_templates.svg",
+      "sha256": "21fe63058efec7b2a7ef222357e8bf179fd52d09e0266c438eb41a0c53b16372"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_transfers.svg",
+      "local_path": "odoo/catalog_transfers.svg",
+      "sha256": "80b543fc60eecba66f39150d8f02ec92938b79c72179278a5897561b962b32a4"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_treasury.svg",
+      "local_path": "odoo/catalog_treasury.svg",
+      "sha256": "36c2d3a56113f547c2bac506903886bdffbb7119de07f4b0a40fa4a42add0e20"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_users.svg",
+      "local_path": "odoo/catalog_users.svg",
+      "sha256": "c1556f55303c0aeeed1400646394c100402639dbd202225de70341e97b674245"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/catalog_vendor_payments.svg",
+      "local_path": "odoo/catalog_vendor_payments.svg",
+      "sha256": "49e799de3bf5fab4dd7f6e4cf96050d1b0138923991f31bfc8e26306b72de785"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/hr_management.svg",
+      "local_path": "odoo/hr_management.svg",
+      "sha256": "6be0b2f793f569d03b96087fc5bd6d66476215496785fd114e3b621d8c34f5f6"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/hr_reports.svg",
+      "local_path": "odoo/hr_reports.svg",
+      "sha256": "3260e80e4809a7829073ad2d2741455ffb07edd3c38453bfcd7f8c847fdbf5e7"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/payroll.svg",
+      "local_path": "odoo/payroll.svg",
+      "sha256": "3d0acf2f7c0dfd07e133ed72cc4a96d34d782d801d949de01f551386065b18c7"
+    },
+    {
+      "library": "dolan_custom",
+      "commit": "local-2026-11-13",
+      "upstream_path": "odoo/scheduling.svg",
+      "local_path": "odoo/scheduling.svg",
+      "sha256": "45111f64d3c63c925ec1f8721b86b7db52afadcbca000aa0b0048524f0f65113"
     }
   ]
 }

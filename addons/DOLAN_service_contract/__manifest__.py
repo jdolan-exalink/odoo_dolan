@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Contratos',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Contratos de servicio con vigencia, renovación y ajuste de precio por índice (IPC, ICL, CER) o porcentaje',
     'description': """
 Contratos

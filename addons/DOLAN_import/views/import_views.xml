@@ -77,5 +77,5 @@
 
     <menuitem id="menu_dolan_import_root" name="Importaciones" sequence="100"
               groups="base.group_erp_manager" action="action_dolan_import_batch"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_imports.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_imports.svg"/>
 </odoo>

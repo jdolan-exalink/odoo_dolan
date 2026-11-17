@@ -104,7 +104,7 @@
 
     <menuitem id="menu_dolan_audit_root" name="Auditoría" sequence="95"
               groups="group_audit_viewer"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_audit.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_audit.svg"/>
     <menuitem id="menu_dolan_audit_log" name="Bitácora" parent="menu_dolan_audit_root" action="action_dolan_audit_log" sequence="10"/>
     <menuitem id="menu_dolan_audit_rules" name="Qué se audita" parent="menu_dolan_audit_root" action="action_dolan_audit_rule" sequence="20"
               groups="base.group_system"/>

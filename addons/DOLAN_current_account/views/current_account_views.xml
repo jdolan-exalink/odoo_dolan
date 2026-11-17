@@ -238,7 +238,7 @@
 
     <menuitem id="menu_dolan_current_account_root" name="Cuentas corrientes" sequence="45"
               groups="account.group_account_invoice"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_current_accounts.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_current_accounts.svg"/>
     <menuitem id="menu_dolan_current_account_accounts" name="Saldos" parent="menu_dolan_current_account_root"
               action="action_dolan_current_account" sequence="10"/>
     <menuitem id="menu_dolan_current_account_promises" name="Promesas de pago" parent="menu_dolan_current_account_root"

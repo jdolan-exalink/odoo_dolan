@@ -91,7 +91,7 @@
 
     <menuitem id="menu_dolan_backup_root" name="Respaldos" sequence="101"
               groups="base.group_system"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_backups.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_backups.svg"/>
     <menuitem id="menu_dolan_backup_list" name="Respaldos" parent="menu_dolan_backup_root" action="action_dolan_backup" sequence="10"/>
     <menuitem id="menu_dolan_backup_settings" name="Opciones" parent="menu_dolan_backup_root" action="action_dolan_backup_settings" sequence="20"/>
 </odoo>

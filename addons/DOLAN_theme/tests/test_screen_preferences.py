@@ -290,3 +290,29 @@ class TestScreenPreferences(TransactionCase):
             self.assertEqual(preference.favorite_menu_keys, [POS_MENU_XMLID])
         else:
             self.assertFalse(preference.favorite_menu_keys)
+
+    def test_odoo_icons_are_the_default_style(self):
+        from ..models.icon_styles import DEFAULT_ICON_STYLE
+        self.assertEqual(DEFAULT_ICON_STYLE, "odoo_original")
+        self.assertEqual(self.env["res.config.settings"].create({}).dolan_ui_icon_style,
+                         self.env["ir.config_parameter"].sudo().get_param("dolan_ui.icon_style") or "odoo_original")
+
+    def test_root_menus_of_dolan_apps_have_unique_odoo_style_icons(self):
+        """Con el estilo de Odoo cada app muestra su web_icon: ninguno se repite y los
+        íconos propios del theme son los de lib/odoo/, no los Flat viejos."""
+        roots = self.env["ir.ui.menu"].with_context(active_test=False).search([
+            ("parent_id", "=", False), ("web_icon", "!=", False),
+        ])
+        seen = {}
+        for menu in roots:
+            if menu.web_icon.startswith("DOLAN_theme,"):
+                self.assertIn("/lib/odoo/", menu.web_icon, f"{menu.name} usa {menu.web_icon}")
+            if not menu.web_icon_data:
+                continue
+            # Una app del catálogo que reutiliza el ícono de la app real es la misma app.
+            key = menu.web_icon_data
+            other = seen.get(key)
+            if other is not None:
+                self.assertEqual(other.web_icon, menu.web_icon,
+                                 f"{menu.name} repite el ícono de {other.name}")
+            seen[key] = menu

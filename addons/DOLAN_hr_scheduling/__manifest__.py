@@ -2,7 +2,7 @@
 # Part of DOLAN Suite for Odoo 20 CE. See LICENSE file for full copyright and licensing details.
 {
     'name': 'DOLAN - Personal: Horarios, turnos y cuadrillas',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'category': 'Human Resources',
     'summary': 'Motor de turnos configurable: plantillas, ciclos 4x2/6x2/7x7 o libres, turnos nocturnos '
                'y partidos, cuadrillas con dotación mínima, cronogramas versionados y publicados',

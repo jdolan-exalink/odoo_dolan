@@ -2,7 +2,7 @@
 # Part of DOLAN Suite for Odoo 20 CE. See LICENSE file for full copyright and licensing details.
 {
     'name': 'DOLAN - Personal: Gestión RRHH (capacitación, desempeño y selección)',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'category': 'Human Resources',
     'summary': 'Cursos y sesiones que otorgan certificaciones con vencimiento, capacitaciones obligatorias por '
                'puesto, ciclos de evaluación con objetivos y notas privadas; selección con Reclutamiento',

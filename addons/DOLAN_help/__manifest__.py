@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Ayuda',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Centro de ayuda visual: cómo se usa cada app y los procedimientos de cada sector, con capturas',
     'description': """
 Ayuda

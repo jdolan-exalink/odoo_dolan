@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Importaciones',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Carga inicial guiada de clientes, proveedores, productos, saldos de cuenta corriente y stock, con validación previa y reversión',
     'description': """
 Importaciones

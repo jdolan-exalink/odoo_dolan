@@ -172,7 +172,7 @@
 
     <menuitem id="menu_dolan_field_service_root" name="Órdenes de servicio" sequence="62"
               groups="group_field_service_technician"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_service_orders.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_service_orders.svg"/>
     <menuitem id="menu_dolan_field_service_orders" name="Órdenes" parent="menu_dolan_field_service_root"
               action="action_dolan_service_order" sequence="10"/>
 </odoo>

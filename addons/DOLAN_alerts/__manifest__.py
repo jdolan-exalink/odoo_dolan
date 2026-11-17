@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Alertas',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Avisos por umbral: deuda vencida, pagos de la semana, caja proyectada negativa, diferencias de caja, margen bajo y stock crítico',
     'description': """
 Alertas

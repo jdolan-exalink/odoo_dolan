@@ -232,12 +232,12 @@
 
     <menuitem id="menu_dolan_delivery_route_root" name="Rutas y reparto" sequence="52"
               groups="group_logistics_driver"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_routes.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_routes.svg"/>
     <menuitem id="menu_dolan_delivery_routes" name="Hojas de ruta" parent="menu_dolan_delivery_route_root" action="action_dolan_delivery_route" sequence="10"/>
     <menuitem id="menu_dolan_delivery_reject_reasons" name="Motivos de rechazo" parent="menu_dolan_delivery_route_root"
               action="action_dolan_delivery_reject_reason" sequence="90" groups="group_logistics_manager"/>
 
     <menuitem id="menu_dolan_delivery_stop_root" name="Prueba de entrega" sequence="53"
               groups="group_logistics_driver" action="action_dolan_delivery_stop"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_proof_delivery.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_proof_delivery.svg"/>
 </odoo>

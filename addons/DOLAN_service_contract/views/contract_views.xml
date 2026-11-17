@@ -168,7 +168,7 @@
 
     <menuitem id="menu_dolan_contract_root" name="Contratos" sequence="63"
               groups="group_contract_user"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_contracts.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_contracts.svg"/>
     <menuitem id="menu_dolan_contract_contracts" name="Contratos" parent="menu_dolan_contract_root"
               action="action_dolan_contract" sequence="10"/>
     <menuitem id="menu_dolan_contract_indexes" name="Índices de ajuste" parent="menu_dolan_contract_root"
