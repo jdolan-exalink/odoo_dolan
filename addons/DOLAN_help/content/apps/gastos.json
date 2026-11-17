@@ -1,0 +1,56 @@
+{
+  "app": "gastos",
+  "intro": "La rendición de gastos de los empleados: cargás el comprobante (con lectura automática), se aprueba y se reintegra.",
+  "who": "Todos los empleados que hacen gastos y sus responsables.",
+  "tasks": [
+    {
+      "slug": "cargar-gasto",
+      "title": "Cargar un gasto",
+      "summary": "Sacás foto o subís el comprobante, se completa solo y lo enviás para aprobar.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Gastos > Mis gastos** y tocá **Nuevo** (1), o **Cargar** para subir el comprobante directo.",
+          "shot": {
+            "id": "gastos-cargar-1",
+            "go": "/odoo/action-hr_expense.hr_expense_actions_my_all",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Completá **Descripción**, **Producto** (tipo de gasto) y **Total** (1). En **Reembolso** elegí si lo pagaste vos o la empresa (2).",
+          "shot": {
+            "id": "gastos-cargar-2",
+            "go": "/odoo/action-hr_expense.hr_expense_actions_my_all/new",
+            "mark": [
+              "div[name=total_amount_currency], div[name=total_amount]",
+              "div[name=payment_mode]"
+            ]
+          }
+        },
+        {
+          "text": "Tocá **Adjuntar recibo** con la foto del comprobante (o **Digitalizar con IA** para que se lean los datos) y después **Enviar**."
+        }
+      ]
+    },
+    {
+      "slug": "aprobar-gastos",
+      "title": "Aprobar y reintegrar gastos",
+      "summary": "El responsable ve los gastos enviados en **Gastos por procesar**, los aprueba y administración los paga.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Gastos > Gastos por procesar**. Revisá cada gasto con su comprobante."
+        },
+        {
+          "text": "Tocá **Aprobar** o **Rechazar** (con motivo)."
+        },
+        {
+          "text": "Administración registra el asiento y el pago del reintegro al empleado."
+        }
+      ]
+    }
+  ]
+}

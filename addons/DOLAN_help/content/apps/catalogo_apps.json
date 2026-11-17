@@ -1,0 +1,29 @@
+{
+  "app": "catalogo_apps",
+  "intro": "El estado de cada app del catálogo DOLAN: operativa, beta o disponible, y quién la ve.",
+  "who": "Administradores.",
+  "tasks": [
+    {
+      "slug": "ver-catalogo",
+      "title": "Ver y ordenar las apps del catálogo",
+      "summary": "La lista muestra cada app con su carpeta, estado y si está visible; podés ocultar las que no uses.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Catálogo de apps** (1).",
+          "shot": {
+            "id": "catalogo-ver-1",
+            "go": "/odoo/action-DOLAN_app_catalog.action_dolan_app_catalog_entry",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ],
+            "menu": "base.menu_administration"
+          }
+        },
+        {
+          "text": "Para ocultar una app a todos, abrila y tildá **Oculta**. Con **Orden propio** cambiás su lugar en el Inicio."
+        }
+      ]
+    }
+  ]
+}

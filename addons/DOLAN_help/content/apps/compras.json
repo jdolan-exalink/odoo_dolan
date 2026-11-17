@@ -1,0 +1,64 @@
+{
+  "app": "compras",
+  "intro": "Pedidos a proveedores: pedís cotización, confirmás la orden, recibís la mercadería y cargás la factura del proveedor.",
+  "who": "Compras y depósito.",
+  "tasks": [
+    {
+      "slug": "pedir-cotizacion",
+      "title": "Pedir una cotización a un proveedor",
+      "summary": "Creás la solicitud con el proveedor y los productos y se la mandás por correo con un botón.",
+      "minutes": 3,
+      "steps": [
+        {"text": "Entrá a **Compras** y tocá **Nuevo** (1).",
+         "shot": {"id": "compras-cotizacion-1", "go": "/odoo/action-purchase.purchase_rfq", "mark": [".o_list_button_add, .o-kanban-button-new"]}},
+        {"text": "Elegí el **Proveedor** (1) y, si querés, la **Entrega esperada** (2).",
+         "shot": {"id": "compras-cotizacion-2", "go": "/odoo/action-purchase.purchase_rfq/new", "mark": ["div[name=partner_id]", "div[name=date_planned]"]}},
+        {"text": "En **Productos** tocá **Agregar un producto**, elegí cada producto y la cantidad. El precio sale de la última compra o de la lista del proveedor."},
+        {"text": "Tocá **Enviar solicitud de cotización** (1): se arma el correo al proveedor con el PDF.",
+         "shot": {"id": "compras-cotizacion-3", "go": "/odoo/action-purchase.purchase_rfq/{id}", "record": {"model": "purchase.order", "domain": [["state", "in", ["draft", "sent"]]]}, "mark": ["button[name=action_rfq_send]"]}}
+      ],
+      "related": ["compras/confirmar-orden"]
+    },
+    {
+      "slug": "confirmar-orden",
+      "title": "Confirmar la orden de compra",
+      "summary": "Cuando el proveedor acepta precio y plazo, confirmás: pasa a orden de compra y el depósito ya espera la recepción.",
+      "minutes": 1,
+      "steps": [
+        {"text": "Abrí la solicitud, ajustá precios si el proveedor los cambió y tocá **Confirmar orden** (1).",
+         "shot": {"id": "compras-confirmar-1", "go": "/odoo/action-purchase.purchase_rfq/{id}", "record": {"model": "purchase.order", "domain": [["state", "in", ["draft", "sent"]]]}, "mark": ["button[name=button_confirm]"]}},
+        {"text": "Arriba aparece **Recepción** (1): es la mercadería que se espera en el depósito.",
+         "shot": {"id": "compras-confirmar-2", "go": "/odoo/action-purchase.purchase_form_action/{id}", "record": {"model": "purchase.order", "domain": [["state", "=", "purchase"]]}, "mark": ["button[name=action_view_picking]"]}}
+      ],
+      "related": ["compras/recibir-mercaderia", "compras/cargar-factura-proveedor"]
+    },
+    {
+      "slug": "recibir-mercaderia",
+      "title": "Recibir la mercadería",
+      "summary": "Cuando llega el pedido, abrís la recepción, controlás las cantidades y tocás **Validar**: el stock sube.",
+      "minutes": 2,
+      "steps": [
+        {"text": "Desde la orden tocá **Recibir** o abrí la recepción desde **Inventario > Recepciones**.",
+         "shot": {"id": "compras-recibir-1", "go": "/odoo/action-purchase.purchase_form_action/{id}", "record": {"model": "purchase.order", "domain": [["state", "=", "purchase"]]}, "mark": ["text=Recibir"]}},
+        {"text": "En **Cantidad** (1) poné lo que llegó realmente. Si falta algo, dejá la cantidad real: DOLAN te pregunta si espera el resto en otra entrega.",
+         "shot": {"id": "compras-recibir-2", "go": "/odoo/action-stock.method_action_picking_tree_incoming/{id}", "record": {"model": "stock.picking", "domain": [["picking_type_code", "=", "incoming"], ["state", "=", "assigned"]]}, "mark": ["th[data-name=quantity], text=Cantidad"]}},
+        {"text": "Tocá **Validar** (1). Si el proveedor mandó remito, cargá su número en **Número de Remito**.",
+         "shot": {"id": "compras-recibir-3", "go": "/odoo/action-stock.method_action_picking_tree_incoming/{id}", "record": {"model": "stock.picking", "domain": [["picking_type_code", "=", "incoming"], ["state", "=", "assigned"]]}, "mark": ["button[name=button_validate]"]}}
+      ],
+      "related": ["inventario/ver-stock"]
+    },
+    {
+      "slug": "cargar-factura-proveedor",
+      "title": "Cargar la factura del proveedor",
+      "summary": "Desde la orden tocás **Subir factura** (o creás la factura) y se arma con los productos recibidos para controlar precios.",
+      "minutes": 3,
+      "steps": [
+        {"text": "En la orden de compra tocá **Subir factura** (1) para adjuntar el PDF del proveedor, o creá la factura y completala a mano.",
+         "shot": {"id": "compras-factura-1", "go": "/odoo/action-purchase.purchase_form_action/{id}", "record": {"model": "purchase.order", "domain": [["state", "=", "purchase"]]}, "mark": ["text=Subir factura"]}},
+        {"text": "Completá el **número de comprobante** del proveedor y la fecha, y revisá que importes e IVA coincidan con el papel."},
+        {"text": "Tocá **Confirmar**. Queda en la cuenta corriente del proveedor para pagarla."}
+      ],
+      "tips": ["Si tenés el OCR de comprobantes, al subir el PDF los datos se leen solos: solo revisás."]
+    }
+  ]
+}

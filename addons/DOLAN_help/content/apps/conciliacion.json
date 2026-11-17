@@ -1,0 +1,35 @@
+{
+  "app": "conciliacion",
+  "intro": "Unir cada movimiento del banco con su cobro, pago o factura para que el saldo del banco coincida con la contabilidad.",
+  "who": "Administración y contador.",
+  "tasks": [
+    {
+      "slug": "conciliar-banco",
+      "title": "Conciliar el banco",
+      "summary": "La conciliación rápida sugiere el pago que corresponde a cada movimiento; vos confirmás o imputás a una cuenta.",
+      "minutes": 5,
+      "steps": [
+        {
+          "text": "Abrí **Conciliación** y elegí el **Diario Bancario** (1).",
+          "shot": {
+            "id": "conciliacion-banco-1",
+            "go": "/odoo/action-DOLAN_accounting.action_dolan_bank_reconciliation_wizard",
+            "mark": [
+              "div[name=journal_id]"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Para cada movimiento ves el **Pago publicado sugerido**. Si es correcto, tildá **Conciliar**. Si no hay pago (por ejemplo una comisión), elegí la **Cuenta de imputación**."
+        },
+        {
+          "text": "Tocá **Procesar líneas seleccionadas**. Si te equivocaste, tildá **Deshacer** y procesá de nuevo."
+        }
+      ],
+      "related": [
+        "bancos/importar-extracto"
+      ]
+    }
+  ]
+}

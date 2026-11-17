@@ -1,0 +1,60 @@
+{
+  "sector": "logistica",
+  "procedures": [
+    {
+      "slug": "salida-de-mercaderia",
+      "title": "Salida de mercadería con remito y COT",
+      "summary": "Todo lo que necesita un envío antes de salir del depósito.",
+      "steps": [
+        {
+          "text": "Validá la entrega con lo que realmente se carga.",
+          "who": "Depósito",
+          "task": "remitos/validar-entrega"
+        },
+        {
+          "text": "Si va a Provincia de Buenos Aires o sale de ahí, pedí el COT de ARBA.",
+          "who": "Logística",
+          "task": "remitos/pedir-cot"
+        },
+        {
+          "text": "Imprimí el remito con el COT.",
+          "who": "Logística",
+          "task": "remitos/imprimir-remito"
+        }
+      ],
+      "controls": [
+        "Ningún camión sale sin remito y, si corresponde, sin COT."
+      ]
+    },
+    {
+      "slug": "dia-de-reparto",
+      "title": "El día de reparto",
+      "summary": "De la preparación de pedidos a la rendición del efectivo.",
+      "steps": [
+        {
+          "text": "Prepará los pedidos del día en una oleada.",
+          "who": "Depósito",
+          "task": "preparacion/armar-oleada"
+        },
+        {
+          "text": "Armá la hoja de ruta con las entregas preparadas y ordenala por cercanía.",
+          "who": "Logística",
+          "task": "rutas_reparto/armar-hoja-de-ruta"
+        },
+        {
+          "text": "En cada parada, registrá la entrega con firma o foto y el cobro.",
+          "who": "Repartidor",
+          "task": "prueba_entrega/registrar-entrega"
+        },
+        {
+          "text": "Al volver, rendí el efectivo y cerrá la hoja de ruta.",
+          "who": "Logística",
+          "task": "rutas_reparto/rendir-reparto"
+        }
+      ],
+      "controls": [
+        "La hoja de ruta no se cierra con paradas sin resultado ni con diferencia de rendición sin explicar."
+      ]
+    }
+  ]
+}

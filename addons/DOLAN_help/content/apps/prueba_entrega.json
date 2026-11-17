@@ -1,0 +1,37 @@
+{
+  "app": "prueba_entrega",
+  "intro": "La pantalla del repartidor en cada parada: quién recibió, firma o foto, ubicación y cobro.",
+  "who": "Repartidores.",
+  "tasks": [
+    {
+      "slug": "registrar-entrega",
+      "title": "Registrar una entrega en la parada",
+      "summary": "Abrís la parada, cargás quién recibió con firma o foto y el cobro, y marcás entregada, parcial o rechazada.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Abrí **Prueba de entrega** (1): ves tus paradas del día en orden.",
+          "shot": {
+            "id": "prueba-entrega-1",
+            "go": "/odoo/action-DOLAN_logistics.action_dolan_delivery_stop",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "Entrá a la parada y cargá **quién recibió** y su DNI, y la **firma** o una **foto** del remito firmado."
+        },
+        {
+          "text": "Si cobraste, poné el importe y el medio de pago."
+        },
+        {
+          "text": "Tocá **Entregada**. Si dejaste solo una parte, **Entrega parcial** con las cantidades (lo que falta queda pendiente). Si no se pudo, **Rechazada** con el motivo."
+        }
+      ],
+      "tips": [
+        "Si la empresa lo tiene activado, el cliente recibe un WhatsApp con el pedido y quién lo recibió."
+      ]
+    }
+  ]
+}

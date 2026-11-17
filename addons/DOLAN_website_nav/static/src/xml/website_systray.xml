@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="DOLAN_website_nav.WebsiteSystray">
+        <div class="o_dolan_website_systray d-flex align-items-center">
+            <button type="button" class="btn btn-sm o_nav_entry px-2" title="Ir al sitio web" aria-label="Ir al sitio web"
+                    t-on-click="() => this.openWebsite()">
+                <i class="oi oi-lg" data-icon="public" aria-hidden="true"/>
+            </button>
+        </div>
+    </t>
+</templates>

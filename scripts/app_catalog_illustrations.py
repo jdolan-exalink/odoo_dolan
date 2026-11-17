@@ -744,6 +744,37 @@ ILLUSTRATIONS = {
 </svg>
 """,
     },
+    # Ayuda: libro abierto con un globo de pregunta (área Gestión, rosa).
+    "help": {
+        "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#fce7f3"/></linearGradient>
+    <linearGradient id="cover" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f9a8d4"/><stop offset="1" stop-color="#be185d"/></linearGradient>
+    <linearGradient id="bubble" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#818cf8"/><stop offset="1" stop-color="#4338ca"/></linearGradient>
+    {SHADOW}
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M6 34c14-4 28-2 42 6 14-8 28-10 42-6v44c-14-4-28-2-42 6-14-8-28-10-42-6Z" fill="url(#cover)"/>
+    <path d="M11 34c12-3 25-1 37 6v38c-12-7-25-9-37-6Z" fill="url(#page)"/>
+    <path d="M85 34c-12-3-25-1-37 6v38c12-7 25-9 37-6Z" fill="url(#page)"/>
+    <path d="M18 46c8-1 15 0 22 3M18 55c8-1 15 0 22 3M18 64c8-1 15 0 22 3M56 49c7-3 14-4 22-3M56 58c7-3 14-4 22-3" stroke="#f472b6" stroke-width="3" stroke-linecap="round"/>
+    <path d="M60 4h26a8 8 0 0 1 8 8v14a8 8 0 0 1-8 8H74l-8 8v-8h-6a8 8 0 0 1-8-8V12a8 8 0 0 1 8-8Z" fill="url(#bubble)"/>
+    <path d="M67 14a6 6 0 1 1 8.5 5.4c-1.5.7-2.5 2-2.5 3.6v1" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="73" cy="29" r="2.2" fill="#ffffff"/>
+  </g>
+</svg>
+""",
+        "fluent_flat": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <path d="M6 34c14-4 28-2 42 6 14-8 28-10 42-6v44c-14-4-28-2-42 6-14-8-28-10-42-6Z" fill="#f178b0" stroke="#c42d72" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M11 34c12-3 25-1 37 6v38c-12-7-25-9-37-6Z" fill="#ffffff"/>
+  <path d="M85 34c-12-3-25-1-37 6v38c12-7 25-9 37-6Z" fill="#ffffff"/>
+  <path d="M18 46c8-1 15 0 22 3M18 55c8-1 15 0 22 3M18 64c8-1 15 0 22 3M56 49c7-3 14-4 22-3M56 58c7-3 14-4 22-3" stroke="#f9a8d4" stroke-width="3" stroke-linecap="round"/>
+  <path d="M60 4h26a8 8 0 0 1 8 8v14a8 8 0 0 1-8 8H74l-8 8v-8h-6a8 8 0 0 1-8-8V12a8 8 0 0 1 8-8Z" fill="#6366f1"/>
+  <path d="M67 14a6 6 0 1 1 8.5 5.4c-1.5.7-2.5 2-2.5 3.6v1" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="73" cy="29" r="2.2" fill="#ffffff"/>
+</svg>
+""",
+    },
     # Tablero del dueño: velocímetro con la aguja en verde y una pila de monedas (área Gestión, rosa).
     "owner_dashboard": {
         "fluent_3d": f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">

@@ -1,0 +1,35 @@
+{
+  "app": "bancos",
+  "intro": "Los movimientos de tus cuentas bancarias importados del extracto, con reglas que reconocen solos cada concepto e impuesto.",
+  "who": "Administración y tesorería.",
+  "tasks": [
+    {
+      "slug": "importar-extracto",
+      "title": "Importar el extracto del banco",
+      "summary": "Subís el archivo del home banking y los movimientos quedan listos para conciliar.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Desde el **Tablero** de contabilidad, en la tarjeta del banco, usá **Importar** y elegí el archivo del extracto."
+        },
+        {
+          "text": "Los movimientos aparecen en **Bancos** (1) con fecha, concepto e importe.",
+          "shot": {
+            "id": "bancos-extracto-1",
+            "go": "/odoo/action-DOLAN_bank_ar.action_dolan_bank_statement_lines",
+            "mark": [
+              ".o_list_table thead, .o_view_nocontent"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Las **reglas bancarias** reconocen solos los impuestos (débitos y créditos, IIBB, comisiones) y los imputan a su cuenta."
+        }
+      ],
+      "related": [
+        "conciliacion/conciliar-banco"
+      ]
+    }
+  ]
+}

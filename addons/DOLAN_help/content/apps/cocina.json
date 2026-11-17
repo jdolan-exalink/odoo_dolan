@@ -1,0 +1,31 @@
+{
+  "app": "cocina",
+  "intro": "Las comandas del punto de venta en una pantalla para la cocina, con tiempos de preparación.",
+  "who": "Cocina y mostrador.",
+  "tasks": [
+    {
+      "slug": "usar-pantalla-cocina",
+      "title": "Usar la pantalla de cocina",
+      "summary": "Cada pedido del punto de venta aparece como comanda; la cocina la marca en preparación y lista.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Pantalla para cocina > Pantalla Táctil Cocina en Vivo** en la tablet de la cocina."
+        },
+        {
+          "text": "Cada comanda muestra los productos y el tiempo desde que entró. Tocala para pasarla a **En preparación** y después a **Lista**."
+        },
+        {
+          "text": "En **Tablero de Comandas** (1) ves todas las comandas por estado.",
+          "shot": {
+            "id": "cocina-tablero-1",
+            "go": "/odoo/action-DOLAN_pos.action_dolan_pos_kitchen_tickets",
+            "mark": [
+              ".o_kanban_renderer, .o_view_nocontent"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

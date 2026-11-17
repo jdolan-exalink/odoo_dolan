@@ -1,0 +1,31 @@
+{
+  "app": "auditoria",
+  "intro": "La bitácora inalterable de cambios sensibles: CUIT, cuentas bancarias, precios, anulaciones, pagos, conciliaciones y permisos.",
+  "who": "Dueños, gerencia y contador.",
+  "tasks": [
+    {
+      "slug": "revisar-bitacora",
+      "title": "Ver quién cambió algo",
+      "summary": "En la **Bitácora** buscás por documento, usuario o fecha y ves el valor de antes y el de después.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Auditoría > Bitácora** (1).",
+          "shot": {
+            "id": "auditoria-bitacora-1",
+            "go": "/odoo/action-DOLAN_audit_log.action_dolan_audit_log",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "Filtrá por **usuario**, **documento** o fecha. Cada fila muestra la operación y los cambios (antes → después)."
+        },
+        {
+          "text": "En **Qué se audita** elegís qué cambios se registran. La bitácora no se puede editar ni borrar."
+        }
+      ]
+    }
+  ]
+}

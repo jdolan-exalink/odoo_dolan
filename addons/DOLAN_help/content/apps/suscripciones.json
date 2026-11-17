@@ -1,0 +1,58 @@
+{
+  "app": "suscripciones",
+  "intro": "Abonos que se facturan solos cada mes (o el período que elijas), con renovaciones, MRR y bajas.",
+  "who": "Comerciales y administración.",
+  "tasks": [
+    {
+      "slug": "crear-suscripcion",
+      "title": "Crear una suscripción",
+      "summary": "Elegís el cliente, el plan y los productos; la factura se genera sola en cada período.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Suscripciones** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "suscripciones-crear-1",
+            "go": "/odoo/action-DOLAN_subscription.action_dolan_subscription",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Elegí el **cliente** y el **plan recurrente** (mensual, trimestral, anual). Agregá los productos del abono."
+        },
+        {
+          "text": "Confirmala: a partir de la fecha de inicio se factura sola en cada período."
+        }
+      ],
+      "tips": [
+        "Si el abono se ajusta por índice, vinculalo a un **Contrato**: el ajuste actualiza los precios de la suscripción."
+      ],
+      "related": [
+        "contratos/crear-contrato"
+      ]
+    },
+    {
+      "slug": "ver-mrr",
+      "title": "Ver la facturación recurrente (MRR) y las bajas",
+      "summary": "En **Informes** ves lo que factura cada mes la cartera de abonos y su evolución.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Suscripciones > Informes > Suscripciones y Desglose de MRR** (1).",
+          "shot": {
+            "id": "suscripciones-mrr-1",
+            "go": "/odoo/action-DOLAN_subscription.action_dolan_subscription_mrr_analysis",
+            "mark": [
+              ".o_action_manager .o_action"
+            ]
+          }
+        },
+        {
+          "text": "Agrupá por cliente, plan o mes. **Retención y Churn** muestra las bajas."
+        }
+      ]
+    }
+  ]
+}

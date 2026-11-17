@@ -1,0 +1,35 @@
+{
+  "app": "activos",
+  "intro": "Los bienes de uso (rodados, máquinas, muebles) con su amortización contable mes a mes.",
+  "who": "Contador.",
+  "tasks": [
+    {
+      "slug": "alta-activo",
+      "title": "Dar de alta un bien de uso",
+      "summary": "Cargás el bien con su valor, fecha y años de vida útil; DOLAN arma la tabla de amortización y la contabiliza cada mes.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Abrí **Activos fijos** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "activos-alta-1",
+            "go": "/odoo/action-DOLAN_accounting.action_dolan_account_asset",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ],
+            "menu": "DOLAN_accounting.menu_dolan_accounting_root"
+          }
+        },
+        {
+          "text": "Completá nombre, **valor de origen**, **fecha de alta**, método y **vida útil**, y las cuentas del activo y de la amortización."
+        },
+        {
+          "text": "Confirmá: se genera la tabla de amortización. Los asientos se publican solos cada mes."
+        }
+      ],
+      "tips": [
+        "La tabla de todos los bienes está en **Contabilidad > Reportes > Tabla de amortización**."
+      ]
+    }
+  ]
+}

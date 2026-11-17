@@ -1,0 +1,48 @@
+{
+  "app": "inventario",
+  "intro": "El stock de cada depósito: recepciones, entregas, movimientos entre depósitos y el conteo físico.",
+  "who": "Depósito y compras.",
+  "tasks": [
+    {
+      "slug": "ver-stock",
+      "title": "Ver cuánto stock hay de un producto",
+      "summary": "En **Reportes > Existencias** ves lo que hay, lo disponible y lo que entra o sale por producto.",
+      "minutes": 1,
+      "steps": [
+        {"text": "Entrá a **Inventario > Reportes > Existencias** (1).",
+         "shot": {"id": "inventario-stock-1", "go": "/odoo/action-stock.action_product_stock_view", "mark": ["text=Reportes"]}},
+        {"text": "**A la mano** (1) es lo que hay físicamente; **Disponible para uso** descuenta lo reservado para entregas. **Entrante** y **Saliente** son lo que viene y lo que se va.",
+         "shot": {"id": "inventario-stock-2", "go": "/odoo/action-stock.action_product_stock_view", "mark": ["th[data-name=qty_available], text=A la mano"]}},
+        {"text": "Buscá el producto por nombre, código o código de barras en el buscador."}
+      ],
+      "related": ["inventario/inventario-fisico"]
+    },
+    {
+      "slug": "resumen-operaciones",
+      "title": "Ver lo que hay que recibir y entregar hoy",
+      "summary": "La pantalla **Información general** muestra una tarjeta por operación (recepciones, entregas) con lo pendiente.",
+      "minutes": 1,
+      "steps": [
+        {"text": "Entrá a **Inventario**. Cada tarjeta (1) es un tipo de operación con los pedidos **listos**, **en espera** y **atrasados**.",
+         "shot": {"id": "inventario-resumen-1", "go": "/odoo/action-stock.stock_picking_type_action", "mark": [".o_kanban_record:not(.o_kanban_ghost)"]}},
+        {"text": "Tocá el botón de la tarjeta para abrir la lista y trabajar cada pedido."}
+      ],
+      "related": ["compras/recibir-mercaderia", "remitos/validar-entrega"]
+    },
+    {
+      "slug": "inventario-fisico",
+      "title": "Hacer un conteo de inventario",
+      "summary": "En **Inventario físico** cargás lo contado de cada producto y tocás **Aplicar**: el stock se corrige y queda registrado.",
+      "minutes": 5,
+      "steps": [
+        {"text": "Entrá a **Inventario > Operaciones > Inventario físico** (1). Ves cada producto con lo que hay según el sistema (**A la mano**).",
+         "shot": {"id": "inventario-fisico-1", "go": "/odoo/action-stock.action_view_inventory_tree", "mark": ["text=Operaciones"]}},
+        {"text": "En la columna **Contado** (1) escribí lo que contaste. La **Diferencia** se calcula sola.",
+         "shot": {"id": "inventario-fisico-2", "go": "/odoo/action-stock.action_view_inventory_tree", "mark": ["th[data-name=inventory_quantity], text=Contado"]}},
+        {"text": "Revisá las diferencias grandes antes de seguir. Tocá **Aplicar** en la fila o **Aplicar todo** (1).",
+         "shot": {"id": "inventario-fisico-3", "go": "/odoo/action-stock.action_view_inventory_tree", "mark": ["text=Aplicar todo"]}}
+      ],
+      "tips": ["Filtrá por ubicación o categoría para contar por sectores del depósito sin mezclar."]
+    }
+  ]
+}

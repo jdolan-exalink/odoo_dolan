@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_dolan_help_center" model="ir.actions.client">
+        <field name="name">Ayuda</field>
+        <field name="tag">dolan_help_center</field>
+        <field name="path">ayuda</field>
+    </record>
+
+    <!-- Procedimientos de la empresa -->
+    <record id="view_dolan_help_article_list" model="ir.ui.view">
+        <field name="name">dolan.help.article.list</field>
+        <field name="model">dolan.help.article</field>
+        <field name="arch" type="xml">
+            <list string="Procedimientos de la empresa">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="sector_id"/>
+                <field name="summary"/>
+                <field name="write_date" string="Actualizado" widget="date"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_help_article_form" model="ir.ui.view">
+        <field name="name">dolan.help.article.form</field>
+        <field name="model">dolan.help.article</field>
+        <field name="arch" type="xml">
+            <form string="Procedimiento">
+                <header>
+                    <button name="action_open_in_help" type="object" string="Ver en la Ayuda" class="btn-secondary" invisible="not id"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Por ejemplo: Cierre de caja del sábado"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sector_id"/>
+                            <field name="summary" placeholder="Qué se logra, en una frase"/>
+                        </group>
+                        <group>
+                            <field name="app_key" placeholder="facturacion, caja_tesoreria…"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="body" placeholder="Escribí los pasos en orden. Podés pegar capturas (Ctrl+V) y links."/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dolan_help_article_search" model="ir.ui.view">
+        <field name="name">dolan.help.article.search</field>
+        <field name="model">dolan.help.article</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="sector_id"/>
+                <filter name="archived" string="Archivados" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="by_sector" string="Sector" context="{'group_by': 'sector_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_help_article" model="ir.actions.act_window">
+        <field name="name">Procedimientos de la empresa</field>
+        <field name="res_model">dolan.help.article</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_by_sector': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Escribí cómo trabaja tu empresa</p>
+            <p>Cada procedimiento aparece en la Ayuda, dentro de su sector, junto a las guías de las apps.</p>
+        </field>
+    </record>
+
+    <!-- Sectores -->
+    <record id="view_dolan_help_sector_list" model="ir.ui.view">
+        <field name="name">dolan.help.sector.list</field>
+        <field name="model">dolan.help.sector</field>
+        <field name="arch" type="xml">
+            <list string="Sectores" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="key" required="0" placeholder="(se completa sola)"/>
+                <field name="description"/>
+                <field name="icon"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_help_sector_form" model="ir.ui.view">
+        <field name="name">dolan.help.sector.form</field>
+        <field name="model">dolan.help.sector</field>
+        <field name="arch" type="xml">
+            <form string="Sector">
+                <sheet>
+                    <group>
+                        <field name="name" placeholder="Por ejemplo: Atención al público"/>
+                        <field name="description" placeholder="Qué hace este sector, en una o dos frases"/>
+                        <field name="icon" placeholder="group"/>
+                        <field name="key" required="0" placeholder="(se completa sola)" groups="base.group_no_one"/>
+                        <field name="sequence"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dolan_help_sector" model="ir.actions.act_window">
+        <field name="name">Sectores</field>
+        <field name="res_model">dolan.help.sector</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- ¿Te sirvió? -->
+    <record id="view_dolan_help_feedback_list" model="ir.ui.view">
+        <field name="name">dolan.help.feedback.list</field>
+        <field name="model">dolan.help.feedback</field>
+        <field name="arch" type="xml">
+            <list string="Respuestas" create="0" decoration-danger="not useful and state == 'new'" decoration-muted="state == 'done'">
+                <field name="create_date" string="Fecha"/>
+                <field name="title"/>
+                <field name="ref" optional="hide"/>
+                <field name="useful"/>
+                <field name="comment"/>
+                <field name="user_id"/>
+                <field name="state" widget="badge"/>
+                <button name="action_mark_done" type="object" string="Revisado" icon="fa-check" invisible="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dolan_help_feedback_search" model="ir.ui.view">
+        <field name="name">dolan.help.feedback.search</field>
+        <field name="model">dolan.help.feedback</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="title"/>
+                <filter name="to_review" string="Para revisar" domain="[('state', '=', 'new')]"/>
+                <filter name="not_useful" string="No le sirvió" domain="[('useful', '=', False)]"/>
+                <group>
+                    <filter name="by_title" string="Artículo" context="{'group_by': 'title'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dolan_help_feedback" model="ir.actions.act_window">
+        <field name="name">¿Te sirvió?</field>
+        <field name="res_model">dolan.help.feedback</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_to_review': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay respuestas para revisar</p>
+            <p>Acá llegan los «No» y los comentarios que dejan los usuarios al pie de cada artículo de la Ayuda.</p>
+        </field>
+    </record>
+
+    <!-- Menús -->
+    <menuitem id="menu_dolan_help_root" name="Ayuda" sequence="1"
+              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_help.svg"/>
+    <menuitem id="menu_dolan_help_center" name="Centro de ayuda" parent="menu_dolan_help_root"
+              action="action_dolan_help_center" sequence="10"/>
+    <menuitem id="menu_dolan_help_manage" name="Administrar" parent="menu_dolan_help_root" sequence="20"
+              groups="DOLAN_help.group_help_editor"/>
+    <menuitem id="menu_dolan_help_articles" name="Procedimientos de la empresa" parent="menu_dolan_help_manage"
+              action="action_dolan_help_article" sequence="10"/>
+    <menuitem id="menu_dolan_help_sectors" name="Sectores" parent="menu_dolan_help_manage"
+              action="action_dolan_help_sector" sequence="20"/>
+    <menuitem id="menu_dolan_help_feedback" name="¿Te sirvió?" parent="menu_dolan_help_manage"
+              action="action_dolan_help_feedback" sequence="30"/>
+</odoo>

@@ -1,0 +1,27 @@
+{
+  "app": "documentos_personal",
+  "intro": "El legajo digital: contratos, altas, aptos médicos y licencias, con vencimientos y conformidad del empleado.",
+  "who": "Recursos humanos y empleados.",
+  "tasks": [
+    {
+      "slug": "cargar-documento",
+      "title": "Cargar un documento al legajo",
+      "summary": "Elegís el empleado y el tipo de documento, subís el archivo y la fecha de vencimiento; DOLAN avisa antes de que venza.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Documentos** y tocá **Nuevo**."
+        },
+        {
+          "text": "Elegí el **empleado**, el **tipo** (contrato, apto médico…), subí el archivo y poné emisión y vencimiento."
+        },
+        {
+          "text": "Si el tipo pide toma de conocimiento, el empleado lo ve en su portal y da la conformidad."
+        }
+      ],
+      "tips": [
+        "Filtrá **Por vencer** y **Vencido** para ver qué renovar. Los documentos obligatorios que faltan aparecen por empleado."
+      ]
+    }
+  ]
+}

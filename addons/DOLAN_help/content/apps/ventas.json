@@ -1,0 +1,65 @@
+{
+  "app": "ventas",
+  "intro": "Presupuestos y órdenes de venta: cotizás, el cliente acepta, confirmás la venta y de ahí salen la entrega y la factura.",
+  "who": "Vendedores y mostrador.",
+  "tasks": [
+    {
+      "slug": "crear-presupuesto",
+      "title": "Hacer un presupuesto",
+      "summary": "Elegís el cliente, cargás los productos con sus cantidades y lo mandás por correo o lo descargás en PDF.",
+      "minutes": 3,
+      "before": ["El cliente tiene que estar cargado (si no, lo creás desde el mismo campo **Cliente**).", "Los productos tienen que tener precio de venta."],
+      "steps": [
+        {"text": "Entrá a **Ventas** y tocá **Nuevo** (1). Se abre un presupuesto en blanco.",
+         "shot": {"id": "ventas-presupuesto-1", "go": "/odoo/action-sale.action_quotations_with_onboarding", "mark": [".o_list_button_add, .o-kanban-button-new"]}},
+        {"text": "Escribí el nombre o el CUIT del cliente en **Cliente** (1) y elegilo de la lista. La lista de precios y los términos de pago se completan solos.",
+         "shot": {"id": "ventas-presupuesto-2", "go": "/odoo/action-sale.action_quotations_with_onboarding/new", "mark": ["div[name=partner_id]"]}},
+        {"text": "Tocá **Agregar línea** (1), buscá el producto y poné la **cantidad**. El precio sale de la lista de precios del cliente; si corresponde, podés cambiarlo o poner un descuento.",
+         "shot": {"id": "ventas-presupuesto-3", "go": "/odoo/action-sale.action_quotations_with_onboarding/{id}", "record": {"model": "sale.order", "domain": [["client_order_ref", "=", "AYUDA-2"]]}, "mark": ["text=Agregar línea"]}},
+        {"text": "Guardá con la nube de arriba. Para mandarlo tocá **Enviar** (1): se arma el correo con el PDF adjunto. Si lo querés imprimir o mandar por WhatsApp, usá **Descargar** (2).",
+         "shot": {"id": "ventas-presupuesto-4", "go": "/odoo/action-sale.action_quotations_with_onboarding/{id}", "record": {"model": "sale.order", "domain": [["client_order_ref", "=", "AYUDA-2"]]}, "mark": ["button[name=action_quotation_send]", "text=Descargar"]}}
+      ],
+      "errors": [
+        {"problem": "El producto sale con precio 0", "fix": "Ese producto no tiene precio en la lista de precios del cliente. Pedile a quien maneja precios que lo cargue, o escribí el precio a mano en la línea."},
+        {"problem": "No encuentro al cliente", "fix": "Probá buscarlo por CUIT. Si es nuevo, escribí el nombre y tocá **Crear y editar** para cargar sus datos fiscales."}
+      ],
+      "tips": ["El presupuesto queda guardado como **Cotización**: lo encontrás después en la lista y podés seguir editándolo hasta confirmarlo."],
+      "related": ["ventas/confirmar-venta"]
+    },
+    {
+      "slug": "confirmar-venta",
+      "title": "Confirmar una venta",
+      "summary": "Cuando el cliente acepta, confirmás el presupuesto: pasa a orden de venta y se genera la entrega para el depósito.",
+      "minutes": 1,
+      "steps": [
+        {"text": "Abrí el presupuesto desde la lista de **Cotizaciones** y revisá productos, cantidades y precios.",
+         "shot": {"id": "ventas-confirmar-1", "go": "/odoo/action-sale.action_quotations_with_onboarding", "mark": [".o_data_row"]}},
+        {"text": "Tocá **Confirmar** (1). El estado cambia a **Orden de venta** (2).",
+         "shot": {"id": "ventas-confirmar-2", "go": "/odoo/action-sale.action_quotations_with_onboarding/{id}", "record": {"model": "sale.order", "domain": [["client_order_ref", "=", "AYUDA-2"]]}, "mark": ["button[name=action_confirm]", ".o_statusbar_status"]}},
+        {"text": "Arriba aparece el botón **Entrega** (1): ahí ves el pedido que tiene que preparar el depósito.",
+         "shot": {"id": "ventas-confirmar-3", "go": "/odoo/action-sale.action_orders/{id}", "record": {"model": "sale.order", "domain": [["client_order_ref", "=", "AYUDA-1"]]}, "mark": ["button[name=action_view_delivery]"]}}
+      ],
+      "errors": [
+        {"problem": "«El cliente superó su límite de crédito»", "fix": "El cliente tiene deuda vencida o supera su límite. Pedile autorización a administración o registrá primero el cobro."}
+      ],
+      "related": ["ventas/facturar-venta", "remitos/validar-entrega"]
+    },
+    {
+      "slug": "facturar-venta",
+      "title": "Facturar una venta",
+      "summary": "Desde la orden de venta creás la factura con un botón; después la confirmás para pedir el CAE a ARCA.",
+      "minutes": 2,
+      "before": ["La venta tiene que estar confirmada. Si se factura lo entregado, primero hay que validar la entrega."],
+      "steps": [
+        {"text": "Abrí la orden de venta y tocá **Crear factura** (1).",
+         "shot": {"id": "ventas-facturar-1", "go": "/odoo/action-sale.action_orders/{id}", "record": {"model": "sale.order", "domain": [["client_order_ref", "=", "AYUDA-1"]]}, "mark": ["button[name='%(sale.action_view_sale_advance_payment_inv)d'], text=Crear factura"]}},
+        {"text": "Dejá marcada **Factura regular** y tocá **Crear borrador**. Se abre la factura en borrador con los productos de la venta."},
+        {"text": "Revisá el tipo de comprobante (A, B o C sale del cliente) y tocá **Confirmar**. DOLAN pide el CAE a ARCA y le pone el número."}
+      ],
+      "errors": [
+        {"problem": "No aparece el botón Crear factura", "fix": "La venta todavía no tiene nada para facturar: si se factura lo entregado, falta validar la entrega en el depósito."}
+      ],
+      "related": ["facturacion/emitir-factura", "facturacion/registrar-cobro"]
+    }
+  ]
+}

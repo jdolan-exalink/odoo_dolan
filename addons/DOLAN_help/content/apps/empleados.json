@@ -1,0 +1,55 @@
+{
+  "app": "empleados",
+  "intro": "El legajo de cada empleado: datos personales, puesto, sector, horario y datos para liquidar sueldos.",
+  "who": "Recursos humanos.",
+  "tasks": [
+    {
+      "slug": "alta-empleado",
+      "title": "Dar de alta un empleado",
+      "summary": "Creás el empleado con nombre, puesto y sector; en las pestañas completás datos personales, horario y sueldo.",
+      "minutes": 5,
+      "steps": [
+        {
+          "text": "Entrá a **Empleados** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "empleados-alta-1",
+            "go": "/odoo/action-hr.open_view_employee_list_my",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Escribí el nombre, el puesto y el **Departamento**. En **Trabajo** elegí el horario y el responsable."
+        },
+        {
+          "text": "En **Personal** cargá DNI, CUIL, domicilio y contacto de emergencia. En **Sueldos AR** el convenio, la categoría y la obra social."
+        },
+        {
+          "text": "Si el empleado va a usar el sistema, tocá **Invitar** para crearle el usuario."
+        }
+      ],
+      "related": [
+        "sueldos/liquidar-mes"
+      ]
+    },
+    {
+      "slug": "buscar-empleado",
+      "title": "Buscar un empleado o ver el organigrama",
+      "summary": "En **Directorio** ves a todos con su foto y contacto; en **Departamentos**, la estructura.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Empleados > Directorio** (1) y buscá por nombre, puesto o sector.",
+          "shot": {
+            "id": "empleados-buscar-1",
+            "go": "/odoo/action-hr.hr_employee_public_action",
+            "mark": [
+              "text=Directorio"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

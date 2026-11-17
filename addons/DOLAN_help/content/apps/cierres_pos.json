@@ -1,0 +1,35 @@
+{
+  "app": "cierres_pos",
+  "intro": "Las sesiones de caja del punto de venta con su cierre: lo esperado, lo contado y la diferencia.",
+  "who": "Encargados de caja y administración.",
+  "tasks": [
+    {
+      "slug": "revisar-cierre",
+      "title": "Revisar el cierre de una caja",
+      "summary": "En **Sesiones** abrís el cierre y ves ventas por medio de pago, efectivo contado y diferencia.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Abrí **Cierres y arqueos** (1). Cada fila es una sesión con su caja, quién la abrió y su estado.",
+          "shot": {
+            "id": "cierres-revisar-1",
+            "go": "/odoo/action-point_of_sale.action_pos_session",
+            "mark": [
+              ".o_list_table thead"
+            ],
+            "menu": "point_of_sale.menu_point_root"
+          }
+        },
+        {
+          "text": "Abrí la sesión: ves las órdenes, los pagos por medio y la diferencia de efectivo."
+        },
+        {
+          "text": "Si una sesión quedó abierta, cerrala desde la pantalla de venta o desde acá con **Cerrar sesión**."
+        }
+      ],
+      "related": [
+        "pos/cerrar-caja-pos"
+      ]
+    }
+  ]
+}

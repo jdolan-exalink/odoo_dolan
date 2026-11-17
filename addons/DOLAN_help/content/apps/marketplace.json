@@ -1,0 +1,63 @@
+{
+  "app": "marketplace",
+  "intro": "Tus publicaciones de Mercado Libre y Tiendanube conectadas con los productos de DOLAN: precio y stock sincronizados y las ventas entran solas.",
+  "who": "Ventas online.",
+  "tasks": [
+    {
+      "slug": "conectar-cuenta",
+      "title": "Conectar una cuenta de Mercado Libre o Tiendanube",
+      "summary": "Creás la cuenta con las credenciales de la app y tocás **Conectar**; desde ahí bajan las publicaciones y las ventas.",
+      "minutes": 5,
+      "before": [
+        "Tener creada la aplicación de desarrollador en Mercado Libre o Tiendanube (lo hace el administrador una vez)."
+      ],
+      "steps": [
+        {
+          "text": "Entrá a **Ventas > Marketplaces > Cuentas** y creá una nueva. Elegí la **Plataforma** (1).",
+          "shot": {
+            "id": "marketplace-cuenta-1",
+            "go": "/odoo/action-DOLAN_marketplace.action_dolan_marketplace_account/new",
+            "mark": [
+              "text=Plataforma"
+            ],
+            "menu": "sale.sale_menu_root"
+          }
+        },
+        {
+          "text": "En **Credenciales** cargá el App ID y la clave secreta que te da la plataforma."
+        },
+        {
+          "text": "Tocá **Conectar con Mercado Libre** e iniciá sesión con la cuenta del vendedor. El estado pasa a **Conectada**."
+        }
+      ]
+    },
+    {
+      "slug": "vincular-publicaciones",
+      "title": "Vincular publicaciones con productos",
+      "summary": "Cada publicación se une a un producto de DOLAN; después el precio y el stock a publicar salen de ahí.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "En **Publicaciones** (1) ves cada publicación con su precio y stock publicados y los que DOLAN va a publicar.",
+          "shot": {
+            "id": "marketplace-publicaciones-1",
+            "go": "/odoo/action-DOLAN_marketplace.action_dolan_marketplace_listing",
+            "mark": [
+              ".o_list_table thead"
+            ],
+            "menu": "sale.sale_menu_root"
+          }
+        },
+        {
+          "text": "Elegí el **Producto de Odoo** de cada publicación (se vincula solo si el SKU coincide con el código del producto)."
+        },
+        {
+          "text": "Tildá **Sincronizar** para que DOLAN mantenga precio y stock al día."
+        }
+      ],
+      "tips": [
+        "Las ventas de la plataforma entran en **Ventas de marketplaces** y siguen el circuito normal: entrega y factura."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "app": "taller",
+  "intro": "La terminal de planta: cada operario ve sus órdenes de trabajo, arranca y para el tiempo y registra controles de calidad.",
+  "who": "Operarios y supervisores de planta.",
+  "tasks": [
+    {
+      "slug": "terminal-de-planta",
+      "title": "Trabajar en la terminal de planta",
+      "summary": "El operario abre su orden de trabajo, toca iniciar, registra lo hecho y la termina; el tiempo queda medido.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Taller > Terminal de Planta** (1). Ves las órdenes de trabajo por estado.",
+          "shot": {
+            "id": "taller-terminal-1",
+            "go": "/odoo/action-DOLAN_stock_mrp.action_dolan_mrp_shopfloor",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "Abrí tu orden y tocá **Iniciar**. El tiempo empieza a correr a tu nombre."
+        },
+        {
+          "text": "Si hay un control de calidad en ese paso, completalo antes de seguir. Al terminar tocá **Terminado**."
+        }
+      ],
+      "related": [
+        "calidad/registrar-control"
+      ]
+    }
+  ]
+}

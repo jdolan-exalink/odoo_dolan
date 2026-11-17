@@ -63,6 +63,7 @@ GLYPHS = {
     "cash_flow": '<path d="M4 16c3 0 3-8 6-8s3 8 6 8 3-6 4-6"/><path d="M3 20h18"/><path d="M5 4v4M3 6h4"/>',
     "audit": '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/><path d="M8 10.5l1.8 1.8L13.5 8.5"/>',
     "alerts": '<path d="M10 5a2 2 0 1 1 4 0 7 7 0 0 1 4 6v3l2 3H4l2-3v-3a7 7 0 0 1 4-6"/><path d="M9.5 17a2.5 2.5 0 0 0 5 0"/>',
+    "help": '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"/><circle cx="12" cy="17" r=".6"/>',
     "owner_dashboard": '<path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l4-5"/><circle cx="12" cy="16" r="1.5"/><path d="M6.5 11.5l1 .6M12 8v1.2M17.5 11.5l-1 .6"/><path d="M4 20h16"/>',
     "budget": '<circle cx="11" cy="13" r="8"/><circle cx="11" cy="13" r="4.5"/><circle cx="11" cy="13" r="1"/><path d="M11 13l8-8M16 5h3v3"/>',
     # Configuración

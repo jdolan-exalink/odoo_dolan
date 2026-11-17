@@ -1,0 +1,47 @@
+{
+  "app": "promociones",
+  "intro": "Descuentos y promociones automáticas del punto de venta: por día, medio de pago, cliente o combos, con presupuesto y aprobaciones.",
+  "who": "Encargados de caja y comerciales.",
+  "tasks": [
+    {
+      "slug": "vender-con-promocion",
+      "title": "Vender con promociones en caja",
+      "summary": "Las promociones activas se aplican solas en el punto de venta; el ticket muestra el ahorro.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Cargá los productos y, si la promoción es para ciertos clientes, el **cliente**."
+        },
+        {
+          "text": "En cada línea ves el nombre de la promoción y el ahorro. Revisá el total."
+        },
+        {
+          "text": "Tocá **Cobrar**: el sistema vuelve a validar la promoción antes del pago. Si una campaña se quedó sin presupuesto, el total se recalcula: revisalo y cobrá de nuevo."
+        }
+      ],
+      "errors": [
+        {
+          "problem": "El descuento manual supera mi límite",
+          "fix": "Un supervisor tiene que aprobarlo en **Punto de venta > Promociones DOLAN > Autorizaciones**; después tocá **Cobrar** otra vez."
+        }
+      ]
+    },
+    {
+      "slug": "beneficio-empleado",
+      "title": "Aplicar el beneficio de empleado",
+      "summary": "Con la venta abierta tocás **Beneficio empleado**, cargás el DNI y el descuento se aplica si corresponde.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Con los productos cargados, tocá **Beneficio empleado** e ingresá el DNI."
+        },
+        {
+          "text": "Si el empleado y los productos califican, aparece el beneficio aplicado. Revisá el total antes de cobrar."
+        },
+        {
+          "text": "Para quitarlo, volvé a **Beneficio empleado** y confirmá con el campo vacío."
+        }
+      ]
+    }
+  ]
+}

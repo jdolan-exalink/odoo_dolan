@@ -1,0 +1,31 @@
+{
+  "app": "presupuesto_financiero",
+  "intro": "Presupuesto por cuenta y mes contra lo real de la contabilidad, con desvío y porcentaje de ejecución.",
+  "who": "Gerencia y contador.",
+  "tasks": [
+    {
+      "slug": "armar-presupuesto",
+      "title": "Armar el presupuesto y compararlo con lo real",
+      "summary": "Creás el presupuesto, cargás importes por cuenta y mes (o con carga rápida), lo aprobás y lo seguís en **Contra real**.",
+      "minutes": 5,
+      "steps": [
+        {
+          "text": "Abrí **Presupuesto financiero > Presupuestos** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "presupuesto-armar-1",
+            "go": "/odoo/action-DOLAN_budget.action_dolan_budget",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Poné nombre, desde y hasta. Cargá las líneas por cuenta y mes, o usá **Carga rápida**: un importe repartido en partes iguales o lo real del año anterior con un ajuste."
+        },
+        {
+          "text": "Tocá **Aprobar**. En **Contra real** ves por cuenta y mes lo presupuestado, lo real, el desvío y la ejecución."
+        }
+      ]
+    }
+  ]
+}

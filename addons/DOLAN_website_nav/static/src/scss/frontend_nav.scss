@@ -1,0 +1,10 @@
+// El botón de la esquina del sitio web lleva al Escritorio DOLAN: se ve como un acceso directo.
+.o_frontend_to_backend_nav .o_dolan_frontend_desktop_btn {
+    gap: 6px;
+    padding: 0 12px;
+
+    &::after {
+        content: "Escritorio";
+        font-weight: 600;
+    }
+}

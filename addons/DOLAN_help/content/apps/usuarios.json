@@ -1,0 +1,38 @@
+{
+  "app": "usuarios",
+  "intro": "Los usuarios del sistema, sus permisos por app y el doble factor de seguridad.",
+  "who": "Administradores.",
+  "tasks": [
+    {
+      "slug": "crear-usuario",
+      "title": "Crear un usuario y darle permisos",
+      "summary": "Creás el usuario con su correo, le das los permisos de cada app y le llega la invitación.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Abrí **Usuarios** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "usuarios-crear-1",
+            "go": "/odoo/action-base.action_res_users",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ],
+            "menu": "base.menu_administration"
+          }
+        },
+        {
+          "text": "Poné nombre y correo (es su usuario). Elegí las **empresas** en las que trabaja."
+        },
+        {
+          "text": "En **Permisos** elegí el nivel en cada app (usuario o responsable). Ve solo las apps que le habilites. Guardá: le llega un correo para poner su contraseña."
+        }
+      ],
+      "errors": [
+        {
+          "problem": "El usuario no ve una app",
+          "fix": "Revisá que tenga el permiso de esa app y la empresa correcta. Los cambios de permisos se ven al volver a entrar."
+        }
+      ]
+    }
+  ]
+}

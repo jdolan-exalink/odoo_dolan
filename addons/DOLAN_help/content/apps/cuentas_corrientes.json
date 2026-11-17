@@ -1,0 +1,50 @@
+{
+  "app": "cuentas_corrientes",
+  "intro": "Cuánto debe cada cliente (y cuánto le debés a cada proveedor), qué está vencido y hace cuánto, promesas de pago y estados de cuenta.",
+  "who": "Administración, cobranzas y vendedores.",
+  "tasks": [
+    {
+      "slug": "ver-saldos",
+      "title": "Ver quién debe y cuánto está vencido",
+      "summary": "En **Saldos** tenés una fila por contacto con saldo, vencido, a vencer y la antigüedad de la deuda.",
+      "minutes": 1,
+      "steps": [
+        {"text": "Entrá a **Cuentas corrientes > Saldos** (1). Cada fila es un cliente o proveedor con su **Saldo**, lo **Vencido** y lo **A vencer**.",
+         "shot": {"id": "cc-saldos-1", "go": "/odoo/action-DOLAN_current_account.action_dolan_current_account", "mark": ["text=Saldos"]}},
+        {"text": "Las columnas **1-30**, **31-60**, **61-90** y **Más de 90 días** (1) muestran hace cuánto venció la deuda. **Días de mora** es el atraso del comprobante más viejo.",
+         "shot": {"id": "cc-saldos-2", "go": "/odoo/action-DOLAN_current_account.action_dolan_current_account", "mark": ["th[data-name=amount_91_plus], text=Más de 90 días"]}},
+        {"text": "Con los filtros del buscador ves solo **Clientes**, **Con vencido**, **Más de 90 días** o **Con promesa** (1).",
+         "shot": {"id": "cc-saldos-3", "go": "/odoo/action-DOLAN_current_account.action_dolan_current_account", "click": [".o_searchview_dropdown_toggler"], "mark": [".o_filter_menu"]}},
+        {"text": "Abrí una fila para ver los comprobantes abiertos, los movimientos, registrar una promesa o sacar el estado de cuenta."}
+      ],
+      "tips": ["Ordená por **Vencido** tocando el título de la columna para empezar por los que más deben."],
+      "related": ["cuentas_corrientes/estado-de-cuenta", "cuentas_corrientes/promesa-de-pago"]
+    },
+    {
+      "slug": "estado-de-cuenta",
+      "title": "Sacar o mandar un estado de cuenta",
+      "summary": "Elegís el contacto y las fechas y sale el estado de cuenta en PDF, Excel o por correo al cliente.",
+      "minutes": 2,
+      "steps": [
+        {"text": "Entrá a **Cuentas corrientes > Estado de cuenta** (1).",
+         "shot": {"id": "cc-estado-1", "go": "/odoo/action-DOLAN_current_account.action_dolan_current_account", "mark": ["text=Estado de cuenta"]}},
+        {"text": "Elegí el **Contacto**, si es cuenta de cliente o de proveedor, **Desde** y la **Fecha de corte**. Si querés solo lo que está pendiente, tildá la opción de comprobantes abiertos.",
+         "shot": {"id": "cc-estado-2", "go": "/odoo/action-DOLAN_current_account.action_dolan_account_statement_wizard", "mark": [".modal-body div[name=partner_id], div[name=partner_id]"]}},
+        {"text": "Tocá **PDF**, **Excel** o **Enviar por correo**. El correo le llega al contacto con el PDF adjunto."}
+      ],
+      "tips": ["También está el botón **Estado de cuenta** en la ficha de cada cliente."]
+    },
+    {
+      "slug": "promesa-de-pago",
+      "title": "Registrar una promesa de pago",
+      "summary": "Cuando el cliente se compromete a pagar, anotás importe y fecha; DOLAN avisa sola si se cumplió o no.",
+      "minutes": 1,
+      "steps": [
+        {"text": "Abrí la fila del cliente en **Saldos** y tocá **Promesa de pago** (1).",
+         "shot": {"id": "cc-promesa-1", "go": "/odoo/action-DOLAN_current_account.action_dolan_current_account/{id}", "record": {"model": "dolan.current.account", "domain": [["balance", ">", 0]]}, "mark": ["button[name=action_new_promise]"]}},
+        {"text": "Cargá el **Importe**, la **Fecha** prometida y por dónde lo dijo (teléfono, WhatsApp, en persona). Guardá."},
+        {"text": "Cada hora se revisan las promesas: pasan a **Cumplida** cuando entran cobros por ese importe, o a **Incumplida** si vence la fecha sin pago. Las ves en **Promesas de pago**."}
+      ]
+    }
+  ]
+}

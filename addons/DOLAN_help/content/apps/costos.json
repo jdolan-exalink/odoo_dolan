@@ -1,0 +1,52 @@
+{
+  "app": "costos",
+  "intro": "Costo promedio, costo de reposición y última compra de cada producto, con el margen y aviso de margen bajo por categoría.",
+  "who": "Compras, precios y gerencia.",
+  "tasks": [
+    {
+      "slug": "analizar-margenes",
+      "title": "Ver los márgenes y los productos con margen bajo",
+      "summary": "En **Análisis de márgenes** ves por producto precio, costos y margen; los que quedan debajo del mínimo de su categoría se marcan.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Abrí **Costos > Análisis de márgenes** (1). Tocá **Actualizar** para recalcular.",
+          "shot": {
+            "id": "costos-margenes-1",
+            "go": "/odoo/action-DOLAN_product_cost.action_dolan_product_margin",
+            "mark": [
+              "text=Análisis de márgenes"
+            ]
+          }
+        },
+        {
+          "text": "**Reposición vs. promedio** muestra cuánto subió lo que cuesta volver a comprar frente a lo que pagaste. Si es alto, revisá el precio de venta."
+        },
+        {
+          "text": "Filtrá **Margen bajo** para ver solo los que están debajo del mínimo de su categoría."
+        }
+      ],
+      "related": [
+        "listas_precios/actualizar-precios"
+      ]
+    },
+    {
+      "slug": "historial-costos",
+      "title": "Ver cómo cambió el costo de un producto",
+      "summary": "En **Historial de costos** está cada cambio de costo con su fecha y origen (compra, ajuste).",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Costos > Historial de costos** y buscá el producto.",
+          "shot": {
+            "id": "costos-historial-1",
+            "go": "/odoo/action-DOLAN_product_cost.action_dolan_product_cost_history",
+            "mark": [
+              ".o_list_table thead, .o_view_nocontent"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

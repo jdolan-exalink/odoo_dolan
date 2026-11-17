@@ -1,0 +1,67 @@
+{
+  "app": "primeros_pasos",
+  "name": "Primeros pasos",
+  "intro": "Lo básico para moverte por DOLAN ERP: entrar, encontrar tus apps, buscar y pedir ayuda.",
+  "tasks": [
+    {
+      "slug": "entrar-al-sistema",
+      "title": "Entrar al sistema",
+      "summary": "Abrí la dirección de la empresa en el navegador y entrá con tu usuario y contraseña.",
+      "minutes": 1,
+      "before": ["Tener tu usuario (suele ser tu correo) y tu contraseña. Si no los tenés, pedíselos al administrador."],
+      "steps": [
+        {"text": "Abrí el navegador (Chrome, Edge o Firefox) y entrá a la dirección del sistema que te pasó la empresa.",
+         "shot": {"id": "primeros-pasos-entrar-1", "go": "/web/login", "logout": true, "mark": ["input[name=login]", "input[name=password]", "button[type=submit]"]}},
+        {"text": "Escribí tu correo o usuario (1) y tu contraseña (2) y tocá **Iniciar sesión** (3)."},
+        {"text": "Entrás al **Inicio**, con los íconos de las apps que tenés habilitadas."}
+      ],
+      "errors": [
+        {"problem": "«Usuario o contraseña incorrectos»", "fix": "Revisá que no esté activado Bloq Mayús. Si la olvidaste, pedile al administrador que te la cambie."},
+        {"problem": "No veo una app que necesito", "fix": "Cada usuario ve solo las apps de su tarea. Pedile al administrador que te dé acceso."}
+      ],
+      "related": ["primeros_pasos/moverse-por-el-inicio"]
+    },
+    {
+      "slug": "moverse-por-el-inicio",
+      "title": "Moverte por el Inicio y las carpetas",
+      "summary": "El Inicio agrupa las apps en carpetas por tema; tocá una carpeta para ver sus apps y tocá una app para abrirla.",
+      "minutes": 2,
+      "steps": [
+        {"text": "En el **Inicio** ves arriba tus apps más usadas y abajo las carpetas (1). Las carpetas juntan las apps de un mismo tema, por ejemplo **Facturación y Finanzas**.",
+         "shot": {"id": "primeros-pasos-inicio-1", "go": "/odoo", "mark": [".o_dolan_folder_tile"]}},
+        {"text": "Tocá una carpeta para abrirla y después la app que necesitás."},
+        {"text": "Para volver al Inicio desde cualquier pantalla, tocá la casita de arriba a la izquierda (1).",
+         "shot": {"id": "primeros-pasos-inicio-2", "go": "/odoo/action-account.action_move_out_invoice_type", "mark": [".o_main_navbar a:first-child, .o_navbar_apps_menu, .o_menu_toggle"]}}
+      ],
+      "tips": ["Podés reordenar los íconos y armar tus propias carpetas: mantené apretado un ícono y arrastralo."],
+      "related": ["primeros_pasos/buscar-y-filtrar", "primeros_pasos/pedir-ayuda"]
+    },
+    {
+      "slug": "buscar-y-filtrar",
+      "title": "Buscar y filtrar en una lista",
+      "summary": "Escribí en el buscador de arriba de cualquier lista y elegí en qué campo buscar; los filtros y agrupaciones están en la flechita del buscador.",
+      "minutes": 2,
+      "steps": [
+        {"text": "En cualquier lista (facturas, clientes, productos) escribí en el buscador (1) lo que buscás: un nombre, un número, un CUIT.",
+         "shot": {"id": "primeros-pasos-buscar-1", "go": "/odoo/action-account.action_move_out_invoice_type", "mark": [".o_searchview_input"]}},
+        {"text": "Elegí de la lista que se abre en qué campo buscar (por ejemplo **Buscar Cliente**) y tocá Enter."},
+        {"text": "Con la flechita del buscador (1) abrís los **Filtros** (por ejemplo «Sin pagar») y **Agrupar por** (por ejemplo por cliente o por mes).",
+         "shot": {"id": "primeros-pasos-buscar-2", "go": "/odoo/action-account.action_move_out_invoice_type", "click": [".o_searchview_dropdown_toggler"], "mark": [".o_searchview_dropdown_toggler"]}},
+        {"text": "Para sacar un filtro tocá la **x** de la etiqueta gris que queda en el buscador."}
+      ],
+      "tips": ["Si usás siempre la misma búsqueda, guardala en **Favoritos** desde la misma flechita."]
+    },
+    {
+      "slug": "pedir-ayuda",
+      "title": "Encontrar ayuda desde cualquier pantalla",
+      "summary": "El botón «?» de arriba a la derecha abre la guía de la app donde estás; también podés preguntarle al Asistente IA.",
+      "minutes": 1,
+      "steps": [
+        {"text": "Tocá el botón **?** de la barra de arriba (1). Se abre la ayuda de la app en la que estás trabajando.",
+         "shot": {"id": "primeros-pasos-ayuda-1", "go": "/odoo/action-account.action_move_out_invoice_type", "mark": [".o_dolan_help_systray button"]}},
+        {"text": "Elegí lo que querés hacer, o escribí en el buscador de la ayuda, por ejemplo «anular factura»."},
+        {"text": "Si una guía no te sirvió, tocá **No** al pie y contá qué faltó: le llega al responsable para mejorarla."}
+      ]
+    }
+  ]
+}

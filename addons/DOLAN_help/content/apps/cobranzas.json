@@ -1,0 +1,64 @@
+{
+  "app": "cobranzas",
+  "menu": "account.menu_finance",
+  "intro": "Cobranza digital: débito automático por CBU, link de pago con QR en la factura y recordatorios de deuda por WhatsApp.",
+  "who": "Administración y cobranzas.",
+  "tasks": [
+    {
+      "slug": "adherir-cliente-debito",
+      "title": "Adherir un cliente al débito automático",
+      "summary": "En la ficha del cliente, pestaña **Cobranza**, tildás **Débito automático por CBU** y elegís su cuenta bancaria.",
+      "minutes": 2,
+      "before": ["Tener la autorización firmada del cliente y su CBU."],
+      "steps": [
+        {"text": "Abrí la ficha del cliente y entrá a la pestaña **Cobranza** (1).",
+         "shot": {"id": "cobranzas-adherir-1", "go": "/odoo/action-account.res_partner_action_customer/{id}", "record": {"model": "res.partner", "domain": [["customer_rank", ">", 0], ["is_company", "=", true], ["vat", "!=", false]]}, "click": [".o_notebook .nav-link:text-is('Cobranza')"], "mark": [".o_notebook .nav-link.active"]}},
+        {"text": "Tildá **Débito automático por CBU** (1). Elegí la **cuenta bancaria** del cliente (si no está, creala con su CBU) y la fecha de adhesión.",
+         "shot": {"id": "cobranzas-adherir-2", "go": "/odoo/action-account.res_partner_action_customer/{id}", "record": {"model": "res.partner", "domain": [["customer_rank", ">", 0], ["is_company", "=", true], ["vat", "!=", false]]}, "click": [".o_notebook .nav-link:text-is('Cobranza')"], "mark": ["div[name=dolan_direct_debit]"]}},
+        {"text": "Guardá. Desde ahora sus facturas vencidas entran en los lotes de débito."}
+      ],
+      "related": ["cobranzas/lote-de-debito"]
+    },
+    {
+      "slug": "lote-de-debito",
+      "title": "Armar y mandar un lote de débito al banco",
+      "summary": "Creás el lote, cargás las facturas vencidas de los clientes adheridos y generás el archivo para subir al banco.",
+      "minutes": 4,
+      "steps": [
+        {"text": "Entrá a **Facturación > Clientes > Débito automático por CBU** y tocá **Nuevo** (1).",
+         "shot": {"id": "cobranzas-lote-1", "go": "/odoo/action-DOLAN_collections.action_dolan_direct_debit_batch", "mark": [".o_list_button_add"]}},
+        {"text": "Elegí el **Banco** (1), la **Fecha de débito** y hasta qué vencimiento incluir. Tocá **Cargar facturas vencidas** (2).",
+         "shot": {"id": "cobranzas-lote-2", "go": "/odoo/action-DOLAN_collections.action_dolan_direct_debit_batch/new", "mark": ["div[name=journal_id]", "button[name=action_load_invoices]"]}},
+        {"text": "Revisá las líneas (factura, cliente, CBU, importe) y tocá **Generar archivo para el banco**. Bajá el archivo y subilo en el home banking."},
+        {"text": "Cuando el banco informe el resultado, marcá los **Rechazado** con su motivo y tocá **Registrar cobros**: las facturas debitadas quedan pagadas."}
+      ],
+      "errors": [
+        {"problem": "Un cliente no aparece en el lote", "fix": "Revisá que esté adherido (pestaña **Cobranza**) y que su factura esté vencida hasta la fecha que elegiste."}
+      ]
+    },
+    {
+      "slug": "link-de-pago",
+      "title": "Mandar un link de pago",
+      "summary": "Desde la factura generás un link de Mercado Pago; el cliente paga y la factura se concilia sola.",
+      "minutes": 1,
+      "steps": [
+        {"text": "Abrí la factura confirmada y tocá **Generar link de pago** (1).",
+         "shot": {"id": "cobranzas-link-1", "go": "/odoo/action-account.action_move_out_invoice_type/{id}", "record": {"model": "account.move", "domain": [["move_type", "=", "out_invoice"], ["state", "=", "posted"], ["payment_state", "in", ["not_paid", "partial"]]]}, "mark": ["button[name=action_dolan_payment_link]"]}},
+        {"text": "Copiá el link y mandalo por WhatsApp o correo. La factura impresa también trae el QR."},
+        {"text": "Cuando Mercado Pago avisa el pago, DOLAN registra el cobro y la factura queda **Pagado**."}
+      ]
+    },
+    {
+      "slug": "recordatorio-whatsapp",
+      "title": "Mandar un recordatorio de deuda por WhatsApp",
+      "summary": "Desde la ficha del cliente mandás un mensaje con el detalle de lo que debe y los links de pago.",
+      "minutes": 1,
+      "steps": [
+        {"text": "En la ficha del cliente, pestaña **Cobranza**, tocá **Enviar recordatorio de deuda por WhatsApp** (1).",
+         "shot": {"id": "cobranzas-recordatorio-1", "go": "/odoo/action-account.res_partner_action_customer/{id}", "record": {"model": "res.partner", "domain": [["customer_rank", ">", 0], ["is_company", "=", true], ["vat", "!=", false]]}, "click": [".o_notebook .nav-link:text-is('Cobranza')"], "mark": ["button[name=action_dolan_whatsapp_reminder]"]}},
+        {"text": "Revisá el mensaje y envialo. Para varios clientes a la vez, tildalos en la lista y usá **Acciones > Recordatorio de deuda por WhatsApp**."}
+      ],
+      "related": ["cuentas_corrientes/ver-saldos"]
+    }
+  ]
+}

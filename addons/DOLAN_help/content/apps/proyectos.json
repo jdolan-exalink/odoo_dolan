@@ -1,0 +1,31 @@
+{
+  "app": "proyectos",
+  "intro": "Proyectos con sus tareas por etapa, responsables, fechas y horas, con vista de tablero y Gantt.",
+  "who": "Equipos de trabajo y responsables.",
+  "tasks": [
+    {
+      "slug": "crear-tareas",
+      "title": "Crear un proyecto y sus tareas",
+      "summary": "Creás el proyecto y le vas cargando tareas que se mueven por columnas (por hacer, en curso, hecho).",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Proyectos** y tocá **Nuevo** (1) para crear el proyecto.",
+          "shot": {
+            "id": "proyectos-crear-1",
+            "go": "/odoo/action-project.open_view_project_all",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Abrí el proyecto y agregá tareas en cada columna con **+**. Asigná responsable y fecha límite."
+        },
+        {
+          "text": "Arrastrá las tareas de columna a medida que avanzan. En **Mis tareas** ves las tuyas de todos los proyectos."
+        }
+      ]
+    }
+  ]
+}

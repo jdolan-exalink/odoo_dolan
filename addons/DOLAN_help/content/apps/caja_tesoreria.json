@@ -1,0 +1,75 @@
+{
+  "app": "caja_tesoreria",
+  "intro": "El efectivo de cada caja por turnos: apertura, ingresos y retiros, arqueo por billetes y cierre comparado con la contabilidad.",
+  "who": "Cajeros y tesorería.",
+  "tasks": [
+    {
+      "slug": "abrir-turno",
+      "title": "Abrir el turno de caja",
+      "summary": "Elegís tu caja, contás lo que hay y lo cargás en **Contado al abrir**. Si no coincide con el saldo, queda anotado.",
+      "minutes": 2,
+      "before": ["Tenés que estar habilitado como cajero de esa caja.", "No puede haber otro turno abierto en la misma caja."],
+      "steps": [
+        {"text": "Entrá a **Caja y Tesorería > Turnos** y tocá **Nuevo** (1).",
+         "shot": {"id": "caja-abrir-1", "go": "/odoo/action-DOLAN_treasury.action_dolan_cash_session", "mark": [".o_list_button_add"]}},
+        {"text": "Elegí la **Caja** (1). El **Saldo contable al abrir** muestra lo que debería haber según la contabilidad.",
+         "shot": {"id": "caja-abrir-2", "go": "/odoo/action-DOLAN_treasury.action_dolan_cash_session/new", "mark": ["div[name=box_id]", "div[name=opening_expected]"]}},
+        {"text": "Contá el efectivo y escribilo en **Contado al abrir** (1). Guardá con la nube de arriba.",
+         "shot": {"id": "caja-abrir-3", "go": "/odoo/action-DOLAN_treasury.action_dolan_cash_session/new", "mark": ["div[name=opening_counted]"]}}
+      ],
+      "errors": [
+        {"problem": "«Ya hay un turno abierto en esta caja»", "fix": "Alguien no cerró el turno anterior. Buscalo en **Turnos** con el filtro abiertos y cerralo (o pedíselo a tesorería)."},
+        {"problem": "Lo contado no coincide con el saldo contable", "fix": "Volvé a contar. Si la diferencia sigue, dejá el número real: queda registrada para que tesorería la revise."}
+      ],
+      "related": ["caja_tesoreria/registrar-movimiento", "caja_tesoreria/arqueo-y-cierre"]
+    },
+    {
+      "slug": "registrar-movimiento",
+      "title": "Registrar un ingreso, retiro o gasto",
+      "summary": "En el turno abierto agregás el movimiento con su motivo e importe y lo **asentás**: queda en la contabilidad.",
+      "minutes": 1,
+      "steps": [
+        {"text": "Abrí tu turno y, en la pestaña **Movimientos** (1), tocá **Agregar una línea** (2).",
+         "shot": {"id": "caja-mov-1", "go": "/odoo/action-DOLAN_treasury.action_dolan_cash_session/{id}", "record": {"model": "dolan.cash.session", "domain": [["state", "=", "open"]]}, "mark": [".o_notebook .nav-link.active", "text=Agregar una línea"]}},
+        {"text": "Elegí el **Tipo**: ingreso, retiro o gasto, o transferencia a otra caja (por ejemplo, la rendición a la caja central).",
+         "shot": {"id": "caja-mov-2", "go": "/odoo/action-DOLAN_treasury.action_dolan_cash_session/{id}", "record": {"model": "dolan.cash.session", "domain": [["state", "=", "open"]]}, "mark": [".o_field_x2many_list .o_data_row"]}},
+        {"text": "Elegí el **Motivo** (gasto de librería, pago a proveedor, aporte o retiro de socio), el **Importe** y un **Detalle** corto. Guardá."},
+        {"text": "Tocá **Asentar** en la línea. Desde ese momento el movimiento no se puede cambiar ni borrar: si te equivocaste, cargá uno en sentido contrario."}
+      ],
+      "tips": ["Guardá el comprobante del gasto: el detalle del movimiento ayuda a encontrarlo en el arqueo."],
+      "related": ["caja_tesoreria/arqueo-y-cierre"]
+    },
+    {
+      "slug": "arqueo-y-cierre",
+      "title": "Hacer el arqueo y cerrar el turno",
+      "summary": "Cargás cuántos billetes y monedas de cada valor hay, cerrás el turno y DOLAN lo compara con el saldo contable.",
+      "minutes": 4,
+      "steps": [
+        {"text": "En el turno abierto tocá **Cargar billetes y monedas** (1). En la pestaña **Arqueo** aparece una línea por cada valor.",
+         "shot": {"id": "caja-cierre-1", "go": "/odoo/action-DOLAN_treasury.action_dolan_cash_session/{id}", "record": {"model": "dolan.cash.session", "domain": [["state", "=", "open"]]}, "mark": ["button[name=action_load_denominations]"]}},
+        {"text": "Completá la **cantidad** de cada billete y moneda. El total contado se suma solo.",
+         "shot": {"id": "caja-cierre-2", "go": "/odoo/action-DOLAN_treasury.action_dolan_cash_session/{id}", "record": {"model": "dolan.cash.session", "domain": [["state", "=", "closed"]]}, "click": [".o_notebook .nav-link:has-text('Arqueo')"], "mark": [".o_notebook .nav-link.active"]}},
+        {"text": "Tocá **Cerrar turno** (1). Si la diferencia está dentro de la tolerancia, el turno queda **Cerrado** y la diferencia se asienta sola.",
+         "shot": {"id": "caja-cierre-3", "go": "/odoo/action-DOLAN_treasury.action_dolan_cash_session/{id}", "record": {"model": "dolan.cash.session", "domain": [["state", "=", "open"]]}, "mark": ["button[name=action_close]", ".o_statusbar_status"]}},
+        {"text": "Si la diferencia es mayor, el turno queda en **Diferencia a aprobar** y le llega un aviso al tesorero."}
+      ],
+      "errors": [
+        {"problem": "Me da una diferencia grande", "fix": "Revisá que estén asentados todos los retiros y gastos del día y volvé a contar. Si el tesorero te lo devuelve para recontar, el turno vuelve a quedar abierto."}
+      ],
+      "related": ["caja_tesoreria/aprobar-diferencia"]
+    },
+    {
+      "slug": "aprobar-diferencia",
+      "title": "Aprobar una diferencia de caja (tesorero)",
+      "summary": "En **Diferencias a aprobar** revisás el turno, escribís la explicación y lo aprobás o lo devolvés para recontar.",
+      "minutes": 2,
+      "before": ["Ser tesorero o responsable de contabilidad."],
+      "steps": [
+        {"text": "Entrá a **Caja y Tesorería > Diferencias a aprobar** (1). Ves los turnos con diferencia mayor a la tolerancia.",
+         "shot": {"id": "caja-aprobar-1", "go": "/odoo/action-DOLAN_treasury.action_dolan_cash_session_to_approve", "mark": ["text=Diferencias a aprobar"]}},
+        {"text": "Abrí el turno, mirá los movimientos y el arqueo, y escribí la **Explicación de la diferencia**."},
+        {"text": "Tocá **Aprobar** para asentarla contra faltantes o sobrantes, o **Devolver para recontar** si hay que contar de nuevo."}
+      ]
+    }
+  ]
+}

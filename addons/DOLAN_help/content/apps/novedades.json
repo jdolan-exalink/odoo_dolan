@@ -1,0 +1,41 @@
+{
+  "app": "novedades",
+  "intro": "Horas extra y novedades del período (licencias, ausencias, premios) para pasar a sueldos.",
+  "who": "Supervisores y recursos humanos.",
+  "tasks": [
+    {
+      "slug": "aprobar-horas-extra",
+      "title": "Aprobar horas extra",
+      "summary": "Cada exceso detectado en las fichadas queda como hora extra; el responsable la autoriza para que se liquide.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Novedades** y filtrá las horas extra pendientes."
+        },
+        {
+          "text": "Revisá horas registradas y su clasificación (50 % o 100 %). Tocá **Aprobar** o **Rechazar** con motivo."
+        },
+        {
+          "text": "Sin autorización las horas quedan registradas pero no se liquidan."
+        }
+      ]
+    },
+    {
+      "slug": "cerrar-periodo",
+      "title": "Cerrar las novedades del mes",
+      "summary": "Cuando están todas aprobadas, cerrás el período y se transfieren a la liquidación de sueldos.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Revisá que no queden novedades pendientes."
+        },
+        {
+          "text": "Cerrá el período: las novedades aprobadas pasan a la liquidación y no se pueden duplicar. Si algo cambió, cargá una rectificación."
+        }
+      ],
+      "related": [
+        "sueldos/liquidar-mes"
+      ]
+    }
+  ]
+}

@@ -29,7 +29,7 @@ var ProfileCatalog = []ProfileInfo{
 		},
 		DolanModules: []string{
 			"DOLAN_base", "DOLAN_theme", "DOLAN_app_catalog", "DOLAN_l10n_ar_afip", "DOLAN_accounting", "DOLAN_account_reports", "DOLAN_current_account", "DOLAN_treasury", "DOLAN_product_cost",
-			"DOLAN_cash_flow", "DOLAN_profitability", "DOLAN_audit_log", "DOLAN_alerts", "DOLAN_budget",
+			"DOLAN_cash_flow", "DOLAN_profitability", "DOLAN_audit_log", "DOLAN_alerts", "DOLAN_budget", "DOLAN_help", "DOLAN_help_ai",
 			"DOLAN_branch", "DOLAN_integrations", "DOLAN_import", "DOLAN_backup", "DOLAN_diagnostics",
 			"DOLAN_ai", "DOLAN_ocr", "DOLAN_whatsapp", "DOLAN_knowledge_bi",
 		},
@@ -50,7 +50,7 @@ var ProfileCatalog = []ProfileInfo{
 		},
 		DolanModules: []string{
 			"DOLAN_base", "DOLAN_theme", "DOLAN_app_catalog", "DOLAN_l10n_ar_afip", "DOLAN_accounting", "DOLAN_account_reports", "DOLAN_current_account", "DOLAN_treasury", "DOLAN_product_cost",
-			"DOLAN_cash_flow", "DOLAN_profitability", "DOLAN_audit_log", "DOLAN_alerts", "DOLAN_budget",
+			"DOLAN_cash_flow", "DOLAN_profitability", "DOLAN_audit_log", "DOLAN_alerts", "DOLAN_budget", "DOLAN_help", "DOLAN_help_ai",
 			"DOLAN_branch", "DOLAN_integrations", "DOLAN_import", "DOLAN_backup", "DOLAN_diagnostics",
 			"DOLAN_ai", "DOLAN_ocr", "DOLAN_whatsapp", "DOLAN_subscription",
 			"DOLAN_renting", "DOLAN_views", "DOLAN_knowledge_bi",
@@ -73,7 +73,7 @@ var ProfileCatalog = []ProfileInfo{
 		},
 		DolanModules: []string{
 			"DOLAN_base", "DOLAN_theme", "DOLAN_app_catalog", "DOLAN_l10n_ar_afip", "DOLAN_accounting", "DOLAN_account_reports", "DOLAN_current_account", "DOLAN_treasury", "DOLAN_product_cost",
-			"DOLAN_cash_flow", "DOLAN_profitability", "DOLAN_audit_log", "DOLAN_alerts", "DOLAN_budget",
+			"DOLAN_cash_flow", "DOLAN_profitability", "DOLAN_audit_log", "DOLAN_alerts", "DOLAN_budget", "DOLAN_help", "DOLAN_help_ai",
 			"DOLAN_branch", "DOLAN_integrations", "DOLAN_import", "DOLAN_backup", "DOLAN_diagnostics",
 			"DOLAN_ai", "DOLAN_ocr", "DOLAN_whatsapp", "DOLAN_pos",
 			"DOLAN_discount_engine", "DOLAN_payment_terminal", "DOLAN_pricelist", "DOLAN_knowledge_bi",
@@ -99,13 +99,13 @@ var ProfileCatalog = []ProfileInfo{
 		},
 		DolanModules: []string{
 			"DOLAN_base", "DOLAN_theme", "DOLAN_app_catalog", "DOLAN_l10n_ar_afip", "DOLAN_accounting", "DOLAN_account_reports", "DOLAN_current_account", "DOLAN_treasury", "DOLAN_product_cost",
-			"DOLAN_cash_flow", "DOLAN_profitability", "DOLAN_audit_log", "DOLAN_alerts", "DOLAN_budget",
+			"DOLAN_cash_flow", "DOLAN_profitability", "DOLAN_audit_log", "DOLAN_alerts", "DOLAN_budget", "DOLAN_help", "DOLAN_help_ai",
 			"DOLAN_branch", "DOLAN_integrations", "DOLAN_import", "DOLAN_backup", "DOLAN_diagnostics",
 			"DOLAN_ai", "DOLAN_ocr", "DOLAN_whatsapp", "DOLAN_views",
 			"DOLAN_pos", "DOLAN_stock_mrp", "DOLAN_subscription", "DOLAN_renting",
 			"DOLAN_knowledge_bi", "DOLAN_exchange", "DOLAN_marketplace", "DOLAN_credit_limit_pos", "DOLAN_credit_limit", "DOLAN_pricelist", "DOLAN_discount_engine",
 			"DOLAN_payment_terminal", "ePOS_print", "pos_scale_management", "DOLAN_logistics",
-			"DOLAN_logistics_treasury", "DOLAN_logistics_whatsapp", "DOLAN_loyalty", "DOLAN_ecommerce",
+			"DOLAN_logistics_treasury", "DOLAN_logistics_whatsapp", "DOLAN_loyalty", "DOLAN_ecommerce", "DOLAN_website_nav",
 			"DOLAN_hr_core", "DOLAN_payroll_ar", "DOLAN_personal_operativo", "DOLAN_personal",
 			"DOLAN_helpdesk", "DOLAN_appointment", "DOLAN_field_service", "DOLAN_service_contract",
 		},

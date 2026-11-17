@@ -1,0 +1,92 @@
+{
+  "app": "productos",
+  "intro": "El catálogo de productos: precios, costo, códigos, impuestos y stock de cada uno.",
+  "who": "Compras, ventas y depósito.",
+  "tasks": [
+    {
+      "slug": "alta-producto",
+      "title": "Dar de alta un producto",
+      "summary": "Cargás nombre, tipo, precio, costo, código y código de barras; si se controla stock, tildás **Rastrear inventario**.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Productos** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "productos-alta-1",
+            "go": "/odoo/action-stock.product_template_action_product",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ],
+            "menu": "stock.menu_stock_root"
+          }
+        },
+        {
+          "text": "Escribí el nombre, elegí el **Tipo de producto** (1) (bienes o servicio) y tildá **Rastrear inventario** (2) si se cuenta en el depósito.",
+          "shot": {
+            "id": "productos-alta-2",
+            "go": "/odoo/action-stock.product_template_action_product/new",
+            "mark": [
+              "div[name=type]",
+              "div[name=is_storable]"
+            ],
+            "menu": "stock.menu_stock_root"
+          }
+        },
+        {
+          "text": "Completá **Precio de venta** y **Costo** (1), la **Categoría**, la **Referencia** (código interno) y el **Código de barras**.",
+          "shot": {
+            "id": "productos-alta-3",
+            "go": "/odoo/action-stock.product_template_action_product/new",
+            "mark": [
+              "div[name=list_price]",
+              "div[name=standard_price]"
+            ],
+            "menu": "stock.menu_stock_root"
+          }
+        },
+        {
+          "text": "Revisá los **Impuestos de venta** y de compra (IVA 21 %, 10,5 %…). Guardá."
+        }
+      ],
+      "tips": [
+        "Si el precio sigue al dólar, tildá **Atado al dólar**.",
+        "El **Código nomenclador COT** hace falta para los remitos que piden COT de ARBA."
+      ],
+      "related": [
+        "inventario/ver-stock"
+      ]
+    },
+    {
+      "slug": "ver-ficha",
+      "title": "Ver el stock y los movimientos de un producto",
+      "summary": "En la ficha, los botones de arriba muestran lo que hay, lo vendido y lo comprado.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí el producto. Arriba están **A la mano**, **Vendido** y **Comprado** (1): tocalos para ver el detalle.",
+          "shot": {
+            "id": "productos-ficha-1",
+            "go": "/odoo/action-stock.product_template_action_product/{id}",
+            "record": {
+              "model": "product.template",
+              "domain": [
+                [
+                  "default_code",
+                  "=",
+                  "YER-1000"
+                ]
+              ]
+            },
+            "mark": [
+              ".o_form_view button.oe_stat_button"
+            ],
+            "menu": "stock.menu_stock_root"
+          }
+        },
+        {
+          "text": "En la pestaña **Inventario** ves las rutas y reglas de reposición del producto."
+        }
+      ]
+    }
+  ]
+}

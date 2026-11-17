@@ -8,6 +8,7 @@
 | Configuraciones | Catálogo de apps | `DOLAN_app_catalog` | operativo | [DOLAN_app_catalog.md](DOLAN_app_catalog.md) |
 | Comercial | Fidelización | `DOLAN_loyalty` | beta | [DOLAN_loyalty.md](DOLAN_loyalty.md) |
 | Comercial | Tienda online | `DOLAN_ecommerce` | beta | [DOLAN_ecommerce.md](DOLAN_ecommerce.md) |
+| Comercial | (puente sitio web ↔ Escritorio) | `DOLAN_website_nav` | beta | [DOLAN_website_nav.md](DOLAN_website_nav.md) |
 | Servicios | Mesa de ayuda | `DOLAN_helpdesk` | beta | [DOLAN_helpdesk.md](DOLAN_helpdesk.md) |
 | Servicios | Agenda de turnos | `DOLAN_appointment` | beta | [DOLAN_appointment.md](DOLAN_appointment.md) |
 | Servicios | Órdenes de servicio | `DOLAN_field_service` | beta | [DOLAN_field_service.md](DOLAN_field_service.md) |
@@ -20,6 +21,7 @@
 | Gestión y Análisis | Auditoría | `DOLAN_audit_log` | beta | [DOLAN_audit_log.md](DOLAN_audit_log.md) |
 | Gestión y Análisis | Alertas | `DOLAN_alerts` | beta | [DOLAN_alerts.md](DOLAN_alerts.md) |
 | Gestión y Análisis | Presupuesto financiero | `DOLAN_budget` | beta | [DOLAN_budget.md](DOLAN_budget.md) |
+| Gestión y Análisis | Ayuda (+ `DOLAN_help_ai`) | `DOLAN_help` | beta | [DOLAN_help.md](DOLAN_help.md) |
 | Logística | Preparación de pedidos · Rutas y reparto · Prueba de entrega | `DOLAN_logistics` | beta | [DOLAN_logistics.md](DOLAN_logistics.md) |
 | Configuraciones | Sucursales | `DOLAN_branch` | beta | [DOLAN_branch.md](DOLAN_branch.md) |
 | Configuraciones | Integraciones | `DOLAN_integrations` | beta | [DOLAN_integrations.md](DOLAN_integrations.md) |

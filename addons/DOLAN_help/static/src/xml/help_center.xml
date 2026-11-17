@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="DOLAN_help.HelpSystray">
+        <div class="o_dolan_help_systray d-flex align-items-center">
+            <button type="button" class="btn btn-sm o_nav_entry px-2" title="Ayuda de esta pantalla"
+                    aria-label="Ayuda de esta pantalla" t-on-click="() => this.openHelp()">
+                <i class="oi oi-lg" data-icon="help" aria-hidden="true"/>
+            </button>
+        </div>
+    </t>
+
+
+
+    <t t-name="DOLAN_help.HelpCenter">
+        <div class="o_action o_dolan_help">
+            <div t-if="this.state.loading" class="o_dolan_help__loading"><i class="oi oi-spin" data-icon="progress_activity" aria-hidden="true"/> Cargando la ayuda…</div>
+            <div t-elif="this.state.error" class="alert alert-warning m-3" role="alert">No se pudo cargar la ayuda. Probá de nuevo en un momento.</div>
+            <t t-else="">
+                <t t-set="index" t-value="this.state.index"/>
+                <t t-set="page" t-value="this.state.page"/>
+
+                <header class="o_dolan_help__top d-print-none">
+                    <nav class="o_dolan_help__crumbs" aria-label="Ubicación">
+                        <t t-foreach="this.breadcrumbs()" t-as="crumb" t-key="crumb_index">
+                            <t t-if="!crumb_first"><i class="oi mx-1" data-icon="chevron_right" aria-hidden="true"/></t>
+                            <a href="#" t-on-click.prevent="() => this.go(crumb.ref)" t-esc="crumb.label"/>
+                        </t>
+                    </nav>
+                    <div class="o_dolan_help__search" t-att-class="{'o_dolan_help__search--hero': page.type === 'home'}">
+                        <h1 t-if="page.type === 'home'">¿En qué te ayudamos?</h1>
+                        <div class="o_dolan_help__search_box">
+                            <i class="oi" data-icon="search" aria-hidden="true"/>
+                            <input type="search" class="form-control" placeholder="Buscá una tarea: emitir factura, cerrar caja, cargar ausencia…"
+                                   aria-label="Buscar en la ayuda" t-att-value="this.state.query"
+                                   t-on-input="(ev) => this.onSearchInput(ev)" t-on-keydown="(ev) => this.onSearchKeydown(ev)"/>
+                            <div t-if="this.state.query.length &gt; 1" class="o_dolan_help__results" role="listbox">
+                                <button t-foreach="this.state.results" t-as="row" t-key="row.ref" type="button" role="option"
+                                        class="o_dolan_help__result" t-on-click="() => this.go(row.ref)">
+                                    <span class="o_dolan_help__result_title" t-esc="row.title"/>
+                                    <span class="o_dolan_help__result_where" t-esc="row.where"/>
+                                </button>
+                                <div t-if="!this.state.results.length" class="o_dolan_help__result o_dolan_help__result--empty">
+                                    No encontramos nada con «<t t-esc="this.state.query"/>». Probá con otra palabra o buscá por aplicación.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <main class="o_dolan_help__page">
+                    <!-- Portada -->
+                    <t t-if="page.type === 'home'">
+                        <div class="o_dolan_help__doors">
+                            <button type="button" class="o_dolan_help_door" t-on-click="() => this.go('apps')">
+                                <i class="oi" data-icon="grid_view" aria-hidden="true"/>
+                                <span class="o_dolan_help_door__title">Por aplicación</span>
+                                <span class="o_dolan_help_door__text">Cómo se usa cada app, pantalla por pantalla.</span>
+                            </button>
+                            <button type="button" class="o_dolan_help_door" t-on-click="() => this.go('sectors')">
+                                <i class="oi" data-icon="account_tree" aria-hidden="true"/>
+                                <span class="o_dolan_help_door__title">Por sector</span>
+                                <span class="o_dolan_help_door__text">Los procedimientos del día de cada sector, en orden.</span>
+                            </button>
+                        </div>
+                        <section t-foreach="index.general" t-as="g" t-key="g.key" class="o_dolan_help__section">
+                            <h2 t-esc="g.name"/>
+                                    <div class="o_dolan_help_tasks">
+            <button t-foreach="g.tasks" t-as="task" t-key="task.ref" type="button" class="o_dolan_help_task_card"
+                    t-on-click="() => this.go(task.ref)">
+                <span class="o_dolan_help_task_card__title" t-esc="task.title"/>
+                <span class="o_dolan_help_task_card__summary" t-out="this.formatHelpText(task.summary)"/>
+                <span t-if="task.minutes" class="o_dolan_help_task_card__time"><i class="oi" data-icon="schedule" aria-hidden="true"/> <t t-esc="task.minutes"/> min</span>
+            </button>
+        </div>
+                        </section>
+                        <section t-if="index.company_articles.length or index.can_edit" class="o_dolan_help__section">
+                            <h2>Procedimientos de la empresa</h2>
+                            <div class="o_dolan_help_tasks">
+                                <button t-foreach="index.company_articles" t-as="a" t-key="a.ref" type="button" class="o_dolan_help_task_card" t-on-click="() => this.go(a.ref)">
+                                    <span class="o_dolan_help_task_card__title" t-esc="a.title"/>
+                                    <span class="o_dolan_help_task_card__summary" t-out="this.formatHelpText(a.summary)"/>
+                                </button>
+                                <button t-if="index.can_edit" type="button" class="o_dolan_help_task_card o_dolan_help_task_card--add" t-on-click="() => this.newCompanyArticle()">
+                                    <span class="o_dolan_help_task_card__title"><i class="oi" data-icon="add" aria-hidden="true"/> Escribir un procedimiento</span>
+                                    <span class="o_dolan_help_task_card__summary">Contá cómo trabaja tu empresa; aparece acá y en su sector.</span>
+                                </button>
+                            </div>
+                        </section>
+                        <section t-if="index.news.length" class="o_dolan_help__section">
+                            <h2>Lo nuevo</h2>
+                            <div class="o_dolan_help_news">
+                                <article t-foreach="index.news" t-as="n" t-key="n_index" class="o_dolan_help_news__item">
+                                    <span class="o_dolan_help_news__date" t-esc="n.date"/>
+                                    <strong t-esc="n.title"/>
+                                    <ul class="mb-0"><li t-foreach="n.items or []" t-as="it" t-key="it_index" t-out="this.formatHelpText(it)"/></ul>
+                                </article>
+                            </div>
+                        </section>
+                    </t>
+
+                    <!-- Todas las apps por carpeta -->
+                    <t t-elif="page.type === 'apps'">
+                        <h1 class="o_dolan_help__title">Por aplicación</h1>
+                        <p class="o_dolan_help__lead">Elegí la app que estás usando. Ves solo las que tenés habilitadas.</p>
+                        <section t-foreach="index.folders" t-as="folder" t-key="folder.key" class="o_dolan_help__section">
+                            <h2><a href="#" t-on-click.prevent="() => this.go('folder:' + folder.key)" t-esc="folder.name"/></h2>
+                            <div class="o_dolan_help_tiles">
+                                <t t-foreach="folder.apps" t-as="key" t-key="key">
+                                    <t t-set="app" t-value="index.apps[key]"/>
+        <button type="button" class="o_dolan_help_tile" t-on-click="() => this.go('app:' + app.key)">
+            <img t-att-src="app.icon" alt="" class="o_dolan_help_tile__icon" loading="lazy"/>
+            <span class="o_dolan_help_tile__body">
+                <span class="o_dolan_help_tile__name"><t t-esc="app.name"/>
+                    <span t-if="app.status === 'beta'" class="badge rounded-pill text-bg-warning ms-1">Beta</span>
+                </span>
+                <span class="o_dolan_help_tile__meta">
+                    <t t-if="app.tasks.length"><t t-esc="app.tasks.length"/> <t t-esc="app.tasks.length === 1 ? 'guía' : 'guías'"/></t>
+                    <t t-else="">Guía en preparación</t>
+                </span>
+            </span>
+        </button>
+                                </t>
+                            </div>
+                        </section>
+                    </t>
+
+                    <t t-elif="page.type === 'folder'">
+                        <h1 class="o_dolan_help__title" t-esc="page.folder.name"/>
+                        <div class="o_dolan_help_tiles">
+                            <t t-foreach="page.folder.apps" t-as="key" t-key="key">
+                                <t t-set="app" t-value="index.apps[key]"/>
+        <button type="button" class="o_dolan_help_tile" t-on-click="() => this.go('app:' + app.key)">
+            <img t-att-src="app.icon" alt="" class="o_dolan_help_tile__icon" loading="lazy"/>
+            <span class="o_dolan_help_tile__body">
+                <span class="o_dolan_help_tile__name"><t t-esc="app.name"/>
+                    <span t-if="app.status === 'beta'" class="badge rounded-pill text-bg-warning ms-1">Beta</span>
+                </span>
+                <span class="o_dolan_help_tile__meta">
+                    <t t-if="app.tasks.length"><t t-esc="app.tasks.length"/> <t t-esc="app.tasks.length === 1 ? 'guía' : 'guías'"/></t>
+                    <t t-else="">Guía en preparación</t>
+                </span>
+            </span>
+        </button>
+                            </t>
+                        </div>
+                    </t>
+
+                    <!-- Una app -->
+                    <t t-elif="page.type === 'app'">
+                        <t t-set="app" t-value="page.app"/>
+                        <div class="o_dolan_help_app_head">
+                            <img t-if="app.icon" t-att-src="app.icon" alt="" class="o_dolan_help_app_head__icon"/>
+                            <div class="flex-grow-1">
+                                <h1 class="o_dolan_help__title mb-1"><t t-esc="app.name"/>
+                                    <span t-if="app.status === 'beta'" class="badge rounded-pill text-bg-warning align-middle fs-6 ms-1">Beta</span>
+                                </h1>
+                                <p class="o_dolan_help__lead mb-1" t-esc="app.intro"/>
+                                <p t-if="app.who" class="text-muted mb-0"><i class="oi" data-icon="person" aria-hidden="true"/> <t t-esc="app.who"/></p>
+                            </div>
+                            <button t-if="app.menu_id" type="button" class="btn btn-primary d-print-none" t-on-click="() => this.openApp(app)">
+                                Abrir <t t-esc="app.name"/>
+                            </button>
+                        </div>
+                        <t t-if="app.tasks.length">
+                            <h2 class="o_dolan_help__subtitle">¿Qué querés hacer?</h2>
+                                    <div class="o_dolan_help_tasks">
+            <button t-foreach="app.tasks" t-as="task" t-key="task.ref" type="button" class="o_dolan_help_task_card"
+                    t-on-click="() => this.go(task.ref)">
+                <span class="o_dolan_help_task_card__title" t-esc="task.title"/>
+                <span class="o_dolan_help_task_card__summary" t-out="this.formatHelpText(task.summary)"/>
+                <span t-if="task.minutes" class="o_dolan_help_task_card__time"><i class="oi" data-icon="schedule" aria-hidden="true"/> <t t-esc="task.minutes"/> min</span>
+            </button>
+        </div>
+                        </t>
+                        <div t-else="" class="o_dolan_help_empty">
+                            <i class="oi" data-icon="edit" aria-hidden="true"/>
+                            <p class="mb-0">Estamos preparando la guía de esta app. Mientras tanto, consultá al responsable de tu sector.</p>
+                        </div>
+                    </t>
+
+                    <!-- Una tarea -->
+                    <t t-elif="page.type === 'task'">
+                        <t t-set="task" t-value="page.data"/>
+                        <article class="o_dolan_help_article">
+                            <div class="o_dolan_help_article__head">
+                                <h1 class="o_dolan_help__title" t-esc="task.title"/>
+                                <div class="o_dolan_help_article__actions d-print-none">
+                                    <button type="button" class="btn btn-light btn-sm" t-on-click="() => this.shareLink()"><i class="oi" data-icon="link" aria-hidden="true"/> Copiar link</button>
+                                    <button type="button" class="btn btn-light btn-sm" t-on-click="() => this.print()"><i class="oi" data-icon="print" aria-hidden="true"/> Imprimir o PDF</button>
+                                </div>
+                            </div>
+                            <div class="o_dolan_help_quick">
+                                <span class="o_dolan_help_quick__label">En 30 segundos</span>
+                                <p class="mb-0" t-out="this.formatHelpText(task.summary)"/>
+                                <span t-if="task.minutes" class="o_dolan_help_quick__time"><i class="oi" data-icon="schedule" aria-hidden="true"/> Te lleva unos <t t-esc="task.minutes"/> minutos</span>
+                            </div>
+                            <section t-if="task.before.length" class="o_dolan_help_before">
+                                <h2><i class="oi" data-icon="check_box" aria-hidden="true"/> Antes de empezar</h2>
+                                <ul><li t-foreach="task.before" t-as="b" t-key="b_index" t-out="this.formatHelpText(b)"/></ul>
+                            </section>
+                            <h2 class="o_dolan_help__subtitle">Paso a paso</h2>
+                            <ol class="o_dolan_help_steps">
+                                <li t-foreach="task.steps" t-as="step" t-key="step.number" class="o_dolan_help_step">
+                                    <span class="o_dolan_help_step__number" t-esc="step.number"/>
+                                    <div class="o_dolan_help_step__body">
+                                        <p class="o_dolan_help_step__text" t-out="this.formatHelpText(step.text)"/>
+                                        <p t-if="step.note" class="o_dolan_help_step__note" t-out="this.formatHelpText(step.note)"/>
+                                        <button t-if="step.image" type="button" class="o_dolan_help_step__shot" title="Ver más grande"
+                                                t-on-click="() => this.setZoom(step.image)">
+                                            <img t-att-src="step.image" t-att-alt="'Captura del paso ' + step.number" loading="lazy"/>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ol>
+                            <section t-if="task.errors.length" class="o_dolan_help_errors">
+                                <h2><i class="oi" data-icon="warning" aria-hidden="true"/> Si algo sale mal</h2>
+                                <dl>
+                                    <t t-foreach="task.errors" t-as="err" t-key="err_index">
+                                        <dt t-out="this.formatHelpText(err.problem)"/>
+                                        <dd t-out="this.formatHelpText(err.fix)"/>
+                                    </t>
+                                </dl>
+                            </section>
+                            <section t-if="task.tips.length" class="o_dolan_help_tips">
+                                <h2><i class="oi" data-icon="lightbulb" aria-hidden="true"/> Consejos</h2>
+                                <ul><li t-foreach="task.tips" t-as="tip" t-key="tip_index" t-out="this.formatHelpText(tip)"/></ul>
+                            </section>
+                            <section t-if="task.related.length" class="o_dolan_help_related d-print-none">
+                                <h2>Seguí con</h2>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button t-foreach="task.related" t-as="rel" t-key="rel.ref" type="button" class="btn btn-outline-primary btn-sm"
+                                            t-on-click="() => this.go(rel.ref)"><t t-esc="rel.title"/> <i class="oi" data-icon="arrow_forward" aria-hidden="true"/></button>
+                                </div>
+                            </section>
+                                    <footer class="o_dolan_help_feedback d-print-none">
+            <t t-if="this.state.feedback === 'thanks'">
+                <span><i class="oi text-danger" data-icon="favorite" aria-hidden="true"/> ¡Gracias! Con tu respuesta mejoramos la ayuda.</span>
+            </t>
+            <t t-elif="this.state.feedback === 'ask'">
+                <label class="form-label" for="o_dolan_help_feedback_comment">¿Qué faltó o qué no se entendió?</label>
+                <textarea id="o_dolan_help_feedback_comment" class="form-control mb-2" rows="3"
+                          t-on-input="(ev) => this.setFeedbackComment(ev)"/>
+                <button type="button" class="btn btn-primary btn-sm" t-on-click="() => this.sendFeedbackComment()">Enviar</button>
+            </t>
+            <t t-else="">
+                <span>¿Te sirvió esta guía?</span>
+                <button type="button" class="btn btn-outline-success btn-sm" t-on-click="() => this.sendFeedback(true)"><i class="oi" data-icon="thumb_up" aria-hidden="true"/> Sí</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" t-on-click="() => this.sendFeedback(false)"><i class="oi" data-icon="thumb_down" aria-hidden="true"/> No</button>
+            </t>
+        </footer>
+                        </article>
+                    </t>
+
+                    <!-- Sectores -->
+                    <t t-elif="page.type === 'sectors'">
+                        <h1 class="o_dolan_help__title">Por sector</h1>
+                        <p class="o_dolan_help__lead">Cómo trabaja cada sector, en el orden del día. Cada paso te lleva a la guía de la app.</p>
+                        <div class="o_dolan_help_sectors">
+                            <button t-foreach="index.sectors" t-as="sector" t-key="sector.key" type="button" class="o_dolan_help_sector_card"
+                                    t-on-click="() => this.go('sector:' + sector.key)">
+                                <i class="oi o_dolan_help_sector_card__icon" t-att-data-icon="sector.icon" aria-hidden="true"/>
+                                <span class="o_dolan_help_sector_card__name" t-esc="sector.name"/>
+                                <span class="o_dolan_help_sector_card__text" t-out="this.formatHelpText(sector.description)"/>
+                                <span class="o_dolan_help_sector_card__meta"><t t-esc="sector.procedures.length"/> procedimientos</span>
+                            </button>
+                            <button t-if="index.can_edit" type="button" class="o_dolan_help_sector_card o_dolan_help_task_card--add d-print-none"
+                                    t-on-click="() => this.newSector()">
+                                <i class="oi o_dolan_help_sector_card__icon" data-icon="add" aria-hidden="true"/>
+                                <span class="o_dolan_help_sector_card__name">Agregar un sector</span>
+                                <span class="o_dolan_help_sector_card__text">Sumá un área de tu empresa y escribí sus procedimientos.</span>
+                            </button>
+                        </div>
+                        <p t-if="!index.sectors.length" class="text-muted">Todavía no hay procedimientos cargados para tus sectores.</p>
+                    </t>
+
+                    <t t-elif="page.type === 'sector'">
+                        <t t-set="sector" t-value="page.sector"/>
+                        <h1 class="o_dolan_help__title"><i class="oi me-2" t-att-data-icon="sector.icon" aria-hidden="true"/><t t-esc="sector.name"/></h1>
+                        <p class="o_dolan_help__lead" t-esc="sector.description"/>
+                        <div class="o_dolan_help_tasks">
+                            <button t-foreach="sector.procedures" t-as="proc" t-key="proc.ref" type="button" class="o_dolan_help_task_card" t-on-click="() => this.go(proc.ref)">
+                                <span class="o_dolan_help_task_card__title"><t t-esc="proc.title"/>
+                                    <span t-if="proc.kind === 'company'" class="badge rounded-pill text-bg-info ms-1">De la empresa</span>
+                                </span>
+                                <span class="o_dolan_help_task_card__summary" t-out="this.formatHelpText(proc.summary)"/>
+                            </button>
+                            <button t-if="index.can_edit" type="button" class="o_dolan_help_task_card o_dolan_help_task_card--add d-print-none"
+                                    t-on-click="() => this.newCompanyArticle(sector.id)">
+                                <span class="o_dolan_help_task_card__title"><i class="oi" data-icon="add" aria-hidden="true"/> Escribir un procedimiento</span>
+                                <span class="o_dolan_help_task_card__summary">Contá paso a paso cómo trabaja este sector.</span>
+                            </button>
+                        </div>
+                        <p t-if="!sector.procedures.length and !index.can_edit" class="text-muted">Todavía no hay procedimientos para este sector.</p>
+                    </t>
+
+                    <t t-elif="page.type === 'procedure'">
+                        <t t-set="proc" t-value="page.data"/>
+                        <article class="o_dolan_help_article">
+                            <div class="o_dolan_help_article__head">
+                                <h1 class="o_dolan_help__title" t-esc="proc.title"/>
+                                <div class="o_dolan_help_article__actions d-print-none">
+                                    <button type="button" class="btn btn-light btn-sm" t-on-click="() => this.shareLink()"><i class="oi" data-icon="link" aria-hidden="true"/> Copiar link</button>
+                                    <button type="button" class="btn btn-light btn-sm" t-on-click="() => this.print()"><i class="oi" data-icon="print" aria-hidden="true"/> Imprimir o PDF</button>
+                                </div>
+                            </div>
+                            <div class="o_dolan_help_quick">
+                                <span class="o_dolan_help_quick__label"><t t-esc="proc.sector"/></span>
+                                <p class="mb-0" t-out="this.formatHelpText(proc.summary)"/>
+                            </div>
+                            <ol class="o_dolan_help_flow">
+                                <li t-foreach="proc.steps" t-as="step" t-key="step.number" class="o_dolan_help_flow__step">
+                                    <span class="o_dolan_help_step__number" t-esc="step.number"/>
+                                    <div class="o_dolan_help_flow__body">
+                                        <p class="mb-1" t-out="this.formatHelpText(step.text)"/>
+                                        <span t-if="step.who" class="o_dolan_help_flow__who"><i class="oi" data-icon="person" aria-hidden="true"/> <t t-esc="step.who"/></span>
+                                        <a t-if="step.task" href="#" class="o_dolan_help_flow__link d-print-none" t-on-click.prevent="() => this.go(step.task)">
+                                            Ver cómo: <t t-esc="step.task_title"/> <i class="oi" data-icon="arrow_forward" aria-hidden="true"/>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ol>
+                            <section t-if="proc.controls.length" class="o_dolan_help_tips">
+                                <h2><i class="oi" data-icon="verified" aria-hidden="true"/> Controles</h2>
+                                <ul><li t-foreach="proc.controls" t-as="c" t-key="c_index" t-out="this.formatHelpText(c)"/></ul>
+                            </section>
+                                    <footer class="o_dolan_help_feedback d-print-none">
+            <t t-if="this.state.feedback === 'thanks'">
+                <span><i class="oi text-danger" data-icon="favorite" aria-hidden="true"/> ¡Gracias! Con tu respuesta mejoramos la ayuda.</span>
+            </t>
+            <t t-elif="this.state.feedback === 'ask'">
+                <label class="form-label" for="o_dolan_help_feedback_comment">¿Qué faltó o qué no se entendió?</label>
+                <textarea id="o_dolan_help_feedback_comment" class="form-control mb-2" rows="3"
+                          t-on-input="(ev) => this.setFeedbackComment(ev)"/>
+                <button type="button" class="btn btn-primary btn-sm" t-on-click="() => this.sendFeedbackComment()">Enviar</button>
+            </t>
+            <t t-else="">
+                <span>¿Te sirvió esta guía?</span>
+                <button type="button" class="btn btn-outline-success btn-sm" t-on-click="() => this.sendFeedback(true)"><i class="oi" data-icon="thumb_up" aria-hidden="true"/> Sí</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" t-on-click="() => this.sendFeedback(false)"><i class="oi" data-icon="thumb_down" aria-hidden="true"/> No</button>
+            </t>
+        </footer>
+                        </article>
+                    </t>
+
+                    <t t-elif="page.type === 'company'">
+                        <t t-set="art" t-value="page.data"/>
+                        <article class="o_dolan_help_article">
+                            <div class="o_dolan_help_article__head">
+                                <h1 class="o_dolan_help__title" t-esc="art.title"/>
+                                <div class="o_dolan_help_article__actions d-print-none">
+                                    <button t-if="index.can_edit" type="button" class="btn btn-light btn-sm" t-on-click="() => this.editCompany(art.id)"><i class="oi" data-icon="edit" aria-hidden="true"/> Editar</button>
+                                    <button type="button" class="btn btn-light btn-sm" t-on-click="() => this.shareLink()"><i class="oi" data-icon="link" aria-hidden="true"/> Copiar link</button>
+                                    <button type="button" class="btn btn-light btn-sm" t-on-click="() => this.print()"><i class="oi" data-icon="print" aria-hidden="true"/> Imprimir o PDF</button>
+                                </div>
+                            </div>
+                            <p class="text-muted"><span class="badge rounded-pill text-bg-info me-1">Procedimiento de la empresa</span>
+                                <t t-if="art.sector"><t t-esc="art.sector"/> · </t>Actualizado <t t-esc="art.updated"/> por <t t-esc="art.author"/></p>
+                            <p t-if="art.summary" class="o_dolan_help__lead" t-esc="art.summary"/>
+                            <div class="o_dolan_help_company_body" t-out="art.body"/>
+                                    <footer class="o_dolan_help_feedback d-print-none">
+            <t t-if="this.state.feedback === 'thanks'">
+                <span><i class="oi text-danger" data-icon="favorite" aria-hidden="true"/> ¡Gracias! Con tu respuesta mejoramos la ayuda.</span>
+            </t>
+            <t t-elif="this.state.feedback === 'ask'">
+                <label class="form-label" for="o_dolan_help_feedback_comment">¿Qué faltó o qué no se entendió?</label>
+                <textarea id="o_dolan_help_feedback_comment" class="form-control mb-2" rows="3"
+                          t-on-input="(ev) => this.setFeedbackComment(ev)"/>
+                <button type="button" class="btn btn-primary btn-sm" t-on-click="() => this.sendFeedbackComment()">Enviar</button>
+            </t>
+            <t t-else="">
+                <span>¿Te sirvió esta guía?</span>
+                <button type="button" class="btn btn-outline-success btn-sm" t-on-click="() => this.sendFeedback(true)"><i class="oi" data-icon="thumb_up" aria-hidden="true"/> Sí</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" t-on-click="() => this.sendFeedback(false)"><i class="oi" data-icon="thumb_down" aria-hidden="true"/> No</button>
+            </t>
+        </footer>
+                        </article>
+                    </t>
+
+                    <div t-elif="page.type === 'noaccess'" class="o_dolan_help_empty">
+                        <i class="oi" data-icon="lock" aria-hidden="true"/>
+                        <p class="mb-0">Esta guía es de una app que no tenés habilitada. Pedile acceso al administrador.</p>
+                    </div>
+                    <div t-else="" class="o_dolan_help_empty">
+                        <i class="oi" data-icon="help_outline" aria-hidden="true"/>
+                        <p class="mb-2">No encontramos esa página de la ayuda.</p>
+                        <button type="button" class="btn btn-primary" t-on-click="() => this.go('')">Ir a la portada</button>
+                    </div>
+                </main>
+
+                <div t-if="this.state.zoom" class="o_dolan_help_zoom" role="dialog" aria-label="Captura ampliada" t-on-click="() => this.setZoom(null)">
+                    <img t-att-src="this.state.zoom" alt="Captura ampliada"/>
+                    <span class="o_dolan_help_zoom__close"><i class="oi" data-icon="close" aria-hidden="true"/> Cerrar</span>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

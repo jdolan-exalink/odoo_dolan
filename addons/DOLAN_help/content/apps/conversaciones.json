@@ -1,0 +1,31 @@
+{
+  "app": "conversaciones",
+  "intro": "El chat interno: mensajes directos y canales por tema o sector.",
+  "who": "Todos los usuarios.",
+  "tasks": [
+    {
+      "slug": "chatear",
+      "title": "Mandar un mensaje a un compañero",
+      "summary": "En **Conversaciones** elegís la persona o el canal y escribís; también podés llamar.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Conversaciones** (1).",
+          "shot": {
+            "id": "conversaciones-chat-1",
+            "go": "/odoo/action-mail.action_discuss",
+            "mark": [
+              ".o-mail-Discuss, .o_action_manager .o_action"
+            ]
+          }
+        },
+        {
+          "text": "Tocá **+** al lado de **Mensajes directos** y buscá la persona. Escribí y tocá Enter."
+        },
+        {
+          "text": "Para hablar con un sector, usá un **canal** (por ejemplo #depósito). Con **@nombre** avisás a alguien en particular."
+        }
+      ]
+    }
+  ]
+}

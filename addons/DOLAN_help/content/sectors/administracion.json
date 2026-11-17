@@ -1,0 +1,80 @@
+{
+  "sector": "administracion",
+  "procedures": [
+    {
+      "slug": "facturacion-y-cobranza",
+      "title": "Facturación y cobranza",
+      "summary": "Emitir los comprobantes, cobrar y mantener al día la cuenta corriente de cada cliente.",
+      "steps": [
+        {
+          "text": "Emití las facturas que no salen desde Ventas (servicios, abonos).",
+          "who": "Administración",
+          "task": "facturacion/emitir-factura"
+        },
+        {
+          "text": "Registrá cada cobro contra su factura.",
+          "who": "Administración",
+          "task": "facturacion/registrar-cobro"
+        },
+        {
+          "text": "Para débitos automáticos, armá el lote y mandalo al banco.",
+          "who": "Administración",
+          "task": "cobranzas/lote-de-debito"
+        },
+        {
+          "text": "Mandá recordatorios por WhatsApp a quienes tienen deuda vencida.",
+          "who": "Cobranzas",
+          "task": "cobranzas/recordatorio-whatsapp"
+        },
+        {
+          "text": "Si hay que anular una factura, hacé la nota de crédito.",
+          "who": "Administración",
+          "task": "facturacion/nota-de-credito"
+        }
+      ]
+    },
+    {
+      "slug": "bancos-y-pagos",
+      "title": "Bancos, pagos y cierre del mes",
+      "summary": "Pagar a proveedores, conciliar los bancos y preparar las presentaciones.",
+      "steps": [
+        {
+          "text": "Pagá las facturas de proveedores que vencen, con sus retenciones.",
+          "who": "Tesorería",
+          "task": "pagos_proveedores/pagar-factura-proveedor"
+        },
+        {
+          "text": "Importá el extracto del banco.",
+          "who": "Tesorería",
+          "task": "bancos/importar-extracto"
+        },
+        {
+          "text": "Conciliá cada movimiento con su cobro o pago.",
+          "who": "Tesorería",
+          "task": "conciliacion/conciliar-banco"
+        },
+        {
+          "text": "Al cierre del mes, generá el Libro IVA Digital.",
+          "who": "Contador",
+          "task": "reportes_fiscales/libro-iva-digital"
+        }
+      ]
+    },
+    {
+      "slug": "facturas-de-proveedores",
+      "title": "Facturas de proveedores",
+      "summary": "Cargar las facturas de compra controlando contra la orden y lo recibido.",
+      "steps": [
+        {
+          "text": "Cargá la factura del proveedor desde su orden de compra.",
+          "who": "Administración",
+          "task": "compras/cargar-factura-proveedor"
+        },
+        {
+          "text": "Controlá que cantidades y precios coincidan con lo recibido antes de confirmar.",
+          "who": "Administración"
+        }
+      ]
+    }
+  ]
+}

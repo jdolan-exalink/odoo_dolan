@@ -1,0 +1,59 @@
+{
+  "app": "fidelizacion",
+  "intro": "Puntos por compra, tarjetas de regalo y cupones para clientes frecuentes, en Ventas y en el punto de venta.",
+  "who": "Comerciales y caja.",
+  "tasks": [
+    {
+      "slug": "crear-programa",
+      "title": "Crear el programa de puntos",
+      "summary": "Con **Configurar** armás el programa en un paso: cuántos pesos dan un punto, cuánto vale al canjear y cuándo vence.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Fidelización > Configurar** (1).",
+          "shot": {
+            "id": "fidelizacion-programa-1",
+            "go": "/odoo/action-loyalty.loyalty_program_discount_loyalty_action",
+            "mark": [
+              "text=Configurar"
+            ]
+          }
+        },
+        {
+          "text": "Poné el nombre, los **Pesos de compra por punto**, el **Valor de un punto al canjear**, el vencimiento y el mínimo para canjear. Tocá **Crear programa** (1).",
+          "shot": {
+            "id": "fidelizacion-programa-2",
+            "go": "/odoo/action-DOLAN_loyalty.action_dolan_loyalty_setup",
+            "mark": [
+              ".modal footer .btn-primary, .modal-footer .btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Desde ese momento cada compra suma puntos al cliente, en Ventas y en el punto de venta."
+        }
+      ]
+    },
+    {
+      "slug": "ver-puntos",
+      "title": "Ver los puntos de un cliente",
+      "summary": "En **Saldos de puntos** ves cuántos puntos tiene cada cliente; en **Movimientos**, cuándo los sumó o canjeó.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Entrá a **Fidelización > Saldos de puntos** (1).",
+          "shot": {
+            "id": "fidelizacion-puntos-1",
+            "go": "/odoo/action-DOLAN_loyalty.action_dolan_loyalty_cards",
+            "mark": [
+              "text=Saldos de puntos"
+            ]
+          }
+        },
+        {
+          "text": "Buscá al cliente por nombre. Para el detalle abrí **Movimientos**."
+        }
+      ]
+    }
+  ]
+}

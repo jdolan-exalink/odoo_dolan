@@ -42,3 +42,6 @@ backups/*.sql
 /docs/rea-audit/
 /installer/dist/
 *.dolanbak
+
+# Informe local de scripts/help_screenshots.py
+docs/help/informe_capturas.md

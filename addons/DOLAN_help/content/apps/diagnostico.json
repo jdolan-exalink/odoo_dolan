@@ -1,0 +1,28 @@
+{
+  "app": "diagnostico",
+  "intro": "La salud del sistema en una lista corta, con los problemas primero y qué hacer con cada uno.",
+  "who": "Administradores.",
+  "tasks": [
+    {
+      "slug": "revisar-salud",
+      "title": "Revisar la salud del sistema",
+      "summary": "Cada fila es un tema (módulos, tareas, disco, respaldos, certificado, correo) en verde, amarillo o rojo.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Diagnóstico** (1). Tocá **Revisar ahora** para actualizar.",
+          "shot": {
+            "id": "diagnostico-salud-1",
+            "go": "/odoo/action-DOLAN_diagnostics.action_dolan_diagnostic_check",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "Leé las filas en **Revisar** o **Error**: cada una dice qué hacer. Las que tienen botón abren el registro con el problema."
+        }
+      ]
+    }
+  ]
+}

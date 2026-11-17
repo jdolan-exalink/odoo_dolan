@@ -1,0 +1,34 @@
+{
+  "app": "mantenimiento",
+  "intro": "Los equipos y máquinas de la empresa con su mantenimiento preventivo y los pedidos de reparación.",
+  "who": "Mantenimiento y responsables de equipos.",
+  "tasks": [
+    {
+      "slug": "pedir-mantenimiento",
+      "title": "Pedir un mantenimiento o una reparación",
+      "summary": "Creás la solicitud con el equipo y el problema; el equipo de mantenimiento la toma y la mueve por etapas.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Mantenimiento > Solicitudes de mantenimiento** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "mantenimiento-pedir-1",
+            "go": "/odoo/action-maintenance.hr_equipment_request_action",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Escribí qué pasa, elegí el **equipo** y si es **correctivo** o **preventivo**. Guardá."
+        },
+        {
+          "text": "El técnico la arrastra de **Nueva solicitud** a **En curso** y a **Reparado**."
+        }
+      ],
+      "tips": [
+        "En la ficha de cada equipo podés poner cada cuántos días necesita mantenimiento preventivo: la solicitud se crea sola."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "app": "mesa_ayuda",
+  "intro": "Tickets de soporte de clientes con equipos, plazos de atención (SLA), correo entrante y aviso por WhatsApp.",
+  "who": "Soporte y atención al cliente.",
+  "tasks": [
+    {
+      "slug": "atender-ticket",
+      "title": "Atender un ticket",
+      "summary": "Tomás el ticket, respondés desde el hilo, lo movés de etapa y lo cerrás con la solución.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Mesa de ayuda > Tickets** (1): tablero por etapa con la barra de SLA.",
+          "shot": {
+            "id": "mesa-ticket-1",
+            "go": "/odoo/action-DOLAN_helpdesk.action_dolan_helpdesk_ticket",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "Abrí el ticket y tocá **Tomar** para asignártelo. Respondé desde **Enviar mensaje**: el correo le llega al cliente en el mismo hilo."
+        },
+        {
+          "text": "Si hace falta, **Avisar por WhatsApp** abre el mensaje con un texto propuesto para revisar y enviar."
+        },
+        {
+          "text": "Para cerrarlo, escribí la **Solución** y pasalo a **Resuelto**."
+        }
+      ],
+      "tips": [
+        "Los correos que llegan a la casilla de soporte abren tickets solos."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+id,name,model_id,group_id/id,operation,domain
+access_dolan_help_sector_user,Ayuda sectores: usuario,dolan.help.sector,base.group_user,r,
+access_dolan_help_sector_editor,Ayuda sectores: editor,dolan.help.sector,DOLAN_help.group_help_editor,crud,
+access_dolan_help_article_user,Ayuda procedimientos: usuario,dolan.help.article,base.group_user,r,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+access_dolan_help_article_editor,Ayuda procedimientos: editor,dolan.help.article,DOLAN_help.group_help_editor,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+access_dolan_help_feedback_user,Ayuda respuestas: usuario,dolan.help.feedback,base.group_user,c,"[('user_id', '=', user.id)]"
+access_dolan_help_feedback_editor,Ayuda respuestas: editor,dolan.help.feedback,DOLAN_help.group_help_editor,rud,

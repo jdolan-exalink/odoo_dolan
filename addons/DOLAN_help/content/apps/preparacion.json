@@ -1,0 +1,44 @@
+{
+  "app": "preparacion",
+  "intro": "Oleadas de preparación: junta varias entregas y suma lo que hay que buscar por producto; las completas quedan listas para cargar.",
+  "who": "Depósito.",
+  "tasks": [
+    {
+      "slug": "armar-oleada",
+      "title": "Armar y preparar una oleada",
+      "summary": "Creás la oleada, agregás las entregas listas, juntás la mercadería escaneando y al terminar quedan **Preparadas**.",
+      "minutes": 5,
+      "steps": [
+        {
+          "text": "Entrá a **Preparación de pedidos** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "preparacion-oleada-1",
+            "go": "/odoo/action-DOLAN_logistics.action_dolan_picking_wave",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Elegí el **Preparador** y tocá **Agregar entregas listas** (1).",
+          "shot": {
+            "id": "preparacion-oleada-2",
+            "go": "/odoo/action-DOLAN_logistics.action_dolan_picking_wave/new",
+            "mark": [
+              "button[name=action_add_ready]"
+            ]
+          }
+        },
+        {
+          "text": "Tocá **Empezar a preparar**. La lista muestra cuánto juntar de cada producto, sumado entre todas las entregas."
+        },
+        {
+          "text": "Escaneá cada producto (o escribí su código): cada lectura suma una unidad y avisa si sobra o no es de la oleada. Al **Terminar**, las entregas completas quedan **Preparadas** y las otras vuelven a quedar libres."
+        }
+      ],
+      "related": [
+        "rutas_reparto/armar-hoja-de-ruta"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "app": "plantillas",
+  "intro": "Plantillas de correo de cada documento (factura, presupuesto, recordatorio), editables por empresa.",
+  "who": "Administración.",
+  "tasks": [
+    {
+      "slug": "editar-plantilla",
+      "title": "Cambiar el texto de un correo automático",
+      "summary": "Buscás la plantilla del documento y cambiás asunto y cuerpo; los campos entre llaves se completan solos.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Abrí **Plantillas** (1) y buscá, por ejemplo, «Factura».",
+          "shot": {
+            "id": "plantillas-editar-1",
+            "go": "/odoo/action-mail.action_email_template_tree_all",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "Cambiá el **asunto** y el **cuerpo**. No borres los campos dinámicos (nombre del cliente, número de documento)."
+        },
+        {
+          "text": "Guardá y probá mandando un documento de prueba."
+        }
+      ]
+    }
+  ]
+}

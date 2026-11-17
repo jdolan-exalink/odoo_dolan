@@ -1,0 +1,32 @@
+{
+  "app": "empresas",
+  "intro": "Las empresas del sistema con su CUIT, condición fiscal, domicilio, logo y certificados de ARCA.",
+  "who": "Administradores.",
+  "tasks": [
+    {
+      "slug": "datos-empresa",
+      "title": "Revisar los datos de una empresa",
+      "summary": "En la ficha de la empresa están los datos fiscales que salen en las facturas.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Abrí **Empresas** (1) y entrá a la empresa.",
+          "shot": {
+            "id": "empresas-datos-1",
+            "go": "/odoo/action-base.action_res_company_form",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ],
+            "menu": "base.menu_administration"
+          }
+        },
+        {
+          "text": "Revisá razón social, CUIT, condición frente al IVA, ingresos brutos, inicio de actividades, domicilio y logo."
+        },
+        {
+          "text": "Para dar de alta otra empresa rápido por CUIT, usá **Ajustes > Localización Argentina > Alta Rápida Multi-Empresa**."
+        }
+      ]
+    }
+  ]
+}

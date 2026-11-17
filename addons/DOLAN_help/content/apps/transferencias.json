@@ -1,0 +1,40 @@
+{
+  "app": "transferencias",
+  "intro": "Todos los movimientos de mercadería: entre depósitos, recepciones y entregas.",
+  "who": "Depósito.",
+  "tasks": [
+    {
+      "slug": "transferir-entre-depositos",
+      "title": "Pasar mercadería de un depósito a otro",
+      "summary": "Creás un traslado interno con origen, destino y productos, y lo validás cuando la mercadería llega.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Transferencias** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "transferencias-nueva-1",
+            "go": "/odoo/action-stock.action_picking_tree_all",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ],
+            "menu": "stock.menu_stock_root"
+          }
+        },
+        {
+          "text": "Elegí el **Tipo de operación** (1) de transferencia interna; el origen y el destino se completan solos.",
+          "shot": {
+            "id": "transferencias-nueva-2",
+            "go": "/odoo/action-stock.action_picking_tree_all/new",
+            "mark": [
+              "div[name=picking_type_id]"
+            ],
+            "menu": "stock.menu_stock_root"
+          }
+        },
+        {
+          "text": "Agregá los productos con su cantidad en **Operaciones**. Tocá **Marcar como tarea pendiente** y, cuando se hizo el movimiento, **Validar**."
+        }
+      ]
+    }
+  ]
+}

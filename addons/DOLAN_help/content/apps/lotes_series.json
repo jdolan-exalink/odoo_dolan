@@ -1,0 +1,32 @@
+{
+  "app": "lotes_series",
+  "intro": "Trazabilidad por lote o número de serie: de qué compra vino y a qué cliente fue cada unidad.",
+  "who": "Depósito y calidad.",
+  "tasks": [
+    {
+      "slug": "buscar-lote",
+      "title": "Buscar dónde está un lote o una serie",
+      "summary": "En **Números de serie/lote** buscás el número y ves el producto, la cantidad y su historia.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Lotes y series** (1) y buscá el número.",
+          "shot": {
+            "id": "lotes-buscar-1",
+            "go": "/odoo/action-stock.action_production_lot_form",
+            "mark": [
+              ".o_list_table thead, .o_view_nocontent"
+            ],
+            "menu": "stock.menu_stock_root"
+          }
+        },
+        {
+          "text": "Abrí el lote: arriba, **Trazabilidad** muestra todos sus movimientos, de la recepción a la entrega."
+        }
+      ],
+      "tips": [
+        "Para que un producto pida lote al recibir o entregar, activalo en su ficha, pestaña **Inventario**."
+      ]
+    }
+  ]
+}

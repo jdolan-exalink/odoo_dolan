@@ -1,0 +1,90 @@
+{
+  "app": "pagos_proveedores",
+  "intro": "Órdenes de pago a proveedores con sus retenciones: efectivo, transferencia, cheque propio o eCheq.",
+  "who": "Administración y tesorería.",
+  "tasks": [
+    {
+      "slug": "pagar-factura-proveedor",
+      "title": "Pagar una factura de proveedor",
+      "summary": "Desde la factura tocás **Pagar**, elegís el diario y, si corresponde, DOLAN calcula las retenciones.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Abrí la factura del proveedor (en **Proveedores > Facturas**) y tocá **Pagar** (1).",
+          "shot": {
+            "id": "pagos-factura-1",
+            "go": "/odoo/action-account.action_move_in_invoice/{id}",
+            "record": {
+              "model": "account.move",
+              "domain": [
+                [
+                  "move_type",
+                  "=",
+                  "in_invoice"
+                ],
+                [
+                  "state",
+                  "=",
+                  "posted"
+                ]
+              ]
+            },
+            "mark": [
+              "button[name=action_register_payment]"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Elegí el **Diario** (banco, caja o cheques propios), revisá **Importe** y **Fecha**. Con **Retener y pagar** se calculan las retenciones de ganancias e IIBB."
+        },
+        {
+          "text": "Tocá **Crear pago**. Sale la orden de pago con los certificados de retención."
+        }
+      ],
+      "errors": [
+        {
+          "problem": "No calcula la retención",
+          "fix": "Revisá en la ficha del proveedor su condición frente a Ganancias e IIBB y que tu empresa sea agente de retención (lo configura el contador)."
+        }
+      ]
+    },
+    {
+      "slug": "orden-de-pago",
+      "title": "Hacer una orden de pago de varias facturas",
+      "summary": "En **Pagos de proveedor** creás un pago nuevo con el proveedor y el importe; se aplica a sus facturas pendientes.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Pagos a proveedores** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "pagos-orden-1",
+            "go": "/odoo/action-account.action_account_payments_payable",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Elegí el **Proveedor** (1), el **Importe**, la **Fecha** y el **Diario** (2).",
+          "shot": {
+            "id": "pagos-orden-2",
+            "go": "/odoo/action-account.action_account_payments_payable/new",
+            "mark": [
+              "div[name=partner_id]",
+              "div[name=journal_id]"
+            ],
+            "menu": "account.menu_finance"
+          }
+        },
+        {
+          "text": "Tocá **Confirmar**. Después conciliá el pago con las facturas desde la cuenta corriente del proveedor."
+        }
+      ],
+      "tips": [
+        "Para pagar muchos proveedores por banco de una vez, usá **Proveedores > Pagos Masivos a Bancos (TXT)**."
+      ]
+    }
+  ]
+}

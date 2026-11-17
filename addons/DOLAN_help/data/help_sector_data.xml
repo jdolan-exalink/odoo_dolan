@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="sector_ventas" model="dolan.help.sector">
+        <field name="key">ventas</field>
+        <field name="name">Ventas y mostrador</field>
+        <field name="description">Atiende al cliente: presupuesta, vende, factura, cobra y sigue la cuenta corriente.</field>
+        <field name="icon">shopping_cart</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="sector_caja" model="dolan.help.sector">
+        <field name="key">caja</field>
+        <field name="name">Caja</field>
+        <field name="description">Abre y cierra el turno, cobra en el punto de venta, registra retiros y gastos y hace el arqueo.</field>
+        <field name="icon">payments</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="sector_administracion" model="dolan.help.sector">
+        <field name="key">administracion</field>
+        <field name="name">Administración y finanzas</field>
+        <field name="description">Carga facturas de proveedores, paga, maneja cheques y bancos, cobra a deudores y controla impuestos.</field>
+        <field name="icon">account_balance</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="sector_deposito" model="dolan.help.sector">
+        <field name="key">deposito</field>
+        <field name="name">Depósito y compras</field>
+        <field name="description">Compra, recibe mercadería, repone, transfiere entre depósitos y cuenta el inventario.</field>
+        <field name="icon">inventory_2</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="sector_logistica" model="dolan.help.sector">
+        <field name="key">logistica</field>
+        <field name="name">Logística y reparto</field>
+        <field name="description">Prepara pedidos, emite remitos y COT, arma la ruta, entrega y rinde lo cobrado.</field>
+        <field name="icon">local_shipping</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="sector_rrhh" model="dolan.help.sector">
+        <field name="key">rrhh</field>
+        <field name="name">Recursos humanos</field>
+        <field name="description">Da de alta empleados, controla ausencias y asistencias, carga novedades y liquida sueldos.</field>
+        <field name="icon">badge</field>
+        <field name="sequence">60</field>
+    </record>
+    <record id="sector_servicios" model="dolan.help.sector">
+        <field name="key">servicios</field>
+        <field name="name">Servicio técnico y servicios</field>
+        <field name="description">Agenda turnos, atiende la mesa de ayuda, hace órdenes de servicio y administra contratos.</field>
+        <field name="icon">build</field>
+        <field name="sequence">70</field>
+    </record>
+    <record id="sector_gerencia" model="dolan.help.sector">
+        <field name="key">gerencia</field>
+        <field name="name">Gerencia</field>
+        <field name="description">Mira el tablero del dueño, la rentabilidad, el flujo de caja y las alertas para decidir.</field>
+        <field name="icon">bar_chart</field>
+        <field name="sequence">80</field>
+    </record>
+</odoo>

@@ -1,0 +1,79 @@
+{
+  "app": "facturacion",
+  "intro": "Facturas, notas de crédito y débito electrónicas con CAE de ARCA, cobros de clientes y pagos a proveedores.",
+  "who": "Administración, mostrador y quien factura.",
+  "tasks": [
+    {
+      "slug": "emitir-factura",
+      "title": "Emitir una factura",
+      "summary": "Creás la factura con el cliente y los productos y al **Confirmar** DOLAN pide el CAE a ARCA y le asigna el número.",
+      "minutes": 2,
+      "before": ["El cliente tiene que tener CUIT (o DNI) y condición frente al IVA cargados: de eso sale si es factura A, B o C.", "La conexión con ARCA tiene que estar activa (lo configura el administrador)."],
+      "steps": [
+        {"text": "En **Facturación** tocá **Nueva factura** (1) en el menú de arriba.",
+         "shot": {"id": "facturacion-emitir-1", "go": "/odoo/action-DOLAN_accounting.action_dolan_customer_invoices", "mark": ["text=Nueva factura"]}},
+        {"text": "Elegí el **Cliente** (1). El **Tipo de Documento** (2) (Factura A, B o C) se completa solo según el cliente y tu empresa.",
+         "shot": {"id": "facturacion-emitir-2", "go": "/odoo/action-account.action_move_out_invoice_type/new", "mark": ["div[name=partner_id]", "div[name=l10n_latam_document_type_id]"]}},
+        {"text": "Tocá **Agregar una línea** (1), elegí el producto y poné cantidad y precio. Los impuestos y el total se calculan solos.",
+         "shot": {"id": "facturacion-emitir-3", "go": "/odoo/action-account.action_move_out_invoice_type/new", "mark": ["text=Agregar una línea"]}},
+        {"text": "Tocá **Confirmar** (1). En unos segundos la factura pasa a **Registrado** con su número y CAE.",
+         "shot": {"id": "facturacion-emitir-4", "go": "/odoo/action-account.action_move_out_invoice_type/new", "mark": ["button[name=action_post]", ".o_statusbar_status"]}},
+        {"text": "En la pestaña **ARCA / AFIP Factura Electrónica** (1) ves el CAE, su vencimiento y la respuesta de ARCA.",
+         "shot": {"id": "facturacion-emitir-5", "go": "/odoo/action-account.action_move_out_invoice_type/{id}", "record": {"model": "account.move", "domain": [["move_type", "=", "out_invoice"], ["state", "=", "posted"]]}, "click": [".o_notebook .nav-link:has-text('ARCA')"], "mark": [".o_notebook .nav-link.active"]}}
+      ],
+      "errors": [
+        {"problem": "ARCA rechazó la factura", "fix": "El mensaje de ARCA queda en la pestaña **ARCA / AFIP Factura Electrónica**. Lo más común es un dato del cliente (CUIT o condición de IVA) o una fecha fuera de rango. Corregilo y volvé a confirmar."},
+        {"problem": "ARCA no responde", "fix": "Esperá unos minutos y confirmá de nuevo. Si el corte sigue, el administrador puede habilitar la facturación con **CAEA** para no frenar la venta."},
+        {"problem": "Sale factura A y tenía que ser B (o al revés)", "fix": "Revisá la condición frente al IVA del cliente en su ficha antes de confirmar. Una factura confirmada no se borra: se anula con una nota de crédito."}
+      ],
+      "tips": ["Desde la factura confirmada podés **Enviar** por correo o **Imprimir** el PDF con el QR de ARCA."],
+      "related": ["facturacion/registrar-cobro", "facturacion/nota-de-credito"]
+    },
+    {
+      "slug": "registrar-cobro",
+      "title": "Registrar el cobro de una factura",
+      "summary": "Abrís la factura, tocás **Pagar**, elegís el medio (efectivo, banco, cheque) y la factura queda pagada.",
+      "minutes": 1,
+      "steps": [
+        {"text": "Buscá la factura en **Facturas ARCA**. Con el filtro **Por pagar** ves solo las que deben.",
+         "shot": {"id": "facturacion-cobro-1", "go": "/odoo/action-DOLAN_accounting.action_dolan_customer_invoices", "mark": [".o_searchview_input"]}},
+        {"text": "Abrila y tocá **Pagar** (1).",
+         "shot": {"id": "facturacion-cobro-2", "go": "/odoo/action-account.action_move_out_invoice_type/{id}", "record": {"model": "account.move", "domain": [["move_type", "=", "out_invoice"], ["state", "=", "posted"], ["payment_state", "in", ["not_paid", "partial"]]]}, "mark": ["button[name=action_register_payment]"]}},
+        {"text": "Elegí el **Diario** (1) (Efectivo, el banco o Cheques de terceros), revisá el **Importe** y la **Fecha de pago** y tocá **Crear pago**. Si el cliente te retuvo impuestos, elegí **Retener y pagar** y cargá la retención abajo.",
+         "shot": {"id": "facturacion-cobro-3", "go": "/odoo/action-account.action_move_out_invoice_type/{id}", "record": {"model": "account.move", "domain": [["move_type", "=", "out_invoice"], ["state", "=", "posted"], ["payment_state", "in", ["not_paid", "partial"]]]}, "click": ["button[name=action_register_payment]"], "wait": ".modal-dialog", "mark": [".modal div[name=journal_id]"]}},
+        {"text": "La factura muestra la cinta **Pagado** (o **Parcialmente pagado** si cobraste una parte)."}
+      ],
+      "errors": [
+        {"problem": "El cliente pagó varias facturas juntas", "fix": "En la lista, tildá todas las facturas del cliente y usá **Acciones > Pagar**: se genera un solo recibo."}
+      ],
+      "related": ["cuentas_corrientes/ver-saldos"]
+    },
+    {
+      "slug": "nota-de-credito",
+      "title": "Anular una factura con nota de crédito",
+      "summary": "Una factura con CAE no se borra: se hace una nota de crédito por el total o por una parte, que también va a ARCA.",
+      "minutes": 2,
+      "steps": [
+        {"text": "Abrí la factura confirmada y tocá **Nota de crédito** (1).",
+         "shot": {"id": "facturacion-nc-1", "go": "/odoo/action-account.action_move_out_invoice_type/{id}", "record": {"model": "account.move", "domain": [["move_type", "=", "out_invoice"], ["state", "=", "posted"], ["payment_state", "in", ["not_paid", "partial"]]]}, "mark": ["button[name=action_reverse]"]}},
+        {"text": "Escribí el **motivo** (por ejemplo «Devolución de mercadería») y tocá **Revertir**. Se crea la nota de crédito en borrador."},
+        {"text": "Si es parcial, ajustá cantidades o precios de las líneas. Después tocá **Confirmar** para pedir el CAE."}
+      ],
+      "tips": ["La nota de crédito queda vinculada a la factura y descuenta la deuda del cliente en su cuenta corriente."]
+    },
+    {
+      "slug": "buscar-facturas",
+      "title": "Buscar facturas y ver lo que falta cobrar",
+      "summary": "En **Facturas ARCA** buscás por cliente, número o CUIT y filtrás por sin pagar, vencidas o por fecha.",
+      "minutes": 1,
+      "steps": [
+        {"text": "Entrá a **Facturas ARCA** (1). Ves número, CAE, cliente, fechas, IVA, total y estado.",
+         "shot": {"id": "facturacion-buscar-1", "go": "/odoo/action-DOLAN_accounting.action_dolan_customer_invoices", "mark": ["text=Facturas ARCA"]}},
+        {"text": "Abrí los filtros con la flechita del buscador y elegí **Por pagar** o **Vencidas** (1).",
+         "shot": {"id": "facturacion-buscar-2", "go": "/odoo/action-DOLAN_accounting.action_dolan_customer_invoices", "click": [".o_searchview_dropdown_toggler"], "mark": ["text=Por pagar"]}},
+        {"text": "Para ver el total por cliente, usá **Agrupar por > Contacto**: cada grupo muestra la suma."}
+      ],
+      "related": ["primeros_pasos/buscar-y-filtrar"]
+    }
+  ]
+}

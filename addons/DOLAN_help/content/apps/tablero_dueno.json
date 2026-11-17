@@ -1,0 +1,38 @@
+{
+  "app": "tablero_dueno",
+  "intro": "Una sola pantalla con caja y bancos, deuda vencida, pagos de la semana, ventas y margen del mes y alertas.",
+  "who": "Dueños y gerencia.",
+  "tasks": [
+    {
+      "slug": "leer-tablero",
+      "title": "Leer el tablero del dueño",
+      "summary": "Cada tarjeta resume un tema; tocándola se abre el detalle.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Abrí **Tablero del dueño** (1). Arriba a la derecha, **Actualizar** recalcula todo.",
+          "shot": {
+            "id": "tablero-dueno-1",
+            "go": "/odoo/action-DOLAN_owner_dashboard.action_dolan_owner_dashboard",
+            "mark": [
+              ".o_dolan_owner_dashboard__grid, .o_action_manager .o_action"
+            ]
+          }
+        },
+        {
+          "text": "**Caja y bancos**: saldo de cada caja y banco. **Clientes: deuda vencida**: cuánto deben y quiénes más. **Proveedores**: lo que vence en 7 días."
+        },
+        {
+          "text": "**Ventas del mes**: contra los mismos días del mes anterior, con el margen. **Alertas**: lo que necesita atención."
+        },
+        {
+          "text": "Tocá cualquier tarjeta para ir a la pantalla con el detalle."
+        }
+      ],
+      "related": [
+        "cuentas_corrientes/ver-saldos",
+        "alertas/configurar-alerta"
+      ]
+    }
+  ]
+}

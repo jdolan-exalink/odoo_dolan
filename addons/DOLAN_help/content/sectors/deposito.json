@@ -1,0 +1,73 @@
+{
+  "sector": "deposito",
+  "procedures": [
+    {
+      "slug": "compra-y-recepcion",
+      "title": "Comprar y recibir mercadería",
+      "summary": "Del pedido al proveedor hasta que la mercadería queda en el depósito.",
+      "steps": [
+        {
+          "text": "Revisá qué productos están bajos de stock.",
+          "who": "Compras",
+          "task": "inventario/ver-stock"
+        },
+        {
+          "text": "Pedí cotización al proveedor.",
+          "who": "Compras",
+          "task": "compras/pedir-cotizacion"
+        },
+        {
+          "text": "Confirmá la orden de compra.",
+          "who": "Compras",
+          "task": "compras/confirmar-orden"
+        },
+        {
+          "text": "Al llegar el camión, controlá y validá la recepción.",
+          "who": "Depósito",
+          "task": "compras/recibir-mercaderia"
+        }
+      ]
+    },
+    {
+      "slug": "preparar-entregas",
+      "title": "Preparar las entregas del día",
+      "summary": "Cómo arranca el día en el depósito.",
+      "steps": [
+        {
+          "text": "Mirá en el resumen las entregas listas y las atrasadas.",
+          "who": "Depósito",
+          "task": "inventario/resumen-operaciones"
+        },
+        {
+          "text": "Prepará cada pedido y validá la entrega.",
+          "who": "Depósito",
+          "task": "remitos/validar-entrega"
+        },
+        {
+          "text": "Imprimí el remito para que viaje con la mercadería.",
+          "who": "Depósito",
+          "task": "remitos/imprimir-remito"
+        }
+      ]
+    },
+    {
+      "slug": "conteo-de-inventario",
+      "title": "Conteo de inventario",
+      "summary": "El conteo periódico para que el stock del sistema sea el real.",
+      "steps": [
+        {
+          "text": "Contá por sector del depósito y cargá lo contado.",
+          "who": "Depósito",
+          "task": "inventario/inventario-fisico"
+        },
+        {
+          "text": "Las diferencias grandes las revisa el responsable antes de aplicar.",
+          "who": "Responsable de depósito"
+        }
+      ],
+      "controls": [
+        "El conteo lo hace una persona distinta de la que mueve esa mercadería todos los días."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "app": "reportes_personal",
+  "intro": "Tablero de Personal: dotación, presentes, ausentes, tardanzas, turnos sin cubrir, horas extra y licencias.",
+  "who": "Supervisores, recursos humanos y gerencia.",
+  "tasks": [
+    {
+      "slug": "tablero-personal",
+      "title": "Leer el tablero de Personal",
+      "summary": "Filtrás por establecimiento, sector o período y cada número abre los registros de donde sale.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Entrá a **Reportes de Personal**. Elegí el período y, si hace falta, el sector o responsable."
+        },
+        {
+          "text": "Tocá un indicador (por ejemplo **Ausentes**) para ver la lista de personas."
+        },
+        {
+          "text": "Desde cualquier lista exportás a Excel."
+        }
+      ]
+    }
+  ]
+}

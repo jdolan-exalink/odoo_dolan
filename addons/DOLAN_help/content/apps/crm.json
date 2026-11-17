@@ -1,0 +1,77 @@
+{
+  "app": "crm",
+  "intro": "El embudo comercial: cada oportunidad es una posible venta que avanza por etapas hasta ganarse o perderse.",
+  "who": "Vendedores y responsables comerciales.",
+  "tasks": [
+    {
+      "slug": "cargar-oportunidad",
+      "title": "Cargar una oportunidad",
+      "summary": "En **Mi flujo** tocás **Nuevo**, escribís de qué se trata, el cliente y cuánto puede facturarse; queda en la primera etapa.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Entrá a **CRM**. Ves **Mi flujo**: una columna por etapa (nueva, calificada, propuesta, ganada). Tocá **Nuevo** (1).",
+          "shot": {
+            "id": "crm-oportunidad-1",
+            "go": "/odoo/action-crm.crm_lead_action_pipeline",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Escribí un título corto (por ejemplo «Provisión mensual de yerba»), elegí el **cliente** y el **ingreso esperado**. Tocá **Agregar**.",
+          "shot": {
+            "id": "crm-oportunidad-2",
+            "go": "/odoo/action-crm.crm_lead_action_pipeline",
+            "click": [
+              ".o-kanban-button-new"
+            ],
+            "mark": [
+              ".o_kanban_quick_create"
+            ]
+          }
+        },
+        {
+          "text": "La tarjeta queda en la primera columna. Abrila para sumar notas, el teléfono o la probabilidad."
+        }
+      ],
+      "related": [
+        "crm/avanzar-oportunidad"
+      ]
+    },
+    {
+      "slug": "avanzar-oportunidad",
+      "title": "Hacer avanzar una oportunidad",
+      "summary": "Arrastrás la tarjeta a la etapa siguiente, programás la próxima actividad y, cuando se cierra, la marcás como ganada o perdida.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Arrastrá la tarjeta a la columna que corresponde: por ejemplo de **Nuevo** a **Propuesta** cuando mandaste el presupuesto."
+        },
+        {
+          "text": "Dentro de la oportunidad, programá la próxima **actividad** (llamada, reunión, correo) con fecha: te aparece en **Mis actividades** el día que toca.",
+          "shot": {
+            "id": "crm-avanzar-1",
+            "go": "/odoo/action-crm.crm_lead_action_my_activities",
+            "mark": [
+              ".o_control_panel"
+            ]
+          }
+        },
+        {
+          "text": "Desde la oportunidad tocá **Nueva cotización** para armar el presupuesto con el cliente ya cargado."
+        },
+        {
+          "text": "Al cerrar, tocá **Ganado** o **Perdido** (con el motivo). Así el pronóstico y los reportes quedan bien."
+        }
+      ],
+      "tips": [
+        "En **Reportes > Pronóstico** ves cuánto podés vender en los próximos meses según lo que hay en el embudo."
+      ],
+      "related": [
+        "ventas/crear-presupuesto"
+      ]
+    }
+  ]
+}

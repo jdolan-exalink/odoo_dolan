@@ -1,0 +1,37 @@
+{
+  "app": "reclutamiento",
+  "intro": "Búsquedas de personal: puestos abiertos, postulantes por etapa y entrevistas.",
+  "who": "Recursos humanos y responsables.",
+  "tasks": [
+    {
+      "slug": "abrir-busqueda",
+      "title": "Abrir una búsqueda y seguir postulantes",
+      "summary": "Creás el puesto, cargás los postulantes (o llegan por correo) y los movés por etapas hasta contratar.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Reclutamiento** (1): cada tarjeta es un puesto con sus postulantes.",
+          "shot": {
+            "id": "reclutamiento-busqueda-1",
+            "go": "/odoo/action-hr_recruitment.action_hr_job",
+            "mark": [
+              ".o_kanban_renderer, .o_view_nocontent"
+            ]
+          }
+        },
+        {
+          "text": "Tocá **Nuevo** para crear el puesto. Abrí sus postulaciones y cargá cada candidato con su CV."
+        },
+        {
+          "text": "Mové cada postulante de etapa (calificación, entrevista, oferta). Programá las entrevistas como actividad."
+        },
+        {
+          "text": "Al contratar, tocá **Crear empleado**: pasa con sus datos a Empleados."
+        }
+      ],
+      "related": [
+        "empleados/alta-empleado"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "app": "gestion_rrhh",
+  "intro": "Capacitación con certificaciones que vencen, cursos obligatorios por puesto y evaluaciones de desempeño.",
+  "who": "Recursos humanos y responsables.",
+  "tasks": [
+    {
+      "slug": "capacitacion",
+      "title": "Registrar una capacitación",
+      "summary": "Creás la sesión del curso con los asistentes; al cerrarla, los aprobados reciben la certificación con su vencimiento.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Gestión RRHH > Capacitación** y creá una sesión del curso."
+        },
+        {
+          "text": "Agregá los asistentes y, al terminar, el resultado de cada uno."
+        },
+        {
+          "text": "Cerrá la sesión: los aprobados reciben la certificación. Las que están por vencer aparecen en su lista."
+        }
+      ]
+    },
+    {
+      "slug": "evaluacion",
+      "title": "Hacer una evaluación de desempeño",
+      "summary": "En el ciclo de evaluación, el responsable carga objetivos y la evaluación; el empleado comenta y se cierra.",
+      "minutes": 10,
+      "steps": [
+        {
+          "text": "Abrí el ciclo de evaluación y la evaluación del empleado."
+        },
+        {
+          "text": "Calificá los objetivos y escribí la devolución. Enviala: el empleado puede comentar."
+        },
+        {
+          "text": "Cerrá la evaluación. Las notas privadas las ve solo Recursos humanos."
+        }
+      ]
+    }
+  ]
+}

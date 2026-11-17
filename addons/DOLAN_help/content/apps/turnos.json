@@ -1,0 +1,24 @@
+{
+  "app": "turnos",
+  "intro": "Horarios y turnos: plantillas, rotaciones (4x2, 6x2, 7x7), cuadrillas con dotación mínima y cronogramas publicados.",
+  "who": "Supervisores y recursos humanos.",
+  "tasks": [
+    {
+      "slug": "publicar-cronograma",
+      "title": "Armar y publicar el cronograma",
+      "summary": "Elegís la cuadrilla y el período, se generan los turnos de cada persona y los publicás para que los vean.",
+      "minutes": 5,
+      "steps": [
+        {
+          "text": "Entrá a **Turnos > Cronogramas** y creá uno nuevo para el período."
+        },
+        {
+          "text": "Elegí la **cuadrilla** (o el sector) y la **plantilla** de turnos. Tocá **Generar**: se arman los turnos de cada persona salteando licencias aprobadas."
+        },
+        {
+          "text": "Revisá los avisos (superposiciones, falta de descanso, dotación mínima) y tocá **Publicar**. Desde ahí cada empleado ve su horario."
+        }
+      ]
+    }
+  ]
+}

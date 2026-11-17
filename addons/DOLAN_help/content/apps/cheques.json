@@ -1,0 +1,52 @@
+{
+  "app": "cheques",
+  "intro": "La cartera de cheques de terceros y eCheq: recibidos, depositados, endosados y rechazados.",
+  "who": "Administración y tesorería.",
+  "tasks": [
+    {
+      "slug": "recibir-cheque",
+      "title": "Recibir un cheque de un cliente",
+      "summary": "Al registrar el cobro elegís el diario **Cheques de terceros** y cargás los datos del cheque; queda en cartera.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "En la factura del cliente tocá **Pagar** y elegí el diario **Cheques de Terceros**."
+        },
+        {
+          "text": "Cargá número, banco, fecha de pago e importe del cheque. Tocá **Crear pago**."
+        },
+        {
+          "text": "El cheque aparece en **Cheques y eCheq** (1), en cartera, hasta que lo deposites o lo endoses.",
+          "shot": {
+            "id": "cheques-cartera-1",
+            "go": "/odoo/action-l10n_latam_check.action_third_party_check",
+            "mark": [
+              ".o_list_table thead, .o_view_nocontent"
+            ],
+            "menu": "account.menu_finance"
+          }
+        }
+      ],
+      "related": [
+        "facturacion/registrar-cobro"
+      ]
+    },
+    {
+      "slug": "depositar-o-endosar",
+      "title": "Depositar o endosar un cheque",
+      "summary": "Desde la cartera elegís el cheque y lo transferís al banco (depósito) o lo usás para pagar a un proveedor (endoso).",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Para depositar: tildá los cheques en la cartera y usá la acción de depósito eligiendo el banco."
+        },
+        {
+          "text": "Para endosar: al pagar a un proveedor elegí el diario **Cheques de Terceros** y seleccioná el cheque de la cartera."
+        },
+        {
+          "text": "Si el banco rechaza un cheque, registralo como rechazado: vuelve la deuda al cliente."
+        }
+      ]
+    }
+  ]
+}

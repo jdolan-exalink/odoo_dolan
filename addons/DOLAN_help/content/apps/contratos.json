@@ -1,0 +1,43 @@
+{
+  "app": "contratos",
+  "intro": "Contratos de servicio o alquiler con vigencia, renovación automática, aviso de fin y ajuste por índice (IPC, ICL, CER, CAC) o porcentaje.",
+  "who": "Administración y comerciales.",
+  "tasks": [
+    {
+      "slug": "crear-contrato",
+      "title": "Cargar un contrato con ajuste",
+      "summary": "Cargás cliente, fechas, importe y cómo se ajusta; al llegar la fecha se aplica solo el ajuste.",
+      "minutes": 4,
+      "before": [
+        "Para ajustar por índice, cargar los valores mensuales en **Contratos > Índices de ajuste**."
+      ],
+      "steps": [
+        {
+          "text": "Entrá a **Contratos** y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "contratos-crear-1",
+            "go": "/odoo/action-DOLAN_service_contract.action_dolan_contract",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ]
+          }
+        },
+        {
+          "text": "Completá cliente, objeto, **inicio**, **fin** e **importe inicial**. Adjuntá el contrato firmado."
+        },
+        {
+          "text": "Elegí el **ajuste**: sin ajuste, porcentaje fijo o **índice** (IPC, ICL, CER, CAC) y cada cuántos meses. Si se renueva solo, marcá la renovación y los días de aviso."
+        },
+        {
+          "text": "Tocá **Poner en vigencia**. El importe vigente arranca en el inicial."
+        }
+      ],
+      "errors": [
+        {
+          "problem": "No se aplicó el ajuste",
+          "fix": "Falta el valor del índice de algún mes: cargalo en **Índices de ajuste**. Te queda una actividad para avisarte."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "app": "listas_precios",
+  "intro": "Cambiar muchos precios de una vez (por porcentaje o importe), ver el resultado antes de aplicarlo y volver atrás si hace falta.",
+  "who": "Quien maneja precios.",
+  "tasks": [
+    {
+      "slug": "actualizar-precios",
+      "title": "Actualizar precios en forma masiva",
+      "summary": "Elegís qué precios cambiar y cómo, mirás la vista previa con el antes y el después, y aplicás.",
+      "minutes": 3,
+      "steps": [
+        {
+          "text": "Entrá a **Listas de precios** (Actualización masiva de precios) y tocá **Nuevo** (1).",
+          "shot": {
+            "id": "precios-actualizar-1",
+            "go": "/odoo/action-DOLAN_pricelist.action_dolan_price_update",
+            "mark": [
+              ".o_list_button_add, .o-kanban-button-new, .o_control_panel_main_buttons button.btn-primary"
+            ],
+            "menu": "sale.sale_menu_root"
+          }
+        },
+        {
+          "text": "Elegí qué **Actualizar** (1): precio de venta, costo o los precios fijos de una lista. Después el **Método** (porcentaje o importe) y el **Valor**.",
+          "shot": {
+            "id": "precios-actualizar-2",
+            "go": "/odoo/action-DOLAN_pricelist.action_dolan_price_update/new",
+            "mark": [
+              "div[name=target]",
+              "div[name=method]"
+            ],
+            "menu": "sale.sale_menu_root"
+          }
+        },
+        {
+          "text": "Filtrá por **Categorías**, **Proveedores** o productos, y si querés poné **Redondear a** (por ejemplo a $10)."
+        },
+        {
+          "text": "Tocá **Calcular vista previa** (1): ves cada producto con el precio actual y el nuevo. Si está bien, tocá **Aplicar**.",
+          "shot": {
+            "id": "precios-actualizar-3",
+            "go": "/odoo/action-DOLAN_pricelist.action_dolan_price_update/new",
+            "mark": [
+              "button[name=action_compute]"
+            ],
+            "menu": "sale.sale_menu_root"
+          }
+        }
+      ],
+      "tips": [
+        "Cada actualización aplicada queda en la lista con quién y cuándo la hizo, y se puede **revertir**.",
+        "En **Ventas > Productos > Historial de precios** ves cómo fue cambiando el precio de un producto."
+      ]
+    }
+  ]
+}

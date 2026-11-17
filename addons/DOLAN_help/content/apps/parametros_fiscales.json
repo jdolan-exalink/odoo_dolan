@@ -1,0 +1,35 @@
+{
+  "app": "parametros_fiscales",
+  "intro": "La conexión con los servicios de ARCA (factura electrónica, padrón) y el estado del certificado.",
+  "who": "Administradores.",
+  "tasks": [
+    {
+      "slug": "revisar-conexion",
+      "title": "Revisar la conexión con ARCA",
+      "summary": "En **Conexión ARCA** ves cada servicio con su ambiente (homologación o producción) y si el certificado está vigente.",
+      "minutes": 2,
+      "steps": [
+        {
+          "text": "Abrí **Conexión ARCA** (1).",
+          "shot": {
+            "id": "arca-conexion-1",
+            "go": "/odoo/action-DOLAN_l10n_ar_afip.action_l10n_ar_afipws_connection",
+            "mark": [
+              ".o_list_table thead, .o_kanban_renderer, .o_view_nocontent"
+            ],
+            "menu": "base.menu_administration"
+          }
+        },
+        {
+          "text": "Cada fila es un servicio (facturación, padrón). Revisá que esté en **producción** y que el certificado no esté por vencer."
+        },
+        {
+          "text": "Si el certificado vence, generá uno nuevo desde la empresa y cargalo; sin certificado no se pueden emitir facturas."
+        }
+      ],
+      "related": [
+        "integraciones/ver-estado"
+      ]
+    }
+  ]
+}

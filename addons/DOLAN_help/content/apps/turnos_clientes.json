@@ -1,0 +1,31 @@
+{
+  "app": "turnos_clientes",
+  "intro": "Turnos de clientes por profesional o recurso, sin superposiciones y con recordatorio por correo o WhatsApp.",
+  "who": "Recepción y profesionales.",
+  "tasks": [
+    {
+      "slug": "dar-turno",
+      "title": "Dar un turno",
+      "summary": "En la **Agenda** elegís el día y el horario del profesional y cargás cliente y servicio.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Entrá a **Agenda de turnos > Agenda** (1): el calendario por profesional.",
+          "shot": {
+            "id": "agenda-turno-1",
+            "go": "/odoo/action-DOLAN_appointment.action_dolan_appointment",
+            "mark": [
+              ".o_calendar_renderer, .o_action_manager .o_action"
+            ]
+          }
+        },
+        {
+          "text": "Tocá el horario libre, elegí **cliente**, **servicio** y **profesional**. DOLAN no deja superponer turnos ni darlos fuera del horario de atención."
+        },
+        {
+          "text": "El cliente recibe el recordatorio antes del turno. Al atenderlo marcá **Atendido** (o **Ausente** si no vino)."
+        }
+      ]
+    }
+  ]
+}

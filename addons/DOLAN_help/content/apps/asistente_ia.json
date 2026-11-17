@@ -1,0 +1,34 @@
+{
+  "app": "asistente_ia",
+  "intro": "Un chat que responde con los datos de la empresa: ventas, deudores, stock, reportes.",
+  "who": "Todos los usuarios.",
+  "tasks": [
+    {
+      "slug": "preguntar",
+      "title": "Preguntarle al Asistente IA",
+      "summary": "Tocás **Odoo AI** arriba a la derecha y escribís la pregunta como se la harías a un compañero.",
+      "minutes": 1,
+      "steps": [
+        {
+          "text": "Tocá **Odoo AI** (1) en la barra de arriba.",
+          "shot": {
+            "id": "ia-preguntar-1",
+            "go": "/odoo/action-DOLAN_ai.action_ai_session",
+            "mark": [
+              ".o_dolan_ai_systray button"
+            ]
+          }
+        },
+        {
+          "text": "Escribí, por ejemplo: «¿Quiénes son los 10 clientes que más deben?» o «Ventas de este mes contra el anterior»."
+        },
+        {
+          "text": "La respuesta trae tablas y links a los registros. Podés seguir preguntando sobre lo mismo."
+        }
+      ],
+      "tips": [
+        "El asistente ve solo lo que vos podés ver en el sistema."
+      ]
+    }
+  ]
+}
