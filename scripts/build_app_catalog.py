@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from app_catalog_glyphs import GLYPHS  # noqa: E402
 from app_catalog_illustrations import ILLUSTRATIONS  # noqa: E402
-from app_catalog_odoo import ODOO_ICONS  # noqa: E402
+from app_catalog_odoo import MONO_ICONS, ODOO_ICONS, VOLUME_ICONS  # noqa: E402
 
 CATALOG = ROOT / "addons" / "DOLAN_app_catalog" / "data" / "app_catalog.json"
 MENUS_XML = ROOT / "addons" / "DOLAN_app_catalog" / "data" / "app_catalog_menus.xml"
@@ -83,31 +83,10 @@ def svg_regular(glyph):
             f'<g stroke="#212121" stroke-width="1.6" {STROKE}>{glyph}</g>\n</svg>\n')
 
 
-def svg_filled(glyph):
-    # Se usa como máscara (Mosaico): un solo color, trazo más grueso para que se lea sobre el mosaico.
-    return ('<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">\n'
-            f'<g stroke="#212121" stroke-width="2.3" {STROKE}>{glyph}</g>\n</svg>\n')
-
-
 def svg_flat(glyph, light, deep):
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">\n'
             f'  <circle cx="48" cy="48" r="42" fill="{light}" fill-opacity=".22"/>\n'
             f'  <g transform="translate(12 12) scale(3)" stroke="{deep}" stroke-width="1.9" {STROKE}>{glyph}</g>\n'
-            '</svg>\n')
-
-
-def svg_3d(glyph, light, deep):
-    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">\n'
-            '  <defs>\n'
-            f'    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1"><stop stop-color="{light}"/><stop offset="1" stop-color="{deep}"/></linearGradient>\n'
-            '    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff" stop-opacity=".55"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>\n'
-            '    <filter id="shadow" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="1" dy="4" stdDeviation="3" flood-color="#27213c" flood-opacity=".28"/></filter>\n'
-            '  </defs>\n'
-            '  <g filter="url(#shadow)">\n'
-            '    <rect x="10" y="10" width="76" height="76" rx="24" fill="url(#body)"/>\n'
-            '    <path d="M34 10h28a24 24 0 0 1 24 24v2c-14-6-62-6-76 0v-2a24 24 0 0 1 24-24Z" fill="url(#shine)"/>\n'
-            f'    <g transform="translate(18 18) scale(2.5)" stroke="#ffffff" stroke-width="2" {STROKE}>{glyph}</g>\n'
-            '  </g>\n'
             '</svg>\n')
 
 
@@ -255,9 +234,12 @@ def main():
         light, deep, _color = CATEGORY_COLORS[FOLDER_CATEGORY[app["folder"]]]
         illustration = ILLUSTRATIONS.get(app["icon"][4:], {})
         files = {
-            "fluent_3d": illustration.get("fluent_3d") or svg_3d(glyph, light, deep),
+            # Expresivo 3D: la ilustración propia si la hay; si no, el dibujo de la app
+            # con volumen (degradés y sombra, sin mosaico), como los objetos 3D del set.
+            "fluent_3d": illustration.get("fluent_3d") or VOLUME_ICONS[app["icon"][4:]],
             "fluent_flat": illustration.get("fluent_flat") or svg_flat(glyph, light, deep),
-            "fluent_filled": svg_filled(glyph),
+            # Mosaico: forma maciza de un color con cortes, como los íconos rellenos del set.
+            "fluent_filled": MONO_ICONS[app["icon"][4:]],
             "fluent_regular": svg_regular(glyph),
             "tabler": svg_tabler(glyph),
         }
@@ -326,6 +308,22 @@ def main():
     if note not in icon_catalog.setdefault("notes", []):
         icon_catalog["notes"].append(note)
     write(ICON_CATALOG, json.dumps(icon_catalog, ensure_ascii=False, indent=2) + "\n", args.check, stale)
+
+    # Ningún ícono se repite dentro de un estilo, contando las apps que no son del catálogo.
+    # (Tabler ya no lo usa ningún estilo: quedó solo como alias de Contorno.)
+    for family in ("fluent_3d", "fluent_filled", "fluent_regular"):
+        seen = {}
+        for entry in icon_catalog["apps"]:
+            rel = entry.get("assets", {}).get(family)
+            if not rel or not (LIB / rel).exists():
+                continue
+            digest = hashlib.sha256((LIB / rel).read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+            if digest in seen:
+                errors.append(f"{family}: {entry['id']} repite el ícono de {seen[digest]}")
+            seen.setdefault(digest, entry["id"])
+    if errors:
+        print("\n".join(errors))
+        return 1
 
     # 3) Manifiesto de recursos.
     manifest["assets"] = [asset for asset in manifest["assets"]

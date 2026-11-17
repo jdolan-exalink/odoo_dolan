@@ -48,9 +48,10 @@ def fill(color, *shapes):
     return [("fill", color, s) for s in shapes]
 
 
-def over(color, base, shape):
-    """Zona donde `shape` pisa a `base`, en el color más oscuro."""
-    return [("over", color, base, shape)]
+def over(color, base, shape, mono_edge=False):
+    """Zona donde `shape` pisa a `base`, en el color más oscuro. Con `mono_edge` su
+    borde queda marcado también en la versión de un color."""
+    return [("over", color, base, shape, mono_edge)]
 
 
 def stroke(color, shape, width=5):
@@ -65,7 +66,7 @@ def render(layers):
             _k, color, shape = layer
             body.append(shape.replace("/>", f' fill="{color}"/>', 1))
         elif kind == "over":
-            _k, color, base, shape = layer
+            _k, color, base, shape, _edge = layer
             cid = f"c{len(defs)}"
             defs.append(f'<clipPath id="{cid}">{base}</clipPath>')
             body.append(shape.replace("/>", f' fill="{color}" clip-path="url(#{cid})"/>', 1))
@@ -148,7 +149,7 @@ def _icons():
 
     disc = circle(25, 25, 21)
     band = rect(21, -4, 8, 58, 0, ' transform="rotate(45 25 25)"')
-    i["taxes"] = fill(Y, disc) + over(P, disc, band) + fill(W, circle(16, 16, 5), circle(34, 34, 5))
+    i["taxes"] = fill(Y, disc) + over(P, disc, band, mono_edge=True) + fill(W, circle(16, 16, 5), circle(34, 34, 5))
 
     doc = rect(4, 4, 30, 42, 4)
     bars = [rect(14, 30, 7, 12, 2), rect(24, 22, 7, 20, 2), rect(34, 12, 7, 30, 2)]
@@ -369,4 +370,102 @@ def _icons():
     return i
 
 
-ODOO_ICONS = {name: render(layers) for name, layers in _icons().items()}
+GAP = 2.2  # separación transparente entre formas en la versión de un color
+
+
+def _attrs(shape, attrs):
+    return shape.replace("/>", f" {attrs}/>", 1)
+
+
+def render_mono(layers):
+    """Versión de un solo color para el estilo Mosaico (se usa como máscara).
+
+    Mismo dibujo que el ícono de Odoo, con el estilo de los íconos rellenos de
+    Fluent: formas macizas separadas por una línea transparente donde una pisa a
+    otra. Las zonas «over» desaparecen (en un color no se distinguen) y los
+    trazos blancos de detalle se recortan.
+    """
+    overs = [layer for layer in layers if layer[0] == "over"]
+    layers = [layer for layer in layers if layer[0] != "over"]
+    defs, body = [], []
+    # El borde de una zona «over» sigue marcado con una línea transparente dentro de
+    # la forma que pisa (así el impuesto conserva la barra del porcentaje).
+    over_cutters = []
+    for n, (_kind, _color, base, shape, _edge) in enumerate(o for o in overs if o[4]):
+        defs.append(f'<clipPath id="o{n}">{base}</clipPath>')
+        over_cutters.append((shape, f'<g clip-path="url(#o{n})">' + _attrs(
+            shape, f'fill="none" stroke="#000" stroke-width="{GAP * 2}" stroke-linejoin="round"') + "</g>"))
+    for index, layer in enumerate(layers):
+        kind, color = layer[0], layer[1]
+        if kind == "stroke" and color.lower() == "#ffffff":
+            continue  # detalle blanco: solo recorta
+        cutters = []
+        for later in layers[index + 1:]:
+            if later[0] == "fill":
+                cutters.append(_attrs(later[2], f'fill="#000" stroke="#000" stroke-width="{GAP * 2}" stroke-linejoin="round"'))
+            else:
+                gap = 0 if later[1].lower() == "#ffffff" else GAP * 2
+                cutters.append(_attrs(later[2], f'fill="none" stroke="#000" stroke-width="{later[3] + gap}" '
+                                                'stroke-linecap="round" stroke-linejoin="round"'))
+        cutters += [cut for shape, cut in over_cutters if shape != layer[2]]
+        if kind == "fill":
+            shape = _attrs(layer[2], 'fill="#212121"')
+        else:
+            shape = _attrs(layer[2], f'fill="none" stroke="#212121" stroke-width="{layer[3]}" '
+                                     'stroke-linecap="round" stroke-linejoin="round"')
+        if cutters:
+            mid = f"m{index}"
+            defs.append(f'<mask id="{mid}" maskUnits="userSpaceOnUse" x="-5" y="-5" width="60" height="60">'
+                        f'<rect x="-5" y="-5" width="60" height="60" fill="#fff"/>{"".join(cutters)}</mask>')
+            body.append(f'<g mask="url(#{mid})">{shape}</g>')
+        else:
+            body.append(shape)
+    head = '<svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">'
+    return f"{head}<defs>{''.join(defs)}</defs>{''.join(body)}</svg>\n"
+
+
+def _mix(color, other, amount):
+    a = [int(color[i:i + 2], 16) for i in (1, 3, 5)]
+    b = [int(other[i:i + 2], 16) for i in (1, 3, 5)]
+    return "#" + "".join(f"{round(x + (y - x) * amount):02x}" for x, y in zip(a, b))
+
+
+def render_3d(layers):
+    """Versión con volumen para el estilo Expresivo 3D: el mismo dibujo, cada forma
+    con degradé de claro a oscuro y una sombra suave, sin mosaico de fondo, como
+    los objetos de Fluent 3D del resto del set."""
+    defs, body, grads = [], [], {}
+
+    def grad(color):
+        if color not in grads:
+            gid = f"g{len(grads)}"
+            grads[color] = gid
+            defs.append(f'<linearGradient id="{gid}" x1="0" y1="0" x2=".35" y2="1">'
+                        f'<stop stop-color="{_mix(color, "#ffffff", .38)}"/>'
+                        f'<stop offset=".55" stop-color="{color}"/>'
+                        f'<stop offset="1" stop-color="{_mix(color, "#1b1030", .22)}"/></linearGradient>')
+        return grads[color]
+
+    for layer in layers:
+        kind = layer[0]
+        if kind == "fill":
+            body.append(_attrs(layer[2], f'fill="url(#{grad(layer[1])})"'))
+        elif kind == "over":
+            cid = f"c{len(defs)}"
+            defs.append(f'<clipPath id="{cid}">{layer[2]}</clipPath>')
+            body.append(_attrs(layer[3], f'fill="url(#{grad(layer[1])})" clip-path="url(#{cid})"'))
+        else:
+            color = layer[1] if layer[1].lower() == "#ffffff" else _mix(layer[1], "#ffffff", .1)
+            body.append(_attrs(layer[2], f'fill="none" stroke="{color}" stroke-width="{layer[3]}" '
+                                         'stroke-linecap="round" stroke-linejoin="round"'))
+    defs.append('<filter id="shadow" x="-20%" y="-20%" width="150%" height="160%">'
+                '<feDropShadow dx="0.6" dy="2.4" stdDeviation="1.8" flood-color="#27213c" flood-opacity=".3"/></filter>')
+    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">'
+            f"<defs>{''.join(defs)}</defs>"
+            f'<g transform="translate(7 5) scale(1.64)" filter="url(#shadow)">{"".join(body)}</g></svg>\n')
+
+
+LAYERS = _icons()
+ODOO_ICONS = {name: render(layers) for name, layers in LAYERS.items()}
+MONO_ICONS = {name: render_mono(layers) for name, layers in LAYERS.items()}
+VOLUME_ICONS = {name: render_3d(layers) for name, layers in LAYERS.items()}

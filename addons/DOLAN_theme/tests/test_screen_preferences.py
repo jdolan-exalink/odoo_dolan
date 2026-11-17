@@ -292,8 +292,9 @@ class TestScreenPreferences(TransactionCase):
             self.assertFalse(preference.favorite_menu_keys)
 
     def test_odoo_icons_are_the_default_style(self):
-        from ..models.icon_styles import DEFAULT_ICON_STYLE
+        from ..models.icon_styles import DEFAULT_ICON_STYLE, ICON_STYLE_CHOICES
         self.assertEqual(DEFAULT_ICON_STYLE, "odoo_original")
+        self.assertEqual(ICON_STYLE_CHOICES[0][0], "odoo_original", "Odoo va primero en el selector")
         self.assertEqual(self.env["res.config.settings"].create({}).dolan_ui_icon_style,
                          self.env["ir.config_parameter"].sudo().get_param("dolan_ui.icon_style") or "odoo_original")
 
