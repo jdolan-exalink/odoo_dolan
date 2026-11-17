@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- El botón de apps del sitio web lleva al Escritorio DOLAN en vez de abrir la lista de menús. -->
+    <template id="frontend_to_desktop" inherit_id="website.layout" name="DOLAN: apps del sitio web al Escritorio">
+        <xpath expr="//a[hasclass('o_frontend_to_backend_apps_btn')]" position="attributes">
+            <attribute name="href">/odoo</attribute>
+            <attribute name="title">Ir al Escritorio</attribute>
+            <attribute name="data-bs-toggle"/>
+            <attribute name="data-bs-display"/>
+            <attribute name="class" add="o_dolan_frontend_desktop_btn" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_frontend_to_backend_apps_menu')]" position="replace"/>
+    </template>
+
+    <!-- En el menú del usuario del sitio web, el acceso al sistema también dice Escritorio. -->
+    <template id="user_dropdown_desktop" inherit_id="portal.user_dropdown" name="DOLAN: Escritorio en el menú del usuario">
+        <xpath expr="//a[@id='o_backend_user_dropdown_link']" position="attributes">
+            <attribute name="title">Ir al Escritorio</attribute>
+        </xpath>
+    </template>
+</odoo>

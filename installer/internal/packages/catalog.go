@@ -179,6 +179,15 @@ var Catalog = []ModuleSpec{
 		HasData:     false,
 	},
 	{
+		ID:          "DOLAN_website_nav",
+		Title:       "Sitio web: ida y vuelta con el Escritorio DOLAN",
+		Version:     "20.0.1.0.0",
+		Category:    "Comercial",
+		Application: false,
+		Depends:     []string{"website", "DOLAN_theme"},
+		HasData:     true,
+	},
+	{
 		ID:          "DOLAN_budget",
 		Title:       "Presupuesto financiero contra real",
 		Version:     "20.0.1.0.0",
