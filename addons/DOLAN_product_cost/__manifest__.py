@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Costos',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Costo de reposición, última compra, margen por producto y alertas de margen bajo',
     'description': """
 Costos

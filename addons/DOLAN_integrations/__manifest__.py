@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Integraciones',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Estado de las conexiones externas en un solo lugar: ARCA, WhatsApp, Mercado Pago y Clover, marketplaces y correo',
     'description': """
 Integraciones

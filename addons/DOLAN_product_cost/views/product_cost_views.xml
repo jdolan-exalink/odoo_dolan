@@ -166,7 +166,7 @@
 
     <menuitem id="menu_dolan_product_cost_root" name="Costos" sequence="48"
               groups="purchase.group_purchase_user"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_costs.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_costs.svg"/>
     <menuitem id="menu_dolan_product_margin" name="Análisis de márgenes" parent="menu_dolan_product_cost_root"
               action="action_dolan_product_margin" sequence="10"/>
     <menuitem id="menu_dolan_product_cost_history" name="Historial de costos" parent="menu_dolan_product_cost_root"

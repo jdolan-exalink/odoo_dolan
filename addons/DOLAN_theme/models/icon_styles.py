@@ -1,11 +1,12 @@
 """Shared, persisted icon style identifiers for the UI theme."""
 
+# Odoo va primero: es el estilo predeterminado (DEFAULT_ICON_STYLE).
 ICON_STYLE_CHOICES = [
+    ("odoo_original", "Originales de Odoo"),
     ("mosaic", "Mosaico"),
     ("mosaic_brand", "Mosaico de marca"),
     ("outline", "Contorno"),
     ("fluent_3d_classic", "Expresivo 3D"),
-    ("odoo_original", "Originales de Odoo"),
 ]
 
 # Retired styles are still accepted on input so old preferences, URLs and
@@ -24,7 +25,7 @@ ICON_STYLE_ALIASES = {
 
 ICON_STYLE_IDS = {value for value, _label in ICON_STYLE_CHOICES} | set(ICON_STYLE_ALIASES)
 
-DEFAULT_ICON_STYLE = "mosaic"
+DEFAULT_ICON_STYLE = "odoo_original"
 
 
 def normalize_icon_style(value):

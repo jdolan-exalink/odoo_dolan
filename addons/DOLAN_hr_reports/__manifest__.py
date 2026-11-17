@@ -2,7 +2,7 @@
 # Part of DOLAN Suite for Odoo 20 CE. See LICENSE file for full copyright and licensing details.
 {
     'name': 'DOLAN - Personal: Tablero e informes',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'category': 'Human Resources',
     'summary': 'Tablero de Personal (dotación, presentes, ausentes, tardanzas, turnos sin cubrir, horas extra, '
                'licencias y pendientes) con filtros y acceso al origen; informes dinámicos',

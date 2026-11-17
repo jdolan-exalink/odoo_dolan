@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Auditoría',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Bitácora inalterable de operaciones sensibles: precios, CUIT, cuentas bancarias, anulaciones, pagos, conciliaciones y permisos',
     'description': """
 Auditoría

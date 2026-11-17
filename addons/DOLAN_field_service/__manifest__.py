@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Órdenes de servicio',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Trabajos en campo con técnico, agenda, materiales, horas, conformidad firmada y factura',
     'description': """
 Órdenes de servicio

@@ -2,7 +2,11 @@
 """Genera, a partir de addons/DOLAN_app_catalog/data/app_catalog.json:
 
 * data/app_catalog_menus.xml: una acción informativa y un menú raíz por app.
-* Los íconos propios del catálogo en las cinco familias de DOLAN_theme.
+* Los íconos propios del catálogo en las cinco familias de DOLAN_theme, más la
+  familia «odoo» (lib/odoo/), que es el web_icon de los menús: el ícono nativo
+  que ve el estilo «Originales de Odoo» y la lista de Odoo.
+* Los íconos estilo Odoo de las apps propias que no son del catálogo (Sueldos,
+  Turnos, Gestión RRHH, Reportes de Personal) y el ícono de sus módulos.
 * Las entradas del catálogo de íconos del theme (dolan_icon_catalog.json) y su
   manifiesto de recursos (icon_asset_manifest.json).
 
@@ -12,6 +16,7 @@ archivo generado está desactualizado (lo usa la CI).
 import argparse
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 from xml.sax.saxutils import escape, quoteattr
@@ -20,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from app_catalog_glyphs import GLYPHS  # noqa: E402
 from app_catalog_illustrations import ILLUSTRATIONS  # noqa: E402
+from app_catalog_odoo import MONO_ICONS, ODOO_ICONS, VOLUME_ICONS  # noqa: E402
 
 CATALOG = ROOT / "addons" / "DOLAN_app_catalog" / "data" / "app_catalog.json"
 MENUS_XML = ROOT / "addons" / "DOLAN_app_catalog" / "data" / "app_catalog_menus.xml"
@@ -28,6 +34,25 @@ ICON_CATALOG = LIB / "dolan_icon_catalog.json"
 ASSET_MANIFEST = LIB / "icon_asset_manifest.json"
 MODULE = "DOLAN_app_catalog"
 ASSET_COMMIT = "local-2026-11-13"
+ADDONS = ROOT / "addons"
+
+# Íconos estilo Odoo de apps propias que no son del catálogo: nombre en lib/odoo/
+# y módulos cuyo static/description/icon.svg (el web_icon de su menú) es ese dibujo.
+EXTRA_ODOO_ICONS = {
+    "payroll": ["DOLAN_payroll_ar"],
+    "scheduling": ["DOLAN_hr_scheduling"],
+    "hr_management": ["DOLAN_hr_talent"],
+    "hr_reports": ["DOLAN_hr_reports"],
+}
+# Módulos con ícono propio igual al de su app del catálogo.
+CATALOG_MODULE_ICONS = {"DOLAN_help": "help"}
+
+# web_icon de los menús raíz de Odoo que el catálogo reutiliza (tal cual los define Odoo).
+CORE_WEB_ICONS = {
+    "base.menu_administration": "base,static/description/settings.png",
+    "base.menu_management": "base,static/description/modules.png",
+    "sale.sale_menu_root": "sale_management,static/description/icon.png",
+}
 
 # Área de color del theme (ICON_AREA_COLORS en dolan_icon_registry.js) por carpeta.
 FOLDER_CATEGORY = {
@@ -58,31 +83,10 @@ def svg_regular(glyph):
             f'<g stroke="#212121" stroke-width="1.6" {STROKE}>{glyph}</g>\n</svg>\n')
 
 
-def svg_filled(glyph):
-    # Se usa como máscara (Mosaico): un solo color, trazo más grueso para que se lea sobre el mosaico.
-    return ('<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">\n'
-            f'<g stroke="#212121" stroke-width="2.3" {STROKE}>{glyph}</g>\n</svg>\n')
-
-
 def svg_flat(glyph, light, deep):
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">\n'
             f'  <circle cx="48" cy="48" r="42" fill="{light}" fill-opacity=".22"/>\n'
             f'  <g transform="translate(12 12) scale(3)" stroke="{deep}" stroke-width="1.9" {STROKE}>{glyph}</g>\n'
-            '</svg>\n')
-
-
-def svg_3d(glyph, light, deep):
-    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">\n'
-            '  <defs>\n'
-            f'    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1"><stop stop-color="{light}"/><stop offset="1" stop-color="{deep}"/></linearGradient>\n'
-            '    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff" stop-opacity=".55"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>\n'
-            '    <filter id="shadow" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="1" dy="4" stdDeviation="3" flood-color="#27213c" flood-opacity=".28"/></filter>\n'
-            '  </defs>\n'
-            '  <g filter="url(#shadow)">\n'
-            '    <rect x="10" y="10" width="76" height="76" rx="24" fill="url(#body)"/>\n'
-            '    <path d="M34 10h28a24 24 0 0 1 24 24v2c-14-6-62-6-76 0v-2a24 24 0 0 1 24-24Z" fill="url(#shine)"/>\n'
-            f'    <g transform="translate(18 18) scale(2.5)" stroke="#ffffff" stroke-width="2" {STROKE}>{glyph}</g>\n'
-            '  </g>\n'
             '</svg>\n')
 
 
@@ -112,10 +116,49 @@ def menus_xml(catalog, web_icon):
             '    </record>',
             f'    <menuitem id="menu_app_{key}" name={quoteattr(app["name"])} action="action_app_{key}"',
             f'              sequence="{900 + folder_seq[app["folder"]] * 2 + app.get("sequence", 10) // 10}"',
-            f'              web_icon="DOLAN_theme,static/src/lib/{web_icon(app)}"/>',
+            f'              web_icon="{web_icon(app)}"/>',
         ]
     lines.append('</odoo>')
     return "\n".join(lines) + "\n"
+
+
+def repo_menu_web_icon(xmlid):
+    """web_icon del menú `xmlid` si lo define un módulo de este repositorio."""
+    module, _, menu_id = xmlid.partition(".")
+    folder = ADDONS / module
+    if not menu_id or not folder.is_dir():
+        return None
+    pattern = re.compile(r'<menuitem\b[^>]*\bid="' + re.escape(menu_id) + r'"[^>]*>', re.S)
+    for xml in sorted(folder.rglob("*.xml")):
+        match = pattern.search(xml.read_text(encoding="utf-8"))
+        if match:
+            icon = re.search(r'web_icon="([^"]+)"', match.group(0))
+            return icon.group(1) if icon else None
+    return None
+
+
+def native_web_icon(xmlid):
+    if not xmlid:
+        return None
+    if xmlid in CORE_WEB_ICONS:
+        return CORE_WEB_ICONS[xmlid]
+    module = xmlid.partition(".")[0]
+    if (ADDONS / module).is_dir():
+        return repo_menu_web_icon(xmlid)
+    # Menú raíz de un módulo de Odoo: Odoo usa el icon.png del propio módulo.
+    return f"{module},static/description/icon.png"
+
+
+def check_module_web_icons():
+    """Los menús de los módulos propios usan el ícono estilo Odoo, nunca el Flat viejo."""
+    errors = []
+    for xml in sorted(ADDONS.glob("*/**/*.xml")):
+        if xml == MENUS_XML:
+            continue
+        for icon in re.findall(r'web_icon="DOLAN_theme,static/src/lib/([^"]+)"', xml.read_text(encoding="utf-8")):
+            if not icon.startswith("odoo/") or not (LIB / icon).exists():
+                errors.append(f"{xml.relative_to(ROOT)}: web_icon {icon} no es un ícono estilo Odoo de lib/odoo/")
+    return errors
 
 
 def icon_stem(app):
@@ -168,6 +211,14 @@ def main():
         if body in glyph_bodies:
             errors.append(f"glifo {name} repite el dibujo de {glyph_bodies[body]}")
         glyph_bodies[body] = name
+    # Estilo Odoo: un dibujo por glifo y por app extra, sin repetir ninguno.
+    missing = (set(GLYPHS) | set(EXTRA_ODOO_ICONS)) - set(ODOO_ICONS)
+    errors += [f"falta el ícono estilo Odoo {name}" for name in sorted(missing)]
+    odoo_bodies = {}
+    for name, body in ODOO_ICONS.items():
+        if body in odoo_bodies:
+            errors.append(f"ícono estilo Odoo {name} repite el dibujo de {odoo_bodies[body]}")
+        odoo_bodies[body] = name
     if errors:
         print("\n".join(errors))
         return 1
@@ -183,12 +234,19 @@ def main():
         light, deep, _color = CATEGORY_COLORS[FOLDER_CATEGORY[app["folder"]]]
         illustration = ILLUSTRATIONS.get(app["icon"][4:], {})
         files = {
-            "fluent_3d": illustration.get("fluent_3d") or svg_3d(glyph, light, deep),
+            # Expresivo 3D: la ilustración propia si la hay; si no, el dibujo de la app
+            # con volumen (degradés y sombra, sin mosaico), como los objetos 3D del set.
+            "fluent_3d": illustration.get("fluent_3d") or VOLUME_ICONS[app["icon"][4:]],
             "fluent_flat": illustration.get("fluent_flat") or svg_flat(glyph, light, deep),
-            "fluent_filled": svg_filled(glyph),
+            # Mosaico: forma maciza de un color con cortes, como los íconos rellenos del set.
+            "fluent_filled": MONO_ICONS[app["icon"][4:]],
             "fluent_regular": svg_regular(glyph),
             "tabler": svg_tabler(glyph),
         }
+        # Estilo Odoo: nombre fijo porque Odoo embebe el web_icon en la base al instalar.
+        odoo_rel = f"odoo/{stem}.svg"
+        write(LIB / odoo_rel, ODOO_ICONS[app["icon"][4:]], args.check, stale)
+        new_assets[odoo_rel] = hashlib.sha256(ODOO_ICONS[app["icon"][4:]].encode("utf-8")).hexdigest()
         hashed[stem] = {}
         for family, text in files.items():
             digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
@@ -202,8 +260,17 @@ def main():
                 # Copia con nombre fijo para web_icon de los menús (Odoo la embebe al instalar).
                 write(LIB / f"{family}/{stem}.svg", text, args.check, stale)
                 new_assets[f"{family}/{stem}.svg"] = digest
+    # Íconos estilo Odoo de las apps propias fuera del catálogo y de sus módulos.
+    for name, modules in EXTRA_ODOO_ICONS.items():
+        text = ODOO_ICONS[name]
+        write(LIB / f"odoo/{name}.svg", text, args.check, stale)
+        new_assets[f"odoo/{name}.svg"] = hashlib.sha256(text.encode("utf-8")).hexdigest()
+        for module in modules:
+            write(ADDONS / module / "static" / "description" / "icon.svg", text, args.check, stale)
+    for module, name in CATALOG_MODULE_ICONS.items():
+        write(ADDONS / module / "static" / "description" / "icon.svg", ODOO_ICONS[name], args.check, stale)
     # Borra versiones viejas de los íconos del catálogo que ya no se usan.
-    for family in ("fluent_3d", "fluent_flat", "fluent_filled", "fluent_regular", "tabler"):
+    for family in ("fluent_3d", "fluent_flat", "fluent_filled", "fluent_regular", "tabler", "odoo"):
         for path in (LIB / family).glob("catalog_*.svg"):
             rel = f"{family}/{path.name}"
             if rel not in new_assets:
@@ -242,6 +309,22 @@ def main():
         icon_catalog["notes"].append(note)
     write(ICON_CATALOG, json.dumps(icon_catalog, ensure_ascii=False, indent=2) + "\n", args.check, stale)
 
+    # Ningún ícono se repite dentro de un estilo, contando las apps que no son del catálogo.
+    # (Tabler ya no lo usa ningún estilo: quedó solo como alias de Contorno.)
+    for family in ("fluent_3d", "fluent_filled", "fluent_regular"):
+        seen = {}
+        for entry in icon_catalog["apps"]:
+            rel = entry.get("assets", {}).get(family)
+            if not rel or not (LIB / rel).exists():
+                continue
+            digest = hashlib.sha256((LIB / rel).read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+            if digest in seen:
+                errors.append(f"{family}: {entry['id']} repite el ícono de {seen[digest]}")
+            seen.setdefault(digest, entry["id"])
+    if errors:
+        print("\n".join(errors))
+        return 1
+
     # 3) Manifiesto de recursos.
     manifest["assets"] = [asset for asset in manifest["assets"]
                           if not asset["local_path"].split("/")[-1].startswith("catalog_") or asset["local_path"] in new_assets]
@@ -255,13 +338,23 @@ def main():
                                        "upstream_path": rel, "local_path": rel, "sha256": digest})
     write(ASSET_MANIFEST, json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", args.check, stale)
 
-    # 4) Menús y acciones informativas.
+    # 4) Menús y acciones informativas. El web_icon es el ícono nativo: el estilo Odoo
+    # propio para las apps del catálogo y, para una app que el catálogo reutiliza, el
+    # mismo ícono que el menú real de esa app (así no hay dos íconos para una app).
     def web_icon(app):
         stem = icon_stem(app)
         if stem:
-            return f"fluent_flat/{stem}.svg"
+            return f"DOLAN_theme,static/src/lib/odoo/{stem}.svg"
+        native = native_web_icon(app.get("menu") or "")
+        if native:
+            return native
         flat = reused_flat.get(app["key"]) or ""
-        return flat if flat.endswith(".svg") else "fluent_flat/applications.svg"
+        return f"DOLAN_theme,static/src/lib/{flat if flat.endswith('.svg') else 'fluent_flat/applications.svg'}"
+
+    menu_icon_errors = check_module_web_icons()
+    if menu_icon_errors:
+        print("\n".join(menu_icon_errors))
+        return 1
 
     xml = menus_xml(catalog, web_icon)
     write(MENUS_XML, xml, args.check, stale)

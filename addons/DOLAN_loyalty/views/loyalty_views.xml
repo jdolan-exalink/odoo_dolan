@@ -142,7 +142,7 @@
 
     <!-- Menús -->
     <menuitem id="menu_dolan_loyalty_root" name="Fidelización" sequence="46"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_loyalty.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_loyalty.svg"/>
     <menuitem id="menu_dolan_loyalty_programs" name="Programas" parent="menu_dolan_loyalty_root" sequence="10"
               action="loyalty.loyalty_program_discount_loyalty_action"/>
     <menuitem id="menu_dolan_loyalty_gift" name="Tarjetas de regalo y billetera" parent="menu_dolan_loyalty_root" sequence="20"

@@ -50,5 +50,5 @@
 
     <menuitem id="menu_dolan_integrations_root" name="Integraciones" sequence="99"
               groups="base.group_system" action="action_dolan_integration_status"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_integrations.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_integrations.svg"/>
 </odoo>

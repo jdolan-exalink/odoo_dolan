@@ -8,5 +8,5 @@
     <menuitem id="menu_dolan_owner_dashboard_root" name="Tablero del dueño" sequence="5"
               action="action_dolan_owner_dashboard"
               groups="account.group_account_manager,base.group_erp_manager"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_owner_dashboard.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_owner_dashboard.svg"/>
 </odoo>

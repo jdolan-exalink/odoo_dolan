@@ -6,6 +6,12 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Unreleased]
 
+### Cambiado
+- `DOLAN_theme 20.0.2.81.0`: **los íconos de Odoo pasan a ser el estilo predeterminado**. Las bases que seguían con Mosaico (el predeterminado anterior) cambian solas a «Originales de Odoo»; quien eligió otro estilo lo conserva.
+- Íconos estilo Odoo para las 62 apps propias que no tenían uno (las 58 del catálogo, Sueldos, Turnos, Gestión RRHH y Reportes de Personal): dibujos planos de 50x50 con la paleta de Odoo, en `DOLAN_theme/static/src/lib/odoo/`, generados por `scripts/build_app_catalog.py` desde `scripts/app_catalog_odoo.py`. Son el `web_icon` de los menús, así que con el estilo de Odoo ya no aparecen los Flat viejos. Las apps del catálogo que reutilizan una app existente muestran el mismo ícono que esa app. El script falla si dos íconos se repiten o si un menú propio vuelve a usar un Flat.
+- Los íconos de esas apps en **Mosaico** y **Mosaico de marca** pasan a ser formas macizas con cortes, como los rellenos del resto del set (antes eran trazos gruesos), y en **Expresivo 3D** las que todavía tenían el mosaico genérico pasan a ser objetos con volumen y sombra, sin mosaico. Contorno ya era coherente y no cambia. El script falla si dos apps comparten ícono en 3D, Mosaico o Contorno.
+- El selector de íconos muestra «Originales de Odoo» primero.
+
 ### Agregado
 - Apps de **Comercial**, `20.0.1.0.0`:
   - `DOLAN_loyalty` (**Fidelización**, perfiles Comercio y Completo): app propia sobre la fidelización de Odoo con asistente para armar el programa de puntos en pesos (pesos por punto, valor del punto, mínimo para canjear, vencimiento) y la tarjeta de regalo, saldo de puntos en la ficha del cliente y movimientos de puntos por mes. Funciona en Ventas y POS (`sale_loyalty` y `pos_loyalty` se instalan solos).

@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Logística',
-    'version': '20.0.1.1.0',
+    'version': '20.0.1.1.1',
     'summary': 'Preparación de pedidos por oleadas, hojas de ruta con cobranza en reparto y prueba de entrega con firma, foto y ubicación',
     'description': """
 Logística

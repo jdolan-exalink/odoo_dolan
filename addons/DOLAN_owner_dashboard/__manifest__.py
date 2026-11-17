@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Tablero del dueño',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Una sola pantalla con caja y bancos, deuda vencida, pagos de la semana, ventas y margen del mes y alertas',
     'description': """
 Tablero del dueño

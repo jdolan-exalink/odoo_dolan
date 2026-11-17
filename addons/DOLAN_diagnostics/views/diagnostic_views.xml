@@ -49,5 +49,5 @@
 
     <menuitem id="menu_dolan_diagnostics_root" name="Diagnóstico" sequence="102"
               groups="base.group_system" action="action_dolan_diagnostic_check"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_diagnostics.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_diagnostics.svg"/>
 </odoo>

@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Mesa de ayuda',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Tickets de soporte con equipos, etapas, SLA, correo entrante y aviso por WhatsApp',
     'description': """
 Mesa de ayuda

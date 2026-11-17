@@ -97,7 +97,7 @@
 
     <menuitem id="menu_dolan_cash_flow_root" name="Flujo de caja" sequence="47"
               groups="account.group_account_manager"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_cash_flow.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_cash_flow.svg"/>
     <menuitem id="menu_dolan_cash_flow_report" name="Proyección" parent="menu_dolan_cash_flow_root"
               action="action_dolan_cash_flow_report" sequence="10"/>
     <menuitem id="menu_dolan_cash_flow_forecast" name="Previsiones" parent="menu_dolan_cash_flow_root"

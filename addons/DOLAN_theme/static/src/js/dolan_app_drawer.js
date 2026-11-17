@@ -97,12 +97,13 @@ export const DOLAN_THEME_MODES = [
     { id: "contrast", label: "Alto contraste", icon: "contrast" },
 ];
 
+// Odoo va primero: es el estilo predeterminado.
 export const DOLAN_ICON_STYLES = [
+    ["odoo_original", "Originales de Odoo"],
     ["mosaic", "Mosaico"],
     ["mosaic_brand", "Mosaico de marca"],
     ["outline", "Contorno"],
     ["fluent_3d_classic", "Expresivo 3D"],
-    ["odoo_original", "Originales de Odoo"],
 ];
 
 export const DOLAN_WORKSPACE_SECTIONS = [

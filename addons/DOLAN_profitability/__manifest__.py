@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Rentabilidad',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Margen bruto por producto, cliente, vendedor, categoría y período desde las facturas',
     'description': """
 Rentabilidad

@@ -98,5 +98,5 @@
 
     <menuitem id="menu_dolan_picking_wave_root" name="Preparación de pedidos" sequence="51"
               groups="stock.group_stock_user" action="action_dolan_picking_wave"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_picking.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_picking.svg"/>
 </odoo>

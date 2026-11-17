@@ -153,7 +153,7 @@
 
     <menuitem id="menu_dolan_budget_root" name="Presupuesto financiero" sequence="97"
               groups="account.group_account_manager"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_budget.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_budget.svg"/>
     <menuitem id="menu_dolan_budget_budgets" name="Presupuestos" parent="menu_dolan_budget_root" action="action_dolan_budget" sequence="10"/>
     <menuitem id="menu_dolan_budget_analysis" name="Contra real" parent="menu_dolan_budget_root" action="action_dolan_budget_analysis" sequence="20"/>
 </odoo>

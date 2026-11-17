@@ -1264,9 +1264,9 @@
       ],
       "color": "violet",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_quotations-321f87b9.svg",
+        "fluent_3d": "fluent_3d/catalog_quotations-1b927595.svg",
         "fluent_flat": "fluent_flat/catalog_quotations-6be79835.svg",
-        "fluent_filled": "fluent_filled/catalog_quotations-703c73d5.svg",
+        "fluent_filled": "fluent_filled/catalog_quotations-9c298833.svg",
         "fluent_regular": "fluent_regular/catalog_quotations-dc627b28.svg",
         "tabler": "tabler/catalog_quotations-d0fbfc68.svg"
       }
@@ -1285,9 +1285,9 @@
       ],
       "color": "violet",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_customers-7c906cbe.svg",
+        "fluent_3d": "fluent_3d/catalog_customers-339f2dd9.svg",
         "fluent_flat": "fluent_flat/catalog_customers-568df215.svg",
-        "fluent_filled": "fluent_filled/catalog_customers-f191c4a3.svg",
+        "fluent_filled": "fluent_filled/catalog_customers-7f0d1774.svg",
         "fluent_regular": "fluent_regular/catalog_customers-6ab4b1f2.svg",
         "tabler": "tabler/catalog_customers-fcda8f39.svg"
       }
@@ -1306,9 +1306,9 @@
       ],
       "color": "violet",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_pricelists-6008f1a8.svg",
+        "fluent_3d": "fluent_3d/catalog_pricelists-165d8c07.svg",
         "fluent_flat": "fluent_flat/catalog_pricelists-bb458fbe.svg",
-        "fluent_filled": "fluent_filled/catalog_pricelists-f9c162e3.svg",
+        "fluent_filled": "fluent_filled/catalog_pricelists-b82b5eb8.svg",
         "fluent_regular": "fluent_regular/catalog_pricelists-a0c804ec.svg",
         "tabler": "tabler/catalog_pricelists-fe1eda14.svg"
       }
@@ -1327,9 +1327,9 @@
       ],
       "color": "violet",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_marketplace-e6e608a3.svg",
+        "fluent_3d": "fluent_3d/catalog_marketplace-c8865012.svg",
         "fluent_flat": "fluent_flat/catalog_marketplace-43d3f709.svg",
-        "fluent_filled": "fluent_filled/catalog_marketplace-b7795967.svg",
+        "fluent_filled": "fluent_filled/catalog_marketplace-fa03118d.svg",
         "fluent_regular": "fluent_regular/catalog_marketplace-5fac180b.svg",
         "tabler": "tabler/catalog_marketplace-9eb16586.svg"
       }
@@ -1351,7 +1351,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_ecommerce-4d946199.svg",
         "fluent_flat": "fluent_flat/catalog_ecommerce-8a09096a.svg",
-        "fluent_filled": "fluent_filled/catalog_ecommerce-9eb2c005.svg",
+        "fluent_filled": "fluent_filled/catalog_ecommerce-a457e0a5.svg",
         "fluent_regular": "fluent_regular/catalog_ecommerce-d0326e34.svg",
         "tabler": "tabler/catalog_ecommerce-8d63cbe3.svg"
       }
@@ -1373,7 +1373,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_loyalty-a4420ee5.svg",
         "fluent_flat": "fluent_flat/catalog_loyalty-5cd7a2ef.svg",
-        "fluent_filled": "fluent_filled/catalog_loyalty-69fe462d.svg",
+        "fluent_filled": "fluent_filled/catalog_loyalty-feea0ba6.svg",
         "fluent_regular": "fluent_regular/catalog_loyalty-5e813d4f.svg",
         "tabler": "tabler/catalog_loyalty-96eb4360.svg"
       }
@@ -1395,7 +1395,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_current_accounts-b136062e.svg",
         "fluent_flat": "fluent_flat/catalog_current_accounts-87bd2926.svg",
-        "fluent_filled": "fluent_filled/catalog_current_accounts-1bd85cc8.svg",
+        "fluent_filled": "fluent_filled/catalog_current_accounts-40e312b6.svg",
         "fluent_regular": "fluent_regular/catalog_current_accounts-a857b330.svg",
         "tabler": "tabler/catalog_current_accounts-1313e5fc.svg"
       }
@@ -1414,9 +1414,9 @@
       ],
       "color": "blue",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_debtors-b2bc62e2.svg",
+        "fluent_3d": "fluent_3d/catalog_debtors-25a9314a.svg",
         "fluent_flat": "fluent_flat/catalog_debtors-dec44b89.svg",
-        "fluent_filled": "fluent_filled/catalog_debtors-454dafd2.svg",
+        "fluent_filled": "fluent_filled/catalog_debtors-ec09c43c.svg",
         "fluent_regular": "fluent_regular/catalog_debtors-f0046cfd.svg",
         "tabler": "tabler/catalog_debtors-e5ee87fa.svg"
       }
@@ -1435,9 +1435,9 @@
       ],
       "color": "blue",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_collections-ba72f3f5.svg",
+        "fluent_3d": "fluent_3d/catalog_collections-6d8b3b7d.svg",
         "fluent_flat": "fluent_flat/catalog_collections-90e0065d.svg",
-        "fluent_filled": "fluent_filled/catalog_collections-45e14464.svg",
+        "fluent_filled": "fluent_filled/catalog_collections-2d33f21e.svg",
         "fluent_regular": "fluent_regular/catalog_collections-b0d1cf02.svg",
         "tabler": "tabler/catalog_collections-9e06c5b9.svg"
       }
@@ -1456,9 +1456,9 @@
       ],
       "color": "blue",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_vendor_payments-5e5f18f6.svg",
+        "fluent_3d": "fluent_3d/catalog_vendor_payments-47633cf0.svg",
         "fluent_flat": "fluent_flat/catalog_vendor_payments-a377e2e0.svg",
-        "fluent_filled": "fluent_filled/catalog_vendor_payments-251d6f7e.svg",
+        "fluent_filled": "fluent_filled/catalog_vendor_payments-016114cf.svg",
         "fluent_regular": "fluent_regular/catalog_vendor_payments-4725c735.svg",
         "tabler": "tabler/catalog_vendor_payments-cb2ac493.svg"
       }
@@ -1480,7 +1480,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_treasury-84fb2d5d.svg",
         "fluent_flat": "fluent_flat/catalog_treasury-861d4d99.svg",
-        "fluent_filled": "fluent_filled/catalog_treasury-e7ad64f3.svg",
+        "fluent_filled": "fluent_filled/catalog_treasury-abc79e8e.svg",
         "fluent_regular": "fluent_regular/catalog_treasury-d7f9229a.svg",
         "tabler": "tabler/catalog_treasury-ed79d34f.svg"
       }
@@ -1499,9 +1499,9 @@
       ],
       "color": "blue",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_banks-f21c5294.svg",
+        "fluent_3d": "fluent_3d/catalog_banks-9bbf00ab.svg",
         "fluent_flat": "fluent_flat/catalog_banks-f5f82fb1.svg",
-        "fluent_filled": "fluent_filled/catalog_banks-f4f79405.svg",
+        "fluent_filled": "fluent_filled/catalog_banks-a3af46be.svg",
         "fluent_regular": "fluent_regular/catalog_banks-7dfcefdd.svg",
         "tabler": "tabler/catalog_banks-d902d3db.svg"
       }
@@ -1520,9 +1520,9 @@
       ],
       "color": "blue",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_checks-4a0547ee.svg",
+        "fluent_3d": "fluent_3d/catalog_checks-865327c2.svg",
         "fluent_flat": "fluent_flat/catalog_checks-c6083138.svg",
-        "fluent_filled": "fluent_filled/catalog_checks-3f3423e1.svg",
+        "fluent_filled": "fluent_filled/catalog_checks-00cbc6a0.svg",
         "fluent_regular": "fluent_regular/catalog_checks-4567d0ab.svg",
         "tabler": "tabler/catalog_checks-476a002d.svg"
       }
@@ -1541,9 +1541,9 @@
       ],
       "color": "blue",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_reconciliation-56479b5c.svg",
+        "fluent_3d": "fluent_3d/catalog_reconciliation-85485fab.svg",
         "fluent_flat": "fluent_flat/catalog_reconciliation-7ca6ce22.svg",
-        "fluent_filled": "fluent_filled/catalog_reconciliation-78ad20eb.svg",
+        "fluent_filled": "fluent_filled/catalog_reconciliation-75559cb0.svg",
         "fluent_regular": "fluent_regular/catalog_reconciliation-999ee334.svg",
         "tabler": "tabler/catalog_reconciliation-cfc0059d.svg"
       }
@@ -1562,9 +1562,9 @@
       ],
       "color": "blue",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_taxes-fc8c55f2.svg",
+        "fluent_3d": "fluent_3d/catalog_taxes-badc5f35.svg",
         "fluent_flat": "fluent_flat/catalog_taxes-f1fffeab.svg",
-        "fluent_filled": "fluent_filled/catalog_taxes-71d4ba91.svg",
+        "fluent_filled": "fluent_filled/catalog_taxes-df7043b7.svg",
         "fluent_regular": "fluent_regular/catalog_taxes-2b1645c1.svg",
         "tabler": "tabler/catalog_taxes-672992c0.svg"
       }
@@ -1583,9 +1583,9 @@
       ],
       "color": "blue",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_fiscal_reports-7a064030.svg",
+        "fluent_3d": "fluent_3d/catalog_fiscal_reports-e602f361.svg",
         "fluent_flat": "fluent_flat/catalog_fiscal_reports-8f1b5d9e.svg",
-        "fluent_filled": "fluent_filled/catalog_fiscal_reports-dfa0743b.svg",
+        "fluent_filled": "fluent_filled/catalog_fiscal_reports-44701f0b.svg",
         "fluent_regular": "fluent_regular/catalog_fiscal_reports-315726c4.svg",
         "tabler": "tabler/catalog_fiscal_reports-14cc7f12.svg"
       }
@@ -1604,9 +1604,9 @@
       ],
       "color": "blue",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_financial_reports-e3fae700.svg",
+        "fluent_3d": "fluent_3d/catalog_financial_reports-a0ddb7d9.svg",
         "fluent_flat": "fluent_flat/catalog_financial_reports-0b3bd5fb.svg",
-        "fluent_filled": "fluent_filled/catalog_financial_reports-b5505440.svg",
+        "fluent_filled": "fluent_filled/catalog_financial_reports-f913e616.svg",
         "fluent_regular": "fluent_regular/catalog_financial_reports-05d8c45d.svg",
         "tabler": "tabler/catalog_financial_reports-83cbf70a.svg"
       }
@@ -1625,9 +1625,9 @@
       ],
       "color": "violet",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_pos_closing-c57eb48a.svg",
+        "fluent_3d": "fluent_3d/catalog_pos_closing-e7cfa4fe.svg",
         "fluent_flat": "fluent_flat/catalog_pos_closing-4542e8e4.svg",
-        "fluent_filled": "fluent_filled/catalog_pos_closing-d273c5ba.svg",
+        "fluent_filled": "fluent_filled/catalog_pos_closing-b94110d2.svg",
         "fluent_regular": "fluent_regular/catalog_pos_closing-23f50ad7.svg",
         "tabler": "tabler/catalog_pos_closing-2ad0fec9.svg"
       }
@@ -1648,7 +1648,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_cash_shifts-d95929d4.svg",
         "fluent_flat": "fluent_flat/catalog_cash_shifts-8cfd2292.svg",
-        "fluent_filled": "fluent_filled/catalog_cash_shifts-7020c2f8.svg",
+        "fluent_filled": "fluent_filled/catalog_cash_shifts-141565ec.svg",
         "fluent_regular": "fluent_regular/catalog_cash_shifts-8285b763.svg",
         "tabler": "tabler/catalog_cash_shifts-a91eff5f.svg"
       }
@@ -1667,9 +1667,9 @@
       ],
       "color": "orange",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_products-d1a82151.svg",
+        "fluent_3d": "fluent_3d/catalog_products-f232372c.svg",
         "fluent_flat": "fluent_flat/catalog_products-f958d7fc.svg",
-        "fluent_filled": "fluent_filled/catalog_products-9cbf6b56.svg",
+        "fluent_filled": "fluent_filled/catalog_products-ae2dabc4.svg",
         "fluent_regular": "fluent_regular/catalog_products-fc8db322.svg",
         "tabler": "tabler/catalog_products-d1409a07.svg"
       }
@@ -1688,9 +1688,9 @@
       ],
       "color": "orange",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_suppliers-1eeaca61.svg",
+        "fluent_3d": "fluent_3d/catalog_suppliers-a012c680.svg",
         "fluent_flat": "fluent_flat/catalog_suppliers-d808c35e.svg",
-        "fluent_filled": "fluent_filled/catalog_suppliers-10d7a6ef.svg",
+        "fluent_filled": "fluent_filled/catalog_suppliers-9d878fa8.svg",
         "fluent_regular": "fluent_regular/catalog_suppliers-3fe15386.svg",
         "tabler": "tabler/catalog_suppliers-ffb117e5.svg"
       }
@@ -1709,9 +1709,9 @@
       ],
       "color": "orange",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_replenishment-25995161.svg",
+        "fluent_3d": "fluent_3d/catalog_replenishment-8bf3d727.svg",
         "fluent_flat": "fluent_flat/catalog_replenishment-fe1dd670.svg",
-        "fluent_filled": "fluent_filled/catalog_replenishment-28feb92f.svg",
+        "fluent_filled": "fluent_filled/catalog_replenishment-b9f89a16.svg",
         "fluent_regular": "fluent_regular/catalog_replenishment-4f8379e3.svg",
         "tabler": "tabler/catalog_replenishment-8c75c5eb.svg"
       }
@@ -1730,9 +1730,9 @@
       ],
       "color": "orange",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_transfers-ebd6fd2b.svg",
+        "fluent_3d": "fluent_3d/catalog_transfers-60a1e409.svg",
         "fluent_flat": "fluent_flat/catalog_transfers-489ff9fc.svg",
-        "fluent_filled": "fluent_filled/catalog_transfers-b5c3a418.svg",
+        "fluent_filled": "fluent_filled/catalog_transfers-23653fde.svg",
         "fluent_regular": "fluent_regular/catalog_transfers-5d9dd2a0.svg",
         "tabler": "tabler/catalog_transfers-0c779a0d.svg"
       }
@@ -1751,9 +1751,9 @@
       ],
       "color": "orange",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_lots-05491eae.svg",
+        "fluent_3d": "fluent_3d/catalog_lots-dd540d6e.svg",
         "fluent_flat": "fluent_flat/catalog_lots-3bcff1df.svg",
-        "fluent_filled": "fluent_filled/catalog_lots-8a7e47aa.svg",
+        "fluent_filled": "fluent_filled/catalog_lots-a1c9dd3f.svg",
         "fluent_regular": "fluent_regular/catalog_lots-6db56f19.svg",
         "tabler": "tabler/catalog_lots-c7cd7cb5.svg"
       }
@@ -1772,9 +1772,9 @@
       ],
       "color": "orange",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_stock_count-60e9db28.svg",
+        "fluent_3d": "fluent_3d/catalog_stock_count-7ed51125.svg",
         "fluent_flat": "fluent_flat/catalog_stock_count-d74b4de9.svg",
-        "fluent_filled": "fluent_filled/catalog_stock_count-9ae15bcc.svg",
+        "fluent_filled": "fluent_filled/catalog_stock_count-3ee82ba6.svg",
         "fluent_regular": "fluent_regular/catalog_stock_count-39242865.svg",
         "tabler": "tabler/catalog_stock_count-c830fd43.svg"
       }
@@ -1796,7 +1796,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_costs-76241f51.svg",
         "fluent_flat": "fluent_flat/catalog_costs-df59fa80.svg",
-        "fluent_filled": "fluent_filled/catalog_costs-0688cbaf.svg",
+        "fluent_filled": "fluent_filled/catalog_costs-1f884a88.svg",
         "fluent_regular": "fluent_regular/catalog_costs-1896d303.svg",
         "tabler": "tabler/catalog_costs-df0b1f91.svg"
       }
@@ -1815,9 +1815,9 @@
       ],
       "color": "orange",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_delivery_notes-ce11f295.svg",
+        "fluent_3d": "fluent_3d/catalog_delivery_notes-2ebc9062.svg",
         "fluent_flat": "fluent_flat/catalog_delivery_notes-af7532ea.svg",
-        "fluent_filled": "fluent_filled/catalog_delivery_notes-1721076b.svg",
+        "fluent_filled": "fluent_filled/catalog_delivery_notes-0d37e0f8.svg",
         "fluent_regular": "fluent_regular/catalog_delivery_notes-683b3d2e.svg",
         "tabler": "tabler/catalog_delivery_notes-f23ffec3.svg"
       }
@@ -1839,7 +1839,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_picking-907a86c1.svg",
         "fluent_flat": "fluent_flat/catalog_picking-2a668e05.svg",
-        "fluent_filled": "fluent_filled/catalog_picking-dd55ed16.svg",
+        "fluent_filled": "fluent_filled/catalog_picking-c0415a03.svg",
         "fluent_regular": "fluent_regular/catalog_picking-990290d9.svg",
         "tabler": "tabler/catalog_picking-667adb38.svg"
       }
@@ -1861,7 +1861,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_routes-5e3a7412.svg",
         "fluent_flat": "fluent_flat/catalog_routes-dcd7fab7.svg",
-        "fluent_filled": "fluent_filled/catalog_routes-88756c60.svg",
+        "fluent_filled": "fluent_filled/catalog_routes-ee1ce282.svg",
         "fluent_regular": "fluent_regular/catalog_routes-a61977bb.svg",
         "tabler": "tabler/catalog_routes-af4d2316.svg"
       }
@@ -1883,7 +1883,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_proof_delivery-d07c1184.svg",
         "fluent_flat": "fluent_flat/catalog_proof_delivery-14849970.svg",
-        "fluent_filled": "fluent_filled/catalog_proof_delivery-a715c44c.svg",
+        "fluent_filled": "fluent_filled/catalog_proof_delivery-06cd0a92.svg",
         "fluent_regular": "fluent_regular/catalog_proof_delivery-cb174b90.svg",
         "tabler": "tabler/catalog_proof_delivery-36fce462.svg"
       }
@@ -1902,9 +1902,9 @@
       ],
       "color": "teal",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_hr_novelties-efeaa2d4.svg",
+        "fluent_3d": "fluent_3d/catalog_hr_novelties-c0b5b648.svg",
         "fluent_flat": "fluent_flat/catalog_hr_novelties-cc5833be.svg",
-        "fluent_filled": "fluent_filled/catalog_hr_novelties-4ae9dcba.svg",
+        "fluent_filled": "fluent_filled/catalog_hr_novelties-c909a22a.svg",
         "fluent_regular": "fluent_regular/catalog_hr_novelties-116a5aa7.svg",
         "tabler": "tabler/catalog_hr_novelties-709511f5.svg"
       }
@@ -1923,9 +1923,9 @@
       ],
       "color": "teal",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_hr_documents-972c61c7.svg",
+        "fluent_3d": "fluent_3d/catalog_hr_documents-c7864049.svg",
         "fluent_flat": "fluent_flat/catalog_hr_documents-1ea087b9.svg",
-        "fluent_filled": "fluent_filled/catalog_hr_documents-e5b39017.svg",
+        "fluent_filled": "fluent_filled/catalog_hr_documents-a2588625.svg",
         "fluent_regular": "fluent_regular/catalog_hr_documents-d28ea9bc.svg",
         "tabler": "tabler/catalog_hr_documents-e2b4bd20.svg"
       }
@@ -1944,9 +1944,9 @@
       ],
       "color": "orange",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_quality-1823412a.svg",
+        "fluent_3d": "fluent_3d/catalog_quality-463a5696.svg",
         "fluent_flat": "fluent_flat/catalog_quality-7c80a0b2.svg",
-        "fluent_filled": "fluent_filled/catalog_quality-03da0a6a.svg",
+        "fluent_filled": "fluent_filled/catalog_quality-2d5994aa.svg",
         "fluent_regular": "fluent_regular/catalog_quality-2b268585.svg",
         "tabler": "tabler/catalog_quality-f03bceb3.svg"
       }
@@ -1965,9 +1965,9 @@
       ],
       "color": "orange",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_assets-ed0ecea8.svg",
+        "fluent_3d": "fluent_3d/catalog_assets-c0349c0c.svg",
         "fluent_flat": "fluent_flat/catalog_assets-e19994b6.svg",
-        "fluent_filled": "fluent_filled/catalog_assets-497bdbfd.svg",
+        "fluent_filled": "fluent_filled/catalog_assets-d7e7db59.svg",
         "fluent_regular": "fluent_regular/catalog_assets-0648d542.svg",
         "tabler": "tabler/catalog_assets-74540b6b.svg"
       }
@@ -1989,7 +1989,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_contracts-3c0ecdb9.svg",
         "fluent_flat": "fluent_flat/catalog_contracts-97b5e2a0.svg",
-        "fluent_filled": "fluent_filled/catalog_contracts-d207298c.svg",
+        "fluent_filled": "fluent_filled/catalog_contracts-543c378e.svg",
         "fluent_regular": "fluent_regular/catalog_contracts-3944582e.svg",
         "tabler": "tabler/catalog_contracts-3e11253d.svg"
       }
@@ -2011,7 +2011,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_appointments-9a667cf1.svg",
         "fluent_flat": "fluent_flat/catalog_appointments-9659180b.svg",
-        "fluent_filled": "fluent_filled/catalog_appointments-3ac7b1ae.svg",
+        "fluent_filled": "fluent_filled/catalog_appointments-402361f8.svg",
         "fluent_regular": "fluent_regular/catalog_appointments-0810aa9f.svg",
         "tabler": "tabler/catalog_appointments-7faeb81e.svg"
       }
@@ -2033,7 +2033,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_helpdesk-db26b834.svg",
         "fluent_flat": "fluent_flat/catalog_helpdesk-00852ac8.svg",
-        "fluent_filled": "fluent_filled/catalog_helpdesk-16f20b86.svg",
+        "fluent_filled": "fluent_filled/catalog_helpdesk-8632ec4e.svg",
         "fluent_regular": "fluent_regular/catalog_helpdesk-f318aa63.svg",
         "tabler": "tabler/catalog_helpdesk-5c454e4c.svg"
       }
@@ -2055,7 +2055,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_service_orders-778d90bc.svg",
         "fluent_flat": "fluent_flat/catalog_service_orders-813093d2.svg",
-        "fluent_filled": "fluent_filled/catalog_service_orders-b499bc14.svg",
+        "fluent_filled": "fluent_filled/catalog_service_orders-9ed9dcc9.svg",
         "fluent_regular": "fluent_regular/catalog_service_orders-a32f726d.svg",
         "tabler": "tabler/catalog_service_orders-eb40b910.svg"
       }
@@ -2074,9 +2074,9 @@
       ],
       "color": "green",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_ocr-f53f0bd8.svg",
+        "fluent_3d": "fluent_3d/catalog_ocr-1974df93.svg",
         "fluent_flat": "fluent_flat/catalog_ocr-71636f02.svg",
-        "fluent_filled": "fluent_filled/catalog_ocr-391f243f.svg",
+        "fluent_filled": "fluent_filled/catalog_ocr-f2a83479.svg",
         "fluent_regular": "fluent_regular/catalog_ocr-87de7729.svg",
         "tabler": "tabler/catalog_ocr-7a6b390d.svg"
       }
@@ -2095,9 +2095,9 @@
       ],
       "color": "green",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_templates-17c90c39.svg",
+        "fluent_3d": "fluent_3d/catalog_templates-a7109655.svg",
         "fluent_flat": "fluent_flat/catalog_templates-b50c3486.svg",
-        "fluent_filled": "fluent_filled/catalog_templates-34b63414.svg",
+        "fluent_filled": "fluent_filled/catalog_templates-1621081b.svg",
         "fluent_regular": "fluent_regular/catalog_templates-2f23c3e2.svg",
         "tabler": "tabler/catalog_templates-bf04d125.svg"
       }
@@ -2116,9 +2116,9 @@
       ],
       "color": "green",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_automations-771fb789.svg",
+        "fluent_3d": "fluent_3d/catalog_automations-1cddaed8.svg",
         "fluent_flat": "fluent_flat/catalog_automations-e6e8425b.svg",
-        "fluent_filled": "fluent_filled/catalog_automations-3d555cbb.svg",
+        "fluent_filled": "fluent_filled/catalog_automations-55675922.svg",
         "fluent_regular": "fluent_regular/catalog_automations-44965162.svg",
         "tabler": "tabler/catalog_automations-212b6a6f.svg"
       }
@@ -2137,9 +2137,9 @@
       ],
       "color": "pink",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_executive_dashboard-4aef47b7.svg",
+        "fluent_3d": "fluent_3d/catalog_executive_dashboard-76c63cc9.svg",
         "fluent_flat": "fluent_flat/catalog_executive_dashboard-b4ab9285.svg",
-        "fluent_filled": "fluent_filled/catalog_executive_dashboard-fb0e7e62.svg",
+        "fluent_filled": "fluent_filled/catalog_executive_dashboard-c0c2adc0.svg",
         "fluent_regular": "fluent_regular/catalog_executive_dashboard-1cfee0f6.svg",
         "tabler": "tabler/catalog_executive_dashboard-d662006c.svg"
       }
@@ -2161,7 +2161,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_profitability-ff477ae3.svg",
         "fluent_flat": "fluent_flat/catalog_profitability-b01f4bda.svg",
-        "fluent_filled": "fluent_filled/catalog_profitability-f3404956.svg",
+        "fluent_filled": "fluent_filled/catalog_profitability-6aeccc07.svg",
         "fluent_regular": "fluent_regular/catalog_profitability-edc10b0f.svg",
         "tabler": "tabler/catalog_profitability-8ea5de75.svg"
       }
@@ -2183,7 +2183,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_cash_flow-f4da357f.svg",
         "fluent_flat": "fluent_flat/catalog_cash_flow-bce7dda9.svg",
-        "fluent_filled": "fluent_filled/catalog_cash_flow-e2b829e1.svg",
+        "fluent_filled": "fluent_filled/catalog_cash_flow-5bfa6dd1.svg",
         "fluent_regular": "fluent_regular/catalog_cash_flow-07e2a21d.svg",
         "tabler": "tabler/catalog_cash_flow-0c96ceca.svg"
       }
@@ -2205,7 +2205,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_audit-4f72f11a.svg",
         "fluent_flat": "fluent_flat/catalog_audit-7d2fcc1b.svg",
-        "fluent_filled": "fluent_filled/catalog_audit-63f67681.svg",
+        "fluent_filled": "fluent_filled/catalog_audit-8ed2faec.svg",
         "fluent_regular": "fluent_regular/catalog_audit-ce11061e.svg",
         "tabler": "tabler/catalog_audit-6813e4fc.svg"
       }
@@ -2227,7 +2227,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_alerts-ef408b9e.svg",
         "fluent_flat": "fluent_flat/catalog_alerts-f66fa37b.svg",
-        "fluent_filled": "fluent_filled/catalog_alerts-cfa70de8.svg",
+        "fluent_filled": "fluent_filled/catalog_alerts-02fb30e8.svg",
         "fluent_regular": "fluent_regular/catalog_alerts-db7521d0.svg",
         "tabler": "tabler/catalog_alerts-891d0894.svg"
       }
@@ -2249,7 +2249,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_budget-4a2adb55.svg",
         "fluent_flat": "fluent_flat/catalog_budget-4593bac9.svg",
-        "fluent_filled": "fluent_filled/catalog_budget-346dff6d.svg",
+        "fluent_filled": "fluent_filled/catalog_budget-138cf2ba.svg",
         "fluent_regular": "fluent_regular/catalog_budget-ecd1b0bd.svg",
         "tabler": "tabler/catalog_budget-a89d0185.svg"
       }
@@ -2268,9 +2268,9 @@
       ],
       "color": "gray",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_companies-dd96ce98.svg",
+        "fluent_3d": "fluent_3d/catalog_companies-b9f70fab.svg",
         "fluent_flat": "fluent_flat/catalog_companies-ea8c9723.svg",
-        "fluent_filled": "fluent_filled/catalog_companies-71dc096f.svg",
+        "fluent_filled": "fluent_filled/catalog_companies-23bce9d6.svg",
         "fluent_regular": "fluent_regular/catalog_companies-39203281.svg",
         "tabler": "tabler/catalog_companies-e9558cc5.svg"
       }
@@ -2292,7 +2292,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_branches-854841c1.svg",
         "fluent_flat": "fluent_flat/catalog_branches-e25df586.svg",
-        "fluent_filled": "fluent_filled/catalog_branches-fafbf3d4.svg",
+        "fluent_filled": "fluent_filled/catalog_branches-5b129b81.svg",
         "fluent_regular": "fluent_regular/catalog_branches-417376d8.svg",
         "tabler": "tabler/catalog_branches-3c2be388.svg"
       }
@@ -2311,9 +2311,9 @@
       ],
       "color": "gray",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_users-7ec3a55d.svg",
+        "fluent_3d": "fluent_3d/catalog_users-b9bc3517.svg",
         "fluent_flat": "fluent_flat/catalog_users-5d73491f.svg",
-        "fluent_filled": "fluent_filled/catalog_users-316add3c.svg",
+        "fluent_filled": "fluent_filled/catalog_users-7b77656e.svg",
         "fluent_regular": "fluent_regular/catalog_users-c8e32e64.svg",
         "tabler": "tabler/catalog_users-c907971e.svg"
       }
@@ -2332,9 +2332,9 @@
       ],
       "color": "gray",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_fiscal_settings-6f3a02cb.svg",
+        "fluent_3d": "fluent_3d/catalog_fiscal_settings-2219aab8.svg",
         "fluent_flat": "fluent_flat/catalog_fiscal_settings-d9863505.svg",
-        "fluent_filled": "fluent_filled/catalog_fiscal_settings-f84990ba.svg",
+        "fluent_filled": "fluent_filled/catalog_fiscal_settings-e08a7ade.svg",
         "fluent_regular": "fluent_regular/catalog_fiscal_settings-e7e8f553.svg",
         "tabler": "tabler/catalog_fiscal_settings-920e911b.svg"
       }
@@ -2356,7 +2356,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_integrations-9745827e.svg",
         "fluent_flat": "fluent_flat/catalog_integrations-97755696.svg",
-        "fluent_filled": "fluent_filled/catalog_integrations-111fc772.svg",
+        "fluent_filled": "fluent_filled/catalog_integrations-548de6de.svg",
         "fluent_regular": "fluent_regular/catalog_integrations-5d2fd936.svg",
         "tabler": "tabler/catalog_integrations-7de48b70.svg"
       }
@@ -2378,7 +2378,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_imports-489c50ad.svg",
         "fluent_flat": "fluent_flat/catalog_imports-ab500b70.svg",
-        "fluent_filled": "fluent_filled/catalog_imports-f6c57bec.svg",
+        "fluent_filled": "fluent_filled/catalog_imports-64730f63.svg",
         "fluent_regular": "fluent_regular/catalog_imports-fd754458.svg",
         "tabler": "tabler/catalog_imports-449f0563.svg"
       }
@@ -2397,9 +2397,9 @@
       ],
       "color": "gray",
       "assets": {
-        "fluent_3d": "fluent_3d/catalog_app_catalog-10146380.svg",
+        "fluent_3d": "fluent_3d/catalog_app_catalog-3397372d.svg",
         "fluent_flat": "fluent_flat/catalog_app_catalog-ce15acfb.svg",
-        "fluent_filled": "fluent_filled/catalog_app_catalog-1bf29a78.svg",
+        "fluent_filled": "fluent_filled/catalog_app_catalog-4501c622.svg",
         "fluent_regular": "fluent_regular/catalog_app_catalog-aeb04467.svg",
         "tabler": "tabler/catalog_app_catalog-cfc50bad.svg"
       }
@@ -2421,7 +2421,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_backups-8b41c16f.svg",
         "fluent_flat": "fluent_flat/catalog_backups-cf7d9598.svg",
-        "fluent_filled": "fluent_filled/catalog_backups-ca511c39.svg",
+        "fluent_filled": "fluent_filled/catalog_backups-92c6ff7a.svg",
         "fluent_regular": "fluent_regular/catalog_backups-db272328.svg",
         "tabler": "tabler/catalog_backups-fab9c95b.svg"
       }
@@ -2443,7 +2443,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_diagnostics-7fb71008.svg",
         "fluent_flat": "fluent_flat/catalog_diagnostics-d8800092.svg",
-        "fluent_filled": "fluent_filled/catalog_diagnostics-1baa3719.svg",
+        "fluent_filled": "fluent_filled/catalog_diagnostics-051b5b8f.svg",
         "fluent_regular": "fluent_regular/catalog_diagnostics-a15b9685.svg",
         "tabler": "tabler/catalog_diagnostics-0042edee.svg"
       }
@@ -2465,7 +2465,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_owner_dashboard-0a98f5b9.svg",
         "fluent_flat": "fluent_flat/catalog_owner_dashboard-86b188dc.svg",
-        "fluent_filled": "fluent_filled/catalog_owner_dashboard-29388744.svg",
+        "fluent_filled": "fluent_filled/catalog_owner_dashboard-68144f8f.svg",
         "fluent_regular": "fluent_regular/catalog_owner_dashboard-aa41ae28.svg",
         "tabler": "tabler/catalog_owner_dashboard-af9d3e3c.svg"
       }
@@ -2487,7 +2487,7 @@
       "assets": {
         "fluent_3d": "fluent_3d/catalog_help-79d7aef5.svg",
         "fluent_flat": "fluent_flat/catalog_help-b6215a12.svg",
-        "fluent_filled": "fluent_filled/catalog_help-a4297fae.svg",
+        "fluent_filled": "fluent_filled/catalog_help-5aa24b37.svg",
         "fluent_regular": "fluent_regular/catalog_help-d8d557eb.svg",
         "tabler": "tabler/catalog_help-038cc73e.svg"
       }

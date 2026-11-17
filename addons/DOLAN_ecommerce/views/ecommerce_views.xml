@@ -72,7 +72,7 @@
 
     <menuitem id="menu_dolan_ecommerce_root" name="Tienda online" sequence="47"
               groups="sales_team.group_sale_salesman"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_ecommerce.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_ecommerce.svg"/>
     <menuitem id="menu_dolan_ecommerce_orders" name="Pedidos web" parent="menu_dolan_ecommerce_root" sequence="10"
               action="website_sale.action_orders_ecommerce"/>
     <menuitem id="menu_dolan_ecommerce_products" name="Productos" parent="menu_dolan_ecommerce_root" sequence="20"

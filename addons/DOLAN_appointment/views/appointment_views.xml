@@ -172,7 +172,7 @@
 
     <menuitem id="menu_dolan_appointment_root" name="Agenda de turnos" sequence="61"
               groups="group_appointment_user"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_appointments.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_appointments.svg"/>
     <menuitem id="menu_dolan_appointment_agenda" name="Agenda" parent="menu_dolan_appointment_root"
               action="action_dolan_appointment" sequence="10"/>
     <menuitem id="menu_dolan_appointment_config" name="Configuración" parent="menu_dolan_appointment_root"

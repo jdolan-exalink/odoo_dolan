@@ -164,7 +164,7 @@
 
     <!-- Menús -->
     <menuitem id="menu_dolan_help_root" name="Ayuda" sequence="1"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_help.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_help.svg"/>
     <menuitem id="menu_dolan_help_center" name="Centro de ayuda" parent="menu_dolan_help_root"
               action="action_dolan_help_center" sequence="10"/>
     <menuitem id="menu_dolan_help_manage" name="Administrar" parent="menu_dolan_help_root" sequence="20"

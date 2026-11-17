@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Caja y Tesorería',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Cajas físicas con turnos, arqueo por billetes, ingresos, retiros, transferencias y diferencias aprobadas',
     'description': """
 Caja y Tesorería

@@ -286,7 +286,7 @@
 
     <menuitem id="menu_dolan_treasury_root" name="Caja y Tesorería" sequence="46"
               groups="group_treasury_cashier"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_treasury.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_treasury.svg"/>
     <menuitem id="menu_dolan_treasury_boxes" name="Cajas" parent="menu_dolan_treasury_root" action="action_dolan_cash_box" sequence="10"/>
     <menuitem id="menu_dolan_treasury_sessions" name="Turnos" parent="menu_dolan_treasury_root" action="action_dolan_cash_session" sequence="20"/>
     <menuitem id="menu_dolan_treasury_moves" name="Movimientos" parent="menu_dolan_treasury_root" action="action_dolan_cash_move" sequence="30"

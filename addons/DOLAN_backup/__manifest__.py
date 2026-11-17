@@ -1,6 +1,6 @@
 {
     'name': 'DOLAN Respaldos',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.0.1',
     'summary': 'Respaldos programados de base y archivos, con retención, descarga y prueba de restauración',
     'description': """
 Respaldos

@@ -93,7 +93,7 @@
     </record>
 
     <menuitem id="menu_dolan_alerts_root" name="Alertas" sequence="96"
-              web_icon="DOLAN_theme,static/src/lib/fluent_flat/catalog_alerts.svg"/>
+              web_icon="DOLAN_theme,static/src/lib/odoo/catalog_alerts.svg"/>
     <menuitem id="menu_dolan_alerts_rules" name="Alertas" parent="menu_dolan_alerts_root" action="action_dolan_alert_rule" sequence="10"/>
     <menuitem id="menu_dolan_alerts_events" name="Historial de avisos" parent="menu_dolan_alerts_root" action="action_dolan_alert_event" sequence="20"/>
 </odoo>
